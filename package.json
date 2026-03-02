@@ -1,7 +1,7 @@
 {
   "name": "@marketdataapp/ui",
-  "version": "1.0.0",
-  "description": "Shared UI preset for MarketData properties",
+  "version": "1.1.0",
+  "description": "Shared UI preset and theme utilities for MarketData properties",
   "main": "preset.js",
   "license": "UNLICENSED",
   "private": false,
@@ -9,7 +9,18 @@
     "type": "git",
     "url": "https://github.com/MarketDataApp/ui.git"
   },
+  "exports": {
+    "./preset": "./preset.js",
+    "./theme": "./theme.js"
+  },
+  "scripts": {
+    "test": "vitest run"
+  },
   "peerDependencies": {
     "tailwindcss": ">=3.0.0"
+  },
+  "devDependencies": {
+    "jsdom": "^28.1.0",
+    "vitest": "^2.0.0"
   }
 }
