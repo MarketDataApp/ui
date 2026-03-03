@@ -122,6 +122,7 @@
     --font-weight-semibold: 600;
     --font-weight-bold: 700;
     --tracking-tight: -0.025em;
+    --radius-xs: 0.125rem;
     --radius-sm: 0.25rem;
     --radius-lg: 0.5rem;
     --radius-3xl: 1.5rem;
@@ -549,6 +550,18 @@
   .border-gray-300 {
     border-color: var(--color-gray-300);
   }
+  .border-marketdata-darkblue\/40 {
+    border-color: color-mix(in srgb, #003286 40%, transparent);
+    @supports (color: color-mix(in lab, red, red)) {
+      border-color: color-mix(in oklab, var(--color-marketdata-darkblue) 40%, transparent);
+    }
+  }
+  .border-marketdata-darkorange\/40 {
+    border-color: color-mix(in srgb, #e83155 40%, transparent);
+    @supports (color: color-mix(in lab, red, red)) {
+      border-color: color-mix(in oklab, var(--color-marketdata-darkorange) 40%, transparent);
+    }
+  }
   .bg-\[rgb\(230\,246\,230\)\] {
     background-color: rgb(230,246,230);
   }
@@ -585,8 +598,20 @@
   .bg-marketdata-darkblue {
     background-color: var(--color-marketdata-darkblue);
   }
+  .bg-marketdata-darkblue\/20 {
+    background-color: color-mix(in srgb, #003286 20%, transparent);
+    @supports (color: color-mix(in lab, red, red)) {
+      background-color: color-mix(in oklab, var(--color-marketdata-darkblue) 20%, transparent);
+    }
+  }
   .bg-marketdata-darkorange {
     background-color: var(--color-marketdata-darkorange);
+  }
+  .bg-marketdata-darkorange\/20 {
+    background-color: color-mix(in srgb, #e83155 20%, transparent);
+    @supports (color: color-mix(in lab, red, red)) {
+      background-color: color-mix(in oklab, var(--color-marketdata-darkorange) 20%, transparent);
+    }
   }
   .bg-marketdata-lightblue {
     background-color: var(--color-marketdata-lightblue);
@@ -1492,7 +1517,7 @@
     font-size: var(--text-sm);
     line-height: var(--tw-leading, var(--text-sm--line-height));
     color: var(--color-gray-900);
-    --tw-shadow: 0 1px 3px 0 var(--tw-shadow-color, rgb(0 0 0 / 0.1)), 0 1px 2px -1px var(--tw-shadow-color, rgb(0 0 0 / 0.1));
+    --tw-shadow: 0 1px 2px 0 var(--tw-shadow-color, rgb(0 0 0 / 0.05));
     box-shadow: var(--tw-inset-shadow), var(--tw-inset-ring-shadow), var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow);
     &:focus {
       border-color: var(--color-blue-500);
@@ -1566,6 +1591,10 @@
     &:focus {
       --tw-outline-style: none;
       outline-style: none;
+      @media (forced-colors: active) {
+        outline: 2px solid transparent;
+        outline-offset: 2px;
+      }
     }
     &:where(.dark, .dark *, [data-theme="dark"], [data-theme="dark"] *) {
       &:focus {
@@ -1607,7 +1636,7 @@
     }
   }
   .badge {
-    border-radius: var(--radius-sm);
+    border-radius: var(--radius-xs);
     padding-inline: calc(var(--spacing) * 2.5);
     padding-block: calc(var(--spacing) * 0.5);
     font-size: var(--text-xs);
