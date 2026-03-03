@@ -23,7 +23,7 @@ module.exports = {
   plugins: [
     // your project-specific plugins (e.g. flowbite)
   ],
-}
+};
 ```
 
 The preset provides:
@@ -36,10 +36,12 @@ Each consuming project adds its own `content` paths and any project-specific plu
 ## What's included
 
 ### Colors
+
 - `marketdata.*` — Brand palette (darkorange, lightorange, darkblue, lightblue, bluebg)
 - `note.*`, `tip.*`, `info.*`, `warning.*`, `danger.*` — Semantic colors with light/dark variants
 
 ### Components
+
 - `.btn-orange-to-blue`, `.btn-blue-to-orange`, `.btn-hover-orange`, `.btn-hover-blue` — Brand buttons
 - `.form-container`, `.form-heading`, `.form-label`, `.form-input`, `.form-input-disabled`, `.form-input-error`, `.form-dropdown-input`, `.form-helper-text`, `.form-helper-text-error` — Form elements
 - `.badge`, `.badge-{color}`, `.badge-pill`, `.badge-pill-{color}` — Badges

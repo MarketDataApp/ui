@@ -1,362 +1,720 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>@marketdataapp/ui - Component Library</title>
-  <script src="https://cdn.tailwindcss.com/3.4.17"></script>
-  <script>
-    tailwind.config = {
-      darkMode: 'selector',
-      theme: {
-        extend: {
-          fontFamily: {
-            sans: ['system-ui', '-apple-system', '"Segoe UI"', 'Roboto', 'Ubuntu', 'Cantarell', '"Noto Sans"', 'sans-serif'],
-            mono: ['SFMono-Regular', 'Menlo', 'Monaco', 'Consolas', '"Liberation Mono"', '"Courier New"', 'monospace'],
-            quicksand: ['Quicksand', 'sans-serif'],
-          },
-          backgroundImage: {
-            'gradient-orange': 'linear-gradient(103deg, #E83155 0%, #FFDFB9 100%)',
-            'gradient-blue': 'linear-gradient(103deg, #003286 0%, #0085f2 100%)',
-          },
-          boxShadow: {
-            line: '0 0 0 1px rgba(0, 26, 108, 0.2) inset',
-            darkline: '0 0 0 1px rgba(255, 255, 255, 0.4) inset',
-            diffuse: '0 20px 40px 0 rgba(232, 49, 85, 0.2)',
-          },
-          colors: {
-            marketdata: {
-              lightorange: '#FFDFB9',
-              darkorange: '#E83155',
-              lightblue: '#0085f2',
-              darkblue: '#003286',
-              bluebg: '#001A6C',
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@marketdataapp/ui - Component Library</title>
+    <script src="https://cdn.tailwindcss.com/3.4.17"></script>
+    <script>
+      tailwind.config = {
+        darkMode: 'selector',
+        theme: {
+          extend: {
+            fontFamily: {
+              sans: [
+                'system-ui',
+                '-apple-system',
+                '"Segoe UI"',
+                'Roboto',
+                'Ubuntu',
+                'Cantarell',
+                '"Noto Sans"',
+                'sans-serif',
+              ],
+              mono: [
+                'SFMono-Regular',
+                'Menlo',
+                'Monaco',
+                'Consolas',
+                '"Liberation Mono"',
+                '"Courier New"',
+                'monospace',
+              ],
+              quicksand: ['Quicksand', 'sans-serif'],
+            },
+            backgroundImage: {
+              'gradient-orange': 'linear-gradient(103deg, #E83155 0%, #FFDFB9 100%)',
+              'gradient-blue': 'linear-gradient(103deg, #003286 0%, #0085f2 100%)',
+            },
+            boxShadow: {
+              line: '0 0 0 1px rgba(0, 26, 108, 0.2) inset',
+              darkline: '0 0 0 1px rgba(255, 255, 255, 0.4) inset',
+              diffuse: '0 20px 40px 0 rgba(232, 49, 85, 0.2)',
+            },
+            colors: {
+              marketdata: {
+                lightorange: '#FFDFB9',
+                darkorange: '#E83155',
+                lightblue: '#0085f2',
+                darkblue: '#003286',
+                bluebg: '#001A6C',
+              },
             },
           },
         },
-      },
-    }
-  </script>
-  <link rel="stylesheet" href="css/components.css">
-  <script>
-    (function() {
-      var saved = localStorage.getItem('ui-demo-theme');
-      var prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-      if (saved === 'dark' || (!saved && prefersDark)) {
-        document.documentElement.classList.add('dark');
-        document.documentElement.setAttribute('data-theme', 'dark');
-      }
-    })();
-  </script>
-</head>
-<body class="default min-h-screen">
-
-  <!-- Header -->
-  <header class="border-b border-gray-200 dark:border-gray-700 mb-12">
-    <div class="max-w-5xl mx-auto px-4 py-8 flex items-center justify-between">
-      <div>
-        <h1 class="text-3xl font-bold">@marketdataapp/ui</h1>
-        <p class="mt-1 text-gray-500 dark:text-gray-400">Shared component library for MarketData properties</p>
+      };
+    </script>
+    <link rel="stylesheet" href="../css/components.css" />
+    <script>
+      (function () {
+        var saved = localStorage.getItem('ui-demo-theme');
+        var prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+        if (saved === 'dark' || (!saved && prefersDark)) {
+          document.documentElement.classList.add('dark');
+          document.documentElement.setAttribute('data-theme', 'dark');
+        }
+      })();
+    </script>
+  </head>
+  <body class="default min-h-screen">
+    <!-- Header -->
+    <header class="border-b border-gray-200 dark:border-gray-700 mb-12">
+      <div class="max-w-5xl mx-auto px-4 py-8 flex items-center justify-between">
+        <div>
+          <h1 class="text-3xl font-bold">@marketdataapp/ui</h1>
+          <p class="mt-1 text-gray-500 dark:text-gray-400">
+            Shared component library for MarketData properties
+          </p>
+        </div>
+        <button onclick="toggleTheme()" class="btn-hover-blue" id="theme-toggle">Dark Mode</button>
       </div>
-      <button onclick="toggleTheme()" class="btn-hover-blue" id="theme-toggle">Dark Mode</button>
-    </div>
-  </header>
+    </header>
 
-  <main class="max-w-5xl mx-auto px-4 pb-16 space-y-16">
+    <main class="max-w-5xl mx-auto px-4 pb-16 space-y-16">
+      <!-- Typography -->
+      <section id="typography">
+        <h2 class="text-2xl font-bold mb-6 border-b border-gray-200 dark:border-gray-700 pb-2">
+          Typography
+        </h2>
+        <div class="space-y-6">
+          <div>
+            <code class="text-sm text-gray-500 dark:text-gray-400 font-mono block mb-1"
+              >font-sans</code
+            >
+            <p class="font-sans text-lg">The quick brown fox jumps over the lazy dog.</p>
+          </div>
+          <div>
+            <code class="text-sm text-gray-500 dark:text-gray-400 font-mono block mb-1"
+              >font-mono</code
+            >
+            <p class="font-mono text-lg">The quick brown fox jumps over the lazy dog.</p>
+          </div>
+          <div>
+            <code class="text-sm text-gray-500 dark:text-gray-400 font-mono block mb-1"
+              >font-quicksand</code
+            >
+            <p class="font-quicksand text-lg">The quick brown fox jumps over the lazy dog.</p>
+          </div>
+        </div>
+      </section>
 
-    <!-- Typography -->
-    <section id="typography">
-      <h2 class="text-2xl font-bold mb-6 border-b border-gray-200 dark:border-gray-700 pb-2">Typography</h2>
-      <div class="space-y-6">
-        <div>
-          <code class="text-sm text-gray-500 dark:text-gray-400 font-mono block mb-1">font-sans</code>
-          <p class="font-sans text-lg">The quick brown fox jumps over the lazy dog.</p>
-        </div>
-        <div>
-          <code class="text-sm text-gray-500 dark:text-gray-400 font-mono block mb-1">font-mono</code>
-          <p class="font-mono text-lg">The quick brown fox jumps over the lazy dog.</p>
-        </div>
-        <div>
-          <code class="text-sm text-gray-500 dark:text-gray-400 font-mono block mb-1">font-quicksand</code>
-          <p class="font-quicksand text-lg">The quick brown fox jumps over the lazy dog.</p>
-        </div>
-      </div>
-    </section>
-
-    <!-- Brand Colors -->
-    <section id="colors">
-      <h2 class="text-2xl font-bold mb-6 border-b border-gray-200 dark:border-gray-700 pb-2">Brand Colors</h2>
-      <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-4 mb-8">
-        <div>
-          <div class="h-20 rounded-lg bg-marketdata-lightorange"></div>
-          <code class="text-xs font-mono text-gray-500 dark:text-gray-400 mt-1 block">lightorange<br>#FFDFB9</code>
-        </div>
-        <div>
-          <div class="h-20 rounded-lg bg-marketdata-darkorange"></div>
-          <code class="text-xs font-mono text-gray-500 dark:text-gray-400 mt-1 block">darkorange<br>#E83155</code>
-        </div>
-        <div>
-          <div class="h-20 rounded-lg bg-marketdata-lightblue"></div>
-          <code class="text-xs font-mono text-gray-500 dark:text-gray-400 mt-1 block">lightblue<br>#0085f2</code>
-        </div>
-        <div>
-          <div class="h-20 rounded-lg bg-marketdata-darkblue"></div>
-          <code class="text-xs font-mono text-gray-500 dark:text-gray-400 mt-1 block">darkblue<br>#003286</code>
-        </div>
-        <div>
-          <div class="h-20 rounded-lg bg-marketdata-bluebg"></div>
-          <code class="text-xs font-mono text-gray-500 dark:text-gray-400 mt-1 block">bluebg<br>#001A6C</code>
-        </div>
-      </div>
-
-      <h3 class="text-lg font-semibold mb-4">Semantic Colors</h3>
-      <div class="space-y-3">
-        <div class="p-4 rounded-lg border-l-4 bg-[rgb(253,253,254)] border-[rgb(212,213,216)] text-[rgb(71,71,72)] dark:bg-[rgb(71,71,72)] dark:border-[rgb(212,213,216)] dark:text-[rgb(253,253,254)]">
-          <strong>Note</strong> &mdash; bg / border / text with dark mode variants
-        </div>
-        <div class="p-4 rounded-lg border-l-4 bg-[rgb(230,246,230)] border-[rgb(0,148,0)] text-[rgb(0,49,0)] dark:bg-[rgb(0,49,0)] dark:border-[rgb(0,148,0)] dark:text-[rgb(230,246,230)]">
-          <strong>Tip</strong> &mdash; bg / border / text with dark mode variants
-        </div>
-        <div class="p-4 rounded-lg border-l-4 bg-[rgb(238,249,253)] border-[rgb(76,179,212)] text-[rgb(25,60,71)] dark:bg-[rgb(25,60,71)] dark:border-[rgb(76,179,212)] dark:text-[rgb(238,249,253)]">
-          <strong>Info</strong> &mdash; bg / border / text with dark mode variants
-        </div>
-        <div class="p-4 rounded-lg border-l-4 bg-[rgb(255,248,230)] border-[rgb(230,167,0)] text-[rgb(77,56,0)] dark:bg-[rgb(77,56,0)] dark:border-[rgb(230,167,0)] dark:text-[rgb(255,248,230)]">
-          <strong>Warning</strong> &mdash; bg / border / text with dark mode variants
-        </div>
-        <div class="p-4 rounded-lg border-l-4 bg-[rgb(255,235,236)] border-[rgb(225,50,56)] text-[rgb(75,17,19)] dark:bg-[rgb(75,17,19)] dark:border-[rgb(225,50,56)] dark:text-[rgb(255,235,236)]">
-          <strong>Danger</strong> &mdash; bg / border / text with dark mode variants
-        </div>
-      </div>
-    </section>
-
-    <!-- Gradients & Shadows -->
-    <section id="gradients-shadows">
-      <h2 class="text-2xl font-bold mb-6 border-b border-gray-200 dark:border-gray-700 pb-2">Gradients & Shadows</h2>
-      <div class="grid grid-cols-1 sm:grid-cols-2 gap-6 mb-8">
-        <div>
-          <div class="h-24 rounded-lg bg-gradient-orange"></div>
-          <code class="text-sm font-mono text-gray-500 dark:text-gray-400 mt-1 block">bg-gradient-orange</code>
-        </div>
-        <div>
-          <div class="h-24 rounded-lg bg-gradient-blue"></div>
-          <code class="text-sm font-mono text-gray-500 dark:text-gray-400 mt-1 block">bg-gradient-blue</code>
-        </div>
-      </div>
-      <div class="grid grid-cols-1 sm:grid-cols-3 gap-6">
-        <div>
-          <div class="h-20 rounded-lg bg-white dark:bg-gray-800 shadow-line"></div>
-          <code class="text-sm font-mono text-gray-500 dark:text-gray-400 mt-1 block">shadow-line</code>
-        </div>
-        <div>
-          <div class="h-20 rounded-lg bg-gray-800 shadow-darkline"></div>
-          <code class="text-sm font-mono text-gray-500 dark:text-gray-400 mt-1 block">shadow-darkline</code>
-        </div>
-        <div>
-          <div class="h-20 rounded-lg bg-white dark:bg-gray-800 shadow-diffuse"></div>
-          <code class="text-sm font-mono text-gray-500 dark:text-gray-400 mt-1 block">shadow-diffuse</code>
-        </div>
-      </div>
-    </section>
-
-    <!-- Buttons -->
-    <section id="buttons">
-      <h2 class="text-2xl font-bold mb-6 border-b border-gray-200 dark:border-gray-700 pb-2">Buttons</h2>
-      <p class="text-gray-500 dark:text-gray-400 mb-6">Hover to see gradient transitions. All buttons include disabled states.</p>
-
-      <div class="grid grid-cols-1 sm:grid-cols-2 gap-8">
-        <!-- btn-orange-to-blue -->
-        <div class="space-y-3">
-          <code class="text-sm font-mono text-gray-500 dark:text-gray-400 block">.btn-orange-to-blue</code>
-          <div class="flex flex-wrap gap-3 items-center">
-            <button class="btn-orange-to-blue">Get Started</button>
-            <button class="btn-orange-to-blue" disabled>Disabled</button>
+      <!-- Brand Colors -->
+      <section id="colors">
+        <h2 class="text-2xl font-bold mb-6 border-b border-gray-200 dark:border-gray-700 pb-2">
+          Brand Colors
+        </h2>
+        <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-4 mb-8">
+          <div>
+            <div class="h-20 rounded-lg bg-marketdata-lightorange"></div>
+            <code class="text-xs font-mono text-gray-500 dark:text-gray-400 mt-1 block"
+              >lightorange<br />#FFDFB9</code
+            >
+          </div>
+          <div>
+            <div class="h-20 rounded-lg bg-marketdata-darkorange"></div>
+            <code class="text-xs font-mono text-gray-500 dark:text-gray-400 mt-1 block"
+              >darkorange<br />#E83155</code
+            >
+          </div>
+          <div>
+            <div class="h-20 rounded-lg bg-marketdata-lightblue"></div>
+            <code class="text-xs font-mono text-gray-500 dark:text-gray-400 mt-1 block"
+              >lightblue<br />#0085f2</code
+            >
+          </div>
+          <div>
+            <div class="h-20 rounded-lg bg-marketdata-darkblue"></div>
+            <code class="text-xs font-mono text-gray-500 dark:text-gray-400 mt-1 block"
+              >darkblue<br />#003286</code
+            >
+          </div>
+          <div>
+            <div class="h-20 rounded-lg bg-marketdata-bluebg"></div>
+            <code class="text-xs font-mono text-gray-500 dark:text-gray-400 mt-1 block"
+              >bluebg<br />#001A6C</code
+            >
           </div>
         </div>
 
-        <!-- btn-blue-to-orange -->
+        <h3 class="text-lg font-semibold mb-4">Semantic Colors</h3>
         <div class="space-y-3">
-          <code class="text-sm font-mono text-gray-500 dark:text-gray-400 block">.btn-blue-to-orange</code>
-          <div class="flex flex-wrap gap-3 items-center">
-            <button class="btn-blue-to-orange">Sign Up Free</button>
-            <button class="btn-blue-to-orange" disabled>Disabled</button>
+          <div
+            class="p-4 rounded-lg border-l-4 bg-[rgb(253,253,254)] border-[rgb(212,213,216)] text-[rgb(71,71,72)] dark:bg-[rgb(71,71,72)] dark:border-[rgb(212,213,216)] dark:text-[rgb(253,253,254)]"
+          >
+            <strong>Note</strong> &mdash; bg / border / text with dark mode variants
+          </div>
+          <div
+            class="p-4 rounded-lg border-l-4 bg-[rgb(230,246,230)] border-[rgb(0,148,0)] text-[rgb(0,49,0)] dark:bg-[rgb(0,49,0)] dark:border-[rgb(0,148,0)] dark:text-[rgb(230,246,230)]"
+          >
+            <strong>Tip</strong> &mdash; bg / border / text with dark mode variants
+          </div>
+          <div
+            class="p-4 rounded-lg border-l-4 bg-[rgb(238,249,253)] border-[rgb(76,179,212)] text-[rgb(25,60,71)] dark:bg-[rgb(25,60,71)] dark:border-[rgb(76,179,212)] dark:text-[rgb(238,249,253)]"
+          >
+            <strong>Info</strong> &mdash; bg / border / text with dark mode variants
+          </div>
+          <div
+            class="p-4 rounded-lg border-l-4 bg-[rgb(255,248,230)] border-[rgb(230,167,0)] text-[rgb(77,56,0)] dark:bg-[rgb(77,56,0)] dark:border-[rgb(230,167,0)] dark:text-[rgb(255,248,230)]"
+          >
+            <strong>Warning</strong> &mdash; bg / border / text with dark mode variants
+          </div>
+          <div
+            class="p-4 rounded-lg border-l-4 bg-[rgb(255,235,236)] border-[rgb(225,50,56)] text-[rgb(75,17,19)] dark:bg-[rgb(75,17,19)] dark:border-[rgb(225,50,56)] dark:text-[rgb(255,235,236)]"
+          >
+            <strong>Danger</strong> &mdash; bg / border / text with dark mode variants
           </div>
         </div>
+      </section>
 
-        <!-- btn-hover-orange -->
-        <div class="space-y-3">
-          <code class="text-sm font-mono text-gray-500 dark:text-gray-400 block">.btn-hover-orange</code>
-          <div class="flex flex-wrap gap-3 items-center">
-            <button class="btn-hover-orange">Log In</button>
-            <button class="btn-hover-orange" disabled>Disabled</button>
+      <!-- Gradients & Shadows -->
+      <section id="gradients-shadows">
+        <h2 class="text-2xl font-bold mb-6 border-b border-gray-200 dark:border-gray-700 pb-2">
+          Gradients & Shadows
+        </h2>
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-6 mb-8">
+          <div>
+            <div class="h-24 rounded-lg bg-gradient-orange"></div>
+            <code class="text-sm font-mono text-gray-500 dark:text-gray-400 mt-1 block"
+              >bg-gradient-orange</code
+            >
+          </div>
+          <div>
+            <div class="h-24 rounded-lg bg-gradient-blue"></div>
+            <code class="text-sm font-mono text-gray-500 dark:text-gray-400 mt-1 block"
+              >bg-gradient-blue</code
+            >
           </div>
         </div>
-
-        <!-- btn-hover-blue -->
-        <div class="space-y-3">
-          <code class="text-sm font-mono text-gray-500 dark:text-gray-400 block">.btn-hover-blue</code>
-          <div class="flex flex-wrap gap-3 items-center">
-            <button class="btn-hover-blue">Learn More</button>
-            <button class="btn-hover-blue" disabled>Disabled</button>
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-6">
+          <div>
+            <div class="h-20 rounded-lg bg-white dark:bg-gray-800 shadow-line"></div>
+            <code class="text-sm font-mono text-gray-500 dark:text-gray-400 mt-1 block"
+              >shadow-line</code
+            >
+          </div>
+          <div>
+            <div class="h-20 rounded-lg bg-gray-800 shadow-darkline"></div>
+            <code class="text-sm font-mono text-gray-500 dark:text-gray-400 mt-1 block"
+              >shadow-darkline</code
+            >
+          </div>
+          <div>
+            <div class="h-20 rounded-lg bg-white dark:bg-gray-800 shadow-diffuse"></div>
+            <code class="text-sm font-mono text-gray-500 dark:text-gray-400 mt-1 block"
+              >shadow-diffuse</code
+            >
           </div>
         </div>
-      </div>
-    </section>
+      </section>
 
-    <!-- Forms -->
-    <section id="forms">
-      <h2 class="text-2xl font-bold mb-6 border-b border-gray-200 dark:border-gray-700 pb-2">Forms</h2>
-      <div class="form-container max-w-lg">
-        <h3 class="form-heading">Account Settings</h3>
+      <!-- Buttons -->
+      <section id="buttons">
+        <h2 class="text-2xl font-bold mb-6 border-b border-gray-200 dark:border-gray-700 pb-2">
+          Buttons
+        </h2>
+        <p class="text-gray-500 dark:text-gray-400 mb-6">
+          Hover to see gradient transitions. All buttons include disabled states.
+        </p>
 
-        <div class="mb-4">
-          <label class="form-label">Full Name</label>
-          <input type="text" class="form-input" placeholder="Jane Smith">
-          <p class="form-helper-text">your display name across MarketData</p>
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-8">
+          <!-- btn-orange-to-blue -->
+          <div class="space-y-3">
+            <code class="text-sm font-mono text-gray-500 dark:text-gray-400 block"
+              >.btn-orange-to-blue</code
+            >
+            <div class="flex flex-wrap gap-3 items-center">
+              <button class="btn-orange-to-blue">Get Started</button>
+              <button class="btn-orange-to-blue" disabled>Disabled</button>
+            </div>
+          </div>
+
+          <!-- btn-blue-to-orange -->
+          <div class="space-y-3">
+            <code class="text-sm font-mono text-gray-500 dark:text-gray-400 block"
+              >.btn-blue-to-orange</code
+            >
+            <div class="flex flex-wrap gap-3 items-center">
+              <button class="btn-blue-to-orange">Sign Up Free</button>
+              <button class="btn-blue-to-orange" disabled>Disabled</button>
+            </div>
+          </div>
+
+          <!-- btn-hover-orange -->
+          <div class="space-y-3">
+            <code class="text-sm font-mono text-gray-500 dark:text-gray-400 block"
+              >.btn-hover-orange</code
+            >
+            <div class="flex flex-wrap gap-3 items-center">
+              <button class="btn-hover-orange">Log In</button>
+              <button class="btn-hover-orange" disabled>Disabled</button>
+            </div>
+          </div>
+
+          <!-- btn-hover-blue -->
+          <div class="space-y-3">
+            <code class="text-sm font-mono text-gray-500 dark:text-gray-400 block"
+              >.btn-hover-blue</code
+            >
+            <div class="flex flex-wrap gap-3 items-center">
+              <button class="btn-hover-blue">Learn More</button>
+              <button class="btn-hover-blue" disabled>Disabled</button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Forms -->
+      <section id="forms">
+        <h2 class="text-2xl font-bold mb-6 border-b border-gray-200 dark:border-gray-700 pb-2">
+          Forms
+        </h2>
+        <div class="form-container max-w-lg">
+          <h3 class="form-heading">Account Settings</h3>
+
+          <div class="mb-4">
+            <label class="form-label">Full Name</label>
+            <input type="text" class="form-input" placeholder="Jane Smith" />
+            <p class="form-helper-text">your display name across MarketData</p>
+          </div>
+
+          <div class="mb-4">
+            <label class="form-label">Email</label>
+            <input
+              type="email"
+              class="form-input form-input-error"
+              placeholder="invalid-email"
+              value="not-an-email"
+            />
+            <p class="form-helper-text-error">Please enter a valid email address.</p>
+          </div>
+
+          <div class="mb-4">
+            <label class="form-label">API Key</label>
+            <input
+              type="text"
+              class="form-input-disabled"
+              placeholder="sk-..."
+              value="sk-abc123...xyz"
+              disabled
+            />
+            <p class="form-helper-text">contact support to regenerate</p>
+          </div>
+
+          <div class="mb-4">
+            <label class="form-label">Plan</label>
+            <select class="form-dropdown-input">
+              <option>Free</option>
+              <option>Starter</option>
+              <option selected>Trader</option>
+            </select>
+          </div>
+
+          <button class="btn-orange-to-blue mt-2">Save Changes</button>
         </div>
 
-        <div class="mb-4">
-          <label class="form-label">Email</label>
-          <input type="email" class="form-input form-input-error" placeholder="invalid-email" value="not-an-email">
-          <p class="form-helper-text-error">Please enter a valid email address.</p>
+        <div class="mt-6">
+          <h3 class="text-lg font-semibold mb-3">Form Classes</h3>
+          <div class="flex flex-wrap gap-2">
+            <code class="text-xs font-mono bg-gray-100 dark:bg-gray-800 px-2 py-1 rounded"
+              >.form-container</code
+            >
+            <code class="text-xs font-mono bg-gray-100 dark:bg-gray-800 px-2 py-1 rounded"
+              >.form-heading</code
+            >
+            <code class="text-xs font-mono bg-gray-100 dark:bg-gray-800 px-2 py-1 rounded"
+              >.form-label</code
+            >
+            <code class="text-xs font-mono bg-gray-100 dark:bg-gray-800 px-2 py-1 rounded"
+              >.form-input</code
+            >
+            <code class="text-xs font-mono bg-gray-100 dark:bg-gray-800 px-2 py-1 rounded"
+              >.form-input-disabled</code
+            >
+            <code class="text-xs font-mono bg-gray-100 dark:bg-gray-800 px-2 py-1 rounded"
+              >.form-input-error</code
+            >
+            <code class="text-xs font-mono bg-gray-100 dark:bg-gray-800 px-2 py-1 rounded"
+              >.form-dropdown-input</code
+            >
+            <code class="text-xs font-mono bg-gray-100 dark:bg-gray-800 px-2 py-1 rounded"
+              >.form-helper-text</code
+            >
+            <code class="text-xs font-mono bg-gray-100 dark:bg-gray-800 px-2 py-1 rounded"
+              >.form-helper-text-error</code
+            >
+          </div>
+        </div>
+      </section>
+
+      <!-- Radio Buttons -->
+      <section id="radio-buttons">
+        <h2 class="text-2xl font-bold mb-6 border-b border-gray-200 dark:border-gray-700 pb-2">
+          Radio Buttons
+        </h2>
+        <fieldset class="space-y-3">
+          <legend class="form-label mb-3">Select a data plan:</legend>
+          <div class="flex items-start">
+            <input
+              type="radio"
+              name="plan"
+              value="free"
+              id="plan-free"
+              class="radio-button-input mt-0.5"
+              checked
+            />
+            <div>
+              <label for="plan-free" class="text-sm font-medium text-gray-900 dark:text-white"
+                >Free</label
+              >
+              <p class="radio-button-helper">100 requests/day, delayed data</p>
+            </div>
+          </div>
+          <div class="flex items-start">
+            <input
+              type="radio"
+              name="plan"
+              value="starter"
+              id="plan-starter"
+              class="radio-button-input mt-0.5"
+            />
+            <div>
+              <label for="plan-starter" class="text-sm font-medium text-gray-900 dark:text-white"
+                >Starter</label
+              >
+              <p class="radio-button-helper">10,000 requests/day, real-time data</p>
+            </div>
+          </div>
+          <div class="flex items-start">
+            <input
+              type="radio"
+              name="plan"
+              value="trader"
+              id="plan-trader"
+              class="radio-button-input mt-0.5"
+            />
+            <div>
+              <label for="plan-trader" class="text-sm font-medium text-gray-900 dark:text-white"
+                >Trader</label
+              >
+              <p class="radio-button-helper">Unlimited requests, real-time data, options chains</p>
+            </div>
+          </div>
+        </fieldset>
+        <div class="mt-4 flex flex-wrap gap-2">
+          <code class="text-xs font-mono bg-gray-100 dark:bg-gray-800 px-2 py-1 rounded"
+            >.radio-button-input</code
+          >
+          <code class="text-xs font-mono bg-gray-100 dark:bg-gray-800 px-2 py-1 rounded"
+            >.radio-button-helper</code
+          >
+        </div>
+      </section>
+
+      <!-- Badges -->
+      <section id="badges">
+        <h2 class="text-2xl font-bold mb-6 border-b border-gray-200 dark:border-gray-700 pb-2">
+          Badges
+        </h2>
+
+        <h3 class="text-lg font-semibold mb-3">Standard Badges</h3>
+        <div class="flex flex-wrap gap-2 mb-6">
+          <span class="badge badge-blue">Blue</span>
+          <span class="badge badge-gray">Gray</span>
+          <span class="badge badge-red">Red</span>
+          <span class="badge badge-green">Green</span>
+          <span class="badge badge-yellow">Yellow</span>
+          <span class="badge badge-indigo">Indigo</span>
+          <span class="badge badge-purple">Purple</span>
+          <span class="badge badge-pink">Pink</span>
         </div>
 
-        <div class="mb-4">
-          <label class="form-label">API Key</label>
-          <input type="text" class="form-input-disabled" placeholder="sk-..." value="sk-abc123...xyz" disabled>
-          <p class="form-helper-text">contact support to regenerate</p>
+        <h3 class="text-lg font-semibold mb-3">Pill Badges</h3>
+        <div class="flex flex-wrap gap-2 mb-4">
+          <span class="badge-pill-green">Active</span>
+          <span class="badge-pill-blue">Pending</span>
+          <span class="badge-pill-red">Expired</span>
         </div>
 
-        <div class="mb-4">
-          <label class="form-label">Plan</label>
-          <select class="form-dropdown-input">
-            <option>Free</option>
-            <option>Starter</option>
-            <option selected>Trader</option>
-          </select>
-        </div>
-
-        <button class="btn-orange-to-blue mt-2">Save Changes</button>
-      </div>
-
-      <div class="mt-6">
-        <h3 class="text-lg font-semibold mb-3">Form Classes</h3>
         <div class="flex flex-wrap gap-2">
-          <code class="text-xs font-mono bg-gray-100 dark:bg-gray-800 px-2 py-1 rounded">.form-container</code>
-          <code class="text-xs font-mono bg-gray-100 dark:bg-gray-800 px-2 py-1 rounded">.form-heading</code>
-          <code class="text-xs font-mono bg-gray-100 dark:bg-gray-800 px-2 py-1 rounded">.form-label</code>
-          <code class="text-xs font-mono bg-gray-100 dark:bg-gray-800 px-2 py-1 rounded">.form-input</code>
-          <code class="text-xs font-mono bg-gray-100 dark:bg-gray-800 px-2 py-1 rounded">.form-input-disabled</code>
-          <code class="text-xs font-mono bg-gray-100 dark:bg-gray-800 px-2 py-1 rounded">.form-input-error</code>
-          <code class="text-xs font-mono bg-gray-100 dark:bg-gray-800 px-2 py-1 rounded">.form-dropdown-input</code>
-          <code class="text-xs font-mono bg-gray-100 dark:bg-gray-800 px-2 py-1 rounded">.form-helper-text</code>
-          <code class="text-xs font-mono bg-gray-100 dark:bg-gray-800 px-2 py-1 rounded">.form-helper-text-error</code>
+          <code class="text-xs font-mono bg-gray-100 dark:bg-gray-800 px-2 py-1 rounded"
+            >.badge .badge-{color}</code
+          >
+          <code class="text-xs font-mono bg-gray-100 dark:bg-gray-800 px-2 py-1 rounded"
+            >.badge-pill-{color}</code
+          >
         </div>
-      </div>
-    </section>
+      </section>
 
-    <!-- Radio Buttons -->
-    <section id="radio-buttons">
-      <h2 class="text-2xl font-bold mb-6 border-b border-gray-200 dark:border-gray-700 pb-2">Radio Buttons</h2>
-      <fieldset class="space-y-3">
-        <legend class="form-label mb-3">Select a data plan:</legend>
-        <div class="flex items-start">
-          <input type="radio" name="plan" value="free" id="plan-free" class="radio-button-input mt-0.5" checked>
-          <div>
-            <label for="plan-free" class="text-sm font-medium text-gray-900 dark:text-white">Free</label>
-            <p class="radio-button-helper">100 requests/day, delayed data</p>
+      <!-- Grid Layout -->
+      <section id="grid-layout">
+        <h2 class="text-2xl font-bold mb-6 border-b border-gray-200 dark:border-gray-700 pb-2">
+          Grid Layout
+        </h2>
+        <p class="text-gray-500 dark:text-gray-400 mb-6">
+          A 12-column grid system. <code class="font-mono text-xs">.grid-layout-12</code> sets up
+          the grid, then child elements use column spans to control width. Resize your browser to
+          see breakpoint behavior.
+        </p>
+
+        <!-- Raw 12-column grid visualization -->
+        <h3 class="text-lg font-semibold mb-3 text-gray-700 dark:text-gray-300">
+          The 12-Column Grid
+        </h3>
+        <div
+          class="border border-dashed border-gray-300 dark:border-gray-600 rounded-lg p-2 bg-gray-50 dark:bg-gray-800/50 mb-6"
+        >
+          <div class="grid-layout-12">
+            <div
+              class="bg-marketdata-orange/20 border border-marketdata-orange/40 rounded text-center py-2 text-xs font-mono text-gray-600 dark:text-gray-300"
+            >
+              1
+            </div>
+            <div
+              class="bg-marketdata-orange/20 border border-marketdata-orange/40 rounded text-center py-2 text-xs font-mono text-gray-600 dark:text-gray-300"
+            >
+              2
+            </div>
+            <div
+              class="bg-marketdata-orange/20 border border-marketdata-orange/40 rounded text-center py-2 text-xs font-mono text-gray-600 dark:text-gray-300"
+            >
+              3
+            </div>
+            <div
+              class="bg-marketdata-orange/20 border border-marketdata-orange/40 rounded text-center py-2 text-xs font-mono text-gray-600 dark:text-gray-300"
+            >
+              4
+            </div>
+            <div
+              class="bg-marketdata-orange/20 border border-marketdata-orange/40 rounded text-center py-2 text-xs font-mono text-gray-600 dark:text-gray-300"
+            >
+              5
+            </div>
+            <div
+              class="bg-marketdata-orange/20 border border-marketdata-orange/40 rounded text-center py-2 text-xs font-mono text-gray-600 dark:text-gray-300"
+            >
+              6
+            </div>
+            <div
+              class="bg-marketdata-orange/20 border border-marketdata-orange/40 rounded text-center py-2 text-xs font-mono text-gray-600 dark:text-gray-300"
+            >
+              7
+            </div>
+            <div
+              class="bg-marketdata-orange/20 border border-marketdata-orange/40 rounded text-center py-2 text-xs font-mono text-gray-600 dark:text-gray-300"
+            >
+              8
+            </div>
+            <div
+              class="bg-marketdata-orange/20 border border-marketdata-orange/40 rounded text-center py-2 text-xs font-mono text-gray-600 dark:text-gray-300"
+            >
+              9
+            </div>
+            <div
+              class="bg-marketdata-orange/20 border border-marketdata-orange/40 rounded text-center py-2 text-xs font-mono text-gray-600 dark:text-gray-300"
+            >
+              10
+            </div>
+            <div
+              class="bg-marketdata-orange/20 border border-marketdata-orange/40 rounded text-center py-2 text-xs font-mono text-gray-600 dark:text-gray-300"
+            >
+              11
+            </div>
+            <div
+              class="bg-marketdata-orange/20 border border-marketdata-orange/40 rounded text-center py-2 text-xs font-mono text-gray-600 dark:text-gray-300"
+            >
+              12
+            </div>
           </div>
         </div>
-        <div class="flex items-start">
-          <input type="radio" name="plan" value="starter" id="plan-starter" class="radio-button-input mt-0.5">
-          <div>
-            <label for="plan-starter" class="text-sm font-medium text-gray-900 dark:text-white">Starter</label>
-            <p class="radio-button-helper">10,000 requests/day, real-time data</p>
+
+        <!-- Column span examples -->
+        <h3 class="text-lg font-semibold mb-3 text-gray-700 dark:text-gray-300">Column Spans</h3>
+        <div
+          class="border border-dashed border-gray-300 dark:border-gray-600 rounded-lg p-2 bg-gray-50 dark:bg-gray-800/50 space-y-2 mb-6"
+        >
+          <div class="grid-layout-12">
+            <div
+              class="col-span-12 bg-marketdata-blue/20 border border-marketdata-blue/40 rounded text-center py-2 text-xs font-mono text-gray-600 dark:text-gray-300"
+            >
+              col-span-12
+            </div>
+          </div>
+          <div class="grid-layout-12">
+            <div
+              class="col-span-6 bg-marketdata-blue/20 border border-marketdata-blue/40 rounded text-center py-2 text-xs font-mono text-gray-600 dark:text-gray-300"
+            >
+              col-span-6
+            </div>
+            <div
+              class="col-span-6 bg-marketdata-blue/20 border border-marketdata-blue/40 rounded text-center py-2 text-xs font-mono text-gray-600 dark:text-gray-300"
+            >
+              col-span-6
+            </div>
+          </div>
+          <div class="grid-layout-12">
+            <div
+              class="col-span-4 bg-marketdata-blue/20 border border-marketdata-blue/40 rounded text-center py-2 text-xs font-mono text-gray-600 dark:text-gray-300"
+            >
+              col-span-4
+            </div>
+            <div
+              class="col-span-4 bg-marketdata-blue/20 border border-marketdata-blue/40 rounded text-center py-2 text-xs font-mono text-gray-600 dark:text-gray-300"
+            >
+              col-span-4
+            </div>
+            <div
+              class="col-span-4 bg-marketdata-blue/20 border border-marketdata-blue/40 rounded text-center py-2 text-xs font-mono text-gray-600 dark:text-gray-300"
+            >
+              col-span-4
+            </div>
+          </div>
+          <div class="grid-layout-12">
+            <div
+              class="col-span-3 bg-marketdata-blue/20 border border-marketdata-blue/40 rounded text-center py-2 text-xs font-mono text-gray-600 dark:text-gray-300"
+            >
+              col-span-3
+            </div>
+            <div
+              class="col-span-6 bg-marketdata-blue/20 border border-marketdata-blue/40 rounded text-center py-2 text-xs font-mono text-gray-600 dark:text-gray-300"
+            >
+              col-span-6
+            </div>
+            <div
+              class="col-span-3 bg-marketdata-blue/20 border border-marketdata-blue/40 rounded text-center py-2 text-xs font-mono text-gray-600 dark:text-gray-300"
+            >
+              col-span-3
+            </div>
+          </div>
+          <div class="grid-layout-12">
+            <div
+              class="col-span-2 bg-marketdata-blue/20 border border-marketdata-blue/40 rounded text-center py-2 text-xs font-mono text-gray-600 dark:text-gray-300"
+            >
+              2
+            </div>
+            <div
+              class="col-span-2 bg-marketdata-blue/20 border border-marketdata-blue/40 rounded text-center py-2 text-xs font-mono text-gray-600 dark:text-gray-300"
+            >
+              2
+            </div>
+            <div
+              class="col-span-2 bg-marketdata-blue/20 border border-marketdata-blue/40 rounded text-center py-2 text-xs font-mono text-gray-600 dark:text-gray-300"
+            >
+              2
+            </div>
+            <div
+              class="col-span-2 bg-marketdata-blue/20 border border-marketdata-blue/40 rounded text-center py-2 text-xs font-mono text-gray-600 dark:text-gray-300"
+            >
+              2
+            </div>
+            <div
+              class="col-span-2 bg-marketdata-blue/20 border border-marketdata-blue/40 rounded text-center py-2 text-xs font-mono text-gray-600 dark:text-gray-300"
+            >
+              2
+            </div>
+            <div
+              class="col-span-2 bg-marketdata-blue/20 border border-marketdata-blue/40 rounded text-center py-2 text-xs font-mono text-gray-600 dark:text-gray-300"
+            >
+              2
+            </div>
           </div>
         </div>
-        <div class="flex items-start">
-          <input type="radio" name="plan" value="trader" id="plan-trader" class="radio-button-input mt-0.5">
-          <div>
-            <label for="plan-trader" class="text-sm font-medium text-gray-900 dark:text-white">Trader</label>
-            <p class="radio-button-helper">Unlimited requests, real-time data, options chains</p>
+
+        <!-- Content container demo -->
+        <h3 class="text-lg font-semibold mb-3 text-gray-700 dark:text-gray-300">
+          Content Containers
+        </h3>
+        <p class="text-gray-500 dark:text-gray-400 mb-3 text-sm">
+          These preset classes center content and narrow it at wider breakpoints:
+        </p>
+        <div
+          class="border border-dashed border-gray-300 dark:border-gray-600 rounded-lg p-2 bg-gray-50 dark:bg-gray-800/50 space-y-2 mb-2"
+        >
+          <!-- Show the background grid columns as a reference -->
+          <div class="grid-layout-12 relative">
+            <div class="col-span-1 bg-gray-200/50 dark:bg-gray-700/30 rounded h-8"></div>
+            <div class="col-span-1 bg-gray-200/50 dark:bg-gray-700/30 rounded h-8"></div>
+            <div class="col-span-1 bg-gray-200/50 dark:bg-gray-700/30 rounded h-8"></div>
+            <div class="col-span-1 bg-gray-200/50 dark:bg-gray-700/30 rounded h-8"></div>
+            <div class="col-span-1 bg-gray-200/50 dark:bg-gray-700/30 rounded h-8"></div>
+            <div class="col-span-1 bg-gray-200/50 dark:bg-gray-700/30 rounded h-8"></div>
+            <div class="col-span-1 bg-gray-200/50 dark:bg-gray-700/30 rounded h-8"></div>
+            <div class="col-span-1 bg-gray-200/50 dark:bg-gray-700/30 rounded h-8"></div>
+            <div class="col-span-1 bg-gray-200/50 dark:bg-gray-700/30 rounded h-8"></div>
+            <div class="col-span-1 bg-gray-200/50 dark:bg-gray-700/30 rounded h-8"></div>
+            <div class="col-span-1 bg-gray-200/50 dark:bg-gray-700/30 rounded h-8"></div>
+            <div class="col-span-1 bg-gray-200/50 dark:bg-gray-700/30 rounded h-8"></div>
+          </div>
+          <div class="grid-layout-12">
+            <div
+              class="grid-content-position bg-marketdata-orange/20 border border-marketdata-orange/40 rounded text-center py-3 text-xs font-mono text-gray-600 dark:text-gray-300"
+            >
+              .grid-content-position<br />
+              <span class="text-[10px] text-gray-400"
+                >span-12 &rarr; xl:span-10 &rarr; 2xl:span-8 (no styling, just position)</span
+              >
+            </div>
+          </div>
+          <div class="grid-layout-12">
+            <div class="grid-content-container">
+              <p class="text-xs font-mono text-gray-600 dark:text-gray-300 text-center">
+                .grid-content-container<br />
+                <span class="text-[10px] text-gray-400"
+                  >same centering + background, shadow, padding, rounded corners</span
+                >
+              </p>
+            </div>
           </div>
         </div>
-      </fieldset>
-      <div class="mt-4 flex flex-wrap gap-2">
-        <code class="text-xs font-mono bg-gray-100 dark:bg-gray-800 px-2 py-1 rounded">.radio-button-input</code>
-        <code class="text-xs font-mono bg-gray-100 dark:bg-gray-800 px-2 py-1 rounded">.radio-button-helper</code>
-      </div>
-    </section>
 
-    <!-- Badges -->
-    <section id="badges">
-      <h2 class="text-2xl font-bold mb-6 border-b border-gray-200 dark:border-gray-700 pb-2">Badges</h2>
-
-      <h3 class="text-lg font-semibold mb-3">Standard Badges</h3>
-      <div class="flex flex-wrap gap-2 mb-6">
-        <span class="badge badge-blue">Blue</span>
-        <span class="badge badge-gray">Gray</span>
-        <span class="badge badge-red">Red</span>
-        <span class="badge badge-green">Green</span>
-        <span class="badge badge-yellow">Yellow</span>
-        <span class="badge badge-indigo">Indigo</span>
-        <span class="badge badge-purple">Purple</span>
-        <span class="badge badge-pink">Pink</span>
-      </div>
-
-      <h3 class="text-lg font-semibold mb-3">Pill Badges</h3>
-      <div class="flex flex-wrap gap-2 mb-4">
-        <span class="badge-pill-green">Active</span>
-        <span class="badge-pill-blue">Pending</span>
-        <span class="badge-pill-red">Expired</span>
-      </div>
-
-      <div class="flex flex-wrap gap-2">
-        <code class="text-xs font-mono bg-gray-100 dark:bg-gray-800 px-2 py-1 rounded">.badge .badge-{color}</code>
-        <code class="text-xs font-mono bg-gray-100 dark:bg-gray-800 px-2 py-1 rounded">.badge-pill-{color}</code>
-      </div>
-    </section>
-
-    <!-- Grid Layout -->
-    <section id="grid-layout">
-      <h2 class="text-2xl font-bold mb-6 border-b border-gray-200 dark:border-gray-700 pb-2">Grid Layout</h2>
-      <p class="text-gray-500 dark:text-gray-400 mb-6">12-column grid with responsive content containers. Resize your browser to see breakpoint behavior.</p>
-
-      <div class="border border-dashed border-gray-300 dark:border-gray-600 rounded-lg p-2 bg-gray-50 dark:bg-gray-800/50">
-        <div class="grid-layout-12 min-h-[120px]">
-          <div class="grid-content-container">
-            <p class="text-sm"><code class="font-mono">.grid-content-container</code> &mdash; col-span-12 &rarr; xl:col-span-10 &rarr; 2xl:col-span-8 (centered)</p>
-          </div>
+        <div class="mt-4 flex flex-wrap gap-2">
+          <code class="text-xs font-mono bg-gray-100 dark:bg-gray-800 px-2 py-1 rounded"
+            >.grid-layout-12</code
+          >
+          <code class="text-xs font-mono bg-gray-100 dark:bg-gray-800 px-2 py-1 rounded"
+            >.grid-content-container</code
+          >
+          <code class="text-xs font-mono bg-gray-100 dark:bg-gray-800 px-2 py-1 rounded"
+            >.grid-content-position</code
+          >
         </div>
+      </section>
+    </main>
+
+    <footer class="border-t border-gray-200 dark:border-gray-700 mt-12">
+      <div
+        class="max-w-5xl mx-auto px-4 py-6 text-sm text-gray-500 dark:text-gray-400 flex justify-between"
+      >
+        <span>@marketdataapp/ui</span>
+        <a
+          href="https://github.com/MarketDataApp/ui"
+          class="hover:text-gray-900 dark:hover:text-white"
+          >GitHub</a
+        >
       </div>
+    </footer>
 
-      <div class="mt-4 flex flex-wrap gap-2">
-        <code class="text-xs font-mono bg-gray-100 dark:bg-gray-800 px-2 py-1 rounded">.grid-layout-12</code>
-        <code class="text-xs font-mono bg-gray-100 dark:bg-gray-800 px-2 py-1 rounded">.grid-content-container</code>
-        <code class="text-xs font-mono bg-gray-100 dark:bg-gray-800 px-2 py-1 rounded">.grid-content-position</code>
-      </div>
-    </section>
-
-  </main>
-
-  <footer class="border-t border-gray-200 dark:border-gray-700 mt-12">
-    <div class="max-w-5xl mx-auto px-4 py-6 text-sm text-gray-500 dark:text-gray-400 flex justify-between">
-      <span>@marketdataapp/ui</span>
-      <a href="https://github.com/MarketDataApp/ui" class="hover:text-gray-900 dark:hover:text-white">GitHub</a>
-    </div>
-  </footer>
-
-  <script>
-    function toggleTheme() {
-      var html = document.documentElement;
-      var isDark = html.classList.toggle('dark');
-      html.setAttribute('data-theme', isDark ? 'dark' : 'light');
-      localStorage.setItem('ui-demo-theme', isDark ? 'dark' : 'light');
-      document.getElementById('theme-toggle').textContent = isDark ? 'Light Mode' : 'Dark Mode';
-    }
-    // Sync button text on load
-    if (document.documentElement.classList.contains('dark')) {
-      document.getElementById('theme-toggle').textContent = 'Light Mode';
-    }
-  </script>
-</body>
+    <script>
+      function toggleTheme() {
+        var html = document.documentElement;
+        var isDark = html.classList.toggle('dark');
+        html.setAttribute('data-theme', isDark ? 'dark' : 'light');
+        localStorage.setItem('ui-demo-theme', isDark ? 'dark' : 'light');
+        document.getElementById('theme-toggle').textContent = isDark ? 'Light Mode' : 'Dark Mode';
+      }
+      // Sync button text on load
+      if (document.documentElement.classList.contains('dark')) {
+        document.getElementById('theme-toggle').textContent = 'Light Mode';
+      }
+    </script>
+  </body>
 </html>

@@ -17,8 +17,28 @@ module.exports = {
   theme: {
     extend: {
       fontFamily: {
-        sans: ['system-ui', '-apple-system', '"Segoe UI"', 'Roboto', 'Ubuntu', 'Cantarell', '"Noto Sans"', 'sans-serif', '"Apple Color Emoji"', '"Segoe UI Emoji"', '"Segoe UI Symbol"'],
-        mono: ['SFMono-Regular', 'Menlo', 'Monaco', 'Consolas', '"Liberation Mono"', '"Courier New"', 'monospace'],
+        sans: [
+          'system-ui',
+          '-apple-system',
+          '"Segoe UI"',
+          'Roboto',
+          'Ubuntu',
+          'Cantarell',
+          '"Noto Sans"',
+          'sans-serif',
+          '"Apple Color Emoji"',
+          '"Segoe UI Emoji"',
+          '"Segoe UI Symbol"',
+        ],
+        mono: [
+          'SFMono-Regular',
+          'Menlo',
+          'Monaco',
+          'Consolas',
+          '"Liberation Mono"',
+          '"Courier New"',
+          'monospace',
+        ],
         quicksand: ['Quicksand', 'sans-serif'],
       },
       backgroundImage: {
@@ -26,9 +46,9 @@ module.exports = {
         'gradient-blue': 'linear-gradient(103deg, #003286 0%, #0085f2 100%)',
       },
       boxShadow: {
-        'line': '0 0 0 1px rgba(0, 26, 108, 0.2) inset',
-        'darkline': '0 0 0 1px rgba(255, 255, 255, 0.4) inset',
-        'diffuse': '0 20px 40px 0 rgba(232, 49, 85, 0.2)',
+        line: '0 0 0 1px rgba(0, 26, 108, 0.2) inset',
+        darkline: '0 0 0 1px rgba(255, 255, 255, 0.4) inset',
+        diffuse: '0 20px 40px 0 rgba(232, 49, 85, 0.2)',
       },
       colors: {
         marketdata: {
@@ -83,51 +103,63 @@ module.exports = {
   },
 
   plugins: [
-    function({ addComponents }) {
+    function ({ addComponents }) {
       addComponents({
         /* ---- Buttons ---- */
         '.btn-orange-to-blue': {
-          '@apply inline-flex max-w-max no-underline text-center py-2.5 px-7 lg:px-10 lg:py-3.5 rounded-3xl': {},
-          '@apply font-quicksand text-xs lg:text-base lg:leading-none font-medium tracking-tight leading-none': {},
+          '@apply inline-flex max-w-max no-underline text-center py-2.5 px-7 lg:px-10 lg:py-3.5 rounded-3xl':
+            {},
+          '@apply font-quicksand text-xs lg:text-base lg:leading-none font-medium tracking-tight leading-none':
+            {},
           '@apply border-none bg-gradient-orange text-white': {},
           '@apply shadow-diffuse': {},
           '@apply hover:bg-gradient-blue hover:shadow-none': {},
-          '@apply cursor-pointer disabled:cursor-not-allowed disabled:opacity-50 disabled:hover:bg-gradient-orange disabled:hover:shadow-diffuse': {},
+          '@apply cursor-pointer disabled:cursor-not-allowed disabled:opacity-50 disabled:hover:bg-gradient-orange disabled:hover:shadow-diffuse':
+            {},
           '&:hover': {
             'text-decoration': 'none !important',
           },
         },
         '.btn-blue-to-orange': {
-          '@apply inline-flex max-w-max no-underline text-center py-2.5 px-7 lg:px-10 lg:py-3.5 rounded-3xl': {},
-          '@apply font-quicksand text-xs lg:text-base lg:leading-none font-medium tracking-tight leading-none': {},
+          '@apply inline-flex max-w-max no-underline text-center py-2.5 px-7 lg:px-10 lg:py-3.5 rounded-3xl':
+            {},
+          '@apply font-quicksand text-xs lg:text-base lg:leading-none font-medium tracking-tight leading-none':
+            {},
           '@apply border-none bg-gradient-blue text-white': {},
           '@apply shadow-line': {},
           '@apply hover:bg-gradient-orange hover:shadow-diffuse': {},
-          '@apply cursor-pointer disabled:cursor-not-allowed disabled:opacity-50 disabled:hover:bg-gradient-blue disabled:hover:shadow-line': {},
+          '@apply cursor-pointer disabled:cursor-not-allowed disabled:opacity-50 disabled:hover:bg-gradient-blue disabled:hover:shadow-line':
+            {},
           '&:hover': {
             'text-decoration': 'none !important',
           },
         },
         '.btn-hover-orange': {
-          '@apply inline-flex max-w-max no-underline text-center py-2.5 px-7 lg:px-10 lg:py-3.5 rounded-3xl': {},
-          '@apply font-quicksand text-xs lg:text-base lg:leading-none font-medium tracking-tight leading-none': {},
+          '@apply inline-flex max-w-max no-underline text-center py-2.5 px-7 lg:px-10 lg:py-3.5 rounded-3xl':
+            {},
+          '@apply font-quicksand text-xs lg:text-base lg:leading-none font-medium tracking-tight leading-none':
+            {},
           '@apply bg-transparent text-marketdata-darkblue': {},
           '@apply shadow-line dark:shadow-darkline dark:text-white': {},
           '@apply hover:bg-gradient-orange hover:text-white hover:shadow-diffuse': {},
           '@apply cursor-pointer disabled:cursor-not-allowed disabled:opacity-50': {},
-          '@apply disabled:hover:bg-none disabled:hover:bg-transparent disabled:hover:text-marketdata-darkblue dark:disabled:hover:text-white disabled:hover:shadow-line dark:disabled:hover:shadow-darkline': {},
+          '@apply disabled:hover:bg-none disabled:hover:bg-transparent disabled:hover:text-marketdata-darkblue dark:disabled:hover:text-white disabled:hover:shadow-line dark:disabled:hover:shadow-darkline':
+            {},
           '&:hover': {
             'text-decoration': 'none !important',
           },
         },
         '.btn-hover-blue': {
-          '@apply inline-flex max-w-max no-underline text-center py-2.5 px-7 lg:px-10 lg:py-3.5 rounded-3xl': {},
-          '@apply font-quicksand text-xs lg:text-base lg:leading-none font-medium tracking-tight leading-none': {},
+          '@apply inline-flex max-w-max no-underline text-center py-2.5 px-7 lg:px-10 lg:py-3.5 rounded-3xl':
+            {},
+          '@apply font-quicksand text-xs lg:text-base lg:leading-none font-medium tracking-tight leading-none':
+            {},
           '@apply bg-transparent text-marketdata-darkblue': {},
           '@apply shadow-line dark:shadow-darkline dark:text-white': {},
           '@apply hover:bg-gradient-blue hover:text-white hover:shadow-none': {},
           '@apply cursor-pointer disabled:cursor-not-allowed disabled:opacity-50': {},
-          '@apply disabled:hover:bg-none disabled:hover:bg-transparent disabled:hover:text-marketdata-darkblue dark:disabled:hover:text-white disabled:hover:shadow-line dark:disabled:hover:shadow-darkline': {},
+          '@apply disabled:hover:bg-none disabled:hover:bg-transparent disabled:hover:text-marketdata-darkblue dark:disabled:hover:text-white disabled:hover:shadow-line dark:disabled:hover:shadow-darkline':
+            {},
           '&:hover': {
             'text-decoration': 'none !important',
           },
@@ -135,7 +167,8 @@ module.exports = {
 
         /* ---- Forms ---- */
         '.form-container': {
-          '@apply dark:border-gray-700 dark:bg-gray-800 border-gray-200 bg-white p-4 lg:p-8 rounded-lg shadow-md': {},
+          '@apply dark:border-gray-700 dark:bg-gray-800 border-gray-200 bg-white p-4 lg:p-8 rounded-lg shadow-md':
+            {},
         },
         '.form-heading': {
           '@apply mb-4 text-xl font-bold text-gray-900 dark:text-white': {},
@@ -144,16 +177,20 @@ module.exports = {
           '@apply block mb-2 text-sm font-medium text-gray-900 dark:text-white': {},
         },
         '.form-input': {
-          '@apply shadow-none bg-gray-50 border border-solid border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500': {},
+          '@apply shadow-none bg-gray-50 border border-solid border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500':
+            {},
         },
         '.form-input-disabled': {
-          '@apply bg-gray-100 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 cursor-not-allowed dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-gray-400 dark:focus:ring-blue-500 dark:focus:border-blue-500': {},
+          '@apply bg-gray-100 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 cursor-not-allowed dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-gray-400 dark:focus:ring-blue-500 dark:focus:border-blue-500':
+            {},
         },
         '.form-input-error': {
-          '@apply shadow-none border-red-500 text-red-900 placeholder-red-700 focus:ring-red-500 focus:border-red-500 dark:text-red-500 dark:placeholder-red-500 dark:border-red-500': {},
+          '@apply shadow-none border-red-500 text-red-900 placeholder-red-700 focus:ring-red-500 focus:border-red-500 dark:text-red-500 dark:placeholder-red-500 dark:border-red-500':
+            {},
         },
         '.form-dropdown-input': {
-          '@apply shadow-sm bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full px-3 py-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500': {},
+          '@apply shadow-sm bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full px-3 py-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500':
+            {},
         },
         '.form-helper-text': {
           '@apply mt-2 text-sm text-gray-500 dark:text-gray-400': {},
@@ -167,7 +204,8 @@ module.exports = {
 
         /* ---- Radio Buttons ---- */
         '.radio-button-input': {
-          '@apply w-4 h-4 text-blue-600 bg-gray-100 border border-gray-300 rounded-full appearance-none': {},
+          '@apply w-4 h-4 text-blue-600 bg-gray-100 border border-gray-300 rounded-full appearance-none':
+            {},
           '@apply focus:ring-blue-200 focus:ring-2 focus:outline-none dark:focus:ring-blue-600': {},
           '@apply dark:ring-offset-gray-700 dark:focus:ring-offset-gray-700': {},
           '@apply dark:bg-gray-600 dark:border-gray-500': {},
@@ -177,7 +215,8 @@ module.exports = {
           '&:checked': {
             'background-color': '#2563eb',
             'border-color': 'transparent',
-            'background-image': "url(\"data:image/svg+xml,%3csvg viewBox='0 0 16 16' fill='white' xmlns='http://www.w3.org/2000/svg'%3e%3ccircle cx='8' cy='8' r='3'/%3e%3c/svg%3e\")",
+            'background-image':
+              "url(\"data:image/svg+xml,%3csvg viewBox='0 0 16 16' fill='white' xmlns='http://www.w3.org/2000/svg'%3e%3ccircle cx='8' cy='8' r='3'/%3e%3c/svg%3e\")",
             'background-size': '100% 100%',
           },
         },
@@ -217,13 +256,16 @@ module.exports = {
           '@apply text-xs font-medium me-2 px-2.5 py-0.5 rounded-full font-sans': {},
         },
         '.badge-pill-green': {
-          '@apply badge-pill bg-green-100 text-green-800 border border-green-400 dark:bg-green-900 dark:text-green-300': {},
+          '@apply badge-pill bg-green-100 text-green-800 border border-green-400 dark:bg-green-900 dark:text-green-300':
+            {},
         },
         '.badge-pill-blue': {
-          '@apply badge-pill bg-blue-100 text-blue-800 border border-blue-400 dark:bg-blue-900 dark:text-blue-300 capitalize': {},
+          '@apply badge-pill bg-blue-100 text-blue-800 border border-blue-400 dark:bg-blue-900 dark:text-blue-300 capitalize':
+            {},
         },
         '.badge-pill-red': {
-          '@apply badge-pill bg-red-100 text-red-800 border border-red-400 dark:bg-red-900 dark:text-red-300 capitalize': {},
+          '@apply badge-pill bg-red-100 text-red-800 border border-red-400 dark:bg-red-900 dark:text-red-300 capitalize':
+            {},
         },
 
         /* ---- Grid Layout ---- */
@@ -231,7 +273,8 @@ module.exports = {
           '@apply grid grid-cols-12 gap-4': {},
         },
         '.grid-content-container': {
-          '@apply col-span-12 p-4 mx-4 mb-4 bg-white rounded-lg shadow sm:p-6 xl:p-8 dark:bg-gray-800 xl:col-start-2 xl:col-span-10 2xl:col-start-3 2xl:col-span-8 md:mx-6 lg:my-6': {},
+          '@apply col-span-12 p-4 mx-4 mb-4 bg-white rounded-lg shadow sm:p-6 xl:p-8 dark:bg-gray-800 xl:col-start-2 xl:col-span-10 2xl:col-start-3 2xl:col-span-8 md:mx-6 lg:my-6':
+            {},
         },
         '.grid-content-position': {
           '@apply col-span-12 xl:col-start-2 xl:col-span-10 2xl:col-start-3 2xl:col-span-8': {},
