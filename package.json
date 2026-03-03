@@ -1,8 +1,9 @@
 {
   "name": "@marketdataapp/ui",
-  "version": "2.0.1",
+  "version": "2.0.2",
   "description": "Shared UI theme and component styles for MarketData properties",
   "license": "UNLICENSED",
+  "type": "module",
   "private": false,
   "repository": {
     "type": "git",
@@ -11,11 +12,12 @@
   "exports": {
     "./theme": "./theme.js",
     "./css/components": "./css/components.css",
+    "./css/components.src": "./css/components.src.css",
     "./css/theme": "./css/theme.css"
   },
   "scripts": {
     "build": "npm run build:css",
-    "build:css": "tailwindcss -i css/components.input.css -o css/components.css",
+    "build:css": "tailwindcss -i css/components.input.css -o css/components.css && node scripts/unlayer.js",
     "dev": "concurrently -n css,serve -c blue,green \"npm:dev:css\" \"npm:dev:serve\"",
     "dev:css": "tailwindcss -i css/components.input.css -o css/components.css --watch",
     "dev:serve": "serve . -p 3000",
