@@ -15,7 +15,9 @@
     "./css/components": "./css/components.css"
   },
   "scripts": {
+    "build": "npm run build:css",
     "build:css": "tailwindcss -i css/components.input.css -o css/components.css --config tailwind.build.config.js",
+    "prepare": "npm run build",
     "test": "vitest run"
   },
   "peerDependencies": {

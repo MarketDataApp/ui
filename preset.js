@@ -115,7 +115,7 @@ module.exports = {
           '@apply shadow-line dark:shadow-darkline dark:text-white': {},
           '@apply hover:bg-gradient-orange hover:text-white hover:shadow-diffuse': {},
           '@apply cursor-pointer disabled:cursor-not-allowed disabled:opacity-50': {},
-          '@apply disabled:hover:bg-transparent disabled:hover:text-marketdata-darkblue dark:disabled:hover:text-white disabled:hover:shadow-line dark:disabled:hover:shadow-darkline': {},
+          '@apply disabled:hover:bg-none disabled:hover:bg-transparent disabled:hover:text-marketdata-darkblue dark:disabled:hover:text-white disabled:hover:shadow-line dark:disabled:hover:shadow-darkline': {},
           '&:hover': {
             'text-decoration': 'none !important',
           },
@@ -127,7 +127,7 @@ module.exports = {
           '@apply shadow-line dark:shadow-darkline dark:text-white': {},
           '@apply hover:bg-gradient-blue hover:text-white hover:shadow-none': {},
           '@apply cursor-pointer disabled:cursor-not-allowed disabled:opacity-50': {},
-          '@apply disabled:hover:bg-transparent disabled:hover:text-marketdata-darkblue dark:disabled:hover:text-white disabled:hover:shadow-line dark:disabled:hover:shadow-darkline': {},
+          '@apply disabled:hover:bg-none disabled:hover:bg-transparent disabled:hover:text-marketdata-darkblue dark:disabled:hover:text-white disabled:hover:shadow-line dark:disabled:hover:shadow-darkline': {},
           '&:hover': {
             'text-decoration': 'none !important',
           },
@@ -167,10 +167,10 @@ module.exports = {
 
         /* ---- Radio Buttons ---- */
         '.radio-button-input': {
-          '@apply w-4 h-4 pl-2 text-blue-600 bg-gray-100 border-gray-300': {},
+          '@apply w-4 h-4 pl-2 text-blue-600 bg-gray-100 border border-gray-300 rounded-full appearance-none': {},
           '@apply checked:bg-blue-600 checked:border-transparent': {},
-          '@apply focus:ring-blue-500 dark:focus:ring-blue-600': {},
-          '@apply dark:ring-offset-gray-700 dark:focus:ring-offset-gray-700 focus:ring-2': {},
+          '@apply focus:ring-blue-500 focus:ring-2 focus:outline-none dark:focus:ring-blue-600': {},
+          '@apply dark:ring-offset-gray-700 dark:focus:ring-offset-gray-700': {},
           '@apply dark:bg-gray-600 dark:border-gray-500': {},
           '@apply mr-2': {},
           'background-size': '1em',
