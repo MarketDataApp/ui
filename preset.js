@@ -88,7 +88,7 @@ module.exports = {
         /* ---- Buttons ---- */
         '.btn-orange-to-blue': {
           '@apply inline-flex max-w-max no-underline text-center py-2.5 px-7 lg:px-10 lg:py-3.5 rounded-3xl': {},
-          '@apply font-quicksand text-xs lg:text-base lg:leading-none font-medium tracking-tight capitalize leading-none': {},
+          '@apply font-quicksand text-xs lg:text-base lg:leading-none font-medium tracking-tight leading-none': {},
           '@apply border-none bg-gradient-orange text-white': {},
           '@apply shadow-diffuse': {},
           '@apply hover:bg-gradient-blue hover:shadow-none': {},
@@ -99,7 +99,7 @@ module.exports = {
         },
         '.btn-hover-orange': {
           '@apply inline-flex max-w-max no-underline text-center py-2.5 px-7 lg:px-10 lg:py-3.5 rounded-3xl': {},
-          '@apply font-quicksand text-xs lg:text-base lg:leading-none font-medium tracking-tight capitalize leading-none': {},
+          '@apply font-quicksand text-xs lg:text-base lg:leading-none font-medium tracking-tight leading-none': {},
           '@apply bg-transparent text-marketdata-darkblue': {},
           '@apply shadow-line dark:shadow-darkline dark:text-white': {},
           '@apply hover:bg-gradient-orange hover:text-white hover:shadow-diffuse': {},
