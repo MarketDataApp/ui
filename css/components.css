@@ -76,6 +76,82 @@
   text-decoration: none !important
 }
 
+.btn-blue-to-orange{
+  display: inline-flex;
+  max-width: -moz-max-content;
+  max-width: max-content;
+  border-radius: 1.5rem;
+  padding-top: 0.625rem;
+  padding-bottom: 0.625rem;
+  padding-left: 1.75rem;
+  padding-right: 1.75rem;
+  text-align: center;
+  text-decoration-line: none
+}
+
+@media (min-width: 1024px){
+  .btn-blue-to-orange{
+    padding-left: 2.5rem;
+    padding-right: 2.5rem;
+    padding-top: 0.875rem;
+    padding-bottom: 0.875rem
+  }
+}
+
+.btn-blue-to-orange{
+  font-family: Quicksand, sans-serif;
+  font-size: 0.75rem;
+  line-height: 1rem;
+  font-weight: 500;
+  line-height: 1;
+  letter-spacing: -0.025em
+}
+
+@media (min-width: 1024px){
+  .btn-blue-to-orange{
+    font-size: 1rem;
+    line-height: 1.5rem;
+    line-height: 1
+  }
+}
+
+.btn-blue-to-orange{
+  border-style: none;
+  background-image: linear-gradient(103deg, #003286 0%, #0085f2 100%);
+  --tw-text-opacity: 1;
+  color: rgb(255 255 255 / var(--tw-text-opacity, 1));
+  --tw-shadow: 0 0 0 1px rgba(0, 26, 108, 0.2) inset;
+  --tw-shadow-colored: inset 0 0 0 1px var(--tw-shadow-color);
+  box-shadow: var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow)
+}
+
+.btn-blue-to-orange:hover{
+  background-image: linear-gradient(103deg, #E83155 0%, #FFDFB9 100%);
+  --tw-shadow: 0 20px 40px 0 rgba(232, 49, 85, 0.2);
+  --tw-shadow-colored: 0 20px 40px 0 var(--tw-shadow-color);
+  box-shadow: var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow)
+}
+
+.btn-blue-to-orange{
+  cursor: pointer
+}
+
+.btn-blue-to-orange:disabled{
+  cursor: not-allowed;
+  opacity: 0.5
+}
+
+.btn-blue-to-orange:hover:disabled{
+  background-image: linear-gradient(103deg, #003286 0%, #0085f2 100%);
+  --tw-shadow: 0 0 0 1px rgba(0, 26, 108, 0.2) inset;
+  --tw-shadow-colored: inset 0 0 0 1px var(--tw-shadow-color);
+  box-shadow: var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow)
+}
+
+.btn-blue-to-orange:hover{
+  text-decoration: none !important
+}
+
 .btn-hover-orange{
   display: inline-flex;
   max-width: -moz-max-content;
@@ -168,6 +244,101 @@
 }
 
 .btn-hover-orange:hover{
+  text-decoration: none !important
+}
+
+.btn-hover-blue{
+  display: inline-flex;
+  max-width: -moz-max-content;
+  max-width: max-content;
+  border-radius: 1.5rem;
+  padding-top: 0.625rem;
+  padding-bottom: 0.625rem;
+  padding-left: 1.75rem;
+  padding-right: 1.75rem;
+  text-align: center;
+  text-decoration-line: none
+}
+
+@media (min-width: 1024px){
+  .btn-hover-blue{
+    padding-left: 2.5rem;
+    padding-right: 2.5rem;
+    padding-top: 0.875rem;
+    padding-bottom: 0.875rem
+  }
+}
+
+.btn-hover-blue{
+  font-family: Quicksand, sans-serif;
+  font-size: 0.75rem;
+  line-height: 1rem;
+  font-weight: 500;
+  line-height: 1;
+  letter-spacing: -0.025em
+}
+
+@media (min-width: 1024px){
+  .btn-hover-blue{
+    font-size: 1rem;
+    line-height: 1.5rem;
+    line-height: 1
+  }
+}
+
+.btn-hover-blue{
+  background-color: transparent;
+  --tw-text-opacity: 1;
+  color: rgb(0 50 134 / var(--tw-text-opacity, 1));
+  --tw-shadow: 0 0 0 1px rgba(0, 26, 108, 0.2) inset;
+  --tw-shadow-colored: inset 0 0 0 1px var(--tw-shadow-color);
+  box-shadow: var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow)
+}
+
+.btn-hover-blue:where(:is(.dark, [data-theme="dark"]), :is(.dark, [data-theme="dark"]) *){
+  --tw-text-opacity: 1;
+  color: rgb(255 255 255 / var(--tw-text-opacity, 1));
+  --tw-shadow: 0 0 0 1px rgba(255, 255, 255, 0.4) inset;
+  --tw-shadow-colored: inset 0 0 0 1px var(--tw-shadow-color);
+  box-shadow: var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow)
+}
+
+.btn-hover-blue:hover{
+  background-image: linear-gradient(103deg, #003286 0%, #0085f2 100%);
+  --tw-text-opacity: 1;
+  color: rgb(255 255 255 / var(--tw-text-opacity, 1));
+  --tw-shadow: 0 0 #0000;
+  --tw-shadow-colored: 0 0 #0000;
+  box-shadow: var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow)
+}
+
+.btn-hover-blue{
+  cursor: pointer
+}
+
+.btn-hover-blue:disabled{
+  cursor: not-allowed;
+  opacity: 0.5
+}
+
+.btn-hover-blue:hover:disabled{
+  background-color: transparent;
+  --tw-text-opacity: 1;
+  color: rgb(0 50 134 / var(--tw-text-opacity, 1));
+  --tw-shadow: 0 0 0 1px rgba(0, 26, 108, 0.2) inset;
+  --tw-shadow-colored: inset 0 0 0 1px var(--tw-shadow-color);
+  box-shadow: var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow)
+}
+
+.btn-hover-blue:hover:disabled:where(:is(.dark, [data-theme="dark"]), :is(.dark, [data-theme="dark"]) *){
+  --tw-text-opacity: 1;
+  color: rgb(255 255 255 / var(--tw-text-opacity, 1));
+  --tw-shadow: 0 0 0 1px rgba(255, 255, 255, 0.4) inset;
+  --tw-shadow-colored: inset 0 0 0 1px var(--tw-shadow-color);
+  box-shadow: var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow)
+}
+
+.btn-hover-blue:hover{
   text-decoration: none !important
 }
 

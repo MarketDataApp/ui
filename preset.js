@@ -97,12 +97,35 @@ module.exports = {
             'text-decoration': 'none !important',
           },
         },
+        '.btn-blue-to-orange': {
+          '@apply inline-flex max-w-max no-underline text-center py-2.5 px-7 lg:px-10 lg:py-3.5 rounded-3xl': {},
+          '@apply font-quicksand text-xs lg:text-base lg:leading-none font-medium tracking-tight leading-none': {},
+          '@apply border-none bg-gradient-blue text-white': {},
+          '@apply shadow-line': {},
+          '@apply hover:bg-gradient-orange hover:shadow-diffuse': {},
+          '@apply cursor-pointer disabled:cursor-not-allowed disabled:opacity-50 disabled:hover:bg-gradient-blue disabled:hover:shadow-line': {},
+          '&:hover': {
+            'text-decoration': 'none !important',
+          },
+        },
         '.btn-hover-orange': {
           '@apply inline-flex max-w-max no-underline text-center py-2.5 px-7 lg:px-10 lg:py-3.5 rounded-3xl': {},
           '@apply font-quicksand text-xs lg:text-base lg:leading-none font-medium tracking-tight leading-none': {},
           '@apply bg-transparent text-marketdata-darkblue': {},
           '@apply shadow-line dark:shadow-darkline dark:text-white': {},
           '@apply hover:bg-gradient-orange hover:text-white hover:shadow-diffuse': {},
+          '@apply cursor-pointer disabled:cursor-not-allowed disabled:opacity-50': {},
+          '@apply disabled:hover:bg-transparent disabled:hover:text-marketdata-darkblue dark:disabled:hover:text-white disabled:hover:shadow-line dark:disabled:hover:shadow-darkline': {},
+          '&:hover': {
+            'text-decoration': 'none !important',
+          },
+        },
+        '.btn-hover-blue': {
+          '@apply inline-flex max-w-max no-underline text-center py-2.5 px-7 lg:px-10 lg:py-3.5 rounded-3xl': {},
+          '@apply font-quicksand text-xs lg:text-base lg:leading-none font-medium tracking-tight leading-none': {},
+          '@apply bg-transparent text-marketdata-darkblue': {},
+          '@apply shadow-line dark:shadow-darkline dark:text-white': {},
+          '@apply hover:bg-gradient-blue hover:text-white hover:shadow-none': {},
           '@apply cursor-pointer disabled:cursor-not-allowed disabled:opacity-50': {},
           '@apply disabled:hover:bg-transparent disabled:hover:text-marketdata-darkblue dark:disabled:hover:text-white disabled:hover:shadow-line dark:disabled:hover:shadow-darkline': {},
           '&:hover': {

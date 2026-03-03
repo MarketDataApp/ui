@@ -22,8 +22,9 @@ Shared Tailwind CSS preset for all MarketData properties (*.marketdata.app). Thi
 - Content scanning paths (each project defines its own)
 
 ## Consuming projects
-- `marketdata-amember` — Amember membership dashboard
-- `marketdata-amember-apps/interview` — Data Access Quiz interview app
+- `MarketDataApp/amember` — Amember membership dashboard
+- `MarketDataApp/interview` — Data Access Quiz interview app
+- `MarketDataApp/documentation` — Documentation site
 - More properties will be added over time
 
 ## Installation

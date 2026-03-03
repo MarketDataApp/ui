@@ -2,6 +2,8 @@
 
 Shared Tailwind CSS preset for [MarketData](https://www.marketdata.app) properties.
 
+**[Live Component Showcase](https://marketdataapp.github.io/ui/)**
+
 ## Install
 
 ```bash
@@ -38,7 +40,7 @@ Each consuming project adds its own `content` paths and any project-specific plu
 - `note.*`, `tip.*`, `info.*`, `warning.*`, `danger.*` — Semantic colors with light/dark variants
 
 ### Components
-- `.btn-orange-to-blue`, `.btn-hover-orange` — Brand buttons
+- `.btn-orange-to-blue`, `.btn-blue-to-orange`, `.btn-hover-orange`, `.btn-hover-blue` — Brand buttons
 - `.form-container`, `.form-heading`, `.form-label`, `.form-input`, `.form-input-disabled`, `.form-input-error`, `.form-dropdown-input`, `.form-helper-text`, `.form-helper-text-error` — Form elements
 - `.badge`, `.badge-{color}`, `.badge-pill`, `.badge-pill-{color}` — Badges
 - `.radio-button-input`, `.radio-button-helper` — Radio buttons
