@@ -168,7 +168,7 @@ module.exports = {
         /* ---- Radio Buttons ---- */
         '.radio-button-input': {
           '@apply w-4 h-4 text-blue-600 bg-gray-100 border border-gray-300 rounded-full appearance-none': {},
-          '@apply focus:ring-blue-500 focus:ring-2 focus:outline-none dark:focus:ring-blue-600': {},
+          '@apply focus:ring-blue-200 focus:ring-2 focus:outline-none dark:focus:ring-blue-600': {},
           '@apply dark:ring-offset-gray-700 dark:focus:ring-offset-gray-700': {},
           '@apply dark:bg-gray-600 dark:border-gray-500': {},
           '@apply mr-2': {},
