@@ -8,7 +8,7 @@ Shared Tailwind CSS theme and components for all MarketData properties (\*.marke
 
 - **Tailwind v4** with CSS-first configuration (no JS config files)
 - `css/theme.css` defines brand design tokens via `@theme {}` — consumed by projects that run their own Tailwind build via `@import "@marketdataapp/ui/css/theme.css"`
-- `css/components.input.css` is the build entry point — imports theme, defines `@custom-variant dark`, gradient utilities, and all shared component classes in `@layer components {}`
+- `css/components.input.css` is the build entry point — imports theme, defines `@custom-variant dark`, gradient utilities, and all shared component classes (unlayered, so they win over foreign CSS on specificity alone)
 - `css/components.css` is the built artifact (from `components.input.css`) — must stay committed because consuming projects import it directly
 - `theme.js` exports shared JS for dark/light theme cookie and preference management
 
