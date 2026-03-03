@@ -11,9 +11,11 @@
   },
   "exports": {
     "./preset": "./preset.js",
-    "./theme": "./theme.js"
+    "./theme": "./theme.js",
+    "./css/components": "./css/components.css"
   },
   "scripts": {
+    "build:css": "tailwindcss -i css/components.input.css -o css/components.css --config tailwind.build.config.js",
     "test": "vitest run"
   },
   "peerDependencies": {
@@ -21,6 +23,7 @@
   },
   "devDependencies": {
     "jsdom": "^28.1.0",
+    "tailwindcss": "^3.4.19",
     "vitest": "^2.0.0"
   }
 }
