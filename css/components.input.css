@@ -1,13 +1,13 @@
 @import url('https://fonts.googleapis.com/css2?family=Quicksand:wght@500&display=swap');
-@import "tailwindcss";
-@import "./theme.css";
+@import 'tailwindcss';
+@import './theme.css';
 
 /* Support both .dark (Tailwind/Flowbite) and [data-theme="dark"] (Docusaurus) */
 @custom-variant dark (&:where(.dark, .dark *, [data-theme="dark"], [data-theme="dark"] *));
 
 /* Gradient utilities — no @theme namespace for background-image in v4 */
 @utility bg-gradient-orange {
-  background-image: linear-gradient(103deg, #E83155 0%, #FFDFB9 100%);
+  background-image: linear-gradient(103deg, #e83155 0%, #ffdfb9 100%);
 }
 
 @utility bg-gradient-blue {

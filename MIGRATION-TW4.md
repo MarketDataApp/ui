@@ -16,6 +16,7 @@ npm install -D @tailwindcss/cli
 ```
 
 In `package.json`:
+
 - Remove `peerDependencies.tailwindcss` entirely (CSS-only consumers don't need it)
 
 ### 2. Create `css/theme.css`
@@ -25,12 +26,14 @@ This is the v4 replacement for `preset.js`. It contains a `@theme {}` block with
 ```css
 @theme {
   /* Fonts */
-  --font-sans: system-ui, -apple-system, "Segoe UI", Roboto, Ubuntu, Cantarell, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
-  --font-mono: SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
-  --font-quicksand: "Quicksand", sans-serif;
+  --font-sans:
+    system-ui, -apple-system, 'Segoe UI', Roboto, Ubuntu, Cantarell, 'Noto Sans', sans-serif,
+    'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol';
+  --font-mono: SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace;
+  --font-quicksand: 'Quicksand', sans-serif;
 
   /* Gradients (used by buttons) */
-  --background-image-gradient-orange: linear-gradient(103deg, #E83155 0%, #FFDFB9 100%);
+  --background-image-gradient-orange: linear-gradient(103deg, #e83155 0%, #ffdfb9 100%);
   --background-image-gradient-blue: linear-gradient(103deg, #003286 0%, #0085f2 100%);
 
   /* Shadows */
@@ -39,11 +42,11 @@ This is the v4 replacement for `preset.js`. It contains a `@theme {}` block with
   --shadow-diffuse: 0 20px 40px 0 rgba(232, 49, 85, 0.2);
 
   /* Brand colors */
-  --color-marketdata-lightorange: #FFDFB9;
-  --color-marketdata-darkorange: #E83155;
+  --color-marketdata-lightorange: #ffdfb9;
+  --color-marketdata-darkorange: #e83155;
   --color-marketdata-lightblue: #0085f2;
   --color-marketdata-darkblue: #003286;
-  --color-marketdata-bluebg: #001A6C;
+  --color-marketdata-bluebg: #001a6c;
 
   /* Semantic colors: note */
   --color-note-bg: rgb(253, 253, 254);
@@ -95,8 +98,8 @@ Replace the current contents:
 
 ```css
 @import url('https://fonts.googleapis.com/css2?family=Quicksand:wght@500&display=swap');
-@import "tailwindcss";
-@import "./theme.css";
+@import 'tailwindcss';
+@import './theme.css';
 
 /* Support both .dark (Tailwind/Flowbite) and [data-theme="dark"] (Docusaurus) */
 @custom-variant dark (&:where(.dark, .dark *, [data-theme="dark"], [data-theme="dark"] *));
@@ -137,6 +140,7 @@ All component definitions from `preset.js` lines 106–288 move here, converted 
 ```
 
 Changes:
+
 - `tailwindcss` → `@tailwindcss/cli`
 - Remove `--config tailwind.build.config.js` (config is now in the CSS file)
 
@@ -177,17 +181,17 @@ Update the Architecture section to reflect the new file structure (CSS-based the
 
 ## Files changed
 
-| Action | File |
-|--------|------|
-| Create | `css/theme.css` |
-| Rewrite | `css/components.input.css` |
-| Rebuild | `css/components.css` |
-| Edit | `package.json` (deps, scripts, exports) |
-| Edit | `CLAUDE.md` (architecture docs) |
-| Delete | `preset.js` |
-| Delete | `tailwind.build.config.js` |
-| Keep | `theme.js` (no changes) |
-| Keep | `css/flowbite-theme.css` (reference only) |
+| Action  | File                                      |
+| ------- | ----------------------------------------- |
+| Create  | `css/theme.css`                           |
+| Rewrite | `css/components.input.css`                |
+| Rebuild | `css/components.css`                      |
+| Edit    | `package.json` (deps, scripts, exports)   |
+| Edit    | `CLAUDE.md` (architecture docs)           |
+| Delete  | `preset.js`                               |
+| Delete  | `tailwind.build.config.js`                |
+| Keep    | `theme.js` (no changes)                   |
+| Keep    | `css/flowbite-theme.css` (reference only) |
 
 ## Notes
 

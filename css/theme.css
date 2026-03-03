@@ -8,9 +8,11 @@
 
 @theme {
   /* Fonts */
-  --font-sans: system-ui, -apple-system, "Segoe UI", Roboto, Ubuntu, Cantarell, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
-  --font-mono: SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
-  --font-quicksand: "Quicksand", sans-serif;
+  --font-sans:
+    system-ui, -apple-system, 'Segoe UI', Roboto, Ubuntu, Cantarell, 'Noto Sans', sans-serif,
+    'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol';
+  --font-mono: SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace;
+  --font-quicksand: 'Quicksand', sans-serif;
 
   /* Shadows */
   --shadow-line: 0 0 0 1px rgba(0, 26, 108, 0.2) inset;
@@ -18,11 +20,11 @@
   --shadow-diffuse: 0 20px 40px 0 rgba(232, 49, 85, 0.2);
 
   /* Brand colors */
-  --color-marketdata-lightorange: #FFDFB9;
-  --color-marketdata-darkorange: #E83155;
+  --color-marketdata-lightorange: #ffdfb9;
+  --color-marketdata-darkorange: #e83155;
   --color-marketdata-lightblue: #0085f2;
   --color-marketdata-darkblue: #003286;
-  --color-marketdata-bluebg: #001A6C;
+  --color-marketdata-bluebg: #001a6c;
 
   /* Semantic: note */
   --color-note-bg: rgb(253, 253, 254);

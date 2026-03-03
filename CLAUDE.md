@@ -30,15 +30,18 @@ Shared Tailwind CSS theme and components for all MarketData properties (\*.marke
 ## Consuming projects
 
 ### MarketDataApp/documentation (Docusaurus site)
+
 - `@marketdataapp/ui/css/components` — imports built CSS directly (`docusaurus.config.js:53` in customCss array)
 - `@marketdataapp/ui/theme` — imports `setThemeCookie` for dark/light mode sync (`src/clientModules/themeCookieSync.js:1`)
 
 ### MarketDataApp/amember (membership dashboard)
+
 - `@marketdataapp/ui/css/theme` — imports shared `@theme {}` tokens into its Tailwind v4 CSS build
 - `@marketdataapp/ui/theme` — re-exports all theme functions: `getThemeCookie`, `setThemeCookie`, `getUserThemePreference`, `getBrowserThemePreference`, `getEffectiveTheme` (`src/theme.js:5`)
 - Does NOT import `css/components` — defines its own component CSS locally
 
 ### MarketDataApp/interview (Data Access Quiz)
+
 - Usage not yet verified
 
 ## Installation

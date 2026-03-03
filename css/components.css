@@ -4,8 +4,9 @@
 @layer theme, base, components, utilities;
 @layer theme {
   :root, :host {
-    --font-sans: system-ui, -apple-system, "Segoe UI", Roboto, Ubuntu, Cantarell, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
-    --font-mono: SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+    --font-sans: system-ui, -apple-system, 'Segoe UI', Roboto, Ubuntu, Cantarell, 'Noto Sans', sans-serif,
+    'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol';
+    --font-mono: SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace;
     --color-red-100: oklch(93.6% 0.032 17.717);
     --color-red-300: oklch(80.8% 0.114 19.571);
     --color-red-400: oklch(70.4% 0.191 22.216);
@@ -126,15 +127,15 @@
     --radius-3xl: 1.5rem;
     --default-font-family: var(--font-sans);
     --default-mono-font-family: var(--font-mono);
-    --font-quicksand: "Quicksand", sans-serif;
+    --font-quicksand: 'Quicksand', sans-serif;
     --shadow-line: 0 0 0 1px rgba(0, 26, 108, 0.2) inset;
     --shadow-darkline: 0 0 0 1px rgba(255, 255, 255, 0.4) inset;
     --shadow-diffuse: 0 20px 40px 0 rgba(232, 49, 85, 0.2);
-    --color-marketdata-lightorange: #FFDFB9;
-    --color-marketdata-darkorange: #E83155;
+    --color-marketdata-lightorange: #ffdfb9;
+    --color-marketdata-darkorange: #e83155;
     --color-marketdata-lightblue: #0085f2;
     --color-marketdata-darkblue: #003286;
-    --color-marketdata-bluebg: #001A6C;
+    --color-marketdata-bluebg: #001a6c;
     --color-note-bg: rgb(253, 253, 254);
     --color-note-border: rgb(212, 213, 216);
     --color-note-text: rgb(71, 71, 72);
@@ -600,7 +601,7 @@
     background-image: linear-gradient(103deg, #003286 0%, #0085f2 100%);
   }
   .bg-gradient-orange {
-    background-image: linear-gradient(103deg, #E83155 0%, #FFDFB9 100%);
+    background-image: linear-gradient(103deg, #e83155 0%, #ffdfb9 100%);
   }
   .p-2 {
     padding: calc(var(--spacing) * 2);
@@ -722,9 +723,6 @@
   .text-gray-900 {
     color: var(--color-gray-900);
   }
-  .uppercase {
-    text-transform: uppercase;
-  }
   .no-underline {
     text-decoration-line: none;
   }
@@ -739,10 +737,6 @@
   .shadow-line {
     --tw-shadow: 0 0 0 1px var(--tw-shadow-color, rgba(0, 26, 108, 0.2)) inset;
     box-shadow: var(--tw-inset-shadow), var(--tw-inset-ring-shadow), var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow);
-  }
-  .outline {
-    outline-style: var(--tw-outline-style);
-    outline-width: 1px;
   }
   .hover\:bg-gradient-blue {
     &:hover {
@@ -772,7 +766,7 @@
     &:disabled {
       &:hover {
         @media (hover: hover) {
-          background-image: linear-gradient(103deg, #E83155 0%, #FFDFB9 100%);
+          background-image: linear-gradient(103deg, #e83155 0%, #ffdfb9 100%);
         }
       }
     }
@@ -979,7 +973,7 @@
     }
     --tw-border-style: none;
     border-style: none;
-    background-image: linear-gradient(103deg, #E83155 0%, #FFDFB9 100%);
+    background-image: linear-gradient(103deg, #e83155 0%, #ffdfb9 100%);
     color: var(--color-white);
     --tw-shadow: 0 20px 40px 0 var(--tw-shadow-color, rgba(232, 49, 85, 0.2));
     box-shadow: var(--tw-inset-shadow), var(--tw-inset-ring-shadow), var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow);
@@ -1004,7 +998,7 @@
     &:disabled {
       &:hover {
         @media (hover: hover) {
-          background-image: linear-gradient(103deg, #E83155 0%, #FFDFB9 100%);
+          background-image: linear-gradient(103deg, #e83155 0%, #ffdfb9 100%);
         }
       }
     }
@@ -1059,7 +1053,7 @@
     box-shadow: var(--tw-inset-shadow), var(--tw-inset-ring-shadow), var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow);
     &:hover {
       @media (hover: hover) {
-        background-image: linear-gradient(103deg, #E83155 0%, #FFDFB9 100%);
+        background-image: linear-gradient(103deg, #e83155 0%, #ffdfb9 100%);
       }
     }
     &:hover {
@@ -1138,7 +1132,7 @@
     }
     &:hover {
       @media (hover: hover) {
-        background-image: linear-gradient(103deg, #E83155 0%, #FFDFB9 100%);
+        background-image: linear-gradient(103deg, #e83155 0%, #ffdfb9 100%);
       }
     }
     &:hover {
@@ -1934,11 +1928,6 @@
   inherits: false;
   initial-value: 0 0 #0000;
 }
-@property --tw-outline-style {
-  syntax: "*";
-  inherits: false;
-  initial-value: solid;
-}
 @property --tw-leading {
   syntax: "*";
   inherits: false;
@@ -1964,7 +1953,6 @@
       --tw-ring-offset-width: 0px;
       --tw-ring-offset-color: #fff;
       --tw-ring-offset-shadow: 0 0 #0000;
-      --tw-outline-style: solid;
       --tw-leading: initial;
     }
   }
