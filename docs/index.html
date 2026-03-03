@@ -260,23 +260,23 @@
       <fieldset class="space-y-3">
         <legend class="form-label mb-3">Select a data plan:</legend>
         <div class="flex items-start">
-          <input type="radio" name="plan" value="free" class="radio-button-input mt-0.5" checked>
+          <input type="radio" name="plan" value="free" id="plan-free" class="radio-button-input mt-0.5" checked>
           <div>
-            <label class="text-sm font-medium text-gray-900 dark:text-white">Free</label>
+            <label for="plan-free" class="text-sm font-medium text-gray-900 dark:text-white">Free</label>
             <p class="radio-button-helper">100 requests/day, delayed data</p>
           </div>
         </div>
         <div class="flex items-start">
-          <input type="radio" name="plan" value="starter" class="radio-button-input mt-0.5">
+          <input type="radio" name="plan" value="starter" id="plan-starter" class="radio-button-input mt-0.5">
           <div>
-            <label class="text-sm font-medium text-gray-900 dark:text-white">Starter</label>
+            <label for="plan-starter" class="text-sm font-medium text-gray-900 dark:text-white">Starter</label>
             <p class="radio-button-helper">10,000 requests/day, real-time data</p>
           </div>
         </div>
         <div class="flex items-start">
-          <input type="radio" name="plan" value="trader" class="radio-button-input mt-0.5">
+          <input type="radio" name="plan" value="trader" id="plan-trader" class="radio-button-input mt-0.5">
           <div>
-            <label class="text-sm font-medium text-gray-900 dark:text-white">Trader</label>
+            <label for="plan-trader" class="text-sm font-medium text-gray-900 dark:text-white">Trader</label>
             <p class="radio-button-helper">Unlimited requests, real-time data, options chains</p>
           </div>
         </div>
