@@ -167,13 +167,19 @@ module.exports = {
 
         /* ---- Radio Buttons ---- */
         '.radio-button-input': {
-          '@apply w-4 h-4 pl-2 text-blue-600 bg-gray-100 border border-gray-300 rounded-full appearance-none': {},
-          '@apply checked:bg-blue-600 checked:border-transparent': {},
+          '@apply w-4 h-4 text-blue-600 bg-gray-100 border border-gray-300 rounded-full appearance-none': {},
           '@apply focus:ring-blue-500 focus:ring-2 focus:outline-none dark:focus:ring-blue-600': {},
           '@apply dark:ring-offset-gray-700 dark:focus:ring-offset-gray-700': {},
           '@apply dark:bg-gray-600 dark:border-gray-500': {},
           '@apply mr-2': {},
-          'background-size': '1em',
+          'background-position': 'center',
+          'background-repeat': 'no-repeat',
+          '&:checked': {
+            'background-color': '#2563eb',
+            'border-color': 'transparent',
+            'background-image': "url(\"data:image/svg+xml,%3csvg viewBox='0 0 16 16' fill='white' xmlns='http://www.w3.org/2000/svg'%3e%3ccircle cx='8' cy='8' r='3'/%3e%3c/svg%3e\")",
+            'background-size': '100% 100%',
+          },
         },
         '.radio-button-helper': {
           '@apply text-xs font-normal text-gray-500 dark:text-gray-300': {},

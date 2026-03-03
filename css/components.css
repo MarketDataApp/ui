@@ -645,15 +645,8 @@
   border-color: rgb(209 213 219 / var(--tw-border-opacity, 1));
   --tw-bg-opacity: 1;
   background-color: rgb(243 244 246 / var(--tw-bg-opacity, 1));
-  padding-left: 0.5rem;
   --tw-text-opacity: 1;
   color: rgb(37 99 235 / var(--tw-text-opacity, 1))
-}
-
-.radio-button-input:checked{
-  border-color: transparent;
-  --tw-bg-opacity: 1;
-  background-color: rgb(37 99 235 / var(--tw-bg-opacity, 1))
 }
 
 .radio-button-input:focus{
@@ -688,7 +681,15 @@
 
 .radio-button-input{
   margin-right: 0.5rem;
-  background-size: 1em
+  background-position: center;
+  background-repeat: no-repeat
+}
+
+.radio-button-input:checked{
+  background-color: #2563eb;
+  border-color: transparent;
+  background-image: url("data:image/svg+xml,%3csvg viewBox='0 0 16 16' fill='white' xmlns='http://www.w3.org/2000/svg'%3e%3ccircle cx='8' cy='8' r='3'/%3e%3c/svg%3e");
+  background-size: 100% 100%
 }
 
 .radio-button-helper{
