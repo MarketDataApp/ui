@@ -36,7 +36,7 @@
   @apply border-none bg-gradient-blue text-white;
   @apply shadow-line;
   @apply hover:bg-gradient-orange hover:shadow-diffuse;
-  @apply focus:ring-4 focus:outline-hidden focus:ring-blue-300 dark:focus:ring-blue-800;
+  @apply focus:ring-4 focus:outline-hidden focus:ring-brand-medium;
   @apply cursor-pointer disabled:cursor-not-allowed disabled:opacity-50 disabled:hover:bg-gradient-blue disabled:hover:shadow-line;
   @apply hover:!no-underline;
 }
@@ -59,7 +59,7 @@
   @apply bg-transparent text-marketdata-darkblue;
   @apply shadow-line dark:shadow-darkline dark:text-white;
   @apply hover:bg-gradient-blue hover:text-white hover:shadow-none;
-  @apply focus:ring-4 focus:outline-hidden focus:ring-blue-300 dark:focus:ring-blue-800;
+  @apply focus:ring-4 focus:outline-hidden focus:ring-brand-medium;
   @apply cursor-pointer disabled:cursor-not-allowed disabled:opacity-50;
   @apply disabled:hover:bg-none disabled:hover:bg-transparent disabled:hover:text-marketdata-darkblue dark:disabled:hover:text-white disabled:hover:shadow-line dark:disabled:hover:shadow-darkline;
   @apply hover:!no-underline;
@@ -79,11 +79,11 @@
 }
 
 @utility form-input {
-  @apply shadow-none bg-gray-50 border border-solid border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 focus:outline-hidden block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500;
+  @apply shadow-none bg-gray-50 border border-solid border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-1 focus:ring-brand focus:border-brand focus:outline-hidden block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white;
 }
 
 @utility form-input-disabled {
-  @apply bg-gray-100 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 focus:outline-hidden block w-full p-2.5 cursor-not-allowed dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-gray-400 dark:focus:ring-blue-500 dark:focus:border-blue-500;
+  @apply bg-gray-100 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-1 focus:ring-brand focus:border-brand focus:outline-hidden block w-full p-2.5 cursor-not-allowed dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-gray-400;
 }
 
 @utility form-input-error {
@@ -91,7 +91,7 @@
 }
 
 @utility form-dropdown-input {
-  @apply shadow-xs bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 focus:outline-hidden block w-full ps-3 pe-10 py-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500;
+  @apply shadow-xs bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-1 focus:ring-brand focus:border-brand focus:outline-hidden block w-full ps-3 pe-10 py-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white;
   appearance: none;
   background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24'%3e%3cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='m19 9-7 7-7-7'/%3e%3c/svg%3e");
   background-position: right 0.75rem center;
@@ -117,8 +117,8 @@
 
 /* ---- Radio Buttons ---- */
 @utility radio-button-input {
-  @apply w-4 h-4 text-blue-600 bg-gray-100 border border-gray-300 rounded-full appearance-none;
-  @apply focus:ring-blue-200 focus:ring-2 focus:outline-hidden dark:focus:ring-blue-600;
+  @apply w-4 h-4 text-brand bg-gray-100 border border-gray-300 rounded-full appearance-none;
+  @apply focus:ring-brand-medium focus:ring-1 focus:outline-hidden;
   @apply dark:ring-offset-gray-700 dark:focus:ring-offset-gray-700;
   @apply dark:bg-gray-600 dark:border-gray-500;
   @apply mr-2;
@@ -127,7 +127,7 @@
 }
 
 @utility radio-button-input-checked {
-  background-color: #2563eb;
+  background-color: var(--color-brand);
   border-color: transparent;
   background-image: url("data:image/svg+xml,%3csvg viewBox='0 0 16 16' fill='white' xmlns='http://www.w3.org/2000/svg'%3e%3ccircle cx='8' cy='8' r='3'/%3e%3c/svg%3e");
   background-size: 100% 100%;
