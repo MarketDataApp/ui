@@ -24,7 +24,7 @@
     "dev:serve": "serve . -p 3000",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
-    "prepare": "husky && npm run build",
+    "prepare": "husky || true",
     "test": "vitest run"
   },
   "lint-staged": {
