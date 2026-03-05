@@ -200,22 +200,61 @@
   @apply col-span-12 xl:col-start-2 xl:col-span-10 2xl:col-start-3 2xl:col-span-8;
 }
 
-/* ---- User Profile Avatar Placeholder ---- */
-@utility navbar-user-avatar-placeholder {
-  position: relative;
-  width: 2.5rem;
-  height: 2.5rem;
-  overflow: hidden;
-  border-radius: 9999px;
-  background-color: var(--color-gray-300, #d1d5db);
+/* ---- User Profile ---- */
+@utility user-profile-wrapper {
+  @apply relative inline-block;
 }
 
-@utility navbar-user-avatar-placeholder-svg {
-  position: absolute;
-  width: 3rem;
-  height: 3rem;
+@utility user-profile-avatar {
+  @apply w-10 h-10 rounded-full cursor-pointer object-cover;
+}
+
+@utility user-profile-dropdown {
+  @apply absolute right-0 z-10 bg-white border border-gray-200 rounded-lg shadow-lg w-44 dark:bg-gray-800 dark:border-gray-600;
+  top: calc(100% + 0.5rem);
+}
+
+@utility user-profile-dropdown-header {
+  @apply px-4 py-3 border-b border-gray-200 text-sm text-gray-900 dark:border-gray-600 dark:text-white;
+}
+
+@utility user-profile-dropdown-name {
+  @apply font-medium;
+}
+
+@utility user-profile-dropdown-email {
+  @apply truncate;
+}
+
+@utility user-profile-dropdown-menu {
+  @apply list-none p-2 m-0 text-sm text-gray-700 font-medium dark:text-gray-200;
+}
+
+@utility user-profile-dropdown-link {
+  @apply block w-full p-2 rounded-md no-underline text-inherit;
+  @apply hover:bg-gray-100 hover:text-gray-900;
+  @apply dark:hover:bg-gray-600 dark:hover:text-white;
+  transition:
+    background 0.15s,
+    color 0.15s;
+}
+
+@utility user-profile-dropdown-signout {
+  @apply block w-full p-2 rounded-md no-underline text-red-600;
+  @apply hover:bg-red-50;
+  @apply dark:text-red-400 dark:hover:bg-gray-600;
+  transition:
+    background 0.15s,
+    color 0.15s;
+}
+
+@utility user-profile-placeholder {
+  @apply relative w-10 h-10 overflow-hidden rounded-full bg-gray-300 dark:bg-gray-600 inline-block cursor-pointer;
+}
+
+@utility user-profile-placeholder-svg {
+  @apply absolute w-12 h-12 text-gray-400 dark:text-gray-500;
   left: -0.25rem;
-  color: var(--color-gray-400, #9ca3af);
 }
 
 /* ---- Defaults ---- */
