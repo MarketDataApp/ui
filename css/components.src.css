@@ -67,23 +67,23 @@
 
 /* ---- Forms ---- */
 @utility form-container {
-  @apply dark:border-gray-700 dark:bg-gray-800 border-gray-200 bg-white p-4 lg:p-8 rounded-lg shadow-md;
+  @apply border-default-medium bg-neutral-primary-medium p-4 lg:p-8 rounded-lg shadow-md;
 }
 
 @utility form-heading {
-  @apply mb-4 text-xl font-bold text-gray-900 dark:text-white;
+  @apply mb-4 text-xl font-bold text-heading;
 }
 
 @utility form-label {
-  @apply block mb-2 text-sm font-medium text-gray-900 dark:text-white;
+  @apply block mb-2 text-sm font-medium text-heading;
 }
 
 @utility form-input {
-  @apply shadow-none bg-gray-50 border border-solid border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-1 focus:ring-brand focus:border-brand focus:outline-hidden block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white;
+  @apply shadow-none bg-neutral-secondary-strong border border-solid border-gray text-heading text-sm rounded-lg focus:ring-1 focus:ring-brand focus:border-brand focus:outline-hidden block w-full p-2.5 dark:placeholder-gray-400;
 }
 
 @utility form-input-disabled {
-  @apply bg-gray-100 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-1 focus:ring-brand focus:border-brand focus:outline-hidden block w-full p-2.5 cursor-not-allowed dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-gray-400;
+  @apply bg-neutral-tertiary-medium border border-gray text-gray-900 text-sm rounded-lg focus:ring-1 focus:ring-brand focus:border-brand focus:outline-hidden block w-full p-2.5 cursor-not-allowed dark:placeholder-gray-400 dark:text-gray-400;
 }
 
 @utility form-input-error {
@@ -91,7 +91,7 @@
 }
 
 @utility form-dropdown-input {
-  @apply shadow-xs bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-1 focus:ring-brand focus:border-brand focus:outline-hidden block w-full ps-3 pe-10 py-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white;
+  @apply shadow-xs bg-neutral-secondary-strong border border-gray text-heading text-sm rounded-lg focus:ring-1 focus:ring-brand focus:border-brand focus:outline-hidden block w-full ps-3 pe-10 py-2.5 dark:placeholder-gray-400;
   appearance: none;
   background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24'%3e%3cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='m19 9-7 7-7-7'/%3e%3c/svg%3e");
   background-position: right 0.75rem center;
@@ -103,7 +103,7 @@
 }
 
 @utility form-helper-text {
-  @apply mt-2 text-sm text-gray-500 dark:text-gray-400;
+  @apply mt-2 text-sm text-body-subtle;
   &::first-letter {
     text-transform: uppercase;
   }
@@ -115,10 +115,9 @@
 
 /* ---- Radio Buttons ---- */
 @utility radio-button-input {
-  @apply w-4 h-4 text-brand bg-gray-100 border border-gray-300 rounded-full appearance-none;
+  @apply w-4 h-4 text-brand bg-neutral-tertiary-medium border border-gray rounded-full appearance-none;
   @apply focus:ring-brand-medium focus:ring-1 focus:outline-hidden;
   @apply dark:ring-offset-gray-700 dark:focus:ring-offset-gray-700;
-  @apply dark:bg-gray-600 dark:border-gray-500;
   @apply mr-2;
   background-position: center;
   background-repeat: no-repeat;
@@ -131,7 +130,7 @@
 }
 
 @utility radio-button-helper {
-  @apply text-xs font-normal text-gray-500 dark:text-gray-300;
+  @apply text-xs font-normal text-body-subtle;
 }
 
 /* ---- Badges ---- */
@@ -193,7 +192,7 @@
 }
 
 @utility grid-content-container {
-  @apply col-span-12 p-4 mx-4 mb-4 bg-white rounded-lg shadow sm:p-6 xl:p-8 dark:bg-gray-800 xl:col-start-2 xl:col-span-10 2xl:col-start-3 2xl:col-span-8 md:mx-6 lg:my-6;
+  @apply col-span-12 p-4 mx-4 mb-4 bg-neutral-primary-medium rounded-lg shadow sm:p-6 xl:p-8 xl:col-start-2 xl:col-span-10 2xl:col-start-3 2xl:col-span-8 md:mx-6 lg:my-6;
 }
 
 @utility grid-content-position {
@@ -257,6 +256,6 @@
 
 /* ---- Defaults ---- */
 @utility default {
-  @apply text-base font-sans text-gray-900 dark:text-white;
-  @apply bg-white dark:bg-gray-900;
+  @apply text-base font-sans text-heading;
+  @apply bg-neutral-primary-soft;
 }
