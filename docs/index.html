@@ -26,7 +26,7 @@
             Shared component library for MarketData properties
           </p>
         </div>
-        <button onclick="toggleTheme()" class="btn-hover-blue" id="theme-toggle">Dark Mode</button>
+        <div id="theme-toggle"></div>
       </div>
     </header>
 
@@ -638,6 +638,44 @@
           >
         </div>
       </section>
+      <!-- Theme Toggle -->
+      <section id="theme-toggle-demo">
+        <h2 class="text-2xl font-bold mb-6 border-b border-gray-200 dark:border-gray-700 pb-2">
+          Theme Toggle
+        </h2>
+        <p class="text-gray-500 dark:text-gray-400 mb-6">
+          Light/dark mode toggle using Docusaurus-style sun/moon SVG icons. Persists preference via
+          cross-subdomain cookie.
+        </p>
+
+        <div class="space-y-3">
+          <code class="text-sm font-mono text-gray-500 dark:text-gray-400 block"
+            >initThemeToggle({ container })</code
+          >
+          <div
+            class="border border-gray-200 dark:border-gray-700 rounded-lg p-6 flex items-center gap-4 min-h-[80px]"
+          >
+            <div id="theme-toggle-demo-target"></div>
+            <span class="text-sm text-gray-500 dark:text-gray-400">Click to toggle theme</span>
+          </div>
+        </div>
+
+        <div class="mt-6 flex flex-wrap gap-2">
+          <code class="text-xs font-mono bg-gray-100 dark:bg-gray-800 px-2 py-1 rounded"
+            >initThemeToggle()</code
+          >
+          <code class="text-xs font-mono bg-gray-100 dark:bg-gray-800 px-2 py-1 rounded"
+            >.theme-toggle-button</code
+          >
+          <code class="text-xs font-mono bg-gray-100 dark:bg-gray-800 px-2 py-1 rounded"
+            >.theme-toggle-icon-light</code
+          >
+          <code class="text-xs font-mono bg-gray-100 dark:bg-gray-800 px-2 py-1 rounded"
+            >.theme-toggle-icon-dark</code
+          >
+        </div>
+      </section>
+
       <!-- User Profile -->
       <section id="user-profile">
         <h2 class="text-2xl font-bold mb-6 border-b border-gray-200 dark:border-gray-700 pb-2">
@@ -737,24 +775,16 @@
       </div>
     </footer>
 
-    <script>
-      function toggleTheme() {
-        var html = document.documentElement;
-        var isDark = html.classList.toggle('dark');
-        html.setAttribute('data-theme', isDark ? 'dark' : 'light');
-        localStorage.setItem('ui-demo-theme', isDark ? 'dark' : 'light');
-        document.getElementById('theme-toggle').textContent = isDark ? 'Light Mode' : 'Dark Mode';
-      }
-      // Sync button text on load
-      if (document.documentElement.classList.contains('dark')) {
-        document.getElementById('theme-toggle').textContent = 'Light Mode';
-      }
-    </script>
-
-    <!-- User Profile demo -->
     <script type="module">
+      import { initThemeToggle } from '../theme-toggle.js';
       import { initUserProfile } from '../user-profile.js';
 
+      // Theme toggle (header)
+      initThemeToggle({ container: document.getElementById('theme-toggle') });
+      // Theme toggle (demo section)
+      initThemeToggle({ container: document.getElementById('theme-toggle-demo-target') });
+
+      // User Profile demo
       const avatarContainer = document.getElementById('user-profile-avatar');
       const dropdownContainer = document.getElementById('user-profile-dropdown');
 

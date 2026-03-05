@@ -254,6 +254,24 @@
   left: -0.25rem;
 }
 
+/* ---- Theme Toggle ---- */
+@utility theme-toggle-button {
+  @apply inline-flex items-center justify-center w-8 h-8 rounded-full cursor-pointer;
+  @apply bg-transparent text-body border-none p-0;
+  @apply hover:bg-neutral-tertiary-medium;
+  @apply focus:outline-hidden;
+  -webkit-tap-highlight-color: transparent;
+  transition: background 0.15s;
+}
+
+@utility theme-toggle-icon-light {
+  @apply w-5 h-5;
+}
+
+@utility theme-toggle-icon-dark {
+  @apply w-5 h-5;
+}
+
 /* ---- Defaults ---- */
 @utility default {
   @apply text-base font-sans text-heading;
