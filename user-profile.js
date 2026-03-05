@@ -2,7 +2,7 @@
  * @module user-profile
  * Framework-agnostic user profile avatar and dropdown for *.marketdata.app navbars.
  *
- * Zero production dependencies. Renders a sign-in button (logged out) or
+ * Zero production dependencies. Renders a log-in button (logged out) or
  * Gravatar avatar with optional dropdown menu (logged in).
  */
 
@@ -324,34 +324,34 @@ function setupDropdown(trigger, menu) {
 // ---------------------------------------------------------------------------
 
 /**
- * Renders a user profile avatar (or sign-in button) into the given container.
+ * Renders a user profile avatar (or log-in button) into the given container.
  *
  * @param {Object} options
  * @param {HTMLElement} options.container - DOM element to render into
  * @param {boolean} [options.dropdown=false] - Enable dropdown menu
- * @param {string} [options.loginUrl='https://www.marketdata.app/dashboard/'] - Sign-in href
- * @param {string} [options.logoutUrl='https://dashboard.marketdata.app/marketdata/login'] - Sign-out href
- * @param {string} [options.dashboardUrl='https://www.marketdata.app/dashboard/'] - Dashboard link
- * @param {string} [options.profileUrl='https://dashboard.marketdata.app/amember/member'] - Profile link
+ * @param {string} [options.loginUrl='https://dashboard.marketdata.app/marketdata/login'] - Log-in href
+ * @param {string} [options.logoutUrl='https://dashboard.marketdata.app/marketdata/logout'] - Log-out href
+ * @param {string} [options.dashboardUrl='https://dashboard.marketdata.app/marketdata/member'] - Dashboard link
+ * @param {string} [options.profileUrl='https://dashboard.marketdata.app/marketdata/profile'] - Profile link
  * @param {string} [options.planUrl='https://dashboard.marketdata.app/amember/signup'] - Plan link
  * @param {Array<{label: string, url: string}>} [options.menuItems=[]] - Extra menu items
  * @param {string} [options.apiUrl] - Override API endpoint
- * @param {string} [options.loginText='Sign in'] - Sign-in button text
- * @param {string} [options.buttonClass='btn-hover-orange'] - CSS class on sign-in button
+ * @param {string} [options.loginText='Sign in'] - Log-in button text
+ * @param {string} [options.buttonClass='btn-hover-orange'] - CSS class on log-in button
  * @returns {Promise<() => void>} Cleanup function
  */
 export async function initUserProfile(options) {
   const {
     container,
     dropdown = false,
-    loginUrl = 'https://www.marketdata.app/dashboard/',
-    logoutUrl = 'https://dashboard.marketdata.app/marketdata/login',
-    dashboardUrl = 'https://www.marketdata.app/dashboard/',
-    profileUrl = 'https://dashboard.marketdata.app/amember/member',
+    loginUrl = 'https://dashboard.marketdata.app/marketdata/login',
+    logoutUrl = 'https://dashboard.marketdata.app/marketdata/logout',
+    dashboardUrl = 'https://dashboard.marketdata.app/marketdata/member',
+    profileUrl = 'https://dashboard.marketdata.app/marketdata/profile',
     planUrl = 'https://dashboard.marketdata.app/amember/signup',
     menuItems = [],
     apiUrl,
-    loginText = 'Sign in',
+    loginText = 'Log in',
     buttonClass = 'btn-hover-orange',
   } = options;
 
@@ -379,7 +379,7 @@ export async function initUserProfile(options) {
     onInvalidate: renderSignIn,
   });
 
-  // Logged out or error → sign-in button
+  // Logged out or error → log-in button
   if (!user) {
     renderSignIn();
     return clearContainer;
@@ -479,7 +479,7 @@ export async function initUserProfile(options) {
   const signOutA = document.createElement('a');
   signOutA.href = logoutUrl;
   signOutA.className = 'user-profile-dropdown-signout';
-  signOutA.textContent = 'Sign out';
+  signOutA.textContent = 'Log out';
   signOutLi.appendChild(signOutA);
   ul.appendChild(signOutLi);
 
