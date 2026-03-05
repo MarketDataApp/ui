@@ -1,3 +1,4 @@
 node_modules/
 css/components.css
+css/components.no-reset.css
 .claude/
