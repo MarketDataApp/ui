@@ -44,7 +44,14 @@ export function initNavbarOverflow({ container, items }) {
   }
 
   function isOverflowing() {
-    return container.scrollWidth > container.clientWidth;
+    // With flex-wrap: nowrap, flex items shrink instead of overflowing,
+    // so scrollWidth may equal clientWidth even when items are compressed.
+    // Compare the sum of children's scrollWidth to detect compression.
+    let childrenWidth = 0;
+    for (const child of container.children) {
+      childrenWidth += child.scrollWidth;
+    }
+    return childrenWidth > container.clientWidth;
   }
 
   function hideItem(item) {
