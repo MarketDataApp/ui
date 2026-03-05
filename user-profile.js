@@ -205,7 +205,11 @@ export async function fetchUser(options = {}) {
 
   // If we have cached data, return it immediately and revalidate in background
   if (cached) {
-    fetchAndCache(apiUrl).catch(() => {});
+    fetchAndCache(apiUrl)
+      .then((fresh) => {
+        if (!fresh && options.onInvalidate) options.onInvalidate();
+      })
+      .catch(() => {});
     return cached;
   }
 
@@ -216,7 +220,13 @@ export async function fetchUser(options = {}) {
 async function fetchAndCache(apiUrl) {
   try {
     const res = await fetch(apiUrl, { credentials: 'include' });
-    if (!res.ok) return null;
+    if (!res.ok) {
+      _memoryCache = null;
+      try {
+        sessionStorage.removeItem(CACHE_KEY);
+      } catch {}
+      return null;
+    }
     const user = await res.json();
     _memoryCache = user;
     try {
@@ -347,18 +357,32 @@ export async function initUserProfile(options) {
 
   let dropdownCleanup = null;
 
-  const user = await fetchUser(apiUrl ? { apiUrl } : {});
+  function clearContainer() {
+    if (dropdownCleanup) {
+      dropdownCleanup();
+      dropdownCleanup = null;
+    }
+    while (container.firstChild) container.removeChild(container.firstChild);
+  }
 
-  // Logged out or error → sign-in button
-  if (!user) {
+  function renderSignIn() {
+    clearContainer();
     const link = document.createElement('a');
     link.href = loginUrl;
     link.className = buttonClass;
     link.textContent = loginText;
     container.appendChild(link);
-    return () => {
-      while (container.firstChild) container.removeChild(container.firstChild);
-    };
+  }
+
+  const user = await fetchUser({
+    ...(apiUrl ? { apiUrl } : {}),
+    onInvalidate: renderSignIn,
+  });
+
+  // Logged out or error → sign-in button
+  if (!user) {
+    renderSignIn();
+    return clearContainer;
   }
 
   const gravatarSrc = getGravatarUrl(user.email);
@@ -479,8 +503,5 @@ export async function initUserProfile(options) {
     dropdownCleanup = setupDropdown(triggerEl, menuEl);
   });
 
-  return () => {
-    if (dropdownCleanup) dropdownCleanup();
-    while (container.firstChild) container.removeChild(container.firstChild);
-  };
+  return clearContainer;
 }
