@@ -40,7 +40,5 @@
     "serve": "^14.2.5",
     "vitest": "^2.0.0"
   },
-  "dependencies": {
-    "@marketdataapp/ui": "github:MarketDataApp/ui"
-  }
+  "dependencies": {}
 }
