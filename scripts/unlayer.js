@@ -68,8 +68,10 @@ export function unlayer(css) {
   return result;
 }
 
-// Run as CLI script
-const cssPath = resolve(__dirname, '../css/components.css');
-const css = readFileSync(cssPath, 'utf8');
-const unlayered = unlayer(css);
-writeFileSync(cssPath, unlayered);
+// Run as CLI script — process all compiled CSS files
+const cssFiles = ['components.css', 'components.no-reset.css'];
+for (const file of cssFiles) {
+  const cssPath = resolve(__dirname, '../css', file);
+  const css = readFileSync(cssPath, 'utf8');
+  writeFileSync(cssPath, unlayer(css));
+}
