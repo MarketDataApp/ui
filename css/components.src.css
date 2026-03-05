@@ -200,6 +200,24 @@
   @apply col-span-12 xl:col-start-2 xl:col-span-10 2xl:col-start-3 2xl:col-span-8;
 }
 
+/* ---- User Profile Avatar Placeholder ---- */
+@utility navbar-user-avatar-placeholder {
+  position: relative;
+  width: 2.5rem;
+  height: 2.5rem;
+  overflow: hidden;
+  border-radius: 9999px;
+  background-color: var(--color-gray-300, #d1d5db);
+}
+
+@utility navbar-user-avatar-placeholder-svg {
+  position: absolute;
+  width: 3rem;
+  height: 3rem;
+  left: -0.25rem;
+  color: var(--color-gray-400, #9ca3af);
+}
+
 /* ---- Defaults ---- */
 @utility default {
   @apply text-base font-sans text-gray-900 dark:text-white;

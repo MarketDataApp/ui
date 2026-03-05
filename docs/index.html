@@ -638,6 +638,90 @@
           >
         </div>
       </section>
+      <!-- User Profile -->
+      <section id="user-profile">
+        <h2 class="text-2xl font-bold mb-6 border-b border-gray-200 dark:border-gray-700 pb-2">
+          User Profile
+        </h2>
+        <p class="text-gray-500 dark:text-gray-400 mb-6">
+          Framework-agnostic avatar component with optional dropdown. Fetches the current user from
+          the MarketData API (requires
+          <code class="font-mono text-xs">*.marketdata.app</code> cookie — this demo must be hosted
+          on a <code class="font-mono text-xs">.marketdata.app</code>
+          subdomain for credentials to be sent).
+        </p>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-8">
+          <!-- Logged-in state: avatar only -->
+          <div class="space-y-3">
+            <code class="text-sm font-mono text-gray-500 dark:text-gray-400 block"
+              >initUserProfile({ dropdown: false })</code
+            >
+            <p class="text-xs text-gray-400 dark:text-gray-500 mb-2">
+              Logged in: avatar links to dashboard. Logged out: sign-in button.
+            </p>
+            <div
+              class="border border-gray-200 dark:border-gray-700 rounded-lg p-6 flex items-center justify-center min-h-[80px]"
+              id="user-profile-avatar"
+            ></div>
+          </div>
+
+          <!-- Logged-in state: avatar + dropdown -->
+          <div class="space-y-3">
+            <code class="text-sm font-mono text-gray-500 dark:text-gray-400 block"
+              >initUserProfile({ dropdown: true })</code
+            >
+            <p class="text-xs text-gray-400 dark:text-gray-500 mb-2">
+              Click avatar to toggle dropdown menu with user info and links.
+            </p>
+            <div
+              class="border border-gray-200 dark:border-gray-700 rounded-lg p-6 flex items-center justify-center min-h-[80px] relative"
+              id="user-profile-dropdown"
+            ></div>
+          </div>
+        </div>
+
+        <!-- SVG Placeholder fallback -->
+        <div class="mt-8 space-y-3">
+          <h3 class="text-lg font-semibold">SVG Placeholder Fallback</h3>
+          <p class="text-xs text-gray-400 dark:text-gray-500 mb-2">
+            Shown when the Gravatar image fails to load (no Gravatar for the user's email).
+          </p>
+          <div class="flex items-center gap-4">
+            <div
+              class="relative w-10 h-10 overflow-hidden bg-gray-300 dark:bg-gray-600 rounded-full"
+            >
+              <svg
+                class="absolute w-12 h-12 text-gray-400 dark:text-gray-500 -left-1"
+                fill="currentColor"
+                viewBox="0 0 20 20"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  fill-rule="evenodd"
+                  d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z"
+                  clip-rule="evenodd"
+                ></path>
+              </svg>
+            </div>
+            <code class="text-xs font-mono text-gray-500 dark:text-gray-400"
+              >Flowbite avatar/placeholder-icon pattern</code
+            >
+          </div>
+        </div>
+
+        <div class="mt-6 flex flex-wrap gap-2">
+          <code class="text-xs font-mono bg-gray-100 dark:bg-gray-800 px-2 py-1 rounded"
+            >initUserProfile()</code
+          >
+          <code class="text-xs font-mono bg-gray-100 dark:bg-gray-800 px-2 py-1 rounded"
+            >fetchUser()</code
+          >
+          <code class="text-xs font-mono bg-gray-100 dark:bg-gray-800 px-2 py-1 rounded"
+            >getGravatarUrl()</code
+          >
+        </div>
+      </section>
     </main>
 
     <footer class="border-t border-gray-200 dark:border-gray-700 mt-12">
@@ -665,6 +749,17 @@
       if (document.documentElement.classList.contains('dark')) {
         document.getElementById('theme-toggle').textContent = 'Light Mode';
       }
+    </script>
+
+    <!-- User Profile demo -->
+    <script type="module">
+      import { initUserProfile } from '../user-profile.js';
+
+      const avatarContainer = document.getElementById('user-profile-avatar');
+      const dropdownContainer = document.getElementById('user-profile-dropdown');
+
+      initUserProfile({ container: avatarContainer });
+      initUserProfile({ container: dropdownContainer, dropdown: true });
     </script>
   </body>
 </html>

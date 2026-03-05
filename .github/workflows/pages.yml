@@ -28,6 +28,7 @@ jobs:
           mkdir -p _site/docs _site/css
           cp docs/index.html _site/docs/
           cp css/components.css _site/css/
+          cp user-profile.js _site/
           echo '<meta http-equiv="refresh" content="0;url=docs/">' > _site/index.html
 
       - name: Upload Pages artifact

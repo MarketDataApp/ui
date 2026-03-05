@@ -1,6 +1,6 @@
 {
   "name": "@marketdataapp/ui",
-  "version": "2.3.4",
+  "version": "2.4.0",
   "description": "Shared UI theme and component styles for MarketData properties",
   "license": "UNLICENSED",
   "type": "module",
@@ -15,7 +15,8 @@
     "./css/components.no-reset": "./css/components.no-reset.css",
     "./css/components.src": "./css/components.src.css",
     "./css/theme": "./css/theme.css",
-    "./navbar-overflow": "./navbar-overflow.js"
+    "./navbar-overflow": "./navbar-overflow.js",
+    "./user-profile": "./user-profile.js"
   },
   "scripts": {
     "build": "npm run build:css",

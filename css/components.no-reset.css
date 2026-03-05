@@ -75,6 +75,21 @@
   --color-brand-medium: var(--color-blue-200);
   --color-brand: var(--color-blue-600);
 }
+.navbar-user-avatar-placeholder-svg {
+  position: absolute;
+  width: 3rem;
+  height: 3rem;
+  left: -0.25rem;
+  color: var(--color-gray-400, #9ca3af);
+}
+.navbar-user-avatar-placeholder {
+  position: relative;
+  width: 2.5rem;
+  height: 2.5rem;
+  overflow: hidden;
+  border-radius: 9999px;
+  background-color: var(--color-gray-300, #d1d5db);
+}
 .grid-content-container {
   grid-column: span 12 / span 12;
   margin-inline: calc(var(--spacing) * 4);
