@@ -1,6 +1,7 @@
 @import url('https://fonts.googleapis.com/css2?family=Quicksand:wght@500&display=swap');
 @import 'tailwindcss';
 @import './theme.css';
+@import './flowbite-tokens.css';
 
 /* Support both .dark (Tailwind/Flowbite) and [data-theme="dark"] (Docusaurus) */
 @custom-variant dark (&:where(.dark, .dark *, [data-theme="dark"], [data-theme="dark"] *));

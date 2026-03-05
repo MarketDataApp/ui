@@ -1,13 +1,13 @@
 /**
  * Flowbite v4 / Tailwind v4 theme for MarketData brand.
  *
- * Generated from brand color #E83155 via Flowbite MCP theme generator.
- * This file is NOT currently used — it's saved for a future migration
- * from Tailwind v3 to Tailwind v4 + Flowbite v4.
+ * Generated from brand color #3B82F6 via Flowbite MCP theme generator.
+ * This file is NOT imported — it's saved as a reference for the full
+ * Flowbite token set (brand + UI tokens combined).
  *
- * When migrated, this replaces most of the hardcoded component styles
- * in preset.js, allowing standard Flowbite classes to work with our
- * brand colors via these CSS custom properties.
+ * Active tokens are split between:
+ *   - theme.css        → brand tokens (--color-brand-*, --color-fg-brand-*)
+ *   - flowbite-tokens.css → UI semantic tokens (neutrals, text, borders, status)
  */
 
 @theme {
@@ -53,9 +53,9 @@
   --color-body: var(--color-gray-600);
   --color-body-subtle: var(--color-gray-500);
   --color-heading: var(--color-gray-900);
-  --color-fg-brand-subtle: #eacdd3;
-  --color-fg-brand: #aa1331;
-  --color-fg-brand-strong: #5c0a1a;
+  --color-fg-brand-subtle: #cbd7ec;
+  --color-fg-brand: #084ab4;
+  --color-fg-brand-strong: #042862;
   --color-fg-success: var(--color-emerald-700);
   --color-fg-success-strong: var(--color-emerald-900);
   --color-fg-danger: var(--color-rose-700);
@@ -87,12 +87,12 @@
   --color-neutral-quaternary-medium: var(--color-gray-200);
   --color-gray: var(--color-gray-300);
 
-  /* Brand colors — generated from #E83155 */
-  --color-brand-softer: #f9f6f6;
-  --color-brand-soft: #f1e9eb;
-  --color-brand: #aa1331;
-  --color-brand-medium: #eacdd3;
-  --color-brand-strong: #800e25;
+  /* Brand colors — generated from #3B82F6 */
+  --color-brand-softer: #f5f7f9;
+  --color-brand-soft: #e8ecf2;
+  --color-brand: #084ab4;
+  --color-brand-medium: #cbd7ec;
+  --color-brand-strong: #063889;
 
   /* Status colors */
   --color-success-soft: var(--color-emerald-50);
@@ -135,8 +135,8 @@
   --color-success-subtle: var(--color-emerald-200);
   --color-danger-subtle: var(--color-rose-200);
   --color-warning-subtle: var(--color-orange-200);
-  --color-brand-subtle: #eacdd3;
-  --color-brand-light: #ce173b;
+  --color-brand-subtle: #cbd7ec;
+  --color-brand-light: #0a5adb;
   --color-dark-subtle: var(--color-gray-800);
   --color-dark-backdrop: var(--color-gray-950);
 
@@ -150,9 +150,9 @@
   --color-body: var(--color-gray-400);
   --color-body-subtle: var(--color-gray-400);
   --color-heading: var(--color-white);
-  --color-fg-brand-subtle: #eacdd3;
-  --color-fg-brand: #e83155;
-  --color-fg-brand-strong: #ee637e;
+  --color-fg-brand-subtle: #cbd7ec;
+  --color-fg-brand: #2473f5;
+  --color-fg-brand-strong: #5995f7;
   --color-fg-success: var(--color-emerald-600);
   --color-fg-success-strong: var(--color-emerald-300);
   --color-fg-danger: var(--color-rose-500);
@@ -183,11 +183,11 @@
   --color-neutral-quaternary: var(--color-gray-700);
   --color-neutral-quaternary-medium: var(--color-gray-600);
   --color-gray: var(--color-gray-600);
-  --color-brand-softer: #360c14;
-  --color-brand-soft: #5c0a1a;
-  --color-brand: #ce173b;
-  --color-brand-medium: #5c0a1a;
-  --color-brand-strong: #aa1331;
+  --color-brand-softer: #091b39;
+  --color-brand-soft: #042862;
+  --color-brand: #0a5adb;
+  --color-brand-medium: #042862;
+  --color-brand-strong: #084ab4;
   --color-success-soft: var(--color-emerald-950);
   --color-success: var(--color-emerald-600);
   --color-success-medium: var(--color-emerald-900);
@@ -228,8 +228,8 @@
   --color-success-subtle: var(--color-emerald-900);
   --color-danger-subtle: var(--color-rose-900);
   --color-warning-subtle: var(--color-orange-900);
-  --color-brand-subtle: #5c0a1a;
-  --color-brand-light: #ce173b;
+  --color-brand-subtle: #042862;
+  --color-brand-light: #0a5adb;
   --color-dark-subtle: var(--color-gray-700);
   --color-dark-backdrop: var(--color-gray-950);
 }

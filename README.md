@@ -14,6 +14,7 @@ npm install @marketdataapp/ui@github:MarketDataApp/ui
 
 | Export                      | File                          | Description                                                                                                                         |
 | --------------------------- | ----------------------------- | ----------------------------------------------------------------------------------------------------------------------------------- |
+| `./css/flowbite-tokens`     | `css/flowbite-tokens.css`     | Flowbite v4 semantic UI tokens (neutrals, text, borders, status, radius). Imported by both build entry points.                      |
 | `./css/theme`               | `css/theme.css`               | `@theme {}` design tokens (colors, fonts, shadows). Import into your own Tailwind v4 build.                                         |
 | `./css/components.src`      | `css/components.src.css`      | Raw `@utility` definitions. Import into your own Tailwind v4 build to use `@apply` with shared classes.                             |
 | `./css/components`          | `css/components.css`          | Pre-built CSS (full Tailwind including preflight reset), unlayered. For standalone consumers.                                       |
@@ -108,8 +109,9 @@ When adding a component to this package, follow this pattern:
 
 Rules:
 
-- Only use standard Tailwind utility classes in `@apply` (e.g. `bg-white`, `text-gray-900`, `rounded-lg`). Do NOT use Flowbite theme token classes (`bg-neutral-primary-medium`, `text-heading`) — those only exist when Flowbite's CSS is loaded.
-- Always include `dark:` variants so the component works in both themes.
+- Use standard Tailwind utility classes or Flowbite semantic tokens defined in `flowbite-tokens.css` in `@apply`. Semantic tokens like `bg-neutral-primary-medium`, `text-heading`, `text-body`, `border-default-medium`, `rounded-base`, `text-fg-danger`, `bg-danger-soft`, `bg-gray`, `text-fg-disabled` are available and handle dark mode automatically — no `dark:` prefix needed.
+- Do NOT use Flowbite theme tokens that only exist when Flowbite's full CSS is loaded (e.g. brand tokens from Flowbite's generator that aren't defined in `flowbite-tokens.css` or `theme.css`).
+- When using raw Tailwind colors (e.g. `bg-white`, `text-gray-900`), include `dark:` variants for dark mode support.
 - Keep custom CSS to a minimum. If a property can be expressed as `@apply`, use `@apply`.
 - The component must look correct using **only** `components.css` — no external CSS framework required.
 
@@ -180,7 +182,7 @@ Usage not yet verified.
 
 3. **Tailwind preflight conflicts with CSS frameworks.** The preflight reset (normalize + box-sizing) destroys Infima styles. Use `components.no-reset.css` when the consumer has its own framework.
 
-4. **Don't use Flowbite theme token classes in shared components.** Classes like `bg-neutral-primary-medium`, `text-heading`, `text-fg-danger` only resolve when Flowbite's theme CSS is loaded. This package's CSS must be self-contained — use standard Tailwind utilities (`bg-white`, `text-gray-900`, etc.) with `dark:` variants.
+4. **Only use locally-defined Flowbite tokens.** Semantic tokens defined in `flowbite-tokens.css` (e.g. `bg-neutral-primary-medium`, `text-heading`, `text-fg-danger`, `bg-danger-soft`, `rounded-base`) are safe to use — they're bundled in our builds. Do NOT use tokens that only exist in Flowbite's full CSS (e.g. brand tokens from Flowbite's generator). This package's CSS must be self-contained.
 
 5. **Dark mode must support both `.dark` and `[data-theme="dark"]`.** The `@custom-variant dark` handles this automatically for any class using `dark:` prefix in `@apply`.
 

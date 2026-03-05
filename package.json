@@ -14,6 +14,7 @@
     "./css/components": "./css/components.css",
     "./css/components.no-reset": "./css/components.no-reset.css",
     "./css/components.src": "./css/components.src.css",
+    "./css/flowbite-tokens": "./css/flowbite-tokens.css",
     "./css/theme": "./css/theme.css",
     "./navbar-overflow": "./navbar-overflow.js",
     "./user-profile": "./user-profile.js"
