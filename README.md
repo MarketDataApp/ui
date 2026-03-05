@@ -12,16 +12,15 @@ npm install @marketdataapp/ui@github:MarketDataApp/ui
 
 ## Exports
 
-| Export                      | File                          | Description                                                                                                                         |
-| --------------------------- | ----------------------------- | ----------------------------------------------------------------------------------------------------------------------------------- |
-| `./css/flowbite-tokens`     | `css/flowbite-tokens.css`     | Flowbite v4 semantic UI tokens (neutrals, text, borders, status, radius). Imported by both build entry points.                      |
-| `./css/theme`               | `css/theme.css`               | `@theme {}` design tokens (colors, fonts, shadows). Import into your own Tailwind v4 build.                                         |
-| `./css/components.src`      | `css/components.src.css`      | Raw `@utility` definitions. Import into your own Tailwind v4 build to use `@apply` with shared classes.                             |
-| `./css/components`          | `css/components.css`          | Pre-built CSS (full Tailwind including preflight reset), unlayered. For standalone consumers.                                       |
-| `./css/components.no-reset` | `css/components.no-reset.css` | Pre-built CSS without preflight reset, unlayered. For framework consumers with their own reset (e.g. Docusaurus).                   |
-| `./theme`                   | `theme.js`                    | Dark/light mode JS: `getThemeCookie`, `setThemeCookie`, `getUserThemePreference`, `getBrowserThemePreference`, `getEffectiveTheme`. |
-| `./navbar-overflow`         | `navbar-overflow.js`          | Priority-based auto-hide for navbar items that overflow their container.                                                            |
-| `./user-profile`            | `user-profile.js`             | Gravatar avatar with optional dropdown menu. Zero dependencies.                                                                     |
+| Export                      | File                          | Description                                                                                                                                             |
+| --------------------------- | ----------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `./css/theme`               | `css/theme.css`               | All design tokens: brand colors, fonts, shadows, Flowbite semantic UI tokens (neutrals, text, borders, status). Import into your own Tailwind v4 build. |
+| `./css/components.src`      | `css/components.src.css`      | Raw `@utility` definitions. Import into your own Tailwind v4 build to use `@apply` with shared classes.                                                 |
+| `./css/components`          | `css/components.css`          | Pre-built CSS (full Tailwind including preflight reset), unlayered. For standalone consumers.                                                           |
+| `./css/components.no-reset` | `css/components.no-reset.css` | Pre-built CSS without preflight reset, unlayered. For framework consumers with their own reset (e.g. Docusaurus).                                       |
+| `./theme`                   | `theme.js`                    | Dark/light mode JS: `getThemeCookie`, `setThemeCookie`, `getUserThemePreference`, `getBrowserThemePreference`, `getEffectiveTheme`.                     |
+| `./navbar-overflow`         | `navbar-overflow.js`          | Priority-based auto-hide for navbar items that overflow their container.                                                                                |
+| `./user-profile`            | `user-profile.js`             | Gravatar avatar with optional dropdown menu. Zero dependencies.                                                                                         |
 
 ## CSS Architecture
 
@@ -85,21 +84,27 @@ The `:where()` wrapper adds **zero specificity**, preventing dark mode selectors
 - **Fonts**: `--font-sans`, `--font-mono`, `--font-quicksand`
 - **Shadows**: `--shadow-line`, `--shadow-darkline`, `--shadow-diffuse`
 - **Brand colors**: `--color-marketdata-lightorange`, `darkorange`, `lightblue`, `darkblue`, `bluebg`
-- **Semantic colors**: `note`, `tip`, `info`, `warning`, `danger` (each with bg/border/text + dark variants)
+- **Docusaurus admonition colors**: `note`, `tip`, `info`, `warning`, `danger` (each with bg/border/text + dark variants)
+- **Neutral surfaces**: `--color-neutral-primary-*`, `secondary-*`, `tertiary-*`, `quaternary-*`, `--color-gray` (Flowbite semantic tokens with dark mode overrides)
+- **Text / foreground**: `--color-heading`, `--color-body`, `--color-body-subtle`, `--color-fg-*` (success, danger, warning, etc.)
+- **Borders**: `--color-buffer-*`, `--color-muted`, `--color-light-*`, `--color-default-*`, `--color-dark-*`
+- **Status backgrounds**: `--color-success-*`, `--color-danger-*`, `--color-warning-*` (danger uses red, not Flowbite's default rose)
 - **Brand aliases**: `--color-brand-*`, `--color-fg-brand-*` (semantic aliases to blue palette, with dark mode overrides)
 
 ## How to Add New Components
 
 When adding a component to this package, follow this pattern:
 
-1. **Define it as `@utility` in `components.src.css`** using only `@apply` with standard Tailwind classes. Include `dark:` variants for dark mode.
+1. **Define it as `@utility` in `components.src.css`** using `@apply` with Flowbite semantic tokens where possible, falling back to standard Tailwind classes with `dark:` variants when no token exists.
 
 ```css
 @utility my-component {
-  @apply bg-white border border-gray-200 rounded-lg shadow-lg;
-  @apply dark:bg-gray-800 dark:border-gray-600;
+  @apply bg-neutral-primary-medium border border-default-medium rounded-lg shadow-lg;
+  @apply text-heading;
 }
 ```
+
+Semantic tokens (defined in `theme.css`) handle dark mode automatically — no `dark:` prefix needed. Only use `dark:` when there's no matching token.
 
 2. **Add all new class names to `components.classes`** — this manifest tells the no-reset build which utilities to generate.
 
@@ -109,8 +114,8 @@ When adding a component to this package, follow this pattern:
 
 Rules:
 
-- Use standard Tailwind utility classes or Flowbite semantic tokens defined in `flowbite-tokens.css` in `@apply`. Semantic tokens like `bg-neutral-primary-medium`, `text-heading`, `text-body`, `border-default-medium`, `rounded-base`, `text-fg-danger`, `bg-danger-soft`, `bg-gray`, `text-fg-disabled` are available and handle dark mode automatically — no `dark:` prefix needed.
-- Do NOT use Flowbite theme tokens that only exist when Flowbite's full CSS is loaded (e.g. brand tokens from Flowbite's generator that aren't defined in `flowbite-tokens.css` or `theme.css`).
+- Use standard Tailwind utility classes or Flowbite semantic tokens defined in `theme.css` in `@apply`. Semantic tokens like `bg-neutral-primary-medium`, `text-heading`, `text-body`, `border-default-medium`, `rounded-base`, `text-fg-danger`, `bg-danger-soft`, `bg-gray`, `text-fg-disabled` are available and handle dark mode automatically — no `dark:` prefix needed.
+- Do NOT use Flowbite theme tokens that only exist when Flowbite's full CSS is loaded (e.g. tokens from Flowbite's generator that aren't defined in `theme.css`).
 - When using raw Tailwind colors (e.g. `bg-white`, `text-gray-900`), include `dark:` variants for dark mode support.
 - Keep custom CSS to a minimum. If a property can be expressed as `@apply`, use `@apply`.
 - The component must look correct using **only** `components.css` — no external CSS framework required.
@@ -146,7 +151,7 @@ headTags: [
 
 **After Tailwind v4 migration, amember will import:**
 
-- `@marketdataapp/ui/css/theme` — `@theme {}` tokens into its own Tailwind v4 build
+- `@marketdataapp/ui/css/theme` — all design tokens (brand + semantic UI) into its own Tailwind v4 build
 - `@marketdataapp/ui/css/components.src` — `@utility` definitions for `@apply` in its own CSS
 - `@marketdataapp/ui/theme` — JS theme functions (already in use)
 
@@ -182,7 +187,7 @@ Usage not yet verified.
 
 3. **Tailwind preflight conflicts with CSS frameworks.** The preflight reset (normalize + box-sizing) destroys Infima styles. Use `components.no-reset.css` when the consumer has its own framework.
 
-4. **Only use locally-defined Flowbite tokens.** Semantic tokens defined in `flowbite-tokens.css` (e.g. `bg-neutral-primary-medium`, `text-heading`, `text-fg-danger`, `bg-danger-soft`, `rounded-base`) are safe to use — they're bundled in our builds. Do NOT use tokens that only exist in Flowbite's full CSS (e.g. brand tokens from Flowbite's generator). This package's CSS must be self-contained.
+4. **Only use locally-defined Flowbite tokens.** Semantic tokens defined in `theme.css` (e.g. `bg-neutral-primary-medium`, `text-heading`, `text-fg-danger`, `bg-danger-soft`, `rounded-base`) are safe to use — they're bundled in our builds. Do NOT use tokens that only exist in Flowbite's full CSS (e.g. tokens from Flowbite's generator that aren't in `theme.css`). This package's CSS must be self-contained.
 
 5. **Dark mode must support both `.dark` and `[data-theme="dark"]`.** The `@custom-variant dark` handles this automatically for any class using `dark:` prefix in `@apply`.
 

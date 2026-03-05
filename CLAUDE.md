@@ -7,7 +7,7 @@ Shared Tailwind CSS theme and components for all MarketData properties (\*.marke
 ## Architecture
 
 - **Tailwind v4** with CSS-first configuration (no JS config files)
-- `css/theme.css` defines brand design tokens via `@theme {}` — consumed by projects that run their own Tailwind build
+- `css/theme.css` defines all design tokens via `@theme {}` — brand colors, Flowbite semantic UI tokens (neutrals, text, borders, status), and dark mode overrides. Consumed by projects that run their own Tailwind build.
 - `css/components.src.css` defines all shared component classes as `@utility` with `@apply` — the single source of truth
 - Two build outputs, both unlayered (see README.md for details):
   - `css/components.css` — full build with preflight reset (for standalone consumers)
@@ -15,11 +15,12 @@ Shared Tailwind CSS theme and components for all MarketData properties (\*.marke
 - `scripts/unlayer.js` strips `@layer` wrappers post-build so our CSS wins specificity battles against unlayered foreign CSS
 - Built CSS artifacts must stay committed because consuming projects import them directly
 - `theme.js` exports shared JS for dark/light theme cookie and preference management
-- Component classes must only use standard Tailwind utilities in `@apply` — never Flowbite theme tokens (they aren't available in all consumers)
+- Component classes should prefer Flowbite semantic tokens from `theme.css` (e.g. `bg-neutral-primary-medium`, `text-heading`, `border-gray`, `text-fg-danger`) — they handle dark mode automatically. Fall back to standard Tailwind utilities with `dark:` variants when no token exists. Do NOT use Flowbite tokens that aren't defined in `theme.css`.
 
 ## What belongs here
 
 - Brand colors (marketdata.\*, note, tip, info, warning, danger)
+- Flowbite semantic UI tokens (neutral surfaces, text/foreground, borders, status backgrounds with dark mode overrides; danger customized to red instead of Flowbite's default rose)
 - Shared typography (font families, Google Fonts references)
 - Shared gradients and shadows
 - Shared component classes used across properties: buttons (btn-orange-to-blue, btn-hover-orange), forms, badges, grid layout, radio buttons

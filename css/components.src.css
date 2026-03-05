@@ -87,7 +87,7 @@
 }
 
 @utility form-input-error {
-  @apply shadow-none border-red-500 text-red-900 placeholder-red-700 focus:ring-1 focus:ring-red-500 focus:border-red-500 focus:outline-hidden dark:text-red-500 dark:placeholder-red-500 dark:border-red-500;
+  @apply shadow-none border-danger text-fg-danger-strong placeholder-fg-danger-strong focus:ring-1 focus:ring-danger focus:border-danger focus:outline-hidden;
 }
 
 @utility form-dropdown-input {
@@ -110,7 +110,7 @@
 }
 
 @utility form-helper-text-error {
-  @apply mt-2 text-sm text-red-600 dark:text-red-500;
+  @apply mt-2 text-sm text-fg-danger;
 }
 
 /* ---- Radio Buttons ---- */

@@ -5,9 +5,8 @@
  * This file is NOT imported — it's saved as a reference for the full
  * Flowbite token set (brand + UI tokens combined).
  *
- * Active tokens are split between:
- *   - theme.css        → brand tokens (--color-brand-*, --color-fg-brand-*)
- *   - flowbite-tokens.css → UI semantic tokens (neutrals, text, borders, status)
+ * Active tokens all live in theme.css (brand + UI semantic tokens combined).
+ * Danger tokens are customized to use red instead of Flowbite's default rose.
  */
 
 @theme {
