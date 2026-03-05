@@ -333,7 +333,7 @@ function setupDropdown(trigger, menu) {
  * @param {string} [options.logoutUrl='https://dashboard.marketdata.app/marketdata/logout'] - Log-out href
  * @param {string} [options.dashboardUrl='https://dashboard.marketdata.app/marketdata/member'] - Dashboard link
  * @param {string} [options.profileUrl='https://dashboard.marketdata.app/marketdata/profile'] - Profile link
- * @param {string} [options.planUrl='https://dashboard.marketdata.app/amember/signup'] - Plan link
+ * @param {string} [options.planUrl='https://dashboard.marketdata.app/marketdata/signup'] - Plan link
  * @param {Array<{label: string, url: string}>} [options.menuItems=[]] - Extra menu items
  * @param {string} [options.apiUrl] - Override API endpoint
  * @param {string} [options.loginText='Sign in'] - Log-in button text
@@ -348,7 +348,7 @@ export async function initUserProfile(options) {
     logoutUrl = 'https://dashboard.marketdata.app/marketdata/logout',
     dashboardUrl = 'https://dashboard.marketdata.app/marketdata/member',
     profileUrl = 'https://dashboard.marketdata.app/marketdata/profile',
-    planUrl = 'https://dashboard.marketdata.app/amember/signup',
+    planUrl = 'https://dashboard.marketdata.app/marketdata/signup',
     menuItems = [],
     apiUrl,
     loginText = 'Log in',
