@@ -51,6 +51,10 @@ Shared Tailwind CSS theme and components for all MarketData properties (\*.marke
 
 - Usage not yet verified
 
+## Deployment
+
+The docs/demo site deploys to https://dev.marketdata.app/ui/docs/ on push to main.
+
 ## Installation
 
 Projects install via GitHub URL:
