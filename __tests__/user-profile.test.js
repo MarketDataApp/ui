@@ -168,9 +168,9 @@ describe('initUserProfile — logged out', () => {
 
     const link = container.querySelector('a');
     expect(link).not.toBeNull();
-    expect(link.textContent).toBe('Sign in');
+    expect(link.textContent).toBe('Log in');
     expect(link.className).toBe('btn-hover-orange');
-    expect(link.href).toContain('/dashboard/');
+    expect(link.href).toContain('dashboard.marketdata.app');
   });
 
   it('uses custom loginText and buttonClass', async () => {
@@ -179,12 +179,12 @@ describe('initUserProfile — logged out', () => {
 
     await initUserProfile({
       container,
-      loginText: 'Log in',
+      loginText: 'Sign in',
       buttonClass: 'btn-orange-to-blue',
     });
 
     const link = container.querySelector('a');
-    expect(link.textContent).toBe('Log in');
+    expect(link.textContent).toBe('Sign in');
     expect(link.className).toBe('btn-orange-to-blue');
   });
 
@@ -221,7 +221,7 @@ describe('initUserProfile — logged in, no dropdown', () => {
     await initUserProfile({ container });
 
     const link = container.querySelector('a');
-    expect(link.href).toContain('/dashboard/');
+    expect(link.href).toContain('dashboard.marketdata.app');
 
     const img = link.querySelector('img');
     expect(img).not.toBeNull();
@@ -296,10 +296,10 @@ describe('initUserProfile — logged in, with dropdown', () => {
     expect(labels).toContain('Dashboard');
     expect(labels).toContain('Profile');
     expect(labels).toContain('Modify My Plan');
-    expect(labels).toContain('Sign out');
+    expect(labels).toContain('Log out');
   });
 
-  it('includes custom menuItems before Sign out', async () => {
+  it('includes custom menuItems before Log out', async () => {
     const container = document.createElement('div');
     document.body.appendChild(container);
 
@@ -312,7 +312,7 @@ describe('initUserProfile — logged in, with dropdown', () => {
     const links = container.querySelectorAll('#userDropdown a');
     const labels = Array.from(links).map((a) => a.textContent);
     const settingsIdx = labels.indexOf('Settings');
-    const signOutIdx = labels.indexOf('Sign out');
+    const signOutIdx = labels.indexOf('Log out');
     expect(settingsIdx).toBeGreaterThan(-1);
     expect(settingsIdx).toBeLessThan(signOutIdx);
   });
