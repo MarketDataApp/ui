@@ -296,6 +296,53 @@ describe('initNavbarOverflow', () => {
     cleanup();
   });
 
+  it('does not treat same-group overlap as overflow', () => {
+    // At ~995px the search container (absolute) and login button (static) are
+    // both in the right group and naturally share space. This should NOT
+    // be detected as overflow — only cross-group overlap matters.
+    const { container, rightGroup } = createMockContainer({ compressed: false });
+
+    const searchEl = addItem(rightGroup, 'search-abs');
+    const loginEl = addItem(rightGroup, 'login-btn');
+
+    // Both items in the same group with overlapping rects
+    searchEl.getBoundingClientRect = () => ({
+      x: 824,
+      y: 12,
+      width: 155,
+      height: 36,
+      top: 12,
+      right: 979,
+      bottom: 48,
+      left: 824,
+    });
+    loginEl.getBoundingClientRect = () => ({
+      x: 874,
+      y: 14,
+      width: 65,
+      height: 32,
+      top: 14,
+      right: 939,
+      bottom: 46,
+      left: 874,
+    });
+
+    const cleanup = initNavbarOverflow({
+      container,
+      items: [
+        { selector: '.login-btn', priority: 1 },
+        { selector: '.search-abs', priority: 2 },
+      ],
+    });
+
+    triggerAndFlush();
+
+    // Neither item should be hidden — same-group overlap is not overflow
+    expect(loginEl.hasAttribute('data-navbar-hidden')).toBe(false);
+    expect(searchEl.hasAttribute('data-navbar-hidden')).toBe(false);
+    cleanup();
+  });
+
   it('shows items when overflow is resolved after resize', () => {
     const { container, rightGroup, setCompressed } = createMockContainer({
       compressed: true,

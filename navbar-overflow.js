@@ -58,24 +58,32 @@ export function initNavbarOverflow({ container, items }) {
     // Check 2: Detect cross-group overlap.
     // Absolutely-positioned items (e.g. Docusaurus search at mobile widths)
     // don't cause compression — they float over siblings without affecting
-    // flow. Detect overflow by checking if any two visible grandchildren
-    // have overlapping bounding rects.
-    const rects = [];
+    // flow. Detect overflow by checking if visible items from DIFFERENT
+    // groups have overlapping bounding rects. We only compare across groups
+    // because items within the same group (e.g. an absolute-positioned
+    // search icon and a static login button) naturally share space.
+    const groups = [];
     for (const group of container.children) {
+      const rects = [];
       for (const item of group.children) {
         const r = item.getBoundingClientRect();
         if (r.width > 0 && r.height > 0) rects.push(r);
       }
+      if (rects.length) groups.push(rects);
     }
-    for (let i = 0; i < rects.length; i++) {
-      for (let j = i + 1; j < rects.length; j++) {
-        if (
-          rects[i].right > rects[j].left + 1 &&
-          rects[j].right > rects[i].left + 1 &&
-          rects[i].bottom > rects[j].top + 1 &&
-          rects[j].bottom > rects[i].top + 1
-        )
-          return true;
+    for (let g1 = 0; g1 < groups.length; g1++) {
+      for (let g2 = g1 + 1; g2 < groups.length; g2++) {
+        for (const a of groups[g1]) {
+          for (const b of groups[g2]) {
+            if (
+              a.right > b.left + 1 &&
+              b.right > a.left + 1 &&
+              a.bottom > b.top + 1 &&
+              b.bottom > a.top + 1
+            )
+              return true;
+          }
+        }
       }
     }
 
