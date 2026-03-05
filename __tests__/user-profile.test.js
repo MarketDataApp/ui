@@ -226,7 +226,7 @@ describe('initUserProfile — logged in, no dropdown', () => {
     const img = link.querySelector('img');
     expect(img).not.toBeNull();
     expect(img.alt).toBe('jdoe');
-    expect(img.className).toContain('rounded-full');
+    expect(img.className).toContain('md-up-avatar');
     expect(img.src).toContain('gravatar.com/avatar/');
   });
 
@@ -426,7 +426,7 @@ describe('initUserProfile — logged in, with dropdown', () => {
     await initUserProfile({ container, dropdown: true });
 
     const menu = container.querySelector('#userDropdown');
-    const nameDiv = menu.querySelector('.font-medium');
+    const nameDiv = menu.querySelector('.md-up-name');
     expect(nameDiv.textContent).toBe('jdoe');
   });
 });

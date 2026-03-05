@@ -241,15 +241,53 @@ export function _clearCache() {
 }
 
 // ---------------------------------------------------------------------------
+// Injected CSS — self-contained dropdown styles (light + dark mode)
+// No dependency on Flowbite or Tailwind at runtime.
+// ---------------------------------------------------------------------------
+
+const STYLE_ID = 'md-user-profile-styles';
+
+function ensureStyles() {
+  if (document.getElementById(STYLE_ID)) return;
+  const style = document.createElement('style');
+  style.id = STYLE_ID;
+  style.textContent = [
+    '.md-up-wrapper{position:relative;display:inline-block}',
+    '.md-up-avatar{width:2.5rem;height:2.5rem;border-radius:9999px;cursor:pointer;object-fit:cover}',
+    '.md-up-dropdown{position:absolute;top:calc(100% + .5rem);right:0;z-index:10;background:#fff;border:1px solid #e5e7eb;border-radius:.5rem;box-shadow:0 4px 6px -1px rgb(0 0 0/.1),0 2px 4px -2px rgb(0 0 0/.1);width:11rem}',
+    '.md-up-dropdown.hidden{display:none}',
+    '.md-up-header{padding:.75rem 1rem;border-bottom:1px solid #e5e7eb;font-size:.875rem;line-height:1.25rem;color:#111827}',
+    '.md-up-name{font-weight:500}',
+    '.md-up-email{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}',
+    '.md-up-menu{list-style:none;padding:.5rem;margin:0;font-size:.875rem;line-height:1.25rem;color:#374151;font-weight:500}',
+    '.md-up-menu li{margin:0;padding:0}',
+    '.md-up-menu a{display:block;padding:.5rem;border-radius:.375rem;text-decoration:none;color:inherit;transition:background .15s,color .15s}',
+    '.md-up-menu a:hover{background:#f3f4f6;color:#111827}',
+    '.md-up-signout{color:#dc2626!important}',
+    '.md-up-signout:hover{color:#dc2626!important}',
+    '.md-up-placeholder{position:relative;width:2.5rem;height:2.5rem;overflow:hidden;border-radius:9999px;background:#d1d5db;cursor:pointer;display:inline-block}',
+    '.md-up-placeholder svg{position:absolute;width:3rem;height:3rem;left:-.25rem;color:#9ca3af}',
+    '.dark .md-up-dropdown{background:#1f2937;border-color:#4b5563;box-shadow:0 4px 6px -1px rgb(0 0 0/.3)}',
+    '.dark .md-up-header{color:#f9fafb;border-color:#4b5563}',
+    '.dark .md-up-menu{color:#d1d5db}',
+    '.dark .md-up-menu a:hover{background:#374151;color:#f9fafb}',
+    '.dark .md-up-signout{color:#f87171!important}',
+    '.dark .md-up-signout:hover{color:#f87171!important}',
+    '.dark .md-up-placeholder{background:#4b5563}',
+    '.dark .md-up-placeholder svg{color:#6b7280}',
+  ].join('\n');
+  document.head.appendChild(style);
+}
+
+// ---------------------------------------------------------------------------
 // SVG Placeholder (Flowbite avatar/placeholder-icon)
 // ---------------------------------------------------------------------------
 
 function createPlaceholderSvg() {
   const wrapper = document.createElement('div');
-  wrapper.className = 'relative w-10 h-10 overflow-hidden bg-neutral-secondary-medium rounded-full';
+  wrapper.className = 'md-up-placeholder';
 
   const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
-  svg.setAttribute('class', 'absolute w-12 h-12 text-body-subtle -left-1');
   svg.setAttribute('fill', 'currentColor');
   svg.setAttribute('viewBox', '0 0 20 20');
 
@@ -345,6 +383,8 @@ export async function initUserProfile(options) {
     buttonClass = 'btn-hover-orange',
   } = options;
 
+  ensureStyles();
+
   let dropdownCleanup = null;
 
   const user = await fetchUser(apiUrl ? { apiUrl } : {});
@@ -376,7 +416,6 @@ export async function initUserProfile(options) {
         img.getAttribute('data-dropdown-placement'),
       );
     }
-    placeholder.style.cursor = 'pointer';
     placeholder.setAttribute('role', 'img');
     placeholder.setAttribute('aria-label', img.alt || 'User avatar');
     img.replaceWith(placeholder);
@@ -391,7 +430,7 @@ export async function initUserProfile(options) {
     const img = document.createElement('img');
     img.src = gravatarSrc;
     img.alt = user.login || '';
-    img.className = 'w-10 h-10 rounded-full cursor-pointer';
+    img.className = 'md-up-avatar';
     img.addEventListener('error', () => handleImgError(img));
 
     link.appendChild(img);
@@ -402,40 +441,38 @@ export async function initUserProfile(options) {
     };
   }
 
-  // Logged in, with dropdown
+  // Logged in, with dropdown — wrapper for absolute positioning
+  const wrapper = document.createElement('div');
+  wrapper.className = 'md-up-wrapper';
+
   const img = document.createElement('img');
   img.id = 'avatarButton';
-  img.setAttribute('type', 'button');
   img.setAttribute('data-dropdown-toggle', 'userDropdown');
   img.setAttribute('data-dropdown-placement', 'bottom-start');
-  img.className = 'w-10 h-10 rounded-full cursor-pointer';
+  img.className = 'md-up-avatar';
   img.src = gravatarSrc;
   img.alt = 'User dropdown';
 
   const menuEl = document.createElement('div');
   menuEl.id = 'userDropdown';
-  menuEl.className =
-    'z-10 hidden bg-neutral-primary-medium border border-default-medium rounded-base shadow-lg w-44';
+  menuEl.className = 'md-up-dropdown hidden';
 
   // Header section
   const header = document.createElement('div');
-  header.className = 'px-4 py-3 border-b border-default-medium text-sm text-heading';
+  header.className = 'md-up-header';
   const nameDiv = document.createElement('div');
-  nameDiv.className = 'font-medium';
+  nameDiv.className = 'md-up-name';
   nameDiv.textContent = user.name || user.login || '';
   const emailDiv = document.createElement('div');
-  emailDiv.className = 'truncate';
+  emailDiv.className = 'md-up-email';
   emailDiv.textContent = user.email || '';
   header.appendChild(nameDiv);
   header.appendChild(emailDiv);
 
   // Menu list
   const ul = document.createElement('ul');
-  ul.className = 'p-2 text-sm text-body font-medium';
+  ul.className = 'md-up-menu';
   ul.setAttribute('aria-labelledby', 'avatarButton');
-
-  const linkClass =
-    'block w-full p-2 hover:bg-neutral-tertiary-medium hover:text-heading rounded-md';
 
   const defaultItems = [
     { label: 'Dashboard', url: dashboardUrl },
@@ -447,7 +484,6 @@ export async function initUserProfile(options) {
     const li = document.createElement('li');
     const a = document.createElement('a');
     a.href = item.url;
-    a.className = linkClass;
     a.textContent = item.label;
     li.appendChild(a);
     ul.appendChild(li);
@@ -457,8 +493,7 @@ export async function initUserProfile(options) {
   const signOutLi = document.createElement('li');
   const signOutA = document.createElement('a');
   signOutA.href = logoutUrl;
-  signOutA.className =
-    'block w-full p-2 hover:bg-neutral-tertiary-medium text-fg-danger rounded-md';
+  signOutA.className = 'md-up-signout';
   signOutA.textContent = 'Sign out';
   signOutLi.appendChild(signOutA);
   ul.appendChild(signOutLi);
@@ -466,8 +501,9 @@ export async function initUserProfile(options) {
   menuEl.appendChild(header);
   menuEl.appendChild(ul);
 
-  container.appendChild(img);
-  container.appendChild(menuEl);
+  wrapper.appendChild(img);
+  wrapper.appendChild(menuEl);
+  container.appendChild(wrapper);
 
   // Set up dropdown toggle (our own JS since we can't rely on Flowbite JS)
   let triggerEl = img;
