@@ -44,6 +44,7 @@ export function initNavbarOverflow({ container, items }) {
   }
 
   function isOverflowing() {
+    // Check 1: Detect flex-item compression.
     // With flex-wrap: nowrap, flex items shrink instead of overflowing,
     // so container.scrollWidth may equal clientWidth even when items are
     // compressed. Detect compression by checking if any element's natural
@@ -53,6 +54,31 @@ export function initNavbarOverflow({ container, items }) {
         if (item.scrollWidth > item.offsetWidth + 1) return true;
       }
     }
+
+    // Check 2: Detect cross-group overlap.
+    // Absolutely-positioned items (e.g. Docusaurus search at mobile widths)
+    // don't cause compression — they float over siblings without affecting
+    // flow. Detect overflow by checking if any two visible grandchildren
+    // have overlapping bounding rects.
+    const rects = [];
+    for (const group of container.children) {
+      for (const item of group.children) {
+        const r = item.getBoundingClientRect();
+        if (r.width > 0 && r.height > 0) rects.push(r);
+      }
+    }
+    for (let i = 0; i < rects.length; i++) {
+      for (let j = i + 1; j < rects.length; j++) {
+        if (
+          rects[i].right > rects[j].left + 1 &&
+          rects[j].right > rects[i].left + 1 &&
+          rects[i].bottom > rects[j].top + 1 &&
+          rects[j].bottom > rects[i].top + 1
+        )
+          return true;
+      }
+    }
+
     return false;
   }
 

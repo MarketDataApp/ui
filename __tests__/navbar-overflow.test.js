@@ -253,6 +253,49 @@ describe('initNavbarOverflow', () => {
     expect(resizeCallbacks.length).toBe(callbackCountBefore - 1);
   });
 
+  it('hides items when visible grandchildren overlap (absolute-position case)', () => {
+    // Simulate the mobile scenario: the search icon is absolutely positioned
+    // and overlaps the logo. No compression detected, but bounding rects overlap.
+    const { container, rightGroup } = createMockContainer({ compressed: false });
+
+    const leftGroup = container.querySelector('.navbar__items');
+    const logo = leftGroup.querySelector('.navbar__brand');
+
+    const searchEl = addItem(rightGroup, 'search-icon');
+
+    // Mock bounding rects: logo extends to 273, search starts at 253 → 20px overlap
+    logo.getBoundingClientRect = () => ({
+      x: 54,
+      y: 8,
+      width: 219,
+      height: 44,
+      top: 8,
+      right: 273,
+      bottom: 52,
+      left: 54,
+    });
+    searchEl.getBoundingClientRect = () => ({
+      x: 253,
+      y: 12,
+      width: 36,
+      height: 36,
+      top: 12,
+      right: 289,
+      bottom: 48,
+      left: 253,
+    });
+
+    const cleanup = initNavbarOverflow({
+      container,
+      items: [{ selector: '.search-icon', priority: 1 }],
+    });
+
+    triggerAndFlush();
+
+    expect(searchEl.getAttribute('data-navbar-hidden')).toBe('');
+    cleanup();
+  });
+
   it('shows items when overflow is resolved after resize', () => {
     const { container, rightGroup, setCompressed } = createMockContainer({
       compressed: true,
