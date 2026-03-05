@@ -413,6 +413,31 @@ describe('initUserProfile — logged in, with dropdown', () => {
     expect(menu.classList.contains('hidden')).toBe(true);
   });
 
+  it('nudges dropdown left when it overflows the left viewport edge', async () => {
+    const container = document.createElement('div');
+    document.body.appendChild(container);
+
+    await initUserProfile({ container, dropdown: true });
+
+    const menu = container.querySelector('#userDropdown');
+    const trigger = container.querySelector('#avatarButton');
+
+    // Mock getBoundingClientRect to simulate left-edge overflow
+    vi.spyOn(menu, 'getBoundingClientRect').mockReturnValue({
+      left: -20,
+      right: 156,
+      top: 50,
+      bottom: 200,
+      width: 176,
+      height: 150,
+    });
+
+    trigger.click();
+    expect(menu.classList.contains('hidden')).toBe(false);
+    expect(menu.style.right).toBe('auto');
+    expect(menu.style.left).toBe('0px');
+  });
+
   it('falls back to login when user has no name', async () => {
     _clearCache();
     globalThis.fetch = vi.fn().mockResolvedValue({

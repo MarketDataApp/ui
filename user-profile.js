@@ -286,8 +286,22 @@ function setupDropdown(trigger, menu) {
   }
 
   function open() {
+    // Reset prior inline adjustments before measuring
+    menu.style.right = '';
+    menu.style.left = '';
+
     menu.classList.remove('hidden');
     trigger.setAttribute('aria-expanded', 'true');
+
+    // Nudge if dropdown overflows viewport edges
+    const rect = menu.getBoundingClientRect();
+    if (rect.left < 0) {
+      menu.style.right = 'auto';
+      menu.style.left = '0';
+    } else if (rect.right > window.innerWidth) {
+      menu.style.right = '0';
+      menu.style.left = 'auto';
+    }
   }
 
   function close() {
