@@ -7,14 +7,14 @@ import { initNavbarOverflow } from '../navbar-overflow.js';
 /**
  * Creates a mock container mimicking the Docusaurus navbar structure:
  *   .navbar__inner (flex container)
- *     .navbar__items (left group — nav links)
+ *     .navbar__items (left group — nav links, includes a "logo" sentinel)
  *     .navbar__items.navbar__items--right (right group — search, user, etc.)
  *
- * The overflow check sums children's scrollWidth vs container clientWidth.
- * We control the left group's scrollWidth (fixed) and the right group's
- * scrollWidth (dynamic, based on visible items) to simulate overflow.
+ * Overflow is detected by finding any grandchild where scrollWidth > offsetWidth.
+ * We place a sentinel "logo" element in the left group; when `compressed` is true,
+ * its scrollWidth exceeds its offsetWidth, signaling overflow.
  */
-function createMockContainer({ clientWidth = 800, leftWidth = 300, rightWidth = 600 } = {}) {
+function createMockContainer({ compressed = false } = {}) {
   const container = document.createElement('div');
   container.className = 'navbar__inner';
   document.body.appendChild(container);
@@ -23,33 +23,30 @@ function createMockContainer({ clientWidth = 800, leftWidth = 300, rightWidth = 
   leftGroup.className = 'navbar__items';
   container.appendChild(leftGroup);
 
+  // Sentinel element that simulates a compressed logo
+  const logo = document.createElement('div');
+  logo.className = 'navbar__brand';
+  leftGroup.appendChild(logo);
+
+  let _compressed = compressed;
+  Object.defineProperty(logo, 'scrollWidth', {
+    get: () => (_compressed ? 200 : 50),
+    configurable: true,
+  });
+  Object.defineProperty(logo, 'offsetWidth', {
+    get: () => 50,
+    configurable: true,
+  });
+
   const rightGroup = document.createElement('div');
   rightGroup.className = 'navbar__items navbar__items--right';
   container.appendChild(rightGroup);
 
-  let _clientWidth = clientWidth;
-  let _leftWidth = leftWidth;
-  let _rightWidth = rightWidth;
-
-  Object.defineProperty(container, 'clientWidth', {
-    get: () => _clientWidth,
-    configurable: true,
-  });
-  Object.defineProperty(leftGroup, 'scrollWidth', {
-    get: () => _leftWidth,
-    configurable: true,
-  });
-  Object.defineProperty(rightGroup, 'scrollWidth', {
-    get: () => _rightWidth,
-    configurable: true,
-  });
-
   return {
     container,
     rightGroup,
-    setWidths(cw, rw) {
-      _clientWidth = cw;
-      _rightWidth = rw;
+    setCompressed(v) {
+      _compressed = v;
     },
   };
 }
@@ -138,12 +135,7 @@ describe('initNavbarOverflow', () => {
   });
 
   it('hides the lowest-priority item when container overflows', () => {
-    // left=300 + right=600 = 900 > clientWidth=800 → overflow
-    const { container, rightGroup } = createMockContainer({
-      clientWidth: 800,
-      leftWidth: 300,
-      rightWidth: 600,
-    });
+    const { container, rightGroup } = createMockContainer({ compressed: true });
 
     const el1 = addItem(rightGroup, 'item-a');
     addItem(rightGroup, 'item-b');
@@ -162,11 +154,7 @@ describe('initNavbarOverflow', () => {
   });
 
   it('hides items in priority order (lowest first)', () => {
-    const { container, rightGroup } = createMockContainer({
-      clientWidth: 800,
-      leftWidth: 300,
-      rightWidth: 600,
-    });
+    const { container, rightGroup } = createMockContainer({ compressed: true });
 
     const el1 = addItem(rightGroup, 'low-pri');
     const el2 = addItem(rightGroup, 'mid-pri');
@@ -201,11 +189,7 @@ describe('initNavbarOverflow', () => {
   });
 
   it('restores items on cleanup', () => {
-    const { container, rightGroup } = createMockContainer({
-      clientWidth: 800,
-      leftWidth: 300,
-      rightWidth: 600,
-    });
+    const { container, rightGroup } = createMockContainer({ compressed: true });
 
     const el1 = addItem(rightGroup, 'hidden-item');
 
@@ -223,12 +207,7 @@ describe('initNavbarOverflow', () => {
   });
 
   it('does not hide items when there is no overflow', () => {
-    // left=300 + right=400 = 700 < clientWidth=800 → no overflow
-    const { container, rightGroup } = createMockContainer({
-      clientWidth: 800,
-      leftWidth: 300,
-      rightWidth: 400,
-    });
+    const { container, rightGroup } = createMockContainer({ compressed: false });
 
     const el1 = addItem(rightGroup, 'no-hide');
 
@@ -243,11 +222,7 @@ describe('initNavbarOverflow', () => {
   });
 
   it('skips items whose selectors do not match any element', () => {
-    const { container, rightGroup } = createMockContainer({
-      clientWidth: 800,
-      leftWidth: 300,
-      rightWidth: 600,
-    });
+    const { container, rightGroup } = createMockContainer({ compressed: true });
 
     const el1 = addItem(rightGroup, 'exists');
 
@@ -279,10 +254,8 @@ describe('initNavbarOverflow', () => {
   });
 
   it('shows items when overflow is resolved after resize', () => {
-    const { container, rightGroup, setWidths } = createMockContainer({
-      clientWidth: 800,
-      leftWidth: 300,
-      rightWidth: 600,
+    const { container, rightGroup, setCompressed } = createMockContainer({
+      compressed: true,
     });
 
     const el1 = addItem(rightGroup, 'toggle-item');
@@ -292,12 +265,12 @@ describe('initNavbarOverflow', () => {
       items: [{ selector: '.toggle-item', priority: 1 }],
     });
 
-    // Initial: overflow → hide
+    // Initial: compressed → hide
     triggerAndFlush();
     expect(el1.getAttribute('data-navbar-hidden')).toBe('');
 
-    // Resize wider so no overflow (300 + 400 = 700 < 1000)
-    setWidths(1000, 400);
+    // Resize wider — no longer compressed
+    setCompressed(false);
     triggerAndFlush();
 
     expect(el1.hasAttribute('data-navbar-hidden')).toBe(false);
