@@ -2392,7 +2392,7 @@
   line-height: var(--tw-leading, var(--text-xs--line-height));
   color: var(--color-body-subtle);
 }
-.user-profile-wrapper .user-profile-placeholder-svg {
+.user-profile-wrapper .user-profile-avatar--placeholder svg {
   position: absolute;
   height: calc(var(--spacing) * 12);
   width: calc(var(--spacing) * 12);

@@ -949,6 +949,14 @@
 .inline {
   display: inline;
 }
+.theme-toggle-icon-dark {
+  height: calc(var(--spacing) * 5);
+  width: calc(var(--spacing) * 5);
+}
+.theme-toggle-icon-light {
+  height: calc(var(--spacing) * 5);
+  width: calc(var(--spacing) * 5);
+}
 .form-container {
   border-radius: var(--radius-lg);
   border-color: var(--color-default-medium);
@@ -1333,7 +1341,7 @@
   line-height: var(--tw-leading, var(--text-xs--line-height));
   color: var(--color-body-subtle);
 }
-.user-profile-wrapper .user-profile-placeholder-svg {
+.user-profile-wrapper .user-profile-avatar--placeholder svg {
   position: absolute;
   height: calc(var(--spacing) * 12);
   width: calc(var(--spacing) * 12);

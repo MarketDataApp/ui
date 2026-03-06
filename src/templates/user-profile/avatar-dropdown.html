@@ -1,0 +1,20 @@
+<div class="user-profile-wrapper">
+  <img
+    id="avatarButton"
+    data-dropdown-toggle="userDropdown"
+    data-dropdown-placement="bottom-start"
+    class="user-profile-avatar user-profile-avatar--img"
+    src="{{gravatarSrc}}"
+    alt="User dropdown"
+  />
+  <div id="userDropdown" class="user-profile-dropdown hidden">
+    <div class="user-profile-dropdown-header">
+      <div class="user-profile-dropdown-name">{{userName}}</div>
+      <div class="user-profile-dropdown-email">{{userEmail}}</div>
+    </div>
+    <ul class="user-profile-dropdown-menu" aria-labelledby="avatarButton">
+      {{{menuItemsHtml}}}
+      <li><a href="{{logoutUrl}}" class="user-profile-dropdown-signout">Log out</a></li>
+    </ul>
+  </div>
+</div>

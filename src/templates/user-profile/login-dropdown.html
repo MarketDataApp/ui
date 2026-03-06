@@ -1,0 +1,21 @@
+<div class="user-profile-wrapper">
+  <button class="user-profile-login-pill" aria-expanded="false">
+    {{> svg/person-icon.svg}}
+    <span>Log in</span>
+    {{> svg/chevron.svg}}
+  </button>
+  <div class="user-profile-dropdown hidden">
+    <ul class="user-profile-dropdown-menu">
+      <li class="user-profile-dropdown-divider-above">
+        <a href="{{loginUrl}}" class="user-profile-dropdown-link">Log in</a>
+      </li>
+      <li class="user-profile-dropdown-divider-below">
+        <a href="{{signupUrl}}" class="user-profile-dropdown-link"
+          >{{signupText}}<br /><span class="user-profile-dropdown-subtext"
+            >No card required</span
+          ></a
+        >
+      </li>
+    </ul>
+  </div>
+</div>

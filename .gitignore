@@ -8,3 +8,6 @@ playwright-report/
 .cursorrules
 .cursorignore
 .env
+
+# Intermediate build artifacts
+src/*.templates.js

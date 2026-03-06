@@ -1,5 +1,3 @@
-// Auto-generated from src/ by scripts/build-js.js — do not edit manually
-
 /**
  * @module theme
  * Cross-domain dark/light theme cookie management for *.marketdata.app.

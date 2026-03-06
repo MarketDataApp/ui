@@ -1,5 +1,3 @@
-// Auto-generated from src/ by scripts/build-js.js — do not edit manually
-
 /**
  * @module navbar-overflow
  * Priority-based navbar overflow utility.
