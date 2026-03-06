@@ -1766,12 +1766,6 @@
   .py-8 {
     padding-block: calc(var(--spacing) * 8);
   }
-  .pt-1\.5 {
-    padding-top: calc(var(--spacing) * 1.5);
-  }
-  .pb-1\.5 {
-    padding-bottom: calc(var(--spacing) * 1.5);
-  }
   .pb-2 {
     padding-bottom: calc(var(--spacing) * 2);
   }
@@ -2321,6 +2315,15 @@
     }
   }
   transition: background 0.15s, color 0.15s;
+}
+.user-profile-wrapper .user-profile-dropdown-divider-above {
+  padding-bottom: calc(var(--spacing) * 1.5);
+}
+.user-profile-wrapper .user-profile-dropdown-divider-below {
+  border-top-style: var(--tw-border-style);
+  border-top-width: 1px;
+  border-color: var(--color-default-medium);
+  padding-top: calc(var(--spacing) * 1.5);
 }
 .user-profile-wrapper .user-profile-dropdown-signout {
   display: block;

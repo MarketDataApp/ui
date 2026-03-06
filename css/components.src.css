@@ -255,6 +255,14 @@
     color 0.15s;
 }
 
+.user-profile-wrapper .user-profile-dropdown-divider-above {
+  @apply pb-1.5;
+}
+
+.user-profile-wrapper .user-profile-dropdown-divider-below {
+  @apply border-t border-default-medium pt-1.5;
+}
+
 .user-profile-wrapper .user-profile-dropdown-signout {
   @apply block w-full p-2 rounded-md no-underline text-fg-danger;
   @apply hover:bg-danger-soft;

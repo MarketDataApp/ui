@@ -3,8 +3,9 @@
 @import 'tailwindcss/utilities' source(none);
 @import './theme.css';
 
-/* Only generate CSS for our component class names, not demo HTML utilities */
+/* Only generate CSS for our component class names + JS runtime, not demo HTML utilities */
 @source "./components.classes";
+@source "../user-profile.js";
 
 /* Support both .dark (Tailwind/Flowbite) and [data-theme="dark"] (Docusaurus) */
 @custom-variant dark (&:where(.dark, .dark *, [data-theme="dark"], [data-theme="dark"] *));

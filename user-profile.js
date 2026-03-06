@@ -251,26 +251,32 @@ export function _clearCache() {
 }
 
 // ---------------------------------------------------------------------------
+// HTML template helpers
+// ---------------------------------------------------------------------------
+
+function escapeHtml(str) {
+  return String(str)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;');
+}
+
+/** Parse an HTML string into a single DOM element via <template>. */
+function htmlToElement(html) {
+  const t = document.createElement('template');
+  t.innerHTML = html.trim();
+  return t.content.firstChild;
+}
+
+// ---------------------------------------------------------------------------
 // SVG Placeholder (Flowbite avatar/placeholder-icon pattern)
 // ---------------------------------------------------------------------------
 
+const PLACEHOLDER_HTML = `<div class="user-profile-avatar user-profile-avatar--placeholder"><svg class="user-profile-placeholder-svg" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clip-rule="evenodd"/></svg></div>`;
+
 function createPlaceholderSvg() {
-  const wrapper = document.createElement('div');
-  wrapper.className = 'user-profile-avatar user-profile-avatar--placeholder';
-
-  const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
-  svg.setAttribute('class', 'user-profile-placeholder-svg');
-  svg.setAttribute('fill', 'currentColor');
-  svg.setAttribute('viewBox', '0 0 20 20');
-
-  const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
-  path.setAttribute('fill-rule', 'evenodd');
-  path.setAttribute('d', 'M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z');
-  path.setAttribute('clip-rule', 'evenodd');
-
-  svg.appendChild(path);
-  wrapper.appendChild(svg);
-  return wrapper;
+  return htmlToElement(PLACEHOLDER_HTML);
 }
 
 // ---------------------------------------------------------------------------
@@ -385,95 +391,38 @@ export async function initUserProfile(options) {
 
   function renderLogin() {
     clearContainer();
-    const wrapper = document.createElement('div');
-    wrapper.className = 'user-profile-wrapper';
-    const link = document.createElement('a');
-    link.href = loginUrl;
-    link.className = buttonClass;
-    link.textContent = loginText;
-    wrapper.appendChild(link);
-    container.appendChild(wrapper);
+    container.appendChild(
+      htmlToElement(`
+      <div class="user-profile-wrapper">
+        <a href="${escapeHtml(loginUrl)}" class="${escapeHtml(buttonClass)}">${escapeHtml(loginText)}</a>
+      </div>
+    `),
+    );
   }
 
   function renderLoginDropdown() {
     clearContainer();
-    const wrapper = document.createElement('div');
-    wrapper.className = 'user-profile-wrapper';
-
-    // Pill trigger button
-    const button = document.createElement('button');
-    button.className = 'user-profile-login-pill';
-    button.setAttribute('aria-expanded', 'false');
-
-    // Person icon
-    const personSvg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
-    personSvg.setAttribute('fill', 'currentColor');
-    personSvg.setAttribute('viewBox', '0 0 20 20');
-    const personPath = document.createElementNS('http://www.w3.org/2000/svg', 'path');
-    personPath.setAttribute('fill-rule', 'evenodd');
-    personPath.setAttribute('d', 'M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z');
-    personPath.setAttribute('clip-rule', 'evenodd');
-    personSvg.appendChild(personPath);
-
-    // Text
-    const textSpan = document.createElement('span');
-    textSpan.textContent = 'Log in';
-
-    // Chevron icon
-    const chevronSvg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
-    chevronSvg.setAttribute('fill', 'none');
-    chevronSvg.setAttribute('viewBox', '0 0 24 24');
-    chevronSvg.setAttribute('stroke', 'currentColor');
-    chevronSvg.setAttribute('stroke-width', '2');
-    const chevronPath = document.createElementNS('http://www.w3.org/2000/svg', 'path');
-    chevronPath.setAttribute('stroke-linecap', 'round');
-    chevronPath.setAttribute('stroke-linejoin', 'round');
-    chevronPath.setAttribute('d', 'm19 9-7 7-7-7');
-    chevronSvg.appendChild(chevronPath);
-
-    button.appendChild(personSvg);
-    button.appendChild(textSpan);
-    button.appendChild(chevronSvg);
-
-    // Dropdown menu
-    const menuEl = document.createElement('div');
-    menuEl.className = 'user-profile-dropdown hidden';
-
-    const ul = document.createElement('ul');
-    ul.className = 'user-profile-dropdown-menu';
-
-    // Log in item
-    const loginLi = document.createElement('li');
-    const loginA = document.createElement('a');
-    loginA.href = loginUrl;
-    loginA.className = 'user-profile-dropdown-link';
-    loginA.textContent = 'Log in';
-    loginLi.className = 'pb-1.5';
-    loginLi.appendChild(loginA);
-    ul.appendChild(loginLi);
-
-    // Start Free Trial item with divider
-    const signupLi = document.createElement('li');
-    signupLi.className = 'border-t border-default-medium pt-1.5';
-    const signupA = document.createElement('a');
-    signupA.href = signupUrl;
-    signupA.className = 'user-profile-dropdown-link';
-    signupA.textContent = signupText;
-    const subtextSpan = document.createElement('span');
-    subtextSpan.className = 'user-profile-dropdown-subtext';
-    subtextSpan.textContent = 'No card required';
-    signupA.appendChild(document.createElement('br'));
-    signupA.appendChild(subtextSpan);
-    signupLi.appendChild(signupA);
-    ul.appendChild(signupLi);
-
-    menuEl.appendChild(ul);
-
-    wrapper.appendChild(button);
-    wrapper.appendChild(menuEl);
+    const wrapper = htmlToElement(`
+      <div class="user-profile-wrapper">
+        <button class="user-profile-login-pill" aria-expanded="false">
+          <svg fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clip-rule="evenodd"/></svg>
+          <span>Log in</span>
+          <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="m19 9-7 7-7-7"/></svg>
+        </button>
+        <div class="user-profile-dropdown hidden">
+          <ul class="user-profile-dropdown-menu">
+            <li class="user-profile-dropdown-divider-above"><a href="${escapeHtml(loginUrl)}" class="user-profile-dropdown-link">Log in</a></li>
+            <li class="user-profile-dropdown-divider-below"><a href="${escapeHtml(signupUrl)}" class="user-profile-dropdown-link">${escapeHtml(signupText)}<br><span class="user-profile-dropdown-subtext">No card required</span></a></li>
+          </ul>
+        </div>
+      </div>
+    `);
     container.appendChild(wrapper);
 
-    dropdownCleanup = setupDropdown(button, menuEl);
+    dropdownCleanup = setupDropdown(
+      wrapper.querySelector('.user-profile-login-pill'),
+      wrapper.querySelector('.user-profile-dropdown'),
+    );
   }
 
   function renderLoggedOut() {
@@ -518,20 +467,15 @@ export async function initUserProfile(options) {
 
   // Logged in, no dropdown — avatar link to dashboard
   if (!dropdown) {
-    const wrapper = document.createElement('div');
-    wrapper.className = 'user-profile-wrapper';
-
-    const link = document.createElement('a');
-    link.href = dashboardUrl;
-
-    const img = document.createElement('img');
-    img.src = gravatarSrc;
-    img.alt = user.login || '';
-    img.className = 'user-profile-avatar user-profile-avatar--img';
+    const wrapper = htmlToElement(`
+      <div class="user-profile-wrapper">
+        <a href="${escapeHtml(dashboardUrl)}">
+          <img src="${escapeHtml(gravatarSrc)}" alt="${escapeHtml(user.login || '')}" class="user-profile-avatar user-profile-avatar--img">
+        </a>
+      </div>
+    `);
+    const img = wrapper.querySelector('img');
     img.addEventListener('error', () => handleImgError(img));
-
-    link.appendChild(img);
-    wrapper.appendChild(link);
     container.appendChild(wrapper);
 
     return () => {
@@ -540,69 +484,34 @@ export async function initUserProfile(options) {
   }
 
   // Logged in, with dropdown — wrapper for absolute positioning
-  const wrapper = document.createElement('div');
-  wrapper.className = 'user-profile-wrapper';
-
-  const img = document.createElement('img');
-  img.id = 'avatarButton';
-  img.setAttribute('data-dropdown-toggle', 'userDropdown');
-  img.setAttribute('data-dropdown-placement', 'bottom-start');
-  img.className = 'user-profile-avatar user-profile-avatar--img';
-  img.src = gravatarSrc;
-  img.alt = 'User dropdown';
-
-  const menuEl = document.createElement('div');
-  menuEl.id = 'userDropdown';
-  menuEl.className = 'user-profile-dropdown hidden';
-
-  // Header section
-  const header = document.createElement('div');
-  header.className = 'user-profile-dropdown-header';
-  const nameDiv = document.createElement('div');
-  nameDiv.className = 'user-profile-dropdown-name';
-  nameDiv.textContent = user.name || user.login || '';
-  const emailDiv = document.createElement('div');
-  emailDiv.className = 'user-profile-dropdown-email';
-  emailDiv.textContent = user.email || '';
-  header.appendChild(nameDiv);
-  header.appendChild(emailDiv);
-
-  // Menu list
-  const ul = document.createElement('ul');
-  ul.className = 'user-profile-dropdown-menu';
-  ul.setAttribute('aria-labelledby', 'avatarButton');
-
-  const defaultItems = [
+  const allItems = [
     { label: 'Dashboard', url: dashboardUrl },
     { label: 'Profile', url: profileUrl },
     { label: 'Modify My Plan', url: planUrl },
+    ...menuItems,
   ];
 
-  for (const item of [...defaultItems, ...menuItems]) {
-    const li = document.createElement('li');
-    const a = document.createElement('a');
-    a.href = item.url;
-    a.className = 'user-profile-dropdown-link';
-    a.textContent = item.label;
-    li.appendChild(a);
-    ul.appendChild(li);
-  }
-
-  // Sign out item
-  const signOutLi = document.createElement('li');
-  const signOutA = document.createElement('a');
-  signOutA.href = logoutUrl;
-  signOutA.className = 'user-profile-dropdown-signout';
-  signOutA.textContent = 'Log out';
-  signOutLi.appendChild(signOutA);
-  ul.appendChild(signOutLi);
-
-  menuEl.appendChild(header);
-  menuEl.appendChild(ul);
-
-  wrapper.appendChild(img);
-  wrapper.appendChild(menuEl);
+  const wrapper = htmlToElement(`
+    <div class="user-profile-wrapper">
+      <img id="avatarButton" data-dropdown-toggle="userDropdown" data-dropdown-placement="bottom-start"
+           class="user-profile-avatar user-profile-avatar--img"
+           src="${escapeHtml(gravatarSrc)}" alt="User dropdown">
+      <div id="userDropdown" class="user-profile-dropdown hidden">
+        <div class="user-profile-dropdown-header">
+          <div class="user-profile-dropdown-name">${escapeHtml(user.name || user.login || '')}</div>
+          <div class="user-profile-dropdown-email">${escapeHtml(user.email || '')}</div>
+        </div>
+        <ul class="user-profile-dropdown-menu" aria-labelledby="avatarButton">
+          ${allItems.map((item) => `<li><a href="${escapeHtml(item.url)}" class="user-profile-dropdown-link">${escapeHtml(item.label)}</a></li>`).join('')}
+          <li><a href="${escapeHtml(logoutUrl)}" class="user-profile-dropdown-signout">Log out</a></li>
+        </ul>
+      </div>
+    </div>
+  `);
   container.appendChild(wrapper);
+
+  const img = wrapper.querySelector('#avatarButton');
+  const menuEl = wrapper.querySelector('#userDropdown');
 
   // Set up dropdown toggle (our own JS since we can't rely on Flowbite JS)
   let triggerEl = img;
