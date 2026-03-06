@@ -72,13 +72,16 @@
 
   /* ---- Neutral Surfaces ---- */
   --color-neutral-primary-soft: var(--color-white);
+  --color-neutral-primary: var(--color-white);
   --color-neutral-primary-medium: var(--color-white);
   --color-neutral-primary-strong: var(--color-white);
   --color-neutral-secondary-soft: var(--color-gray-50);
+  --color-neutral-secondary: var(--color-gray-50);
   --color-neutral-secondary-medium: var(--color-gray-50);
   --color-neutral-secondary-strong: var(--color-gray-50);
   --color-neutral-secondary-strongest: var(--color-gray-50);
   --color-neutral-tertiary-soft: var(--color-gray-100);
+  --color-neutral-tertiary: var(--color-gray-100);
   --color-neutral-tertiary-medium: var(--color-gray-100);
   --color-neutral-quaternary: var(--color-gray-200);
   --color-neutral-quaternary-medium: var(--color-gray-200);
@@ -137,6 +140,14 @@
   --color-dark: var(--color-gray-800);
   --color-dark-strong: var(--color-gray-900);
   --color-disabled: var(--color-gray-100);
+  --color-purple: var(--color-purple-500);
+  --color-sky: var(--color-sky-500);
+  --color-teal: var(--color-teal-600);
+  --color-pink: var(--color-pink-600);
+  --color-cyan: var(--color-cyan-500);
+  --color-fuchsia: var(--color-fuchsia-600);
+  --color-indigo: var(--color-indigo-600);
+  --color-orange: var(--color-orange-400);
 
   /* ---- Brand ---- */
   --color-brand-softer: var(--color-blue-50);
@@ -156,13 +167,16 @@
 [data-theme='dark'] {
   /* Neutral Surfaces */
   --color-neutral-primary-soft: var(--color-gray-900);
+  --color-neutral-primary: var(--color-gray-950);
   --color-neutral-primary-medium: var(--color-gray-800);
   --color-neutral-primary-strong: var(--color-gray-700);
   --color-neutral-secondary-soft: var(--color-gray-900);
+  --color-neutral-secondary: var(--color-gray-950);
   --color-neutral-secondary-medium: var(--color-gray-800);
   --color-neutral-secondary-strong: var(--color-gray-700);
   --color-neutral-secondary-strongest: var(--color-gray-600);
   --color-neutral-tertiary-soft: var(--color-gray-900);
+  --color-neutral-tertiary: var(--color-gray-800);
   --color-neutral-tertiary-medium: var(--color-gray-700);
   --color-neutral-quaternary: var(--color-gray-700);
   --color-neutral-quaternary-medium: var(--color-gray-600);
@@ -221,6 +235,14 @@
   --color-dark: var(--color-gray-800);
   --color-dark-strong: var(--color-gray-700);
   --color-disabled: var(--color-gray-800);
+  --color-purple: var(--color-purple-500);
+  --color-sky: var(--color-sky-500);
+  --color-teal: var(--color-teal-500);
+  --color-pink: var(--color-pink-500);
+  --color-cyan: var(--color-cyan-500);
+  --color-fuchsia: var(--color-fuchsia-500);
+  --color-indigo: var(--color-indigo-500);
+  --color-orange: var(--color-orange-400);
 
   /* Brand */
   --color-brand-softer: var(--color-blue-950);
