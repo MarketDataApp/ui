@@ -1,11 +1,6 @@
 import { test, expect } from '@playwright/test';
 
-// Serve the docs page locally via file:// or a local server.
-// We use a static server approach — Playwright can navigate to localhost.
-// The `webServer` option in playwright.config.js could also work, but
-// we'll use file:// for simplicity since there are no CORS/fetch concerns.
-
-const PAGE_URL = 'http://localhost:3000/docs/navbar-overflow.html';
+const PAGE_URL = 'https://dev.marketdata.app/ui/docs/navbar-overflow.html';
 
 // Wide width where nothing should overflow
 const WIDE = 900;
