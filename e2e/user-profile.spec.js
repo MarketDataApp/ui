@@ -26,25 +26,28 @@ test.describe('User profile component', () => {
 
     await avatar.click();
 
-    const dropdown = page.locator('.user-profile-dropdown');
+    const container = page.locator('#user-profile-dropdown');
+    const dropdown = container.locator('.user-profile-dropdown');
     await expect(dropdown).toBeVisible();
 
     // Verify dropdown header shows user info
-    await expect(page.locator('.user-profile-dropdown-name')).toBeVisible();
-    await expect(page.locator('.user-profile-dropdown-email')).toBeVisible();
+    await expect(container.locator('.user-profile-dropdown-name')).toBeVisible();
+    await expect(container.locator('.user-profile-dropdown-email')).toBeVisible();
 
     // Verify menu links
     await expect(
-      page.locator('.user-profile-dropdown-link', { hasText: 'Dashboard' }),
+      container.locator('.user-profile-dropdown-link', { hasText: 'Dashboard' }),
     ).toBeVisible();
-    await expect(page.locator('.user-profile-dropdown-link', { hasText: 'Profile' })).toBeVisible();
     await expect(
-      page.locator('.user-profile-dropdown-link', {
+      container.locator('.user-profile-dropdown-link', { hasText: 'Profile' }),
+    ).toBeVisible();
+    await expect(
+      container.locator('.user-profile-dropdown-link', {
         hasText: 'Modify My Plan',
       }),
     ).toBeVisible();
     await expect(
-      page.locator('.user-profile-dropdown-signout', { hasText: 'Log out' }),
+      container.locator('.user-profile-dropdown-signout', { hasText: 'Log out' }),
     ).toBeVisible();
   });
 
@@ -53,7 +56,7 @@ test.describe('User profile component', () => {
     await expect(avatar).toBeVisible({ timeout: 10_000 });
 
     await avatar.click();
-    const dropdown = page.locator('.user-profile-dropdown');
+    const dropdown = page.locator('#user-profile-dropdown .user-profile-dropdown');
     await expect(dropdown).toBeVisible();
 
     // Click outside the dropdown
@@ -66,7 +69,7 @@ test.describe('User profile component', () => {
     await expect(avatar).toBeVisible({ timeout: 10_000 });
 
     await avatar.click();
-    const dropdown = page.locator('.user-profile-dropdown');
+    const dropdown = page.locator('#user-profile-dropdown .user-profile-dropdown');
     await expect(dropdown).toBeVisible();
 
     await page.keyboard.press('Escape');
