@@ -87,6 +87,13 @@ export function initNavbarOverflow({ container, items }) {
       }
     }
 
+    // Check 3: Detect container-level horizontal overflow.
+    // Catches any overflow that Checks 1 and 2 miss — e.g. when the
+    // container allows wrapping (no flex-wrap: nowrap) and overlapping
+    // items are in the same group. A simple scrollWidth > clientWidth
+    // on the container itself is the most robust fallback.
+    if (container.scrollWidth > container.clientWidth) return true;
+
     return false;
   }
 

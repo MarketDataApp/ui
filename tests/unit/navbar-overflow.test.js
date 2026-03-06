@@ -343,6 +343,43 @@ describe('initNavbarOverflow', () => {
     cleanup();
   });
 
+  it('hides items when container scrollWidth exceeds clientWidth (scrollWidth fallback)', () => {
+    // Simulate the scenario where Check 1 (compression) and Check 2
+    // (cross-group overlap) don't trigger, but the container itself
+    // has horizontal overflow (scrollWidth > clientWidth).
+    const { container, rightGroup } = createMockContainer({ compressed: false });
+
+    const loginEl = addItem(rightGroup, 'login-btn');
+
+    // No compression (Check 1 won't fire), no cross-group overlap (Check 2 won't fire).
+    // But container itself overflows horizontally (Check 3).
+    let _scrollWidth = 400;
+    Object.defineProperty(container, 'scrollWidth', {
+      get: () => _scrollWidth,
+      configurable: true,
+    });
+    Object.defineProperty(container, 'clientWidth', {
+      get: () => 300,
+      configurable: true,
+    });
+
+    const cleanup = initNavbarOverflow({
+      container,
+      items: [{ selector: '.login-btn', priority: 1 }],
+    });
+
+    triggerAndFlush();
+
+    expect(loginEl.getAttribute('data-navbar-hidden')).toBe('');
+
+    // Resolve overflow: scrollWidth <= clientWidth
+    _scrollWidth = 300;
+    triggerAndFlush();
+
+    expect(loginEl.hasAttribute('data-navbar-hidden')).toBe(false);
+    cleanup();
+  });
+
   it('shows items when overflow is resolved after resize', () => {
     const { container, rightGroup, setCompressed } = createMockContainer({
       compressed: true,

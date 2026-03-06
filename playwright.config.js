@@ -37,5 +37,10 @@ export default defineConfig({
         storageState: 'tests/e2e/.auth/user.json',
       },
     },
+    {
+      name: 'navbar-overflow',
+      testMatch: ['navbar-overflow.spec.js'],
+      use: { browserName: 'chromium' },
+    },
   ],
 });

@@ -1,0 +1,263 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Navbar Overflow - Detection Methods</title>
+    <link rel="stylesheet" href="../dist/css/components.css" />
+    <style>
+      /* Shared navbar styling */
+      .demo-navbar {
+        display: flex;
+        align-items: center;
+        background: #1f2937;
+        color: white;
+        height: 60px;
+        overflow: hidden;
+        position: relative;
+        border-radius: 8px;
+        resize: horizontal;
+      }
+      .demo-navbar .nav-group {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        padding: 0 12px;
+      }
+      .demo-navbar .nav-group.left {
+        flex: 1 1 auto;
+        min-width: 0;
+      }
+      .demo-navbar .nav-group.right {
+        flex: 0 0 auto;
+      }
+      .demo-navbar .nav-item {
+        padding: 6px 14px;
+        border-radius: 6px;
+        white-space: nowrap;
+        font-size: 14px;
+      }
+      .demo-navbar .nav-logo {
+        font-weight: bold;
+        font-size: 16px;
+        white-space: nowrap;
+        padding: 6px 14px;
+      }
+      .demo-navbar .nav-item.login-btn {
+        background: #3b82f6;
+      }
+      .demo-navbar .nav-item.signup-btn {
+        background: #10b981;
+      }
+      .demo-navbar .nav-item.profile {
+        background: #8b5cf6;
+      }
+      .demo-navbar .nav-item.search {
+        background: #6b7280;
+      }
+      .demo-navbar [data-navbar-hidden] {
+        outline: 2px dashed red;
+      }
+      .status-bar {
+        margin-top: 8px;
+        font-size: 13px;
+        font-family: monospace;
+        padding: 4px 8px;
+        border-radius: 4px;
+        background: #f3f4f6;
+      }
+      .dark .status-bar {
+        background: #374151;
+      }
+
+      /* Demo 1: Compression — flex-wrap: nowrap forces items to compress */
+      #navbar-compression {
+        flex-wrap: nowrap;
+      }
+      #navbar-compression .nav-group {
+        flex-wrap: nowrap;
+        min-width: 0;
+      }
+      #navbar-compression .nav-item,
+      #navbar-compression .nav-logo {
+        overflow: hidden;
+        text-overflow: ellipsis;
+        flex-shrink: 1;
+        min-width: 0;
+      }
+
+      /* Demo 2: Cross-group overlap — absolute positioning causes overlap between groups */
+      #navbar-overlap .nav-group.right {
+        position: absolute;
+        right: 0;
+      }
+
+      /* Demo 3: scrollWidth fallback — wrapping allowed, same-group, but content overflows container */
+      #navbar-scrollwidth {
+        flex-wrap: wrap;
+        overflow: hidden;
+      }
+      #navbar-scrollwidth .nav-group {
+        flex-wrap: nowrap;
+        flex-shrink: 0;
+      }
+      #navbar-scrollwidth .nav-item {
+        flex-shrink: 0;
+      }
+    </style>
+  </head>
+  <body class="default min-h-screen">
+    <header class="border-b border-gray-200 dark:border-gray-700 mb-12">
+      <div class="max-w-5xl mx-auto px-4 py-8">
+        <h1 class="text-3xl font-bold">Navbar Overflow Detection</h1>
+        <p class="mt-1 text-gray-500 dark:text-gray-400">
+          Three detection methods. Resize each navbar to trigger overflow.
+        </p>
+      </div>
+    </header>
+
+    <main class="max-w-5xl mx-auto px-4 pb-16 space-y-16">
+      <!-- Demo 1: Compression Detection -->
+      <section id="demo-compression">
+        <h2 class="text-2xl font-bold mb-2">Check 1: Flex-Item Compression</h2>
+        <p class="text-gray-500 dark:text-gray-400 mb-4 text-sm">
+          <code>flex-wrap: nowrap</code> — items compress instead of wrapping. Detected when
+          <code>scrollWidth > offsetWidth</code> on any flex child.
+        </p>
+        <div
+          id="navbar-compression"
+          class="demo-navbar"
+          data-testid="navbar-compression"
+          style="width: 900px"
+        >
+          <div class="nav-group left">
+            <span class="nav-logo">MarketData</span>
+            <span class="nav-item">Documentation</span>
+            <span class="nav-item">API Reference</span>
+            <span class="nav-item">Pricing</span>
+          </div>
+          <div class="nav-group right">
+            <span class="nav-item search">.search</span>
+            <span class="nav-item login-btn">.login-btn</span>
+            <span class="nav-item signup-btn">.signup-btn</span>
+          </div>
+        </div>
+        <div class="status-bar" data-testid="status-compression">
+          Hidden: <span class="hidden-list">none</span>
+        </div>
+      </section>
+
+      <!-- Demo 2: Cross-Group Overlap -->
+      <section id="demo-overlap">
+        <h2 class="text-2xl font-bold mb-2">Check 2: Cross-Group Overlap</h2>
+        <p class="text-gray-500 dark:text-gray-400 mb-4 text-sm">
+          Right group is absolutely positioned. At narrow widths, items from different groups
+          overlap. Detected by comparing bounding rects across groups.
+        </p>
+        <div
+          id="navbar-overlap"
+          class="demo-navbar"
+          data-testid="navbar-overlap"
+          style="width: 900px"
+        >
+          <div class="nav-group left">
+            <span class="nav-logo">MarketData</span>
+            <span class="nav-item">Documentation</span>
+            <span class="nav-item">API Reference</span>
+          </div>
+          <div class="nav-group right">
+            <span class="nav-item search">.search</span>
+            <span class="nav-item login-btn">.login-btn</span>
+            <span class="nav-item signup-btn">.signup-btn</span>
+          </div>
+        </div>
+        <div class="status-bar" data-testid="status-overlap">
+          Hidden: <span class="hidden-list">none</span>
+        </div>
+      </section>
+
+      <!-- Demo 3: scrollWidth Fallback -->
+      <section id="demo-scrollwidth">
+        <h2 class="text-2xl font-bold mb-2">Check 3: Container scrollWidth Fallback</h2>
+        <p class="text-gray-500 dark:text-gray-400 mb-4 text-sm">
+          No <code>flex-wrap: nowrap</code> compression, no cross-group overlap. Items are all in
+          one group and the container simply overflows horizontally. Detected by
+          <code>container.scrollWidth > container.clientWidth</code>.
+        </p>
+        <div
+          id="navbar-scrollwidth"
+          class="demo-navbar"
+          data-testid="navbar-scrollwidth"
+          style="width: 900px"
+        >
+          <div class="nav-group left">
+            <span class="nav-logo">MarketData</span>
+            <span class="nav-item">Documentation</span>
+            <span class="nav-item">API Reference</span>
+            <span class="nav-item">Pricing</span>
+            <span class="nav-item search">.search</span>
+            <span class="nav-item login-btn">.login-btn</span>
+            <span class="nav-item signup-btn">.signup-btn</span>
+          </div>
+        </div>
+        <div class="status-bar" data-testid="status-scrollwidth">
+          Hidden: <span class="hidden-list">none</span>
+        </div>
+      </section>
+    </main>
+
+    <script type="module">
+      import { initNavbarOverflow } from '../dist/navbar-overflow.js';
+
+      function setupDemo(navbarId, statusTestId, items) {
+        const container = document.getElementById(navbarId);
+        const statusEl = document.querySelector(`[data-testid="${statusTestId}"] .hidden-list`);
+
+        initNavbarOverflow({ container, items });
+
+        // Poll for hidden items and update status display
+        const observer = new MutationObserver(() => updateStatus());
+        observer.observe(container, {
+          attributes: true,
+          subtree: true,
+          attributeFilter: ['data-navbar-hidden'],
+        });
+
+        function updateStatus() {
+          const hidden = container.querySelectorAll('[data-navbar-hidden]');
+          if (hidden.length === 0) {
+            statusEl.textContent = 'none';
+          } else {
+            statusEl.textContent = Array.from(hidden)
+              .map((el) => el.textContent.trim())
+              .join(', ');
+          }
+        }
+
+        // Initial update after reflow settles
+        setTimeout(updateStatus, 200);
+      }
+
+      // Demo 1: Compression
+      setupDemo('navbar-compression', 'status-compression', [
+        { selector: '.signup-btn', priority: 1 },
+        { selector: '.login-btn', priority: 2 },
+        { selector: '.search', priority: 3 },
+      ]);
+
+      // Demo 2: Cross-group overlap
+      setupDemo('navbar-overlap', 'status-overlap', [
+        { selector: '.signup-btn', priority: 1 },
+        { selector: '.login-btn', priority: 2 },
+        { selector: '.search', priority: 3 },
+      ]);
+
+      // Demo 3: scrollWidth fallback
+      setupDemo('navbar-scrollwidth', 'status-scrollwidth', [
+        { selector: '.signup-btn', priority: 1 },
+        { selector: '.login-btn', priority: 2 },
+        { selector: '.search', priority: 3 },
+      ]);
+    </script>
+  </body>
+</html>
