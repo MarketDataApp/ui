@@ -448,6 +448,17 @@ describe('initUserProfile — logged in, with dropdown', () => {
     expect(menu.style.left).toBe('0px');
   });
 
+  it('renders avatar (not pill) when logged in with dropdown', async () => {
+    const container = document.createElement('div');
+    document.body.appendChild(container);
+
+    await initUserProfile({ container, dropdown: true });
+
+    // Should have avatar, not pill
+    expect(container.querySelector('#avatarButton')).not.toBeNull();
+    expect(container.querySelector('.user-profile-signin-pill')).toBeNull();
+  });
+
   it('falls back to login when user has no name', async () => {
     _clearCache();
     globalThis.fetch = vi.fn().mockResolvedValue({
@@ -463,5 +474,188 @@ describe('initUserProfile — logged in, with dropdown', () => {
     const menu = container.querySelector('#userDropdown');
     const nameDiv = menu.querySelector('.user-profile-dropdown-name');
     expect(nameDiv.textContent).toBe('jdoe');
+  });
+});
+
+// ---------------------------------------------------------------------------
+// initUserProfile — Logged out, with dropdown (guest dropdown)
+// ---------------------------------------------------------------------------
+describe('initUserProfile — logged out, with dropdown (guest dropdown)', () => {
+  beforeEach(() => {
+    _clearCache();
+    globalThis.fetch = vi.fn().mockResolvedValue({ ok: false });
+  });
+
+  it('renders pill button (not flat link) when dropdown: true and user is null', async () => {
+    const container = document.createElement('div');
+    document.body.appendChild(container);
+
+    await initUserProfile({ container, dropdown: true });
+
+    const pill = container.querySelector('.user-profile-signin-pill');
+    expect(pill).not.toBeNull();
+    expect(pill.tagName).toBe('BUTTON');
+
+    // Should NOT have the old flat link
+    const flatLink = container.querySelector('a.btn-hover-orange');
+    expect(flatLink).toBeNull();
+  });
+
+  it('pill button contains person icon, "Sign in" text, and chevron icon', async () => {
+    const container = document.createElement('div');
+    document.body.appendChild(container);
+
+    await initUserProfile({ container, dropdown: true });
+
+    const pill = container.querySelector('.user-profile-signin-pill');
+    const svgs = pill.querySelectorAll('svg');
+    expect(svgs.length).toBe(2);
+
+    const textSpan = pill.querySelector('span');
+    expect(textSpan.textContent).toBe('Sign in');
+  });
+
+  it('clicking pill opens dropdown with "Log in" and "Start Free Trial" items', async () => {
+    const container = document.createElement('div');
+    document.body.appendChild(container);
+
+    await initUserProfile({ container, dropdown: true });
+
+    const pill = container.querySelector('.user-profile-signin-pill');
+    const menu = container.querySelector('.user-profile-dropdown');
+
+    expect(menu.classList.contains('hidden')).toBe(true);
+
+    pill.click();
+    expect(menu.classList.contains('hidden')).toBe(false);
+
+    const links = menu.querySelectorAll('.user-profile-dropdown-link');
+    const labels = Array.from(links).map((a) => a.textContent.replace(/\n/g, '').trim());
+    expect(labels.some((l) => l.includes('Log in'))).toBe(true);
+    expect(labels.some((l) => l.includes('Start Free Trial'))).toBe(true);
+  });
+
+  it('"Log in" links to loginUrl', async () => {
+    const container = document.createElement('div');
+    document.body.appendChild(container);
+
+    await initUserProfile({ container, dropdown: true, loginUrl: 'https://example.com/login' });
+
+    const links = container.querySelectorAll('.user-profile-dropdown-link');
+    const loginLink = Array.from(links).find((a) => a.textContent.includes('Log in'));
+    expect(loginLink.href).toBe('https://example.com/login');
+  });
+
+  it('"Start Free Trial" links to signupUrl', async () => {
+    const container = document.createElement('div');
+    document.body.appendChild(container);
+
+    await initUserProfile({
+      container,
+      dropdown: true,
+      signupUrl: 'https://example.com/signup',
+    });
+
+    const links = container.querySelectorAll('.user-profile-dropdown-link');
+    const signupLink = Array.from(links).find((a) => a.textContent.includes('Start Free Trial'));
+    expect(signupLink.href).toBe('https://example.com/signup');
+  });
+
+  it('defaults signupUrl to planUrl when signupUrl is not set', async () => {
+    const container = document.createElement('div');
+    document.body.appendChild(container);
+
+    await initUserProfile({
+      container,
+      dropdown: true,
+      planUrl: 'https://example.com/plan',
+    });
+
+    const links = container.querySelectorAll('.user-profile-dropdown-link');
+    const signupLink = Array.from(links).find((a) => a.textContent.includes('Start Free Trial'));
+    expect(signupLink.href).toBe('https://example.com/plan');
+  });
+
+  it('"30 days free" subtext is visible', async () => {
+    const container = document.createElement('div');
+    document.body.appendChild(container);
+
+    await initUserProfile({ container, dropdown: true });
+
+    const subtext = container.querySelector('.user-profile-dropdown-subtext');
+    expect(subtext).not.toBeNull();
+    expect(subtext.textContent).toBe('30 days free');
+  });
+
+  it('Escape key closes the dropdown', async () => {
+    const container = document.createElement('div');
+    document.body.appendChild(container);
+
+    await initUserProfile({ container, dropdown: true });
+
+    const pill = container.querySelector('.user-profile-signin-pill');
+    const menu = container.querySelector('.user-profile-dropdown');
+
+    pill.click();
+    expect(menu.classList.contains('hidden')).toBe(false);
+
+    document.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape' }));
+    expect(menu.classList.contains('hidden')).toBe(true);
+  });
+
+  it('outside click closes the dropdown', async () => {
+    const container = document.createElement('div');
+    document.body.appendChild(container);
+
+    await initUserProfile({ container, dropdown: true });
+
+    const pill = container.querySelector('.user-profile-signin-pill');
+    const menu = container.querySelector('.user-profile-dropdown');
+
+    pill.click();
+    expect(menu.classList.contains('hidden')).toBe(false);
+
+    document.body.click();
+    expect(menu.classList.contains('hidden')).toBe(true);
+  });
+
+  it('when dropdown: false and user is null, renders flat button (backwards compat)', async () => {
+    const container = document.createElement('div');
+    document.body.appendChild(container);
+
+    await initUserProfile({ container, dropdown: false });
+
+    const pill = container.querySelector('.user-profile-signin-pill');
+    expect(pill).toBeNull();
+
+    const link = container.querySelector('a.btn-hover-orange');
+    expect(link).not.toBeNull();
+    expect(link.textContent).toBe('Log in');
+  });
+
+  it('uses custom signupText', async () => {
+    const container = document.createElement('div');
+    document.body.appendChild(container);
+
+    await initUserProfile({
+      container,
+      dropdown: true,
+      signupText: 'Try it free',
+    });
+
+    const links = container.querySelectorAll('.user-profile-dropdown-link');
+    const signupLink = Array.from(links).find((a) => a.textContent.includes('Try it free'));
+    expect(signupLink).not.toBeNull();
+  });
+
+  it('cleanup clears the container and removes listeners', async () => {
+    const container = document.createElement('div');
+    document.body.appendChild(container);
+
+    const cleanup = await initUserProfile({ container, dropdown: true });
+    expect(container.children.length).toBeGreaterThan(0);
+
+    cleanup();
+    expect(container.children.length).toBe(0);
   });
 });

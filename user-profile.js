@@ -352,6 +352,8 @@ function setupDropdown(trigger, menu) {
  * @param {string} [options.apiUrl] - Override API endpoint
  * @param {string} [options.loginText='Sign in'] - Log-in button text
  * @param {string} [options.buttonClass='btn-hover-orange'] - CSS class on log-in button
+ * @param {string} [options.signupUrl] - Signup/trial href (defaults to planUrl)
+ * @param {string} [options.signupText='Start Free Trial'] - Signup menu item text
  * @returns {Promise<() => void>} Cleanup function
  */
 export async function initUserProfile(options) {
@@ -367,6 +369,8 @@ export async function initUserProfile(options) {
     apiUrl,
     loginText = 'Log in',
     buttonClass = 'btn-hover-orange',
+    signupUrl = options.planUrl || 'https://dashboard.marketdata.app/marketdata/signup',
+    signupText = 'Start Free Trial',
   } = options;
 
   let dropdownCleanup = null;
@@ -391,14 +395,102 @@ export async function initUserProfile(options) {
     container.appendChild(wrapper);
   }
 
+  function renderSignInDropdown() {
+    clearContainer();
+    const wrapper = document.createElement('div');
+    wrapper.className = 'user-profile-wrapper';
+
+    // Pill trigger button
+    const button = document.createElement('button');
+    button.className = 'user-profile-signin-pill';
+    button.setAttribute('aria-expanded', 'false');
+
+    // Person icon
+    const personSvg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+    personSvg.setAttribute('fill', 'currentColor');
+    personSvg.setAttribute('viewBox', '0 0 20 20');
+    const personPath = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+    personPath.setAttribute('fill-rule', 'evenodd');
+    personPath.setAttribute('d', 'M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z');
+    personPath.setAttribute('clip-rule', 'evenodd');
+    personSvg.appendChild(personPath);
+
+    // Text
+    const textSpan = document.createElement('span');
+    textSpan.textContent = 'Sign in';
+
+    // Chevron icon
+    const chevronSvg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+    chevronSvg.setAttribute('fill', 'none');
+    chevronSvg.setAttribute('viewBox', '0 0 24 24');
+    chevronSvg.setAttribute('stroke', 'currentColor');
+    chevronSvg.setAttribute('stroke-width', '2');
+    const chevronPath = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+    chevronPath.setAttribute('stroke-linecap', 'round');
+    chevronPath.setAttribute('stroke-linejoin', 'round');
+    chevronPath.setAttribute('d', 'm19 9-7 7-7-7');
+    chevronSvg.appendChild(chevronPath);
+
+    button.appendChild(personSvg);
+    button.appendChild(textSpan);
+    button.appendChild(chevronSvg);
+
+    // Dropdown menu
+    const menuEl = document.createElement('div');
+    menuEl.className = 'user-profile-dropdown hidden';
+
+    const ul = document.createElement('ul');
+    ul.className = 'user-profile-dropdown-menu';
+
+    // Log in item
+    const loginLi = document.createElement('li');
+    const loginA = document.createElement('a');
+    loginA.href = loginUrl;
+    loginA.className = 'user-profile-dropdown-link';
+    loginA.textContent = 'Log in';
+    loginLi.appendChild(loginA);
+    ul.appendChild(loginLi);
+
+    // Start Free Trial item with divider
+    const signupLi = document.createElement('li');
+    signupLi.className = 'border-t border-default-medium pt-1.5';
+    const signupA = document.createElement('a');
+    signupA.href = signupUrl;
+    signupA.className = 'user-profile-dropdown-link';
+    signupA.textContent = signupText;
+    const subtextSpan = document.createElement('span');
+    subtextSpan.className = 'user-profile-dropdown-subtext';
+    subtextSpan.textContent = '30 days free';
+    signupA.appendChild(document.createElement('br'));
+    signupA.appendChild(subtextSpan);
+    signupLi.appendChild(signupA);
+    ul.appendChild(signupLi);
+
+    menuEl.appendChild(ul);
+
+    wrapper.appendChild(button);
+    wrapper.appendChild(menuEl);
+    container.appendChild(wrapper);
+
+    dropdownCleanup = setupDropdown(button, menuEl);
+  }
+
+  function renderLoggedOut() {
+    if (dropdown) {
+      renderSignInDropdown();
+    } else {
+      renderSignIn();
+    }
+  }
+
   const user = await fetchUser({
     ...(apiUrl ? { apiUrl } : {}),
-    onInvalidate: renderSignIn,
+    onInvalidate: renderLoggedOut,
   });
 
-  // Logged out or error → log-in button
+  // Logged out or error → log-in button or guest dropdown
   if (!user) {
-    renderSignIn();
+    renderLoggedOut();
     return clearContainer;
   }
 

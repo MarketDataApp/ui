@@ -689,7 +689,7 @@
           subdomain for credentials to be sent).
         </p>
 
-        <div class="grid grid-cols-1 sm:grid-cols-2 gap-8">
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-8">
           <!-- Logged-in state: avatar only -->
           <div class="space-y-3">
             <code class="text-sm font-mono text-gray-500 dark:text-gray-400 block"
@@ -701,6 +701,20 @@
             <div
               class="border border-gray-200 dark:border-gray-700 rounded-lg p-6 flex items-center justify-center min-h-[80px]"
               id="user-profile-avatar"
+            ></div>
+          </div>
+
+          <!-- Guest dropdown -->
+          <div class="space-y-3">
+            <code class="text-sm font-mono text-gray-500 dark:text-gray-400 block"
+              >Guest Dropdown</code
+            >
+            <p class="text-xs text-gray-400 dark:text-gray-500 mb-2">
+              Logged out with dropdown: pill trigger opens guest menu.
+            </p>
+            <div
+              class="border border-gray-200 dark:border-gray-700 rounded-lg p-6 flex items-center justify-center min-h-[80px] relative"
+              id="user-profile-guest-dropdown"
             ></div>
           </div>
 
@@ -790,9 +804,17 @@
       // User Profile demo
       const avatarContainer = document.getElementById('user-profile-avatar');
       const dropdownContainer = document.getElementById('user-profile-dropdown');
+      const guestDropdownContainer = document.getElementById('user-profile-guest-dropdown');
 
       initUserProfile({ container: avatarContainer });
       initUserProfile({ container: dropdownContainer, dropdown: true });
+
+      // Guest dropdown: force logged-out state with a mock API that returns 401
+      initUserProfile({
+        container: guestDropdownContainer,
+        dropdown: true,
+        apiUrl: 'data:application/json,null',
+      });
     </script>
   </body>
 </html>
