@@ -3,4 +3,8 @@ node_modules/
 *.png
 
 e2e/.auth/
+test-results/
+playwright-report/
+.cursorrules
+.cursorignore
 .env
