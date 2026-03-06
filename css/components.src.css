@@ -302,11 +302,11 @@
 }
 
 @utility theme-toggle-icon-light {
-  @apply w-5 h-5;
+  @apply w-6 h-6;
 }
 
 @utility theme-toggle-icon-dark {
-  @apply w-5 h-5;
+  @apply w-6 h-6;
 }
 
 /* ---- Defaults ---- */
