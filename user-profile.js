@@ -386,11 +386,14 @@ export async function initUserProfile(options) {
 
   function renderSignIn() {
     clearContainer();
+    const wrapper = document.createElement('div');
+    wrapper.className = 'user-profile-wrapper';
     const link = document.createElement('a');
     link.href = loginUrl;
     link.className = buttonClass;
     link.textContent = loginText;
-    container.appendChild(link);
+    wrapper.appendChild(link);
+    container.appendChild(wrapper);
   }
 
   const user = await fetchUser({
@@ -427,6 +430,9 @@ export async function initUserProfile(options) {
 
   // Logged in, no dropdown — avatar link to dashboard
   if (!dropdown) {
+    const wrapper = document.createElement('div');
+    wrapper.className = 'user-profile-wrapper';
+
     const link = document.createElement('a');
     link.href = dashboardUrl;
 
@@ -437,7 +443,8 @@ export async function initUserProfile(options) {
     img.addEventListener('error', () => handleImgError(img));
 
     link.appendChild(img);
-    container.appendChild(link);
+    wrapper.appendChild(link);
+    container.appendChild(wrapper);
 
     return () => {
       while (container.firstChild) container.removeChild(container.firstChild);

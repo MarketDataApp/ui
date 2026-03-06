@@ -204,25 +204,25 @@
   @apply relative inline-block;
 }
 
-@utility user-profile-avatar {
-  @apply w-10 h-10 rounded-full cursor-pointer object-cover;
-}
-
-@utility user-profile-dropdown {
-  @apply absolute right-0 z-10 bg-neutral-primary-medium border border-default-medium rounded-base shadow-lg w-44;
-  top: calc(100% + 0.5rem);
-  max-width: calc(100vw - 1rem);
-}
-
-@utility user-profile-dropdown-menu {
-  @apply list-none p-2 m-0 text-sm text-body font-medium;
-}
-
 /*
   Scoped selectors — nested under .user-profile-wrapper so specificity
   beats host framework rules like `.navbar a` or Infima link styles.
   See: https://github.com/MarketDataApp/ui/issues/3
 */
+.user-profile-wrapper .user-profile-avatar {
+  @apply w-10 h-10 rounded-full cursor-pointer object-cover;
+}
+
+.user-profile-wrapper .user-profile-dropdown {
+  @apply absolute right-0 z-10 bg-neutral-primary-medium border border-default-medium rounded-base shadow-lg w-44;
+  top: calc(100% + 0.5rem);
+  max-width: calc(100vw - 1rem);
+}
+
+.user-profile-wrapper .user-profile-dropdown-menu {
+  @apply list-none p-2 m-0 text-sm text-body font-medium;
+}
+
 .user-profile-wrapper .user-profile-dropdown-header {
   @apply px-4 py-3 border-b border-default-medium text-sm text-heading;
 }
@@ -251,11 +251,11 @@
     color 0.15s;
 }
 
-@utility user-profile-placeholder {
+.user-profile-wrapper .user-profile-placeholder {
   @apply relative w-10 h-10 overflow-hidden rounded-full bg-gray inline-block cursor-pointer;
 }
 
-@utility user-profile-placeholder-svg {
+.user-profile-wrapper .user-profile-placeholder-svg {
   @apply absolute w-12 h-12 text-fg-disabled;
   left: -0.25rem;
 }

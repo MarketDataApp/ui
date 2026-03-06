@@ -166,7 +166,10 @@ describe('initUserProfile — logged out', () => {
 
     await initUserProfile({ container });
 
-    const link = container.querySelector('a');
+    const wrapper = container.querySelector('.user-profile-wrapper');
+    expect(wrapper).not.toBeNull();
+
+    const link = wrapper.querySelector('a');
     expect(link).not.toBeNull();
     expect(link.textContent).toBe('Log in');
     expect(link.className).toBe('btn-hover-orange');
@@ -183,7 +186,7 @@ describe('initUserProfile — logged out', () => {
       buttonClass: 'btn-orange-to-blue',
     });
 
-    const link = container.querySelector('a');
+    const link = container.querySelector('.user-profile-wrapper a');
     expect(link.textContent).toBe('Sign in');
     expect(link.className).toBe('btn-orange-to-blue');
   });
@@ -214,13 +217,16 @@ describe('initUserProfile — logged in, no dropdown', () => {
     });
   });
 
-  it('renders an avatar link to the dashboard', async () => {
+  it('renders an avatar link to the dashboard wrapped in user-profile-wrapper', async () => {
     const container = document.createElement('div');
     document.body.appendChild(container);
 
     await initUserProfile({ container });
 
-    const link = container.querySelector('a');
+    const wrapper = container.querySelector('.user-profile-wrapper');
+    expect(wrapper).not.toBeNull();
+
+    const link = wrapper.querySelector('a');
     expect(link.href).toContain('dashboard.marketdata.app');
 
     const img = link.querySelector('img');
