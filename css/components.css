@@ -680,6 +680,12 @@
     -webkit-tap-highlight-color: transparent;
     transition: background 0.15s;
   }
+  .user-profile-container {
+    display: inline-flex;
+    min-height: calc(var(--spacing) * 10);
+    min-width: calc(var(--spacing) * 10);
+    align-items: center;
+  }
   .form-input-disabled {
     display: block;
     width: 100%;

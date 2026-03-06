@@ -200,6 +200,10 @@
 }
 
 /* ---- User Profile ---- */
+@utility user-profile-container {
+  @apply inline-flex items-center min-w-10 min-h-10;
+}
+
 @utility user-profile-wrapper {
   @apply relative inline-block;
 }

@@ -369,11 +369,6 @@ export async function initUserProfile(options) {
     buttonClass = 'btn-hover-orange',
   } = options;
 
-  // Reserve space immediately to prevent CLS during loading/state changes.
-  // Matches the avatar size (w-10 h-10 = 40px).
-  container.style.minWidth = '2.5rem';
-  container.style.minHeight = '2.5rem';
-
   let dropdownCleanup = null;
 
   function clearContainer() {
