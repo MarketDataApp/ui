@@ -456,7 +456,7 @@ describe('initUserProfile — logged in, with dropdown', () => {
 
     // Should have avatar, not pill
     expect(container.querySelector('#avatarButton')).not.toBeNull();
-    expect(container.querySelector('.user-profile-signin-pill')).toBeNull();
+    expect(container.querySelector('.user-profile-login-pill')).toBeNull();
   });
 
   it('falls back to login when user has no name', async () => {
@@ -492,7 +492,7 @@ describe('initUserProfile — logged out, with dropdown (guest dropdown)', () =>
 
     await initUserProfile({ container, dropdown: true });
 
-    const pill = container.querySelector('.user-profile-signin-pill');
+    const pill = container.querySelector('.user-profile-login-pill');
     expect(pill).not.toBeNull();
     expect(pill.tagName).toBe('BUTTON');
 
@@ -507,12 +507,12 @@ describe('initUserProfile — logged out, with dropdown (guest dropdown)', () =>
 
     await initUserProfile({ container, dropdown: true });
 
-    const pill = container.querySelector('.user-profile-signin-pill');
+    const pill = container.querySelector('.user-profile-login-pill');
     const svgs = pill.querySelectorAll('svg');
     expect(svgs.length).toBe(2);
 
     const textSpan = pill.querySelector('span');
-    expect(textSpan.textContent).toBe('Sign in');
+    expect(textSpan.textContent).toBe('Log in');
   });
 
   it('clicking pill opens dropdown with "Log in" and "Start Free Trial" items', async () => {
@@ -521,7 +521,7 @@ describe('initUserProfile — logged out, with dropdown (guest dropdown)', () =>
 
     await initUserProfile({ container, dropdown: true });
 
-    const pill = container.querySelector('.user-profile-signin-pill');
+    const pill = container.querySelector('.user-profile-login-pill');
     const menu = container.querySelector('.user-profile-dropdown');
 
     expect(menu.classList.contains('hidden')).toBe(true);
@@ -593,7 +593,7 @@ describe('initUserProfile — logged out, with dropdown (guest dropdown)', () =>
 
     await initUserProfile({ container, dropdown: true });
 
-    const pill = container.querySelector('.user-profile-signin-pill');
+    const pill = container.querySelector('.user-profile-login-pill');
     const menu = container.querySelector('.user-profile-dropdown');
 
     pill.click();
@@ -609,7 +609,7 @@ describe('initUserProfile — logged out, with dropdown (guest dropdown)', () =>
 
     await initUserProfile({ container, dropdown: true });
 
-    const pill = container.querySelector('.user-profile-signin-pill');
+    const pill = container.querySelector('.user-profile-login-pill');
     const menu = container.querySelector('.user-profile-dropdown');
 
     pill.click();
@@ -625,7 +625,7 @@ describe('initUserProfile — logged out, with dropdown (guest dropdown)', () =>
 
     await initUserProfile({ container, dropdown: false });
 
-    const pill = container.querySelector('.user-profile-signin-pill');
+    const pill = container.querySelector('.user-profile-login-pill');
     expect(pill).toBeNull();
 
     const link = container.querySelector('a.btn-hover-orange');

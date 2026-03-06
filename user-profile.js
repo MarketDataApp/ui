@@ -350,7 +350,7 @@ function setupDropdown(trigger, menu) {
  * @param {string} [options.planUrl='https://dashboard.marketdata.app/marketdata/signup'] - Plan link
  * @param {Array<{label: string, url: string}>} [options.menuItems=[]] - Extra menu items
  * @param {string} [options.apiUrl] - Override API endpoint
- * @param {string} [options.loginText='Sign in'] - Log-in button text
+ * @param {string} [options.loginText='Log in'] - Log-in button text
  * @param {string} [options.buttonClass='btn-hover-orange'] - CSS class on log-in button
  * @param {string} [options.signupUrl] - Signup/trial href (defaults to planUrl)
  * @param {string} [options.signupText='Start Free Trial'] - Signup menu item text
@@ -383,7 +383,7 @@ export async function initUserProfile(options) {
     while (container.firstChild) container.removeChild(container.firstChild);
   }
 
-  function renderSignIn() {
+  function renderLogin() {
     clearContainer();
     const wrapper = document.createElement('div');
     wrapper.className = 'user-profile-wrapper';
@@ -395,14 +395,14 @@ export async function initUserProfile(options) {
     container.appendChild(wrapper);
   }
 
-  function renderSignInDropdown() {
+  function renderLoginDropdown() {
     clearContainer();
     const wrapper = document.createElement('div');
     wrapper.className = 'user-profile-wrapper';
 
     // Pill trigger button
     const button = document.createElement('button');
-    button.className = 'user-profile-signin-pill';
+    button.className = 'user-profile-login-pill';
     button.setAttribute('aria-expanded', 'false');
 
     // Person icon
@@ -417,7 +417,7 @@ export async function initUserProfile(options) {
 
     // Text
     const textSpan = document.createElement('span');
-    textSpan.textContent = 'Sign in';
+    textSpan.textContent = 'Log in';
 
     // Chevron icon
     const chevronSvg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
@@ -477,9 +477,9 @@ export async function initUserProfile(options) {
 
   function renderLoggedOut() {
     if (dropdown) {
-      renderSignInDropdown();
+      renderLoginDropdown();
     } else {
-      renderSignIn();
+      renderLogin();
     }
   }
 

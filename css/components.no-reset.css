@@ -1244,7 +1244,7 @@
   }
   transition: background 0.15s, color 0.15s;
 }
-.user-profile-wrapper .user-profile-signin-pill {
+.user-profile-wrapper .user-profile-login-pill {
   display: inline-flex;
   cursor: pointer;
   align-items: center;
@@ -1287,7 +1287,7 @@
   --tw-shadow: 0 1px 2px 0 var(--tw-shadow-color, rgb(0 0 0 / 0.05));
   box-shadow: var(--tw-inset-shadow), var(--tw-inset-ring-shadow), var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow);
 }
-.user-profile-wrapper .user-profile-signin-pill svg {
+.user-profile-wrapper .user-profile-login-pill svg {
   height: calc(var(--spacing) * 4);
   width: calc(var(--spacing) * 4);
 }
