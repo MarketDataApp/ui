@@ -160,7 +160,7 @@ describe('initUserProfile — logged out', () => {
     globalThis.fetch = vi.fn().mockResolvedValue({ ok: false });
   });
 
-  it('renders a sign-in button when user is not authenticated', async () => {
+  it('renders a login pill when user is not authenticated', async () => {
     const container = document.createElement('div');
     document.body.appendChild(container);
 
@@ -169,26 +169,27 @@ describe('initUserProfile — logged out', () => {
     const wrapper = container.querySelector('.user-profile-wrapper');
     expect(wrapper).not.toBeNull();
 
-    const link = wrapper.querySelector('a');
+    const link = wrapper.querySelector('a.user-profile-login-pill');
     expect(link).not.toBeNull();
-    expect(link.textContent).toBe('Log in');
-    expect(link.className).toBe('btn-hover-orange');
+    expect(link.textContent.trim()).toBe('Log in');
     expect(link.href).toContain('dashboard.marketdata.app');
+
+    // Should have person icon SVG but no chevron
+    const svgs = link.querySelectorAll('svg');
+    expect(svgs.length).toBe(1);
   });
 
-  it('uses custom loginText and buttonClass', async () => {
+  it('uses custom loginText', async () => {
     const container = document.createElement('div');
     document.body.appendChild(container);
 
     await initUserProfile({
       container,
       loginText: 'Sign in',
-      buttonClass: 'btn-orange-to-blue',
     });
 
-    const link = container.querySelector('.user-profile-wrapper a');
-    expect(link.textContent).toBe('Sign in');
-    expect(link.className).toBe('btn-orange-to-blue');
+    const link = container.querySelector('.user-profile-wrapper a.user-profile-login-pill');
+    expect(link.textContent.trim()).toBe('Sign in');
   });
 
   it('cleanup clears the container', async () => {
@@ -619,18 +620,23 @@ describe('initUserProfile — logged out, with dropdown (guest dropdown)', () =>
     expect(menu.classList.contains('hidden')).toBe(true);
   });
 
-  it('when dropdown: false and user is null, renders flat button (backwards compat)', async () => {
+  it('when dropdown: false and user is null, renders pill as direct link (no chevron)', async () => {
     const container = document.createElement('div');
     document.body.appendChild(container);
 
     await initUserProfile({ container, dropdown: false });
 
-    const pill = container.querySelector('.user-profile-login-pill');
-    expect(pill).toBeNull();
+    const pill = container.querySelector('a.user-profile-login-pill');
+    expect(pill).not.toBeNull();
+    expect(pill.textContent.trim()).toBe('Log in');
 
-    const link = container.querySelector('a.btn-hover-orange');
-    expect(link).not.toBeNull();
-    expect(link.textContent).toBe('Log in');
+    // No chevron (only person icon SVG)
+    const svgs = pill.querySelectorAll('svg');
+    expect(svgs.length).toBe(1);
+
+    // No dropdown menu
+    const menu = container.querySelector('.user-profile-dropdown');
+    expect(menu).toBeNull();
   });
 
   it('uses custom signupText', async () => {

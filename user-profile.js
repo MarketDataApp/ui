@@ -357,7 +357,7 @@ function setupDropdown(trigger, menu) {
  * @param {Array<{label: string, url: string}>} [options.menuItems=[]] - Extra menu items
  * @param {string} [options.apiUrl] - Override API endpoint
  * @param {string} [options.loginText='Log in'] - Log-in button text
- * @param {string} [options.buttonClass='btn-hover-orange'] - CSS class on log-in button
+ * @param {string} [options.buttonClass] - Deprecated, no longer used
  * @param {string} [options.signupUrl] - Signup/trial href (defaults to planUrl)
  * @param {string} [options.signupText='Start Free Trial'] - Signup menu item text
  * @returns {Promise<() => void>} Cleanup function
@@ -394,7 +394,10 @@ export async function initUserProfile(options) {
     container.appendChild(
       htmlToElement(`
       <div class="user-profile-wrapper">
-        <a href="${escapeHtml(loginUrl)}" class="${escapeHtml(buttonClass)}">${escapeHtml(loginText)}</a>
+        <a href="${escapeHtml(loginUrl)}" class="user-profile-login-pill">
+          <svg fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clip-rule="evenodd"/></svg>
+          <span>${escapeHtml(loginText)}</span>
+        </a>
       </div>
     `),
     );
