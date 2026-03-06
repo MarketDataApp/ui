@@ -16,7 +16,7 @@ test.describe('User profile component', () => {
   });
 
   test('user profile avatar is visible when logged in', async ({ page }) => {
-    const avatar = page.locator('.user-profile-avatar');
+    const avatar = page.locator('#user-profile-dropdown .user-profile-avatar');
     await expect(avatar).toBeVisible({ timeout: 10_000 });
   });
 
