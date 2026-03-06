@@ -28,12 +28,14 @@
     "format": "prettier --write .",
     "format:check": "prettier --check .",
     "prepare": "husky || true",
-    "test": "vitest run"
+    "test": "vitest run",
+    "test:e2e": "set -a && source .env && set +a && npx playwright test"
   },
   "lint-staged": {
     "*": "prettier --write --ignore-unknown"
   },
   "devDependencies": {
+    "@playwright/test": "^1.58.2",
     "@tailwindcss/cli": "^4.2.1",
     "concurrently": "^9.2.1",
     "husky": "^9.1.7",
@@ -42,6 +44,5 @@
     "prettier": "^3.8.1",
     "serve": "^14.2.5",
     "vitest": "^2.0.0"
-  },
-  "dependencies": {}
+  }
 }

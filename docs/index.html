@@ -777,12 +777,15 @@
 
     <script type="module">
       import { initThemeToggle } from '../theme-toggle.js';
-      import { initUserProfile } from '../user-profile.js';
 
       // Theme toggle (header)
       initThemeToggle({ container: document.getElementById('theme-toggle') });
       // Theme toggle (demo section)
       initThemeToggle({ container: document.getElementById('theme-toggle-demo-target') });
+    </script>
+
+    <script type="module">
+      import { initUserProfile } from '../user-profile.js';
 
       // User Profile demo
       const avatarContainer = document.getElementById('user-profile-avatar');

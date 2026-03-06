@@ -8,6 +8,7 @@ export default defineConfig({
         url: 'https://www.marketdata.app/',
       },
     },
+    exclude: ['e2e/**', 'node_modules/**'],
     globals: true,
   },
 });
