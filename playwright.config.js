@@ -13,7 +13,8 @@ try {
 }
 
 export default defineConfig({
-  testDir: './e2e',
+  testDir: './tests/e2e',
+  outputDir: './tests/results',
   timeout: 30_000,
   retries: 1,
   use: {
@@ -33,7 +34,7 @@ export default defineConfig({
       dependencies: ['auth-setup'],
       use: {
         browserName: 'chromium',
-        storageState: 'e2e/.auth/user.json',
+        storageState: 'tests/e2e/.auth/user.json',
       },
     },
   ],

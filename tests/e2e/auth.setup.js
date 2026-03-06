@@ -1,6 +1,6 @@
 import { test as setup, expect } from '@playwright/test';
 
-const authFile = 'e2e/.auth/user.json';
+const authFile = 'tests/e2e/.auth/user.json';
 
 setup('authenticate', async ({ page }) => {
   const pass = process.env.AMEMBER_TEST_PASS;
