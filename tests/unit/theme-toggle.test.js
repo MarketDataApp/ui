@@ -97,22 +97,22 @@ describe('initThemeToggle', () => {
     expect(svgs.length).toBe(2);
   });
 
-  it('in light mode: shows moon icon, hides sun icon', () => {
+  it('in light mode: shows sun icon, hides moon icon', () => {
     setLightMode();
-    initThemeToggle({ container });
-    const sunIcon = container.querySelector('.theme-toggle-icon-light');
-    const moonIcon = container.querySelector('.theme-toggle-icon-dark');
-    expect(sunIcon.style.display).toBe('none');
-    expect(moonIcon.style.display).toBe('block');
-  });
-
-  it('in dark mode: shows sun icon, hides moon icon', () => {
-    setDarkMode();
     initThemeToggle({ container });
     const sunIcon = container.querySelector('.theme-toggle-icon-light');
     const moonIcon = container.querySelector('.theme-toggle-icon-dark');
     expect(sunIcon.style.display).toBe('block');
     expect(moonIcon.style.display).toBe('none');
+  });
+
+  it('in dark mode: shows moon icon, hides sun icon', () => {
+    setDarkMode();
+    initThemeToggle({ container });
+    const sunIcon = container.querySelector('.theme-toggle-icon-light');
+    const moonIcon = container.querySelector('.theme-toggle-icon-dark');
+    expect(sunIcon.style.display).toBe('none');
+    expect(moonIcon.style.display).toBe('block');
   });
 
   it('has correct aria-label in light mode', () => {
@@ -154,8 +154,8 @@ describe('initThemeToggle', () => {
     button.click();
     const sunIcon = container.querySelector('.theme-toggle-icon-light');
     const moonIcon = container.querySelector('.theme-toggle-icon-dark');
-    expect(sunIcon.style.display).toBe('block');
-    expect(moonIcon.style.display).toBe('none');
+    expect(sunIcon.style.display).toBe('none');
+    expect(moonIcon.style.display).toBe('block');
   });
 
   it('sets theme cookie on toggle', () => {

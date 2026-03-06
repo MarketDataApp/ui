@@ -52,8 +52,8 @@ function applyTheme(theme) {
 /**
  * Renders a light/dark mode toggle button into the given container.
  *
- * Shows a sun icon in dark mode (click to switch to light) and a moon icon
- * in light mode (click to switch to dark). Persists the choice via
+ * Shows a moon icon in dark mode and a sun icon in light mode (reflecting
+ * the current mode). Persists the choice via
  * setThemeCookie() for cross-subdomain sync.
  *
  * @param {Object} options
@@ -70,9 +70,9 @@ export function initThemeToggle(options) {
 
   function updateState() {
     const dark = isDark();
-    // In dark mode: show sun (click to go light). In light mode: show moon (click to go dark).
-    sunIcon.style.display = dark ? 'block' : 'none';
-    moonIcon.style.display = dark ? 'none' : 'block';
+    // Show the icon for the current mode: moon in dark, sun in light.
+    sunIcon.style.display = dark ? 'none' : 'block';
+    moonIcon.style.display = dark ? 'block' : 'none';
     button.setAttribute('aria-label', dark ? 'Switch to light mode' : 'Switch to dark mode');
   }
 
