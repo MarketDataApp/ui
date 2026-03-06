@@ -12,29 +12,35 @@ npm install @marketdataapp/ui@github:MarketDataApp/ui
 
 ## Exports
 
-| Export                      | File                          | Description                                                                                                                                             |
-| --------------------------- | ----------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `./css/theme`               | `css/theme.css`               | All design tokens: brand colors, fonts, shadows, Flowbite semantic UI tokens (neutrals, text, borders, status). Import into your own Tailwind v4 build. |
-| `./css/components.src`      | `css/components.src.css`      | Raw `@utility` definitions. Import into your own Tailwind v4 build to use `@apply` with shared classes.                                                 |
-| `./css/components`          | `css/components.css`          | Pre-built CSS (full Tailwind including preflight reset), unlayered. For standalone consumers.                                                           |
-| `./css/components.no-reset` | `css/components.no-reset.css` | Pre-built CSS without preflight reset, unlayered. For framework consumers with their own reset (e.g. Docusaurus).                                       |
-| `./theme`                   | `theme.js`                    | Dark/light mode JS: `getThemeCookie`, `setThemeCookie`, `getUserThemePreference`, `getBrowserThemePreference`, `getEffectiveTheme`.                     |
-| `./navbar-overflow`         | `navbar-overflow.js`          | Priority-based auto-hide for navbar items that overflow their container.                                                                                |
-| `./user-profile`            | `user-profile.js`             | Gravatar avatar with optional dropdown menu. Zero dependencies.                                                                                         |
+| Export                      | File                               | Description                                                                                                                                             |
+| --------------------------- | ---------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `./css/theme`               | `css/theme.css`                    | All design tokens: brand colors, fonts, shadows, Flowbite semantic UI tokens (neutrals, text, borders, status). Import into your own Tailwind v4 build. |
+| `./css/components.src`      | `css/components.src.css`           | Raw `@utility` definitions. Import into your own Tailwind v4 build to use `@apply` with shared classes.                                                 |
+| `./css/components`          | `dist/css/components.css`          | Pre-built CSS (full Tailwind including preflight reset), unlayered. For standalone consumers.                                                           |
+| `./css/components.no-reset` | `dist/css/components.no-reset.css` | Pre-built CSS without preflight reset, unlayered. For framework consumers with their own reset (e.g. Docusaurus).                                       |
+| `./theme`                   | `dist/theme.js`                    | Dark/light mode JS: `getThemeCookie`, `setThemeCookie`, `getUserThemePreference`, `getBrowserThemePreference`, `getEffectiveTheme`.                     |
+| `./theme-toggle`            | `dist/theme-toggle.js`             | Sun/moon toggle button for switching dark/light mode. Uses `./theme` for cookie persistence.                                                            |
+| `./navbar-overflow`         | `dist/navbar-overflow.js`          | Priority-based auto-hide for navbar items that overflow their container.                                                                                |
+| `./user-profile`            | `dist/user-profile.js`             | Gravatar avatar with optional dropdown menu. Zero dependencies.                                                                                         |
 
 ## CSS Architecture
 
-### Two Build Outputs
+### Build Pipeline
 
-The build (`npm run build`) produces two CSS files from different entry points, then post-processes both with `unlayer.js`:
+`npm run build` runs three stages:
 
 ```
-css/components.input.css  ──> css/components.css          (full build with preflight reset)
-css/components.no-reset.input.css ──> css/components.no-reset.css  (no reset, framework-safe)
-                                          │
-                                    scripts/unlayer.js
-                                    (strips @layer wrappers)
+1. build:templates   src/templates/**/*.html ──> src/*.templates.js (intermediate, gitignored)
+2. build:js          src/*.js + src/*.templates.js ──> dist/*.js (templates inlined)
+3. build:css         css/*.input.css ──> dist/css/components.css, dist/css/components.no-reset.css
+                                              │
+                                        scripts/unlayer.js
+                                        (strips @layer wrappers)
 ```
+
+All JS source lives in `src/`. Files in `dist/` are build outputs with HTML templates inlined — do not edit them directly.
+
+### Two CSS Outputs
 
 **`components.css`** imports the full `tailwindcss` package, which includes Tailwind's preflight reset (normalize, box-sizing, margin zeroing). Use this when you don't have another CSS framework providing a reset.
 
@@ -108,7 +114,7 @@ Semantic tokens (defined in `theme.css`) handle dark mode automatically — no `
 
 2. **Add all new class names to `components.classes`** — this manifest tells the no-reset build which utilities to generate.
 
-3. **Run `npm run build`** to compile both CSS outputs and run the unlayer step.
+3. **Run `npm run build`** to compile templates, JS, and both CSS outputs.
 
 4. **Use the class names in JS/HTML** — they work as plain CSS classes in any consumer.
 
@@ -170,14 +176,16 @@ Usage not yet verified.
 - **Badges**: `.badge .badge-{color}`, `.badge-pill-{color}`
 - **Radio Buttons**: `.radio-button-input`, `.radio-button-helper`
 - **Grid Layout**: `.grid-layout-12`, `.grid-content-container`, `.grid-content-position`
-- **User Profile**: `.user-profile-wrapper`, `.user-profile-avatar`, `.user-profile-dropdown`, `.user-profile-dropdown-header`, `.user-profile-dropdown-name`, `.user-profile-dropdown-email`, `.user-profile-dropdown-menu`, `.user-profile-dropdown-link`, `.user-profile-dropdown-signout`, `.user-profile-placeholder`, `.user-profile-placeholder-svg`
+- **User Profile**: `.user-profile-container`, `.user-profile-wrapper`, `.user-profile-avatar`, `.user-profile-avatar--img`, `.user-profile-avatar--placeholder`, `.user-profile-login-pill`, `.user-profile-dropdown`, `.user-profile-dropdown-header`, `.user-profile-dropdown-name`, `.user-profile-dropdown-email`, `.user-profile-dropdown-menu`, `.user-profile-dropdown-link`, `.user-profile-dropdown-signout`, `.user-profile-dropdown-subtext`, `.user-profile-dropdown-divider-above`, `.user-profile-dropdown-divider-below`
+- **Theme Toggle**: `.theme-toggle-button`, `.theme-toggle-icon-light`, `.theme-toggle-icon-dark`
 - **Defaults**: `.default` (base text + background with dark mode)
 
-### JS Modules
+### JS Modules (build outputs in `dist/`)
 
-- **`theme.js`** — Cross-subdomain dark/light mode via `.marketdata.app` cookie
-- **`navbar-overflow.js`** — Priority-based auto-hide for navbar items
-- **`user-profile.js`** — Gravatar avatar + dropdown menu (zero deps, works with or without Flowbite)
+- **`dist/theme.js`** — Cross-subdomain dark/light mode via `.marketdata.app` cookie
+- **`dist/theme-toggle.js`** — Sun/moon toggle button with cookie persistence
+- **`dist/navbar-overflow.js`** — Priority-based auto-hide for navbar items
+- **`dist/user-profile.js`** — Gravatar avatar + dropdown menu (zero deps, templates inlined)
 
 ## Known Issues and Lessons Learned
 

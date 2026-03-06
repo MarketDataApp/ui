@@ -1,24 +1,27 @@
 /**
- * Builds root-level JS files from src/.
+ * Builds dist/ JS files from src/.
  *
  * For files with templates (user-profile.js, theme-toggle.js):
  *   - Reads the source from src/
  *   - Reads the corresponding .templates.js from src/
  *   - Replaces the `import { ... } from './foo.templates.js'` with inlined
  *     const declarations
- *   - Writes to root with a "do not edit" header
+ *   - Writes to dist/ with a "do not edit" header
  *
  * For files without templates (theme.js, navbar-overflow.js):
- *   - Copies from src/ to root with a header
+ *   - Copies from src/ to dist/ with a header
  */
 
-import { readFileSync, writeFileSync } from 'fs';
+import { readFileSync, writeFileSync, mkdirSync } from 'fs';
 import { resolve, dirname } from 'path';
 import { fileURLToPath } from 'url';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const ROOT = resolve(__dirname, '..');
 const SRC = resolve(ROOT, 'src');
+const DIST = resolve(ROOT, 'dist');
+
+mkdirSync(DIST, { recursive: true });
 
 const HEADER = '// Auto-generated from src/ by scripts/build-js.js — do not edit manually\n\n';
 
@@ -80,12 +83,12 @@ for (const file of FILES_WITH_TEMPLATES) {
   const tplExports = parseTemplateExports(tplContent);
 
   const output = HEADER + inlineTemplates(source, tplExports);
-  writeFileSync(resolve(ROOT, file), output);
-  console.log(`  ${file} (templates inlined)`);
+  writeFileSync(resolve(DIST, file), output);
+  console.log(`  dist/${file} (templates inlined)`);
 }
 
 for (const file of FILES_WITHOUT_TEMPLATES) {
   const source = readFileSync(resolve(SRC, file), 'utf8');
-  writeFileSync(resolve(ROOT, file), HEADER + source);
-  console.log(`  ${file} (copied)`);
+  writeFileSync(resolve(DIST, file), HEADER + source);
+  console.log(`  dist/${file} (copied)`);
 }

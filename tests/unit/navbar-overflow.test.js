@@ -1,4 +1,4 @@
-import { initNavbarOverflow } from '../navbar-overflow.js';
+import { initNavbarOverflow } from '../../dist/navbar-overflow.js';
 
 // ---------------------------------------------------------------------------
 // Helpers

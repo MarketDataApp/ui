@@ -1,9 +1,4 @@
 node_modules/
-css/components.css
-css/components.no-reset.css
+dist/
 .claude/
 src/*.templates.js
-theme.js
-theme-toggle.js
-user-profile.js
-navbar-overflow.js

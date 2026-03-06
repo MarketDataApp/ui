@@ -71,7 +71,7 @@ export function unlayer(css) {
 // Run as CLI script — process all compiled CSS files
 const cssFiles = ['components.css', 'components.no-reset.css'];
 for (const file of cssFiles) {
-  const cssPath = resolve(__dirname, '../css', file);
+  const cssPath = resolve(__dirname, '../dist/css', file);
   const css = readFileSync(cssPath, 'utf8');
   writeFileSync(cssPath, unlayer(css));
 }

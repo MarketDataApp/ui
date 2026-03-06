@@ -4,7 +4,7 @@ import {
   getUserThemePreference,
   getBrowserThemePreference,
   getEffectiveTheme,
-} from '../theme.js';
+} from '../../dist/theme.js';
 
 // ---------------------------------------------------------------------------
 // localStorage polyfill for Node.js 22+ which has a built-in localStorage

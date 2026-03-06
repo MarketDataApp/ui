@@ -1,4 +1,9 @@
-import { getGravatarUrl, fetchUser, initUserProfile, _clearCache } from '../user-profile.js';
+import {
+  getGravatarUrl,
+  fetchUser,
+  initUserProfile,
+  _clearCache,
+} from '../../dist/user-profile.js';
 
 // ---------------------------------------------------------------------------
 // sessionStorage mock (Node.js 22+ has a built-in one that may interfere)

@@ -1,4 +1,4 @@
-import { initThemeToggle } from '../theme-toggle.js';
+import { initThemeToggle } from '../../dist/theme-toggle.js';
 
 // ---------------------------------------------------------------------------
 // localStorage polyfill for Node.js 22+

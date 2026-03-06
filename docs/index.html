@@ -4,7 +4,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@marketdataapp/ui - Component Library</title>
-    <link rel="stylesheet" href="../css/components.css" />
+    <link rel="stylesheet" href="../dist/css/components.css" />
     <script>
       (function () {
         var saved = localStorage.getItem('ui-demo-theme');
@@ -790,7 +790,7 @@
     </footer>
 
     <script type="module">
-      import { initThemeToggle } from '../theme-toggle.js';
+      import { initThemeToggle } from '../dist/theme-toggle.js';
 
       // Theme toggle (header)
       initThemeToggle({ container: document.getElementById('theme-toggle') });
@@ -799,7 +799,7 @@
     </script>
 
     <script type="module">
-      import { initUserProfile } from '../user-profile.js';
+      import { initUserProfile } from '../dist/user-profile.js';
 
       // User Profile demo
       const avatarContainer = document.getElementById('user-profile-avatar');

@@ -7,14 +7,18 @@ Shared Tailwind CSS theme and components for all MarketData properties (\*.marke
 ## Architecture
 
 - **Tailwind v4** with CSS-first configuration (no JS config files)
+- All JS source lives in `src/` — edit source there, never edit `dist/` files directly
+- `dist/` contains all **build outputs** committed for consumers: 4 JS files + `dist/css/` with 2 CSS files
+- `src/templates/` contains HTML/SVG templates; `scripts/build-templates.js` compiles them to intermediate `src/*.templates.js` files (gitignored), then `scripts/build-js.js` inlines them into `dist/` JS outputs
+- Build pipeline: `npm run build` runs three stages: `build:templates` → `build:js` → `build:css`
 - `css/theme.css` defines all design tokens via `@theme {}` — brand colors, Flowbite semantic UI tokens (neutrals, text, borders, status), and dark mode overrides. Consumed by projects that run their own Tailwind build.
 - `css/components.src.css` defines all shared component classes as `@utility` with `@apply` — the single source of truth
-- Two build outputs, both unlayered (see README.md for details):
-  - `css/components.css` — full build with preflight reset (for standalone consumers)
-  - `css/components.no-reset.css` — no preflight reset (for framework consumers like Docusaurus)
+- Two CSS build outputs in `dist/css/`, both unlayered (see README.md for details):
+  - `dist/css/components.css` — full build with preflight reset (for standalone consumers)
+  - `dist/css/components.no-reset.css` — no preflight reset (for framework consumers like Docusaurus)
 - `scripts/unlayer.js` strips `@layer` wrappers post-build so our CSS wins specificity battles against unlayered foreign CSS
-- Built CSS artifacts must stay committed because consuming projects import them directly
-- `theme.js` exports shared JS for dark/light theme cookie and preference management
+- Built artifacts (`dist/`) must stay committed because consuming projects import them directly
+- Tests live in `tests/` — `tests/unit/` for vitest unit tests, `tests/e2e/` for Playwright e2e tests
 - Component classes should prefer Flowbite semantic tokens from `theme.css` (e.g. `bg-neutral-primary-medium`, `text-heading`, `border-gray`, `text-fg-danger`) — they handle dark mode automatically. Fall back to standard Tailwind utilities with `dark:` variants when no token exists. Do NOT use Flowbite tokens that aren't defined in `theme.css`.
 
 ## What belongs here
@@ -44,7 +48,7 @@ Shared Tailwind CSS theme and components for all MarketData properties (\*.marke
 ### MarketDataApp/amember (membership dashboard)
 
 - **Currently on Tailwind v3** — uses the old JS preset (`@marketdataapp/ui/preset`, now removed from exports). Pinned to an older version.
-- `@marketdataapp/ui/theme` — re-exports all theme functions: `getThemeCookie`, `setThemeCookie`, `getUserThemePreference`, `getBrowserThemePreference`, `getEffectiveTheme` (`src/theme.js:5`)
+- `@marketdataapp/ui/theme` — all theme functions: `getThemeCookie`, `setThemeCookie`, `getUserThemePreference`, `getBrowserThemePreference`, `getEffectiveTheme`
 - After v4 migration, will import `./css/theme` and `./css/components.src` into its own Tailwind build
 
 ### MarketDataApp/interview (Data Access Quiz)
