@@ -1,0 +1,57 @@
+name: 'UI: E2E Tests'
+
+on:
+  workflow_run:
+    workflows: ['UI: Deploy to GitHub Pages']
+    types: [completed]
+    branches: [main]
+
+jobs:
+  e2e:
+    if: github.event.workflow_run.conclusion == 'success'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Install Playwright browsers
+        run: npx playwright install --with-deps chromium
+
+      - name: Run e2e tests
+        env:
+          AMEMBER_TEST_PASS: ${{ secrets.AMEMBER_TEST_PASS }}
+        run: npx playwright test
+
+      - name: Upload test results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-report
+          path: |
+            test-results/
+            playwright-report/
+          retention-days: 7
+
+      - name: Notify Slack on failure
+        if: failure()
+        env:
+          SLACK_WEBHOOK: ${{ secrets.SLACK_ALERTS_WEBHOOK_URL }}
+          REPO: ${{ github.repository }}
+          WORKFLOW: ${{ github.workflow }}
+          BRANCH: ${{ github.ref_name }}
+          SHA: ${{ github.sha }}
+          RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+        run: |
+          SHORT_SHA="${SHA:0:7}"
+          printf '🔴 WORKFLOW FAILED — %s\nRepo: %s\nBranch: %s @ %s\n%s' \
+            "$WORKFLOW" "$REPO" "$BRANCH" "$SHORT_SHA" "$RUN_URL" \
+            | jq -Rs '{text: .}' \
+            | curl -s -X POST "$SLACK_WEBHOOK" -H 'Content-Type: application/json' -d @-

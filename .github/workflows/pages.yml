@@ -30,7 +30,7 @@ jobs:
           CACHE_BUST="${GITHUB_SHA:0:7}"
           sed "s|\.css\"|.css?v=$CACHE_BUST\"|; s|\.js';|.js?v=$CACHE_BUST';|" docs/index.html > _site/docs/index.html
           cp css/components.css _site/css/
-          cp user-profile.js _site/
+          cp user-profile.js theme-toggle.js _site/
           echo '<meta http-equiv="refresh" content="0;url=docs/">' > _site/index.html
 
       - name: Upload Pages artifact
