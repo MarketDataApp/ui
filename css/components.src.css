@@ -214,23 +214,28 @@
   max-width: calc(100vw - 1rem);
 }
 
-@utility user-profile-dropdown-header {
-  @apply px-4 py-3 border-b border-default-medium text-sm text-heading;
-}
-
-@utility user-profile-dropdown-name {
-  @apply font-medium;
-}
-
-@utility user-profile-dropdown-email {
-  @apply truncate;
-}
-
 @utility user-profile-dropdown-menu {
   @apply list-none p-2 m-0 text-sm text-body font-medium;
 }
 
-@utility user-profile-dropdown-link {
+/*
+  Scoped selectors — nested under .user-profile-wrapper so specificity
+  beats host framework rules like `.navbar a` or Infima link styles.
+  See: https://github.com/MarketDataApp/ui/issues/3
+*/
+.user-profile-wrapper .user-profile-dropdown-header {
+  @apply px-4 py-3 border-b border-default-medium text-sm text-heading;
+}
+
+.user-profile-wrapper .user-profile-dropdown-name {
+  @apply font-medium;
+}
+
+.user-profile-wrapper .user-profile-dropdown-email {
+  @apply truncate;
+}
+
+.user-profile-wrapper .user-profile-dropdown-link {
   @apply block w-full p-2 rounded-md no-underline text-inherit;
   @apply hover:bg-neutral-tertiary-medium hover:text-heading;
   transition:
@@ -238,7 +243,7 @@
     color 0.15s;
 }
 
-@utility user-profile-dropdown-signout {
+.user-profile-wrapper .user-profile-dropdown-signout {
   @apply block w-full p-2 rounded-md no-underline text-fg-danger;
   @apply hover:bg-danger-soft;
   transition:
