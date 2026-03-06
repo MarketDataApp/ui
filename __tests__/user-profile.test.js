@@ -236,7 +236,7 @@ describe('initUserProfile — logged in, no dropdown', () => {
     expect(img.src).toContain('gravatar.com/avatar/');
   });
 
-  it('replaces img with SVG placeholder on error', async () => {
+  it('replaces img with SVG placeholder on error, keeping user-profile-avatar class', async () => {
     const container = document.createElement('div');
     document.body.appendChild(container);
 
@@ -248,6 +248,8 @@ describe('initUserProfile — logged in, no dropdown', () => {
     const placeholder = container.querySelector('div[role="img"]');
     expect(placeholder).not.toBeNull();
     expect(placeholder.querySelector('svg')).not.toBeNull();
+    expect(placeholder.classList.contains('user-profile-avatar')).toBe(true);
+    expect(placeholder.classList.contains('user-profile-avatar--placeholder')).toBe(true);
   });
 });
 
@@ -405,10 +407,12 @@ describe('initUserProfile — logged in, with dropdown', () => {
     const img = container.querySelector('#avatarButton');
     img.dispatchEvent(new Event('error'));
 
-    // Placeholder should exist
+    // Placeholder should exist with base avatar class preserved
     const placeholder = container.querySelector('div[role="img"]');
     expect(placeholder).not.toBeNull();
     expect(placeholder.id).toBe('avatarButton');
+    expect(placeholder.classList.contains('user-profile-avatar')).toBe(true);
+    expect(placeholder.classList.contains('user-profile-avatar--placeholder')).toBe(true);
 
     // Dropdown should still toggle via the placeholder
     const menu = container.querySelector('#userDropdown');

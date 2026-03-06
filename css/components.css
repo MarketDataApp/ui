@@ -2224,7 +2224,15 @@
   width: calc(var(--spacing) * 10);
   cursor: pointer;
   border-radius: calc(infinity * 1px);
+}
+.user-profile-wrapper .user-profile-avatar--img {
   object-fit: cover;
+}
+.user-profile-wrapper .user-profile-avatar--placeholder {
+  position: relative;
+  display: inline-block;
+  overflow: hidden;
+  background-color: var(--color-gray);
 }
 .user-profile-wrapper .user-profile-dropdown {
   position: absolute;
@@ -2302,16 +2310,6 @@
     }
   }
   transition: background 0.15s, color 0.15s;
-}
-.user-profile-wrapper .user-profile-placeholder {
-  position: relative;
-  display: inline-block;
-  height: calc(var(--spacing) * 10);
-  width: calc(var(--spacing) * 10);
-  cursor: pointer;
-  overflow: hidden;
-  border-radius: calc(infinity * 1px);
-  background-color: var(--color-gray);
 }
 .user-profile-wrapper .user-profile-placeholder-svg {
   position: absolute;

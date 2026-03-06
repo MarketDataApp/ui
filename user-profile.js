@@ -256,7 +256,7 @@ export function _clearCache() {
 
 function createPlaceholderSvg() {
   const wrapper = document.createElement('div');
-  wrapper.className = 'user-profile-placeholder';
+  wrapper.className = 'user-profile-avatar user-profile-avatar--placeholder';
 
   const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
   svg.setAttribute('class', 'user-profile-placeholder-svg');
@@ -439,7 +439,7 @@ export async function initUserProfile(options) {
     const img = document.createElement('img');
     img.src = gravatarSrc;
     img.alt = user.login || '';
-    img.className = 'user-profile-avatar';
+    img.className = 'user-profile-avatar user-profile-avatar--img';
     img.addEventListener('error', () => handleImgError(img));
 
     link.appendChild(img);
@@ -459,7 +459,7 @@ export async function initUserProfile(options) {
   img.id = 'avatarButton';
   img.setAttribute('data-dropdown-toggle', 'userDropdown');
   img.setAttribute('data-dropdown-placement', 'bottom-start');
-  img.className = 'user-profile-avatar';
+  img.className = 'user-profile-avatar user-profile-avatar--img';
   img.src = gravatarSrc;
   img.alt = 'User dropdown';
 
