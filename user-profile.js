@@ -460,7 +460,7 @@ export async function initUserProfile(options) {
     signupA.textContent = signupText;
     const subtextSpan = document.createElement('span');
     subtextSpan.className = 'user-profile-dropdown-subtext';
-    subtextSpan.textContent = '30 days free';
+    subtextSpan.textContent = 'No card required';
     signupA.appendChild(document.createElement('br'));
     signupA.appendChild(subtextSpan);
     signupLi.appendChild(signupA);

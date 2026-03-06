@@ -576,7 +576,7 @@ describe('initUserProfile — logged out, with dropdown (guest dropdown)', () =>
     expect(signupLink.href).toBe('https://example.com/plan');
   });
 
-  it('"30 days free" subtext is visible', async () => {
+  it('"No card required" subtext is visible', async () => {
     const container = document.createElement('div');
     document.body.appendChild(container);
 
@@ -584,7 +584,7 @@ describe('initUserProfile — logged out, with dropdown (guest dropdown)', () =>
 
     const subtext = container.querySelector('.user-profile-dropdown-subtext');
     expect(subtext).not.toBeNull();
-    expect(subtext.textContent).toBe('30 days free');
+    expect(subtext.textContent).toBe('No card required');
   });
 
   it('Escape key closes the dropdown', async () => {
