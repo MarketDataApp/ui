@@ -448,6 +448,7 @@ export async function initUserProfile(options) {
     loginA.href = loginUrl;
     loginA.className = 'user-profile-dropdown-link';
     loginA.textContent = 'Log in';
+    loginLi.className = 'pb-1.5';
     loginLi.appendChild(loginA);
     ul.appendChild(loginLi);
 
