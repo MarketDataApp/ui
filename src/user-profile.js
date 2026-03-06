@@ -433,6 +433,7 @@ export async function initUserProfile(options) {
     } else {
       renderLogin();
     }
+    container.style.minWidth = 'auto';
   }
 
   const user = await fetchUser({
@@ -479,6 +480,7 @@ export async function initUserProfile(options) {
     const img = wrapper.querySelector('img');
     img.addEventListener('error', () => handleImgError(img));
     container.appendChild(wrapper);
+    container.style.minWidth = 'auto';
 
     return () => {
       while (container.firstChild) container.removeChild(container.firstChild);
@@ -510,6 +512,7 @@ export async function initUserProfile(options) {
     ),
   );
   container.appendChild(wrapper);
+  container.style.minWidth = 'auto';
 
   const img = wrapper.querySelector('#avatarButton');
   const menuEl = wrapper.querySelector('#userDropdown');

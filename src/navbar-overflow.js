@@ -145,11 +145,15 @@ export function initNavbarOverflow({ container, items }) {
   const observer = new ResizeObserver(scheduleReflow);
   observer.observe(container);
 
+  const mutationObserver = new MutationObserver(scheduleReflow);
+  mutationObserver.observe(container, { childList: true, subtree: true });
+
   // Initial check
   scheduleReflow();
 
   return function cleanup() {
     observer.disconnect();
+    mutationObserver.disconnect();
     clearTimeout(debounceTimer);
     if (rafId) cancelAnimationFrame(rafId);
     // Restore all hidden items

@@ -685,8 +685,8 @@
   .user-profile-container {
     display: inline-flex;
     min-height: calc(var(--spacing) * 10);
-    min-width: calc(var(--spacing) * 10);
     align-items: center;
+    min-width: 7.375rem;
   }
   .form-input-disabled {
     display: block;

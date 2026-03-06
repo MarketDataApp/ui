@@ -201,7 +201,8 @@
 
 /* ---- User Profile ---- */
 @utility user-profile-container {
-  @apply inline-flex items-center min-w-10 min-h-10;
+  @apply inline-flex items-center min-h-10;
+  min-width: 7.375rem; /* 118px — login pill worst-case, prevents CLS */
 }
 
 @utility user-profile-wrapper {
