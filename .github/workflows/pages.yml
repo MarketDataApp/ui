@@ -26,11 +26,11 @@ jobs:
 
       - name: Assemble site
         run: |
-          mkdir -p _site/docs _site/css
+          mkdir -p _site/docs _site/dist/css
           CACHE_BUST="${GITHUB_SHA:0:7}"
           sed "s|\.css\"|.css?v=$CACHE_BUST\"|; s|\.js';|.js?v=$CACHE_BUST';|" docs/index.html > _site/docs/index.html
-          cp dist/css/components.css _site/css/
-          cp dist/user-profile.js dist/theme-toggle.js dist/theme.js dist/navbar-overflow.js _site/
+          cp dist/css/components.css _site/dist/css/
+          cp dist/user-profile.js dist/theme-toggle.js dist/theme.js dist/navbar-overflow.js _site/dist/
           echo '<meta http-equiv="refresh" content="0;url=docs/">' > _site/index.html
 
       - name: Upload Pages artifact
