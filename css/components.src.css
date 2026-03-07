@@ -283,6 +283,14 @@
   @apply w-4 h-4;
 }
 
+.user-profile-wrapper .user-profile-login-pill.user-profile-skeleton {
+  @apply pointer-events-none animate-pulse text-transparent;
+}
+
+.user-profile-wrapper .user-profile-login-pill.user-profile-skeleton svg {
+  @apply invisible;
+}
+
 .user-profile-wrapper .user-profile-dropdown-subtext {
   @apply text-xs text-body-subtle;
 }

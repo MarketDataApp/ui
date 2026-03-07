@@ -226,7 +226,7 @@ export async function fetchUser(options = {}) {
   return fetchAndCache(apiUrl);
 }
 
-async function fetchAndCache(apiUrl) {
+async function fetchAndCache(apiUrl, retries = 2, delay = 1000) {
   try {
     const res = await fetch(apiUrl, { credentials: 'include' });
     if (!res.ok) {
@@ -245,6 +245,11 @@ async function fetchAndCache(apiUrl) {
     }
     return user;
   } catch {
+    // Network error — retry with exponential backoff
+    if (retries > 0) {
+      await new Promise((r) => setTimeout(r, delay));
+      return fetchAndCache(apiUrl, retries - 1, delay * 2);
+    }
     return null;
   }
 }
@@ -379,7 +384,7 @@ function setupDropdown(trigger, menu) {
  * @param {Array<{label: string, url: string}>} [options.menuItems=[]] - Extra menu items
  * @param {string} [options.apiUrl] - Override API endpoint
  * @param {string} [options.loginText='Log in'] - Log-in button text
- * @param {string} [options.signupUrl] - Signup/trial href (defaults to planUrl)
+ * @param {string} [options.signupUrl='https://dashboard.marketdata.app/marketdata/signup'] - Signup/trial href
  * @param {string} [options.signupText='Start Free Trial'] - Signup menu item text
  * @returns {Promise<() => void>} Cleanup function
  */
@@ -395,7 +400,7 @@ export async function initUserProfile(options) {
     menuItems = [],
     apiUrl,
     loginText = 'Log in',
-    signupUrl = options.planUrl || 'https://dashboard.marketdata.app/marketdata/signup',
+    signupUrl = 'https://dashboard.marketdata.app/marketdata/signup',
     signupText = 'Start Free Trial',
   } = options;
 
@@ -436,10 +441,20 @@ export async function initUserProfile(options) {
     container.style.minWidth = 'auto';
   }
 
+  // Show skeleton pill immediately while fetching user
+  const skeletonWrapper = htmlToElement(renderTemplate(loginTpl, { loginUrl: '#', loginText }));
+  const skeletonPill = skeletonWrapper.querySelector('.user-profile-login-pill');
+  skeletonPill.classList.add('user-profile-skeleton');
+  skeletonPill.setAttribute('aria-hidden', 'true');
+  container.appendChild(skeletonWrapper);
+
   const user = await fetchUser({
     ...(apiUrl ? { apiUrl } : {}),
     onInvalidate: renderLoggedOut,
   });
+
+  // Remove skeleton before rendering real state
+  clearContainer();
 
   // Logged out or error → log-in button or guest dropdown
   if (!user) {

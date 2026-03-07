@@ -107,10 +107,60 @@ describe('fetchUser', () => {
     expect(user).toBeNull();
   });
 
-  it('returns null on network error', async () => {
+  it('returns null on network error after retries', async () => {
+    vi.useFakeTimers();
     globalThis.fetch = vi.fn().mockRejectedValue(new Error('Network error'));
-    const user = await fetchUser();
+
+    const promise = fetchUser();
+    await vi.advanceTimersByTimeAsync(1000);
+    await vi.advanceTimersByTimeAsync(2000);
+
+    const user = await promise;
     expect(user).toBeNull();
+    vi.useRealTimers();
+  });
+
+  it('retries up to 2 times on network error with exponential backoff', async () => {
+    vi.useFakeTimers();
+    globalThis.fetch = vi.fn().mockRejectedValue(new Error('Network error'));
+
+    const promise = fetchUser();
+    expect(fetch).toHaveBeenCalledTimes(1);
+
+    await vi.advanceTimersByTimeAsync(1000);
+    expect(fetch).toHaveBeenCalledTimes(2);
+
+    await vi.advanceTimersByTimeAsync(2000);
+    expect(fetch).toHaveBeenCalledTimes(3);
+
+    await promise;
+    vi.useRealTimers();
+  });
+
+  it('returns user when retry succeeds after initial network error', async () => {
+    vi.useFakeTimers();
+    const mockUser = { login: 'jdoe', email: 'jdoe@example.com', name: 'John Doe' };
+
+    globalThis.fetch = vi
+      .fn()
+      .mockRejectedValueOnce(new Error('Network error'))
+      .mockResolvedValueOnce({ ok: true, json: () => Promise.resolve(mockUser) });
+
+    const promise = fetchUser();
+    await vi.advanceTimersByTimeAsync(1000);
+
+    const result = await promise;
+    expect(result).toEqual(mockUser);
+    expect(fetch).toHaveBeenCalledTimes(2);
+    vi.useRealTimers();
+  });
+
+  it('does not retry on HTTP error responses', async () => {
+    globalThis.fetch = vi.fn().mockResolvedValue({ ok: false, status: 401 });
+
+    const result = await fetchUser();
+    expect(result).toBeNull();
+    expect(fetch).toHaveBeenCalledTimes(1);
   });
 
   it('uses custom apiUrl', async () => {
@@ -567,7 +617,7 @@ describe('initUserProfile — logged out, with dropdown (guest dropdown)', () =>
     expect(signupLink.href).toBe('https://example.com/signup');
   });
 
-  it('defaults signupUrl to planUrl when signupUrl is not set', async () => {
+  it('signupUrl and planUrl are independent', async () => {
     const container = document.createElement('div');
     document.body.appendChild(container);
 
@@ -579,7 +629,7 @@ describe('initUserProfile — logged out, with dropdown (guest dropdown)', () =>
 
     const links = container.querySelectorAll('.user-profile-dropdown-link');
     const signupLink = Array.from(links).find((a) => a.textContent.includes('Start Free Trial'));
-    expect(signupLink.href).toBe('https://example.com/plan');
+    expect(signupLink.href).toBe('https://dashboard.marketdata.app/marketdata/signup');
   });
 
   it('"No card required" subtext is visible', async () => {
@@ -668,5 +718,124 @@ describe('initUserProfile — logged out, with dropdown (guest dropdown)', () =>
 
     cleanup();
     expect(container.children.length).toBe(0);
+  });
+});
+
+// ---------------------------------------------------------------------------
+// initUserProfile — skeleton loading state
+// ---------------------------------------------------------------------------
+describe('initUserProfile — skeleton loading state', () => {
+  it('shows skeleton pill while fetching user', async () => {
+    let resolveFetch;
+    globalThis.fetch = vi.fn().mockImplementation(
+      () =>
+        new Promise((resolve) => {
+          resolveFetch = resolve;
+        }),
+    );
+
+    const container = document.createElement('div');
+    document.body.appendChild(container);
+
+    const promise = initUserProfile({ container });
+
+    const skeleton = container.querySelector('.user-profile-skeleton');
+    expect(skeleton).not.toBeNull();
+    expect(skeleton.classList.contains('user-profile-login-pill')).toBe(true);
+    expect(skeleton.getAttribute('aria-hidden')).toBe('true');
+
+    resolveFetch({ ok: false });
+    await promise;
+
+    expect(container.querySelector('.user-profile-skeleton')).toBeNull();
+  });
+
+  it('skeleton is replaced by login pill when logged out', async () => {
+    let resolveFetch;
+    globalThis.fetch = vi.fn().mockImplementation(
+      () =>
+        new Promise((resolve) => {
+          resolveFetch = resolve;
+        }),
+    );
+
+    const container = document.createElement('div');
+    document.body.appendChild(container);
+
+    const promise = initUserProfile({ container });
+    expect(container.querySelector('.user-profile-skeleton')).not.toBeNull();
+
+    resolveFetch({ ok: false });
+    await promise;
+
+    const pill = container.querySelector('.user-profile-login-pill');
+    expect(pill).not.toBeNull();
+    expect(pill.classList.contains('user-profile-skeleton')).toBe(false);
+    expect(pill.getAttribute('aria-hidden')).toBeNull();
+  });
+
+  it('skeleton is replaced by avatar when logged in', async () => {
+    let resolveFetch;
+    const mockUser = { login: 'jdoe', email: 'jdoe@example.com', name: 'John Doe' };
+    globalThis.fetch = vi.fn().mockImplementation(
+      () =>
+        new Promise((resolve) => {
+          resolveFetch = resolve;
+        }),
+    );
+
+    const container = document.createElement('div');
+    document.body.appendChild(container);
+
+    const promise = initUserProfile({ container });
+    expect(container.querySelector('.user-profile-skeleton')).not.toBeNull();
+
+    resolveFetch({ ok: true, json: () => Promise.resolve(mockUser) });
+    await promise;
+
+    expect(container.querySelector('.user-profile-skeleton')).toBeNull();
+    expect(container.querySelector('.user-profile-avatar')).not.toBeNull();
+  });
+
+  it('skeleton uses loginText option for correct sizing', async () => {
+    let resolveFetch;
+    globalThis.fetch = vi.fn().mockImplementation(
+      () =>
+        new Promise((resolve) => {
+          resolveFetch = resolve;
+        }),
+    );
+
+    const container = document.createElement('div');
+    document.body.appendChild(container);
+
+    const promise = initUserProfile({ container, loginText: 'Sign in' });
+
+    const skeleton = container.querySelector('.user-profile-skeleton');
+    expect(skeleton.textContent).toContain('Sign in');
+
+    resolveFetch({ ok: false });
+    await promise;
+  });
+
+  it('skeleton link href is # (not a real URL)', async () => {
+    let resolveFetch;
+    globalThis.fetch = vi.fn().mockImplementation(
+      () =>
+        new Promise((resolve) => {
+          resolveFetch = resolve;
+        }),
+    );
+
+    const container = document.createElement('div');
+    document.body.appendChild(container);
+
+    const promise = initUserProfile({ container });
+
+    const skeleton = container.querySelector('.user-profile-skeleton');
+    expect(skeleton.closest('a').getAttribute('href')).toBe('#');
+
+    resolveFetch({ ok: false });
+    await promise;
   });
 });
