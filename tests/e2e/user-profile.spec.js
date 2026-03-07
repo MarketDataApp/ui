@@ -82,7 +82,8 @@ test.describe('User profile component', () => {
 
     await avatar.click();
 
-    const logoutLink = page.locator('.user-profile-dropdown-signout', {
+    const container = page.locator('#user-profile-live-dropdown');
+    const logoutLink = container.locator('.user-profile-dropdown-signout', {
       hasText: 'Log out',
     });
     await expect(logoutLink).toBeVisible();
