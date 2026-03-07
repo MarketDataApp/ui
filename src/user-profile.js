@@ -442,7 +442,10 @@ export async function initUserProfile(options) {
   }
 
   // Show skeleton pill immediately while fetching user
-  const skeletonWrapper = htmlToElement(renderTemplate(loginTpl, { loginUrl: '#', loginText }));
+  const skeletonTpl = dropdown
+    ? renderTemplate(loginDropdownTpl, { loginUrl: '#', signupUrl: '#', signupText })
+    : renderTemplate(loginTpl, { loginUrl: '#', loginText });
+  const skeletonWrapper = htmlToElement(skeletonTpl);
   const skeletonPill = skeletonWrapper.querySelector('.user-profile-login-pill');
   skeletonPill.classList.add('user-profile-skeleton');
   skeletonPill.setAttribute('aria-hidden', 'true');

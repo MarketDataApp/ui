@@ -689,77 +689,177 @@
           subdomain for credentials to be sent).
         </p>
 
-        <div class="grid grid-cols-1 sm:grid-cols-3 gap-8">
-          <!-- Logged-in state: avatar only -->
+        <!-- Live components -->
+        <h3 class="text-lg font-semibold mb-3">Live (real API)</h3>
+        <p class="text-xs text-gray-400 dark:text-gray-500 mb-3">
+          These hit the real API. Result depends on your login state.
+        </p>
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-8 mb-10">
           <div class="space-y-3">
             <code class="text-sm font-mono text-gray-500 dark:text-gray-400 block"
               >initUserProfile({ dropdown: false })</code
             >
-            <p class="text-xs text-gray-400 dark:text-gray-500 mb-2">
-              Logged in: avatar links to dashboard. Logged out: sign-in button.
-            </p>
             <div
               class="border border-gray-200 dark:border-gray-700 rounded-lg p-6 flex items-center justify-center min-h-[80px]"
-              id="user-profile-avatar"
+              id="user-profile-live-no-dropdown"
             ></div>
           </div>
-
-          <!-- Guest dropdown -->
-          <div class="space-y-3">
-            <code class="text-sm font-mono text-gray-500 dark:text-gray-400 block"
-              >Guest Dropdown</code
-            >
-            <p class="text-xs text-gray-400 dark:text-gray-500 mb-2">
-              Logged out with dropdown: pill trigger opens guest menu.
-            </p>
-            <div
-              class="border border-gray-200 dark:border-gray-700 rounded-lg p-6 flex items-center justify-center min-h-[80px] relative"
-              id="user-profile-guest-dropdown"
-            ></div>
-          </div>
-
-          <!-- Logged-in state: avatar + dropdown -->
           <div class="space-y-3">
             <code class="text-sm font-mono text-gray-500 dark:text-gray-400 block"
               >initUserProfile({ dropdown: true })</code
             >
-            <p class="text-xs text-gray-400 dark:text-gray-500 mb-2">
-              Click avatar to toggle dropdown menu with user info and links.
-            </p>
             <div
               class="border border-gray-200 dark:border-gray-700 rounded-lg p-6 flex items-center justify-center min-h-[80px] relative"
-              id="user-profile-dropdown"
+              id="user-profile-live-dropdown"
+            ></div>
+          </div>
+        </div>
+
+        <!-- Skeleton states -->
+        <h3 class="text-lg font-semibold mb-3">Skeleton (loading state)</h3>
+        <p class="text-xs text-gray-400 dark:text-gray-500 mb-3">
+          Shown immediately while the API request is in flight. Same markup as the login pill but
+          with <code class="font-mono">user-profile-skeleton</code> — text is transparent, SVGs are
+          invisible, pointer events disabled.
+        </p>
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-8 mb-10">
+          <div class="space-y-3">
+            <code class="text-sm font-mono text-gray-500 dark:text-gray-400 block"
+              >dropdown: false</code
+            >
+            <div
+              class="border border-gray-200 dark:border-gray-700 rounded-lg p-6 flex items-center justify-center min-h-[80px]"
+            >
+              <div class="user-profile-container">
+                <div class="user-profile-wrapper">
+                  <a
+                    href="#"
+                    class="user-profile-login-pill user-profile-skeleton"
+                    aria-hidden="true"
+                  >
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
+                      <path
+                        fill-rule="evenodd"
+                        d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z"
+                        clip-rule="evenodd"
+                      />
+                    </svg>
+                    <span>Log in</span>
+                  </a>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="space-y-3">
+            <code class="text-sm font-mono text-gray-500 dark:text-gray-400 block"
+              >dropdown: true</code
+            >
+            <div
+              class="border border-gray-200 dark:border-gray-700 rounded-lg p-6 flex items-center justify-center min-h-[80px]"
+            >
+              <div class="user-profile-container">
+                <div class="user-profile-wrapper">
+                  <button class="user-profile-login-pill user-profile-skeleton" aria-hidden="true">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
+                      <path
+                        fill-rule="evenodd"
+                        d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z"
+                        clip-rule="evenodd"
+                      />
+                    </svg>
+                    <span>Log in</span>
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                      stroke-width="2"
+                    >
+                      <path stroke-linecap="round" stroke-linejoin="round" d="m19 9-7 7-7-7" />
+                    </svg>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Logged-out states -->
+        <h3 class="text-lg font-semibold mb-3">Logged Out</h3>
+        <p class="text-xs text-gray-400 dark:text-gray-500 mb-3">
+          Mocked with a <code class="font-mono">data:</code> URI that returns null.
+        </p>
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-8 mb-10">
+          <div class="space-y-3">
+            <code class="text-sm font-mono text-gray-500 dark:text-gray-400 block"
+              >dropdown: false</code
+            >
+            <div
+              class="border border-gray-200 dark:border-gray-700 rounded-lg p-6 flex items-center justify-center min-h-[80px]"
+              id="user-profile-logout-no-dropdown"
+            ></div>
+          </div>
+          <div class="space-y-3">
+            <code class="text-sm font-mono text-gray-500 dark:text-gray-400 block"
+              >dropdown: true (guest dropdown)</code
+            >
+            <div
+              class="border border-gray-200 dark:border-gray-700 rounded-lg p-6 flex items-center justify-center min-h-[80px] relative"
+              id="user-profile-logout-dropdown"
+            ></div>
+          </div>
+        </div>
+
+        <!-- Logged-in states -->
+        <h3 class="text-lg font-semibold mb-3">Logged In</h3>
+        <p class="text-xs text-gray-400 dark:text-gray-500 mb-3">
+          Mocked with a <code class="font-mono">data:</code> URI returning a user object. Gravatar
+          falls back to SVG placeholder for the test email.
+        </p>
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-8 mb-10">
+          <div class="space-y-3">
+            <code class="text-sm font-mono text-gray-500 dark:text-gray-400 block"
+              >dropdown: false</code
+            >
+            <div
+              class="border border-gray-200 dark:border-gray-700 rounded-lg p-6 flex items-center justify-center min-h-[80px]"
+              id="user-profile-login-no-dropdown"
+            ></div>
+          </div>
+          <div class="space-y-3">
+            <code class="text-sm font-mono text-gray-500 dark:text-gray-400 block"
+              >dropdown: true</code
+            >
+            <div
+              class="border border-gray-200 dark:border-gray-700 rounded-lg p-6 flex items-center justify-center min-h-[80px] relative"
+              id="user-profile-login-dropdown"
             ></div>
           </div>
         </div>
 
         <!-- SVG Placeholder fallback -->
-        <div class="mt-8 space-y-3">
-          <h3 class="text-lg font-semibold">SVG Placeholder Fallback</h3>
-          <p class="text-xs text-gray-400 dark:text-gray-500 mb-2">
-            Shown when the Gravatar image fails to load (no Gravatar for the user's email).
-          </p>
-          <div class="flex items-center gap-4">
-            <div
-              class="relative w-10 h-10 overflow-hidden bg-gray-300 dark:bg-gray-600 rounded-full"
+        <h3 class="text-lg font-semibold mb-3">SVG Placeholder Fallback</h3>
+        <p class="text-xs text-gray-400 dark:text-gray-500 mb-3">
+          Shown when the Gravatar image fails to load (no Gravatar for the user's email).
+        </p>
+        <div class="flex items-center gap-4 mb-8">
+          <div class="relative w-10 h-10 overflow-hidden bg-gray-300 dark:bg-gray-600 rounded-full">
+            <svg
+              class="absolute w-12 h-12 text-gray-400 dark:text-gray-500 -left-1"
+              fill="currentColor"
+              viewBox="0 0 20 20"
+              xmlns="http://www.w3.org/2000/svg"
             >
-              <svg
-                class="absolute w-12 h-12 text-gray-400 dark:text-gray-500 -left-1"
-                fill="currentColor"
-                viewBox="0 0 20 20"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                  fill-rule="evenodd"
-                  d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z"
-                  clip-rule="evenodd"
-                ></path>
-              </svg>
-            </div>
-            <code class="text-xs font-mono text-gray-500 dark:text-gray-400"
-              >Flowbite avatar/placeholder-icon pattern</code
-            >
+              <path
+                fill-rule="evenodd"
+                d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z"
+                clip-rule="evenodd"
+              ></path>
+            </svg>
           </div>
+          <code class="text-xs font-mono text-gray-500 dark:text-gray-400"
+            >Flowbite avatar/placeholder-icon pattern</code
+          >
         </div>
 
         <div class="mt-6 flex flex-wrap gap-2">
@@ -801,19 +901,38 @@
     <script type="module">
       import { initUserProfile } from '../dist/user-profile.js';
 
-      // User Profile demo
-      const avatarContainer = document.getElementById('user-profile-avatar');
-      const dropdownContainer = document.getElementById('user-profile-dropdown');
-      const guestDropdownContainer = document.getElementById('user-profile-guest-dropdown');
+      const mockLoggedOutUrl = 'data:application/json,null';
+      const mockUser = { login: 'jdoe', email: 'test@example.com', name: 'Jane Doe' };
+      const mockLoggedInUrl =
+        'data:application/json,' + encodeURIComponent(JSON.stringify(mockUser));
 
-      initUserProfile({ container: avatarContainer });
-      initUserProfile({ container: dropdownContainer, dropdown: true });
-
-      // Guest dropdown: force logged-out state with a mock API that returns 401
+      // Live (real API)
+      initUserProfile({ container: document.getElementById('user-profile-live-no-dropdown') });
       initUserProfile({
-        container: guestDropdownContainer,
+        container: document.getElementById('user-profile-live-dropdown'),
         dropdown: true,
-        apiUrl: 'data:application/json,null',
+      });
+
+      // Logged out (mocked)
+      initUserProfile({
+        container: document.getElementById('user-profile-logout-no-dropdown'),
+        apiUrl: mockLoggedOutUrl,
+      });
+      initUserProfile({
+        container: document.getElementById('user-profile-logout-dropdown'),
+        dropdown: true,
+        apiUrl: mockLoggedOutUrl,
+      });
+
+      // Logged in (mocked)
+      initUserProfile({
+        container: document.getElementById('user-profile-login-no-dropdown'),
+        apiUrl: mockLoggedInUrl,
+      });
+      initUserProfile({
+        container: document.getElementById('user-profile-login-dropdown'),
+        dropdown: true,
+        apiUrl: mockLoggedInUrl,
       });
     </script>
   </body>

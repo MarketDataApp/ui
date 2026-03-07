@@ -16,17 +16,17 @@ test.describe('User profile component', () => {
   });
 
   test('user profile avatar is visible when logged in', async ({ page }) => {
-    const avatar = page.locator('#user-profile-dropdown .user-profile-avatar');
+    const avatar = page.locator('#user-profile-live-dropdown .user-profile-avatar');
     await expect(avatar).toBeVisible({ timeout: 10_000 });
   });
 
   test('dropdown opens on avatar click', async ({ page }) => {
-    const avatar = page.locator('#user-profile-dropdown .user-profile-avatar');
+    const avatar = page.locator('#user-profile-live-dropdown .user-profile-avatar');
     await expect(avatar).toBeVisible({ timeout: 10_000 });
 
     await avatar.click();
 
-    const container = page.locator('#user-profile-dropdown');
+    const container = page.locator('#user-profile-live-dropdown');
     const dropdown = container.locator('.user-profile-dropdown');
     await expect(dropdown).toBeVisible();
 
@@ -52,11 +52,11 @@ test.describe('User profile component', () => {
   });
 
   test('dropdown closes on outside click', async ({ page }) => {
-    const avatar = page.locator('#user-profile-dropdown .user-profile-avatar');
+    const avatar = page.locator('#user-profile-live-dropdown .user-profile-avatar');
     await expect(avatar).toBeVisible({ timeout: 10_000 });
 
     await avatar.click();
-    const dropdown = page.locator('#user-profile-dropdown .user-profile-dropdown');
+    const dropdown = page.locator('#user-profile-live-dropdown .user-profile-dropdown');
     await expect(dropdown).toBeVisible();
 
     // Click outside the dropdown
@@ -65,11 +65,11 @@ test.describe('User profile component', () => {
   });
 
   test('dropdown closes on Escape key', async ({ page }) => {
-    const avatar = page.locator('#user-profile-dropdown .user-profile-avatar');
+    const avatar = page.locator('#user-profile-live-dropdown .user-profile-avatar');
     await expect(avatar).toBeVisible({ timeout: 10_000 });
 
     await avatar.click();
-    const dropdown = page.locator('#user-profile-dropdown .user-profile-dropdown');
+    const dropdown = page.locator('#user-profile-live-dropdown .user-profile-dropdown');
     await expect(dropdown).toBeVisible();
 
     await page.keyboard.press('Escape');
@@ -77,7 +77,7 @@ test.describe('User profile component', () => {
   });
 
   test('logout redirects to dashboard login', async ({ page }) => {
-    const avatar = page.locator('#user-profile-dropdown .user-profile-avatar');
+    const avatar = page.locator('#user-profile-live-dropdown .user-profile-avatar');
     await expect(avatar).toBeVisible({ timeout: 10_000 });
 
     await avatar.click();
