@@ -818,7 +818,7 @@ describe('initUserProfile — skeleton loading state', () => {
     await promise;
   });
 
-  it('skeleton link href is # (not a real URL)', async () => {
+  it('non-dropdown skeleton renders as link with href="#"', async () => {
     let resolveFetch;
     globalThis.fetch = vi.fn().mockImplementation(
       () =>
@@ -830,10 +830,43 @@ describe('initUserProfile — skeleton loading state', () => {
     const container = document.createElement('div');
     document.body.appendChild(container);
 
-    const promise = initUserProfile({ container });
+    const promise = initUserProfile({ container, dropdown: false });
 
     const skeleton = container.querySelector('.user-profile-skeleton');
-    expect(skeleton.closest('a').getAttribute('href')).toBe('#');
+    expect(skeleton.tagName).toBe('A');
+    expect(skeleton.getAttribute('href')).toBe('#');
+
+    // No chevron (person icon only)
+    expect(skeleton.querySelectorAll('svg').length).toBe(1);
+
+    resolveFetch({ ok: false });
+    await promise;
+  });
+
+  it('dropdown skeleton renders as button with chevron', async () => {
+    let resolveFetch;
+    globalThis.fetch = vi.fn().mockImplementation(
+      () =>
+        new Promise((resolve) => {
+          resolveFetch = resolve;
+        }),
+    );
+
+    const container = document.createElement('div');
+    document.body.appendChild(container);
+
+    const promise = initUserProfile({ container, dropdown: true });
+
+    const skeleton = container.querySelector('.user-profile-skeleton');
+    expect(skeleton.tagName).toBe('BUTTON');
+
+    // Person icon + chevron
+    expect(skeleton.querySelectorAll('svg').length).toBe(2);
+
+    // Dropdown menu exists but is hidden
+    const menu = container.querySelector('.user-profile-dropdown');
+    expect(menu).not.toBeNull();
+    expect(menu.classList.contains('hidden')).toBe(true);
 
     resolveFetch({ ok: false });
     await promise;
