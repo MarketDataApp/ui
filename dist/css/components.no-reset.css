@@ -1240,7 +1240,7 @@
 }
 .resena-widget .resena-puntuacion {
   color: #191919;
-  font-family: "Helvetica Neue","Helvetica","Arial","sans-serif";
+  font-family: 'Helvetica Neue', 'Helvetica', 'Arial', 'sans-serif';
   font-weight: 500;
   font-size: 18px;
   margin: 0 16px 0 0;
@@ -1363,7 +1363,7 @@
   }
 }
 .resena-widget .logo__estrella {
-  fill: #00B67A;
+  fill: #00b67a;
 }
 .resena-widget .logo__estrella-marca {
   fill: #005128;

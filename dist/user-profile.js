@@ -310,7 +310,7 @@ function createPlaceholderSvg() {
 // Dropdown toggle
 // ---------------------------------------------------------------------------
 
-function setupDropdown(trigger, menu) {
+function setupDropdown(trigger, menu, { hover = false } = {}) {
   const listeners = [];
 
   function on(target, event, handler) {
@@ -344,6 +344,12 @@ function setupDropdown(trigger, menu) {
 
   function toggle() {
     menu.classList.contains('hidden') ? open() : close();
+  }
+
+  if (hover) {
+    const wrapper = trigger.parentElement;
+    on(wrapper, 'mouseenter', open);
+    on(wrapper, 'mouseleave', close);
   }
 
   on(trigger, 'click', (e) => {
@@ -429,6 +435,7 @@ export async function initUserProfile(options) {
     dropdownCleanup = setupDropdown(
       wrapper.querySelector('.user-profile-login-pill'),
       wrapper.querySelector('.user-profile-dropdown'),
+      { hover: true },
     );
   }
 
