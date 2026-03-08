@@ -32,7 +32,7 @@ jobs:
             sed "s|\.css\"|.css?v=$CACHE_BUST\"|; s|\.js';|.js?v=$CACHE_BUST';|" "$f" > "_site/docs/$(basename "$f")"
           done
           cp dist/css/components.css _site/dist/css/
-          cp dist/user-profile.js dist/theme-toggle.js dist/theme.js dist/navbar-overflow.js _site/dist/
+          cp dist/user-profile.js dist/theme-toggle.js dist/theme.js dist/navbar-overflow.js dist/reviews.js dist/reviews.platform.js _site/dist/
           echo '<meta http-equiv="refresh" content="0;url=docs/">' > _site/index.html
 
       - name: Upload Pages artifact
