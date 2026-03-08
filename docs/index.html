@@ -909,12 +909,16 @@
           review profile page.
         </p>
 
-        <div class="grid grid-cols-1 sm:grid-cols-2 gap-8">
+        <div class="space-y-8">
           <!-- Large widget -->
           <div class="space-y-3">
             <code class="text-sm font-mono text-gray-500 dark:text-gray-400 block"
               >initReviewWidget({ version: 'large' })</code
             >
+            <p class="text-xs text-gray-400 dark:text-gray-500">
+              Resize below 1024px to see the compact view (text labels hide, only stars + logo
+              remain).
+            </p>
             <div
               class="border border-gray-200 dark:border-gray-700 rounded-lg p-6 flex items-center justify-center min-h-[80px]"
               id="review-widget-large"
