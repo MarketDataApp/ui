@@ -10,3 +10,6 @@ playwright-report/
 
 # Intermediate build artifacts
 src/*.templates.js
+
+# macOS
+.DS_Store
