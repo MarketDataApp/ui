@@ -11,5 +11,8 @@ playwright-report/
 # Intermediate build artifacts
 src/*.templates.js
 
+# MCP config (contains local paths)
+.mcp.json
+
 # macOS
 .DS_Store
