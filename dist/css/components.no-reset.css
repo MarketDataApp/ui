@@ -1188,6 +1188,186 @@
   --color-fg-brand: var(--color-blue-500);
   --color-fg-brand-strong: var(--color-blue-400);
 }
+.resena-widget, .resena-widget *, .resena-widget *::before, .resena-widget *::after {
+  box-sizing: border-box;
+  border: 0;
+  font: inherit;
+  font-size: 100%;
+  margin: 0;
+  padding: 0;
+  vertical-align: baseline;
+}
+.resena-widget:not(.resena-small) {
+  color: #191919;
+  text-align: center;
+  margin: 0 auto;
+  position: relative;
+  align-content: flex-start;
+  align-items: center;
+  display: flex;
+  flex-wrap: wrap;
+  height: auto;
+  justify-content: center;
+  max-width: none;
+  &:where(.dark, .dark *, [data-theme="dark"], [data-theme="dark"] *) {
+    color: var(--color-gray-200);
+  }
+}
+.resena-widget:not(.resena-small) .resena-enlace {
+  color: #191919;
+  text-decoration: none;
+  &:where(.dark, .dark *, [data-theme="dark"], [data-theme="dark"] *) {
+    color: var(--color-gray-200);
+  }
+}
+.resena-widget:not(.resena-small) .resena-enlace span {
+  color: #191919;
+  &:where(.dark, .dark *, [data-theme="dark"], [data-theme="dark"] *) {
+    color: var(--color-gray-200);
+  }
+}
+.resena-widget .clientes-dicen {
+  color: #191919;
+  text-align: center;
+  margin: 0 16px 0 0;
+  display: none;
+  @media (width >= 64rem) {
+    display: block;
+  }
+  &:where(.dark, .dark *, [data-theme="dark"], [data-theme="dark"] *) {
+    color: var(--color-gray-200);
+  }
+}
+.resena-widget .resena-puntuacion {
+  color: #191919;
+  font-family: "Helvetica Neue","Helvetica","Arial","sans-serif";
+  font-weight: 500;
+  font-size: 18px;
+  margin: 0 16px 0 0;
+  display: none;
+  @media (width >= 64rem) {
+    display: block;
+  }
+  &:where(.dark, .dark *, [data-theme="dark"], [data-theme="dark"] *) {
+    color: var(--color-gray-200);
+  }
+}
+.resena-widget .resena-estrellas {
+  width: 130px;
+  margin: 0 16px 0 0;
+}
+.resena-widget .resena-rating {
+  color: #191919;
+  margin: 0 16px 0 0;
+  display: none;
+  @media (width >= 64rem) {
+    display: block;
+  }
+  &:where(.dark, .dark *, [data-theme="dark"], [data-theme="dark"] *) {
+    color: var(--color-gray-200);
+  }
+}
+.resena-widget .resena-creditos {
+  color: #191919;
+  &:where(.dark, .dark *, [data-theme="dark"], [data-theme="dark"] *) {
+    color: var(--color-gray-200);
+  }
+}
+.resena-widget .resena-texto {
+  color: #191919;
+  display: none;
+  margin: 0 16px 0 0;
+  &:where(.dark, .dark *, [data-theme="dark"], [data-theme="dark"] *) {
+    color: var(--color-gray-200);
+  }
+}
+.resena-widget .traduccion-creditos {
+  color: #191919;
+  &:where(.dark, .dark *, [data-theme="dark"], [data-theme="dark"] *) {
+    color: var(--color-gray-200);
+  }
+}
+.resena-widget .resena-logo {
+  width: 80px;
+}
+.resena-widget .resena-aspecto-estrellas {
+  position: relative;
+  height: 0;
+  width: 100%;
+  padding-bottom: 18.326693227091635%;
+}
+.resena-widget .resena-aspecto-logo {
+  position: relative;
+  height: 0;
+  width: 100%;
+  padding-bottom: 24.6031746031746%;
+}
+.resena-widget .resena-aspecto-estrellas svg, .resena-widget .resena-aspecto-logo svg {
+  position: absolute;
+  height: 100%;
+  width: 100%;
+  left: 0;
+  top: 0;
+  display: block;
+}
+.resena-widget.resena-small {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  align-items: flex-start;
+}
+.resena-widget.resena-small .resena-enlace {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  text-align: left;
+  color: #191919;
+  text-decoration: none;
+  &:where(.dark, .dark *, [data-theme="dark"], [data-theme="dark"] *) {
+    color: var(--color-white);
+  }
+}
+.resena-widget.resena-small .resena-enlace svg {
+  align-self: flex-start;
+  margin-bottom: 4px;
+  height: calc(var(--spacing) * 6);
+}
+.resena-widget.resena-small .resena-enlace .resena-descripcion {
+  font-size: var(--text-sm);
+  line-height: var(--tw-leading, var(--text-sm--line-height));
+  --tw-font-weight: var(--font-weight-medium);
+  font-weight: var(--font-weight-medium);
+  color: var(--color-gray-500);
+  &:where(.dark, .dark *, [data-theme="dark"], [data-theme="dark"] *) {
+    color: var(--color-gray-400);
+  }
+}
+.resena-widget.resena-small .resena-enlace .resena-numero {
+  --tw-font-weight: var(--font-weight-medium);
+  font-weight: var(--font-weight-medium);
+  color: var(--color-gray-900);
+  &:where(.dark, .dark *, [data-theme="dark"], [data-theme="dark"] *) {
+    color: var(--color-white);
+  }
+}
+.resena-widget .estrella__fondo, .resena-widget .estrella__fondo--mitad {
+  fill: #00b67a;
+}
+.resena-widget .estrella__forma {
+  fill: #fff;
+}
+.resena-widget .logo__texto {
+  fill: #191919;
+  &:where(.dark, .dark *, [data-theme="dark"], [data-theme="dark"] *) {
+    fill: var(--color-gray-200);
+  }
+}
+.resena-widget .logo__estrella {
+  fill: #00B67A;
+}
+.resena-widget .logo__estrella-marca {
+  fill: #005128;
+}
 .user-profile-wrapper .user-profile-avatar {
   height: calc(var(--spacing) * 10);
   width: calc(var(--spacing) * 10);

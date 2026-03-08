@@ -1,0 +1,181 @@
+/* ===================================================================
+   Review Widget – .resena-widget
+   =================================================================== */
+
+/* Container reset — covers all descendants */
+.resena-widget,
+.resena-widget *,
+.resena-widget *::before,
+.resena-widget *::after {
+  box-sizing: border-box;
+  border: 0;
+  font: inherit;
+  font-size: 100%;
+  margin: 0;
+  padding: 0;
+  vertical-align: baseline;
+}
+
+/* ── Large widget ──────────────────────────────────────────────────── */
+
+.resena-widget:not(.resena-small) {
+  color: #191919;
+  text-align: center;
+  margin: 0 auto;
+  position: relative;
+  align-content: flex-start;
+  align-items: center;
+  display: flex;
+  flex-wrap: wrap;
+  height: auto;
+  justify-content: center;
+  max-width: none;
+  @apply dark:text-gray-200;
+}
+
+.resena-widget:not(.resena-small) .resena-enlace {
+  color: #191919;
+  text-decoration: none;
+  @apply dark:text-gray-200;
+}
+
+.resena-widget:not(.resena-small) .resena-enlace span {
+  color: #191919;
+  @apply dark:text-gray-200;
+}
+
+.resena-widget .clientes-dicen {
+  color: #191919;
+  text-align: center;
+  margin: 0 16px 0 0;
+  @apply hidden lg:block dark:text-gray-200;
+}
+
+.resena-widget .resena-puntuacion {
+  color: #191919;
+  font-family: 'Helvetica Neue', 'Helvetica', 'Arial', 'sans-serif';
+  font-weight: 500;
+  font-size: 18px;
+  margin: 0 16px 0 0;
+  @apply hidden lg:block dark:text-gray-200;
+}
+
+.resena-widget .resena-estrellas {
+  width: 130px;
+  margin: 0 16px 0 0;
+}
+
+.resena-widget .resena-rating {
+  color: #191919;
+  margin: 0 16px 0 0;
+  @apply hidden lg:block dark:text-gray-200;
+}
+
+.resena-widget .resena-creditos {
+  color: #191919;
+  @apply dark:text-gray-200;
+}
+
+/* REVIEW: selector not found in current templates */
+.resena-widget .resena-texto {
+  color: #191919;
+  display: none;
+  margin: 0 16px 0 0;
+  @apply dark:text-gray-200;
+}
+
+/* REVIEW: selector not found in current templates */
+.resena-widget .traduccion-creditos {
+  color: #191919;
+  @apply dark:text-gray-200;
+}
+
+.resena-widget .resena-logo {
+  width: 80px;
+}
+
+/* ── Aspect-ratio containers (moved from inline styles) ───────────── */
+
+.resena-widget .resena-aspecto-estrellas {
+  position: relative;
+  height: 0;
+  width: 100%;
+  padding-bottom: 18.326693227091635%;
+}
+
+.resena-widget .resena-aspecto-logo {
+  position: relative;
+  height: 0;
+  width: 100%;
+  padding-bottom: 24.6031746031746%;
+}
+
+/* SVGs inside aspect-ratio boxes (moved from inline styles) */
+.resena-widget .resena-aspecto-estrellas svg,
+.resena-widget .resena-aspecto-logo svg {
+  position: absolute;
+  height: 100%;
+  width: 100%;
+  left: 0;
+  top: 0;
+  display: block;
+}
+
+/* ── Small widget ──────────────────────────────────────────────────── */
+
+.resena-widget.resena-small {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  align-items: flex-start;
+}
+
+.resena-widget.resena-small .resena-enlace {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  text-align: left;
+  color: #191919;
+  text-decoration: none;
+  @apply dark:text-white;
+}
+
+.resena-widget.resena-small .resena-enlace svg {
+  align-self: flex-start;
+  margin-bottom: 4px;
+  @apply h-6;
+}
+
+.resena-widget.resena-small .resena-enlace .resena-descripcion {
+  @apply text-sm font-medium text-gray-500 dark:text-gray-400;
+}
+
+.resena-widget.resena-small .resena-enlace .resena-numero {
+  @apply font-medium text-gray-900 dark:text-white;
+}
+
+/* ── Star fills ────────────────────────────────────────────────────── */
+
+.resena-widget .estrella__fondo,
+.resena-widget .estrella__fondo--mitad {
+  fill: #00b67a;
+}
+
+.resena-widget .estrella__forma {
+  fill: #fff;
+}
+
+/* ── Logo fills ────────────────────────────────────────────────────── */
+
+.resena-widget .logo__texto {
+  fill: #191919;
+  @apply dark:fill-gray-200;
+}
+
+.resena-widget .logo__estrella {
+  fill: #00b67a;
+}
+
+.resena-widget .logo__estrella-marca {
+  fill: #005128;
+}

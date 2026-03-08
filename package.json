@@ -17,10 +17,12 @@
     "./css/theme": "./css/theme.css",
     "./navbar-overflow": "./dist/navbar-overflow.js",
     "./user-profile": "./dist/user-profile.js",
-    "./theme-toggle": "./dist/theme-toggle.js"
+    "./theme-toggle": "./dist/theme-toggle.js",
+    "./reviews": "./dist/reviews.js"
   },
   "scripts": {
-    "build": "npm run build:templates && npm run build:js && npm run build:css",
+    "build": "npm run build:fetch-reviews && npm run build:templates && npm run build:js && npm run build:css",
+    "build:fetch-reviews": "node scripts/fetch-reviews.js",
     "build:templates": "node scripts/build-templates.js",
     "build:js": "node scripts/build-js.js",
     "build:css": "tailwindcss -i css/components.input.css -o dist/css/components.css && tailwindcss -i css/components.no-reset.input.css -o dist/css/components.no-reset.css && node scripts/unlayer.js",

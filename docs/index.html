@@ -898,6 +898,53 @@
           >
         </div>
       </section>
+
+      <!-- Review Widget -->
+      <section id="review-widget">
+        <h2 class="text-2xl font-bold mb-6 border-b border-gray-200 dark:border-gray-700 pb-2">
+          Review Widget
+        </h2>
+        <p class="text-gray-500 dark:text-gray-400 mb-6">
+          Review platform rating widget. Renders build-time review data with clickable links to the
+          review profile page.
+        </p>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-8">
+          <!-- Large widget -->
+          <div class="space-y-3">
+            <code class="text-sm font-mono text-gray-500 dark:text-gray-400 block"
+              >initReviewWidget({ version: 'large' })</code
+            >
+            <div
+              class="border border-gray-200 dark:border-gray-700 rounded-lg p-6 flex items-center justify-center min-h-[80px]"
+              id="review-widget-large"
+            ></div>
+          </div>
+
+          <!-- Small widget -->
+          <div class="space-y-3">
+            <code class="text-sm font-mono text-gray-500 dark:text-gray-400 block"
+              >initReviewWidget({ version: 'small' })</code
+            >
+            <div
+              class="border border-gray-200 dark:border-gray-700 rounded-lg p-6 flex items-center min-h-[80px]"
+              id="review-widget-small"
+            ></div>
+          </div>
+        </div>
+
+        <div class="mt-6 flex flex-wrap gap-2">
+          <code class="text-xs font-mono bg-gray-100 dark:bg-gray-800 px-2 py-1 rounded"
+            >initReviewWidget()</code
+          >
+          <code class="text-xs font-mono bg-gray-100 dark:bg-gray-800 px-2 py-1 rounded"
+            >.resena-widget</code
+          >
+          <code class="text-xs font-mono bg-gray-100 dark:bg-gray-800 px-2 py-1 rounded"
+            >.resena-small</code
+          >
+        </div>
+      </section>
     </main>
 
     <footer class="border-t border-gray-200 dark:border-gray-700 mt-12">
@@ -920,6 +967,16 @@
       initThemeToggle({ container: document.getElementById('theme-toggle') });
       // Theme toggle (demo section)
       initThemeToggle({ container: document.getElementById('theme-toggle-demo-target') });
+    </script>
+
+    <script type="module">
+      import { initReviewWidget } from '../dist/reviews.js';
+
+      initReviewWidget({ container: document.getElementById('review-widget-large') });
+      initReviewWidget({
+        container: document.getElementById('review-widget-small'),
+        version: 'small',
+      });
     </script>
 
     <script type="module">
