@@ -109,7 +109,6 @@
   --color-heading: var(--color-gray-900);
   --color-body: var(--color-gray-600);
   --color-body-subtle: var(--color-gray-500);
-  --color-fg-disabled: var(--color-gray-400);
   --color-fg-danger: var(--color-red-600);
   --color-fg-danger-strong: var(--color-red-900);
   --color-default: var(--color-gray-200);
@@ -1572,7 +1571,7 @@
   position: absolute;
   height: calc(var(--spacing) * 12);
   width: calc(var(--spacing) * 12);
-  color: var(--color-fg-disabled);
+  color: var(--color-body-subtle);
   left: -0.25rem;
 }
 @property --tw-shadow {

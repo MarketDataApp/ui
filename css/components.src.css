@@ -321,7 +321,7 @@
 }
 
 .user-profile-wrapper .user-profile-avatar--placeholder svg {
-  @apply absolute w-12 h-12 text-fg-disabled;
+  @apply absolute w-12 h-12 text-body-subtle;
   left: -0.25rem;
 }
 
