@@ -1398,6 +1398,14 @@
   top: calc(100% + 0.5rem);
   max-width: calc(100vw - 1rem);
 }
+.user-profile-wrapper .user-profile-dropdown::before {
+  content: '';
+  position: absolute;
+  left: calc(var(--spacing) * 0);
+  width: 100%;
+  top: -0.5rem;
+  height: 0.5rem;
+}
 .user-profile-wrapper .user-profile-dropdown-menu {
   margin: calc(var(--spacing) * 0);
   list-style-type: none;

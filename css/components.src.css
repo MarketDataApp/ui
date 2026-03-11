@@ -232,6 +232,15 @@
   max-width: calc(100vw - 1rem);
 }
 
+/* Invisible bridge covering the gap between trigger and dropdown so
+   mouseleave doesn't fire when the cursor crosses the 0.5rem gap. */
+.user-profile-wrapper .user-profile-dropdown::before {
+  content: '';
+  @apply absolute left-0 w-full;
+  top: -0.5rem;
+  height: 0.5rem;
+}
+
 .user-profile-wrapper .user-profile-dropdown-menu {
   @apply list-none p-2 m-0 text-sm text-body font-medium;
 }

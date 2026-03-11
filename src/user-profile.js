@@ -348,8 +348,14 @@ function setupDropdown(trigger, menu, { hover = false } = {}) {
 
   if (hover) {
     const wrapper = trigger.parentElement;
-    on(wrapper, 'mouseenter', open);
-    on(wrapper, 'mouseleave', close);
+    let hoverTimer = null;
+    on(wrapper, 'mouseenter', () => {
+      clearTimeout(hoverTimer);
+      open();
+    });
+    on(wrapper, 'mouseleave', () => {
+      hoverTimer = setTimeout(close, 200);
+    });
   }
 
   on(trigger, 'click', (e) => {
