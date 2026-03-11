@@ -24,15 +24,26 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build docs CSS
+        run: npx tailwindcss -i docs/docs.input.css -o docs/docs.css
+
       - name: Assemble site
         run: |
-          mkdir -p _site/docs _site/dist/css
+          mkdir -p _site/docs _site/dist
           CACHE_BUST="${GITHUB_SHA:0:7}"
           for f in docs/*.html; do
             sed "s|\.css\"|.css?v=$CACHE_BUST\"|; s|\.js';|.js?v=$CACHE_BUST';|" "$f" > "_site/docs/$(basename "$f")"
           done
           cp -n docs/*.avif _site/docs/ 2>/dev/null || true
-          cp dist/css/components.css _site/dist/css/
+          cp docs/docs.css "_site/docs/docs.css"
           cp dist/user-profile.js dist/theme-toggle.js dist/theme.js dist/navbar-overflow.js dist/dark-images.js dist/reviews.js dist/reviews.platform.js _site/dist/
           echo '<meta http-equiv="refresh" content="0;url=docs/">' > _site/index.html
 

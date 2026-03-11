@@ -26,7 +26,7 @@
     "build:fetch-reviews": "node scripts/fetch-reviews.js",
     "build:templates": "node scripts/build-templates.js",
     "build:js": "node scripts/build-js.js",
-    "build:css": "tailwindcss -i css/components.input.css -o dist/css/components.css && tailwindcss -i css/components.no-reset.input.css -o dist/css/components.no-reset.css && node scripts/unlayer.js",
+    "build:css": "tailwindcss -i css/components.input.css -o dist/css/components.css && tailwindcss -i css/components.no-reset.input.css -o dist/css/components.no-reset.css && node scripts/unlayer.js && tailwindcss -i docs/docs.input.css -o docs/docs.css",
     "dev": "concurrently -n css,serve -c blue,green \"npm:dev:css\" \"npm:dev:serve\"",
     "dev:css": "tailwindcss -i css/components.input.css -o dist/css/components.css --watch",
     "dev:serve": "serve . -p 3000",
