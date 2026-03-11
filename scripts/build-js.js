@@ -26,7 +26,12 @@ mkdirSync(DIST, { recursive: true });
 const HEADER = '// Auto-generated from src/ by scripts/build-js.js — do not edit manually\n\n';
 
 const FILES_WITH_LOCAL_IMPORTS = ['user-profile.js', 'theme-toggle.js', 'reviews.js'];
-const FILES_WITHOUT_LOCAL_IMPORTS = ['theme.js', 'navbar-overflow.js', 'reviews.platform.js'];
+const FILES_WITHOUT_LOCAL_IMPORTS = [
+  'theme.js',
+  'navbar-overflow.js',
+  'reviews.platform.js',
+  'dark-images.js',
+];
 
 // ---------------------------------------------------------------------------
 // Helpers

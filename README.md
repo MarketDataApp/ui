@@ -20,6 +20,8 @@ npm install @marketdataapp/ui@github:MarketDataApp/ui
 | `./css/components.no-reset` | `dist/css/components.no-reset.css` | Pre-built CSS without preflight reset, unlayered. For framework consumers with their own reset (e.g. Docusaurus).                                       |
 | `./theme`                   | `dist/theme.js`                    | Dark/light mode JS: `getThemeCookie`, `setThemeCookie`, `getUserThemePreference`, `getBrowserThemePreference`, `getEffectiveTheme`.                     |
 | `./theme-toggle`            | `dist/theme-toggle.js`             | Sun/moon toggle button for switching dark/light mode. Uses `./theme` for cookie persistence.                                                            |
+| `./dark-images`             | `dist/dark-images.js`              | Automatic dark/light image swapping. Convention-based (`-light`/`-dark` suffix) or explicit pairs via `addImagePair()`.                                 |
+| `./reviews`                 | `dist/reviews.js`                  | Review rating widget with build-time data. Renders large or small variant via `initReviewWidget()`.                                                     |
 | `./navbar-overflow`         | `dist/navbar-overflow.js`          | Priority-based auto-hide for navbar items that overflow their container.                                                                                |
 | `./user-profile`            | `dist/user-profile.js`             | Gravatar avatar with optional dropdown menu. Zero dependencies.                                                                                         |
 
@@ -82,6 +84,83 @@ Dark mode uses a `@custom-variant` that supports both conventions:
 - `[data-theme="dark"]` attribute — Docusaurus convention
 
 The `:where()` wrapper adds **zero specificity**, preventing dark mode selectors from creating specificity inflation.
+
+### Dark Image Swapping
+
+The `dark-images` module automatically swaps images between light and dark variants based on the current theme. Two approaches:
+
+#### Convention-based (automatic)
+
+Name your images with `-light` or `-dark` before the extension. The module detects them automatically and probes for the alternate version:
+
+```
+logo-light.png  ↔  logo-dark.png
+hero-light.jpg  ↔  hero-dark.jpg
+icon-light.svg  ↔  icon-dark.svg
+```
+
+```js
+import { initDarkImages } from '@marketdataapp/ui/dark-images';
+
+const cleanup = initDarkImages();
+// cleanup() stops all observers
+```
+
+If the alternate image 404s, the original stays. The browser's native HTTP cache handles repeat requests.
+
+#### Explicit pairs
+
+For images that don't follow the `-light`/`-dark` naming convention, register pairs manually:
+
+```js
+import { initDarkImages, addImagePair } from '@marketdataapp/ui/dark-images';
+
+// Register pairs BEFORE calling initDarkImages()
+addImagePair('chart.png', 'chart-inverted.png'); // suffix match — matches any src ending with these
+addImagePair('/images/photo.jpg', '/images/photo-bw.jpg'); // exact match — absolute paths match exactly
+addImagePair('https://cdn.example.com/a.png', 'https://cdn.example.com/b.png'); // exact match — full URLs match exactly
+
+const cleanup = initDarkImages();
+```
+
+The first argument is the light variant, the second is the dark variant. Match type is inferred from the URL:
+
+- Full URLs (contains `://`) → exact match
+- Absolute paths (starts with `/`) → exact match
+- Bare filenames → suffix match (matches any `src` ending with that string)
+
+#### Behavior
+
+- Runs an initial swap on all images in the DOM
+- Watches for theme changes (`.dark` class toggled on `<html>`)
+- Watches for new images added to the DOM (SPA navigation, lazy loading)
+- Probes alternate URLs via `new Image()` — if the alternate 404s, no swap occurs
+- Idempotent — safe to call `initDarkImages()` multiple times; subsequent calls return the same cleanup function
+- Calling `cleanup()` stops all observers and allows re-initialization
+
+### Review Widget
+
+The `reviews` module renders a star-rating widget using data fetched at build time. Available in two sizes:
+
+```js
+import { initReviewWidget } from '@marketdataapp/ui/reviews';
+
+// Large variant (default)
+const cleanup = initReviewWidget({ container: document.getElementById('reviews') });
+
+// Small variant
+const cleanup = initReviewWidget({ container: el, version: 'small' });
+
+// cleanup() removes the widget from the DOM
+```
+
+The module also re-exports the raw data for consumers who need just the numbers:
+
+```js
+import { reviewRating, reviewCount, reviewLabel } from '@marketdataapp/ui/reviews';
+```
+
+Build-time data is refreshed by `npm run build:fetch-reviews`, which runs as part of `npm run build`.
 
 ### Theme Tokens
 
@@ -184,6 +263,8 @@ Usage not yet verified.
 
 - **`dist/theme.js`** — Cross-subdomain dark/light mode via `.marketdata.app` cookie
 - **`dist/theme-toggle.js`** — Sun/moon toggle button with cookie persistence
+- **`dist/dark-images.js`** — Automatic dark/light image swapping (convention + explicit pairs)
+- **`dist/reviews.js`** — Review rating widget (large/small variants, build-time data, zero deps)
 - **`dist/navbar-overflow.js`** — Priority-based auto-hide for navbar items
 - **`dist/user-profile.js`** — Gravatar avatar + dropdown menu (zero deps, templates inlined)
 

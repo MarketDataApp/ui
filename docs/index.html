@@ -676,6 +676,136 @@
         </div>
       </section>
 
+      <!-- Dark Images -->
+      <section id="dark-images">
+        <h2 class="text-2xl font-bold mb-6 border-b border-gray-200 dark:border-gray-700 pb-2">
+          Dark Images
+        </h2>
+        <p class="text-gray-500 dark:text-gray-400 mb-6">
+          Automatic image swapping based on theme. Images with
+          <code class="font-mono text-xs">-light</code> or
+          <code class="font-mono text-xs">-dark</code> before the file extension are swapped
+          automatically. Toggle the theme to see it in action.
+        </p>
+
+        <div class="space-y-8">
+          <!-- Convention-based -->
+          <div class="space-y-3">
+            <h3 class="text-lg font-semibold mb-3">Convention-based</h3>
+            <p class="text-xs text-gray-400 dark:text-gray-500 mb-3">
+              Uses <code class="font-mono">-light</code>/<code class="font-mono">-dark</code> suffix
+              convention. The alternate image is probed automatically &mdash; if it 404s, no swap
+              occurs.
+            </p>
+            <code class="text-sm font-mono text-gray-500 dark:text-gray-400 block"
+              >&lt;img src="logo-light.avif"&gt;</code
+            >
+            <div
+              class="border border-gray-200 dark:border-gray-700 rounded-lg p-6 flex items-center justify-center min-h-30"
+            >
+              <img src="logo-light.avif" alt="MarketData logo" class="max-h-24" />
+            </div>
+          </div>
+        </div>
+
+        <div class="mt-6 flex flex-wrap gap-2">
+          <code class="text-xs font-mono bg-gray-100 dark:bg-gray-800 px-2 py-1 rounded"
+            >initDarkImages()</code
+          >
+          <code class="text-xs font-mono bg-gray-100 dark:bg-gray-800 px-2 py-1 rounded"
+            >addImagePair()</code
+          >
+          <code class="text-xs font-mono bg-gray-100 dark:bg-gray-800 px-2 py-1 rounded"
+            >-light / -dark suffix</code
+          >
+        </div>
+      </section>
+
+      <!-- Navbar Overflow -->
+      <section id="navbar-overflow">
+        <h2 class="text-2xl font-bold mb-6 border-b border-gray-200 dark:border-gray-700 pb-2">
+          Navbar Overflow
+        </h2>
+        <p class="text-gray-500 dark:text-gray-400 mb-6">
+          Priority-based auto-hide for navbar items. Uses ResizeObserver to monitor container width
+          and hides items in priority order (lowest first) when space runs out. Drag the resize
+          handle to see it in action.
+        </p>
+
+        <div class="space-y-3">
+          <code class="text-sm font-mono text-gray-500 dark:text-gray-400 block"
+            >initNavbarOverflow({ container, items })</code
+          >
+          <div class="border border-gray-200 dark:border-gray-700 rounded-lg p-4">
+            <p class="text-xs text-gray-400 dark:text-gray-500 mb-3">
+              Drag the bottom-right corner to resize. Items hide in priority order: Blog (1) &rarr;
+              About (2) &rarr; Pricing (3) &rarr; API Docs (4). Home (5) hides last.
+            </p>
+            <div
+              id="navbar-overflow-demo"
+              class="flex items-center justify-between overflow-hidden border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 px-4 py-2 resize-x"
+              style="resize: horizontal; min-width: 200px; max-width: 100%"
+            >
+              <div class="flex items-center gap-1 min-w-0">
+                <a
+                  id="nav-home"
+                  href="#"
+                  onclick="return false;"
+                  class="px-3 py-1.5 text-sm font-medium rounded-md whitespace-nowrap text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700"
+                  >Home</a
+                >
+                <a
+                  id="nav-docs"
+                  href="#"
+                  onclick="return false;"
+                  class="px-3 py-1.5 text-sm font-medium rounded-md whitespace-nowrap text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700"
+                  >API Docs</a
+                >
+                <a
+                  id="nav-pricing"
+                  href="#"
+                  onclick="return false;"
+                  class="px-3 py-1.5 text-sm font-medium rounded-md whitespace-nowrap text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700"
+                  >Pricing</a
+                >
+                <a
+                  id="nav-about"
+                  href="#"
+                  onclick="return false;"
+                  class="px-3 py-1.5 text-sm font-medium rounded-md whitespace-nowrap text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700"
+                  >About</a
+                >
+                <a
+                  id="nav-blog"
+                  href="#"
+                  onclick="return false;"
+                  class="px-3 py-1.5 text-sm font-medium rounded-md whitespace-nowrap text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700"
+                  >Blog</a
+                >
+              </div>
+              <div class="flex items-center">
+                <span
+                  class="px-3 py-1.5 text-sm font-medium text-marketdata-lightblue whitespace-nowrap"
+                  >MarketData</span
+                >
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="mt-6 flex flex-wrap gap-2">
+          <code class="text-xs font-mono bg-gray-100 dark:bg-gray-800 px-2 py-1 rounded"
+            >initNavbarOverflow()</code
+          >
+          <code class="text-xs font-mono bg-gray-100 dark:bg-gray-800 px-2 py-1 rounded"
+            >{ selector, priority }</code
+          >
+          <code class="text-xs font-mono bg-gray-100 dark:bg-gray-800 px-2 py-1 rounded"
+            >ResizeObserver</code
+          >
+        </div>
+      </section>
+
       <!-- User Profile -->
       <section id="user-profile">
         <h2 class="text-2xl font-bold mb-6 border-b border-gray-200 dark:border-gray-700 pb-2">
@@ -963,6 +1093,26 @@
         >
       </div>
     </footer>
+
+    <script type="module">
+      import { initDarkImages } from '../dist/dark-images.js';
+      initDarkImages();
+    </script>
+
+    <script type="module">
+      import { initNavbarOverflow } from '../dist/navbar-overflow.js';
+
+      initNavbarOverflow({
+        container: document.getElementById('navbar-overflow-demo'),
+        items: [
+          { selector: '#nav-blog', priority: 1 },
+          { selector: '#nav-about', priority: 2 },
+          { selector: '#nav-pricing', priority: 3 },
+          { selector: '#nav-docs', priority: 4 },
+          { selector: '#nav-home', priority: 5 },
+        ],
+      });
+    </script>
 
     <script type="module">
       import { initThemeToggle } from '../dist/theme-toggle.js';

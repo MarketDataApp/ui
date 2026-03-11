@@ -18,7 +18,8 @@
     "./navbar-overflow": "./dist/navbar-overflow.js",
     "./user-profile": "./dist/user-profile.js",
     "./theme-toggle": "./dist/theme-toggle.js",
-    "./reviews": "./dist/reviews.js"
+    "./reviews": "./dist/reviews.js",
+    "./dark-images": "./dist/dark-images.js"
   },
   "scripts": {
     "build": "npm run build:fetch-reviews && npm run build:templates && npm run build:js && npm run build:css",
