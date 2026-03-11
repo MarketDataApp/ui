@@ -69,6 +69,7 @@
 @utility form-container {
   --nested-component-bg: var(--color-neutral-tertiary-medium);
   --nested-input-bg: var(--color-neutral-quaternary-medium);
+  --nested-input-border: var(--color-body-subtle);
   @apply border-default-medium bg-neutral-primary-medium p-4 lg:p-8 rounded-lg shadow-md;
 }
 
@@ -128,7 +129,8 @@
 /* ---- Radio Buttons ---- */
 @utility radio-button-input {
   background-color: var(--nested-input-bg, var(--color-neutral-tertiary-medium));
-  @apply w-4 h-4 text-brand border border-gray rounded-full appearance-none;
+  border-color: var(--nested-input-border, var(--color-gray));
+  @apply w-4 h-4 text-brand border rounded-full appearance-none;
   @apply focus:ring-brand-medium focus:ring-1 focus:outline-hidden;
   @apply mt-0.5 shrink-0;
   background-position: center;
