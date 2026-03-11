@@ -9,7 +9,7 @@
  * SVG icons from Docusaurus (MIT license, Facebook Inc.)
  */
 
-import { getEffectiveTheme, setThemeCookie } from './theme.js';
+import { getEffectiveTheme, setThemeCookie, clearThemeCookie, isSystemMode } from './theme.js';
 import { button as buttonTpl } from './theme-toggle.templates.js';
 
 // ---------------------------------------------------------------------------
@@ -87,9 +87,12 @@ export function initThemeToggle(options) {
   updateState();
   container.appendChild(button);
 
-  // Listen for system preference changes (if user has no saved preference)
+  // Listen for system preference changes — apply theme when in system mode
   let mql = null;
-  function onSystemChange() {
+  function onSystemChange(e) {
+    if (isSystemMode()) {
+      applyTheme(e.matches ? 'dark' : 'light');
+    }
     updateState();
   }
   if (window.matchMedia) {
@@ -97,9 +100,17 @@ export function initThemeToggle(options) {
     mql.addEventListener('change', onSystemChange);
   }
 
-  return function cleanup() {
+  function cleanup() {
     button.removeEventListener('click', toggle);
     if (mql) mql.removeEventListener('change', onSystemChange);
     if (button.parentNode) button.parentNode.removeChild(button);
-  };
+  }
+
+  function resetToSystem() {
+    clearThemeCookie();
+    applyTheme(getEffectiveTheme());
+    updateState();
+  }
+
+  return { cleanup, resetToSystem };
 }

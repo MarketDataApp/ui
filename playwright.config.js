@@ -42,5 +42,15 @@ export default defineConfig({
       testMatch: ['navbar-overflow.spec.js'],
       use: { browserName: 'chromium' },
     },
+    {
+      name: 'theme-toggle',
+      testMatch: ['theme-toggle.spec.js'],
+      use: { browserName: 'chromium', baseURL: 'http://localhost:3000' },
+    },
   ],
+  webServer: {
+    command: 'npx serve . -p 3000',
+    port: 3000,
+    reuseExistingServer: true,
+  },
 });

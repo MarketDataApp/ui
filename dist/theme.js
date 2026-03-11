@@ -22,6 +22,16 @@ export function setThemeCookie(theme) {
   document.cookie = `theme=${theme}; domain=.marketdata.app; path=/; max-age=31536000; SameSite=Lax`;
 }
 
+/** Clears the theme cookie, reverting to system/OS preference. */
+export function clearThemeCookie() {
+  document.cookie = 'theme=; domain=.marketdata.app; path=/; max-age=0; SameSite=Lax';
+}
+
+/** Returns true when the user has no explicit theme preference (follows OS). */
+export function isSystemMode() {
+  return getUserThemePreference() === 'no-preference';
+}
+
 /** Returns the user's explicitly saved preference (cookie > localStorage), or 'no-preference'. */
 export function getUserThemePreference() {
   const cookieTheme = getThemeCookie();

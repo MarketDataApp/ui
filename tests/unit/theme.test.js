@@ -1,6 +1,8 @@
 import {
   getThemeCookie,
   setThemeCookie,
+  clearThemeCookie,
+  isSystemMode,
   getUserThemePreference,
   getBrowserThemePreference,
   getEffectiveTheme,
@@ -52,7 +54,7 @@ Object.defineProperty(globalThis, 'localStorage', {
  * a plain `document.cookie = 'theme=; max-age=0'` won't clear domain-scoped
  * cookies. We must include the same domain and path attributes.
  */
-function clearThemeCookie() {
+function resetCookies() {
   document.cookie = 'theme=; max-age=0';
   document.cookie = 'theme=; domain=.marketdata.app; path=/; max-age=0';
 }
@@ -79,7 +81,7 @@ function mockMatchMedia(preference) {
 
 beforeEach(() => {
   // Reset cookies (both plain and domain-scoped)
-  clearThemeCookie();
+  resetCookies();
   // Reset localStorage
   localStorage.clear();
   // Restore all mocks
@@ -232,5 +234,51 @@ describe('getEffectiveTheme', () => {
   it('defaults to "light" when no preferences exist at all', () => {
     mockMatchMedia('none');
     expect(getEffectiveTheme()).toBe('light');
+  });
+});
+
+// ---------------------------------------------------------------------------
+// clearThemeCookie
+// ---------------------------------------------------------------------------
+describe('clearThemeCookie', () => {
+  it('clears an existing theme cookie', () => {
+    setThemeCookie('dark');
+    expect(getThemeCookie()).toBe('dark');
+    resetCookies();
+    expect(getThemeCookie()).toBeNull();
+  });
+
+  it('does not throw when no cookie exists', () => {
+    expect(() => clearThemeCookie()).not.toThrow();
+    expect(getThemeCookie()).toBeNull();
+  });
+});
+
+// ---------------------------------------------------------------------------
+// isSystemMode
+// ---------------------------------------------------------------------------
+describe('isSystemMode', () => {
+  it('returns true when no cookie and no localStorage', () => {
+    expect(isSystemMode()).toBe(true);
+  });
+
+  it('returns false when cookie is set to dark', () => {
+    setThemeCookie('dark');
+    expect(isSystemMode()).toBe(false);
+  });
+
+  it('returns false when cookie is set to light', () => {
+    setThemeCookie('light');
+    expect(isSystemMode()).toBe(false);
+  });
+
+  it('returns false when localStorage has a valid theme (migration sets cookie)', () => {
+    localStorage.setItem('theme', 'dark');
+    expect(isSystemMode()).toBe(false);
+  });
+
+  it('returns true when localStorage has an invalid value', () => {
+    localStorage.setItem('theme', 'blue');
+    expect(isSystemMode()).toBe(true);
   });
 });
