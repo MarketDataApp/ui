@@ -115,7 +115,7 @@
 
 /* ---- Radio Group ---- */
 @utility radio-group-container {
-  @apply bg-neutral-secondary-medium border border-default rounded-lg divide-y divide-default text-sm font-medium;
+  @apply bg-neutral-tertiary-medium border border-default rounded-lg divide-y divide-default text-sm font-medium;
 }
 
 @utility radio-group-item {
@@ -124,7 +124,7 @@
 
 /* ---- Radio Buttons ---- */
 @utility radio-button-input {
-  @apply w-4 h-4 text-brand bg-neutral-tertiary-medium border border-gray rounded-full appearance-none;
+  @apply w-4 h-4 text-brand bg-neutral-quaternary-medium border border-gray rounded-full appearance-none;
   @apply focus:ring-brand-medium focus:ring-1 focus:outline-hidden;
   @apply mt-0.5 shrink-0;
   background-position: center;
