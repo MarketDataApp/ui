@@ -21,6 +21,17 @@ Shared Tailwind CSS theme and components for all MarketData properties (\*.marke
 - Tests live in `tests/` — `tests/unit/` for vitest unit tests, `tests/e2e/` for Playwright e2e tests
 - Component classes should prefer Flowbite semantic tokens from `theme.css` (e.g. `bg-neutral-primary-medium`, `text-heading`, `border-gray`, `text-fg-danger`) — they handle dark mode automatically. Fall back to standard Tailwind utilities with `dark:` variants when no token exists. Do NOT use Flowbite tokens that aren't defined in `theme.css`.
 
+## Nested Component Contrast Pattern
+
+When a component needs different styling based on its nesting context (e.g. radio groups inside forms), do NOT use descendant selectors like `.form-container .radio-group-container` — they break when consumers use `@apply` because class names never appear in the DOM.
+
+Instead, use **CSS custom properties as cascade signals**:
+
+- **Parent utility** sets `--nested-*` custom properties declaring which tiers nested components should use
+- **Child utility** reads those properties via `var(--nested-*, <fallback>)`, where the fallback is the standalone default
+
+This works because `@apply` inlines custom property declarations onto the DOM element, and custom properties cascade through the DOM tree regardless of class names. See README.md "Nested Component Contrast" section for full details and examples.
+
 ## What belongs here
 
 - Brand colors (marketdata.\*, note, tip, info, warning, danger)

@@ -280,6 +280,41 @@ Usage not yet verified.
 
 5. **Dark mode must support both `.dark` and `[data-theme="dark"]`.** The `@custom-variant dark` handles this automatically for any class using `dark:` prefix in `@apply`.
 
+6. **Class-name selectors break with `@apply`.** When a consumer writes `@apply form-container`, the `form-container` class name never appears in the DOM — Tailwind inlines the properties at build time. This means descendant selectors like `.form-container .radio-group-container` will never match. Use CSS custom properties as cascade signals instead (see below).
+
+### Nested Component Contrast via CSS Custom Properties
+
+Components that nest inside other components (e.g. radio groups inside forms) need different background tiers depending on their context. The naive approach — descendant selectors like `.form-container .radio-group-container` — breaks when consumers use `@apply` because class names don't appear in the DOM.
+
+**Solution: parent components set CSS custom properties that child components consume with fallbacks.**
+
+```css
+/* Parent sets cascade signals */
+@utility form-container {
+  --nested-component-bg: var(--color-neutral-tertiary-medium);
+  --nested-input-bg: var(--color-neutral-quaternary-medium);
+  @apply bg-neutral-primary-medium /* ...rest */;
+}
+
+/* Child reads signal, falls back to standalone default */
+@utility radio-group-container {
+  background-color: var(--nested-component-bg, var(--color-neutral-secondary-medium));
+}
+
+@utility radio-button-input {
+  background-color: var(--nested-input-bg, var(--color-neutral-tertiary-medium));
+}
+```
+
+**Why this works:** `@apply form-container` inlines the custom property declarations onto the DOM element. Custom properties cascade through the DOM tree (parent → child), not through CSS selectors. So any descendant that reads `--nested-component-bg` gets the value regardless of how the parent was styled.
+
+**Behavior:**
+
+- **Inside a form** (class or `@apply`): custom properties cascade down, deeper tiers are used
+- **Standalone**: properties aren't set, `var()` fallbacks provide the default tier
+
+**When to use this pattern:** Any time a component's appearance needs to shift based on its nesting context. Define `--nested-*` variables in the parent utility; consume them with fallbacks in the child utility.
+
 ## License
 
 UNLICENSED — proprietary MarketData code. Not for external use.
