@@ -111,6 +111,7 @@
   --color-fg-disabled: var(--color-gray-400);
   --color-fg-danger: var(--color-red-600);
   --color-fg-danger-strong: var(--color-red-900);
+  --color-default: var(--color-gray-200);
   --color-default-medium: var(--color-gray-200);
   --color-danger-soft: var(--color-red-50);
   --color-danger: var(--color-red-500);
@@ -270,21 +271,6 @@
   --tw-font-weight: var(--font-weight-medium);
   font-weight: var(--font-weight-medium);
 }
-.form-helper-text {
-  margin-top: calc(var(--spacing) * 2);
-  font-size: var(--text-sm);
-  line-height: var(--tw-leading, var(--text-sm--line-height));
-  color: var(--color-body-subtle);
-  &::first-letter {
-    text-transform: uppercase;
-  }
-}
-.form-helper-text-error {
-  margin-top: calc(var(--spacing) * 2);
-  font-size: var(--text-sm);
-  line-height: var(--tw-leading, var(--text-sm--line-height));
-  color: var(--color-fg-danger);
-}
 .radio-button-input {
   height: calc(var(--spacing) * 4);
   width: calc(var(--spacing) * 4);
@@ -310,15 +296,8 @@
       outline-offset: 2px;
     }
   }
-  &:where(.dark, .dark *, [data-theme="dark"], [data-theme="dark"] *) {
-    --tw-ring-offset-color: var(--color-gray-700);
-  }
-  &:where(.dark, .dark *, [data-theme="dark"], [data-theme="dark"] *) {
-    &:focus {
-      --tw-ring-offset-color: var(--color-gray-700);
-    }
-  }
-  margin-right: calc(var(--spacing) * 2);
+  margin-top: calc(var(--spacing) * 0.5);
+  flex-shrink: 0;
   background-position: center;
   background-repeat: no-repeat;
   &:checked {
@@ -327,6 +306,21 @@
     background-image: url("data:image/svg+xml,%3csvg viewBox='0 0 16 16' fill='white' xmlns='http://www.w3.org/2000/svg'%3e%3ccircle cx='8' cy='8' r='3'/%3e%3c/svg%3e");
     background-size: 100% 100%;
   }
+}
+.form-helper-text {
+  margin-top: calc(var(--spacing) * 2);
+  font-size: var(--text-sm);
+  line-height: var(--tw-leading, var(--text-sm--line-height));
+  color: var(--color-body-subtle);
+  &::first-letter {
+    text-transform: uppercase;
+  }
+}
+.form-helper-text-error {
+  margin-top: calc(var(--spacing) * 2);
+  font-size: var(--text-sm);
+  line-height: var(--tw-leading, var(--text-sm--line-height));
+  color: var(--color-fg-danger);
 }
 .form-label {
   margin-bottom: calc(var(--spacing) * 2);
@@ -438,6 +432,14 @@
   &:where(.dark, .dark *, [data-theme='dark'], [data-theme='dark'] *) {
     background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24'%3e%3cpath stroke='%239ca3af' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='m19 9-7 7-7-7'/%3e%3c/svg%3e");
   }
+}
+.radio-group-item {
+  display: flex;
+  width: 100%;
+  align-items: flex-start;
+  gap: calc(var(--spacing) * 3);
+  padding-inline: calc(var(--spacing) * 4);
+  padding-block: calc(var(--spacing) * 3);
 }
 .form-input {
   display: block;
@@ -957,6 +959,27 @@
 .theme-toggle-icon-light {
   height: calc(var(--spacing) * 6);
   width: calc(var(--spacing) * 6);
+}
+.radio-group-container {
+  :where(& > :not(:last-child)) {
+    --tw-divide-y-reverse: 0;
+    border-bottom-style: var(--tw-border-style);
+    border-top-style: var(--tw-border-style);
+    border-top-width: calc(1px * var(--tw-divide-y-reverse));
+    border-bottom-width: calc(1px * calc(1 - var(--tw-divide-y-reverse)));
+  }
+  :where(& > :not(:last-child)) {
+    border-color: var(--color-default);
+  }
+  border-radius: var(--radius-lg);
+  border-style: var(--tw-border-style);
+  border-width: 1px;
+  border-color: var(--color-default);
+  background-color: var(--color-neutral-secondary-medium);
+  font-size: var(--text-sm);
+  line-height: var(--tw-leading, var(--text-sm--line-height));
+  --tw-font-weight: var(--font-weight-medium);
+  font-weight: var(--font-weight-medium);
 }
 .form-container {
   border-radius: var(--radius-lg);
@@ -1627,6 +1650,11 @@
   syntax: "*";
   inherits: false;
 }
+@property --tw-divide-y-reverse {
+  syntax: "*";
+  inherits: false;
+  initial-value: 0;
+}
 @keyframes pulse {
   50% {
     opacity: 0.5;
@@ -1653,5 +1681,6 @@
       --tw-font-weight: initial;
       --tw-leading: initial;
       --tw-tracking: initial;
+      --tw-divide-y-reverse: 0;
     }
   }

@@ -306,61 +306,140 @@
         </div>
       </section>
 
-      <!-- Radio Buttons -->
+      <!-- Radio Group -->
       <section id="radio-buttons">
         <h2 class="text-2xl font-bold mb-6 border-b border-gray-200 dark:border-gray-700 pb-2">
-          Radio Buttons
+          Radio Group
         </h2>
-        <fieldset class="space-y-3">
+
+        <!-- Bordered radio group (Flowbite list-group pattern) -->
+        <h3 class="text-lg font-semibold mb-3 text-heading">Bordered Radio Group</h3>
+        <p class="text-sm text-body-subtle mb-4">
+          A bordered container that sets the radio group apart from the page background, with proper
+          contrast tiers in both light and dark mode.
+        </p>
+        <fieldset>
           <legend class="form-label mb-3">Select a data plan:</legend>
-          <div class="flex items-start">
-            <input
-              type="radio"
-              name="plan"
-              value="free"
-              id="plan-free"
-              class="radio-button-input mt-0.5"
-              checked
-            />
-            <div>
-              <label for="plan-free" class="text-sm font-medium text-gray-900 dark:text-white"
-                >Free</label
-              >
-              <p class="radio-button-helper">100 requests/day, delayed data</p>
+          <div class="radio-group-container max-w-lg">
+            <div class="radio-group-item">
+              <input
+                type="radio"
+                name="plan-bordered"
+                value="free"
+                id="plan-bordered-free"
+                class="radio-button-input"
+                checked
+              />
+              <div>
+                <label
+                  for="plan-bordered-free"
+                  class="text-sm font-medium text-heading cursor-pointer"
+                  >Free</label
+                >
+                <p class="radio-button-helper">100 requests/day, delayed data</p>
+              </div>
             </div>
-          </div>
-          <div class="flex items-start">
-            <input
-              type="radio"
-              name="plan"
-              value="starter"
-              id="plan-starter"
-              class="radio-button-input mt-0.5"
-            />
-            <div>
-              <label for="plan-starter" class="text-sm font-medium text-gray-900 dark:text-white"
-                >Starter</label
-              >
-              <p class="radio-button-helper">10,000 requests/day, real-time data</p>
+            <div class="radio-group-item">
+              <input
+                type="radio"
+                name="plan-bordered"
+                value="starter"
+                id="plan-bordered-starter"
+                class="radio-button-input"
+              />
+              <div>
+                <label
+                  for="plan-bordered-starter"
+                  class="text-sm font-medium text-heading cursor-pointer"
+                  >Starter</label
+                >
+                <p class="radio-button-helper">10,000 requests/day, real-time data</p>
+              </div>
             </div>
-          </div>
-          <div class="flex items-start">
-            <input
-              type="radio"
-              name="plan"
-              value="trader"
-              id="plan-trader"
-              class="radio-button-input mt-0.5"
-            />
-            <div>
-              <label for="plan-trader" class="text-sm font-medium text-gray-900 dark:text-white"
-                >Trader</label
-              >
-              <p class="radio-button-helper">Unlimited requests, real-time data, options chains</p>
+            <div class="radio-group-item">
+              <input
+                type="radio"
+                name="plan-bordered"
+                value="trader"
+                id="plan-bordered-trader"
+                class="radio-button-input"
+              />
+              <div>
+                <label
+                  for="plan-bordered-trader"
+                  class="text-sm font-medium text-heading cursor-pointer"
+                  >Trader</label
+                >
+                <p class="radio-button-helper">
+                  Unlimited requests, real-time data, options chains
+                </p>
+              </div>
             </div>
           </div>
         </fieldset>
-        <div class="mt-4 flex flex-wrap gap-2">
+
+        <!-- Simple radio list (no container) -->
+        <h3 class="text-lg font-semibold mb-3 mt-8 text-heading">Simple Radio List</h3>
+        <p class="text-sm text-body-subtle mb-4">
+          Standalone radio buttons without a container, for inline use in forms.
+        </p>
+        <fieldset class="space-y-3">
+          <legend class="form-label mb-3">Notification preference:</legend>
+          <div class="flex items-start gap-3">
+            <input
+              type="radio"
+              name="notify"
+              value="email"
+              id="notify-email"
+              class="radio-button-input"
+              checked
+            />
+            <div>
+              <label for="notify-email" class="text-sm font-medium text-heading cursor-pointer"
+                >Email</label
+              >
+              <p class="radio-button-helper">Get notified via email</p>
+            </div>
+          </div>
+          <div class="flex items-start gap-3">
+            <input
+              type="radio"
+              name="notify"
+              value="sms"
+              id="notify-sms"
+              class="radio-button-input"
+            />
+            <div>
+              <label for="notify-sms" class="text-sm font-medium text-heading cursor-pointer"
+                >SMS</label
+              >
+              <p class="radio-button-helper">Get notified via text message</p>
+            </div>
+          </div>
+          <div class="flex items-start gap-3">
+            <input
+              type="radio"
+              name="notify"
+              value="none"
+              id="notify-none"
+              class="radio-button-input"
+            />
+            <div>
+              <label for="notify-none" class="text-sm font-medium text-heading cursor-pointer"
+                >None</label
+              >
+              <p class="radio-button-helper">No notifications</p>
+            </div>
+          </div>
+        </fieldset>
+
+        <div class="mt-6 flex flex-wrap gap-2">
+          <code class="text-xs font-mono bg-gray-100 dark:bg-gray-800 px-2 py-1 rounded"
+            >.radio-group-container</code
+          >
+          <code class="text-xs font-mono bg-gray-100 dark:bg-gray-800 px-2 py-1 rounded"
+            >.radio-group-item</code
+          >
           <code class="text-xs font-mono bg-gray-100 dark:bg-gray-800 px-2 py-1 rounded"
             >.radio-button-input</code
           >
