@@ -312,11 +312,10 @@
           Radio Group
         </h2>
 
-        <!-- Bordered radio group (Flowbite list-group pattern) -->
-        <h3 class="text-lg font-semibold mb-3 text-heading">Bordered Radio Group</h3>
+        <!-- Standalone radio group (on page background) -->
+        <h3 class="text-lg font-semibold mb-3 text-heading">Standalone</h3>
         <p class="text-sm text-body-subtle mb-4">
-          A bordered container that sets the radio group apart from the page background, with proper
-          contrast tiers in both light and dark mode.
+          Radio group on the page background. Uses default contrast tiers.
         </p>
         <fieldset>
           <legend class="form-label mb-3">Select a data plan:</legend>
@@ -324,15 +323,15 @@
             <div class="radio-group-item">
               <input
                 type="radio"
-                name="plan-bordered"
+                name="plan-standalone"
                 value="free"
-                id="plan-bordered-free"
+                id="plan-standalone-free"
                 class="radio-button-input"
                 checked
               />
               <div>
                 <label
-                  for="plan-bordered-free"
+                  for="plan-standalone-free"
                   class="text-sm font-medium text-heading cursor-pointer"
                   >Free</label
                 >
@@ -342,14 +341,14 @@
             <div class="radio-group-item">
               <input
                 type="radio"
-                name="plan-bordered"
+                name="plan-standalone"
                 value="starter"
-                id="plan-bordered-starter"
+                id="plan-standalone-starter"
                 class="radio-button-input"
               />
               <div>
                 <label
-                  for="plan-bordered-starter"
+                  for="plan-standalone-starter"
                   class="text-sm font-medium text-heading cursor-pointer"
                   >Starter</label
                 >
@@ -359,14 +358,14 @@
             <div class="radio-group-item">
               <input
                 type="radio"
-                name="plan-bordered"
+                name="plan-standalone"
                 value="trader"
-                id="plan-bordered-trader"
+                id="plan-standalone-trader"
                 class="radio-button-input"
               />
               <div>
                 <label
-                  for="plan-bordered-trader"
+                  for="plan-standalone-trader"
                   class="text-sm font-medium text-heading cursor-pointer"
                   >Trader</label
                 >
@@ -378,10 +377,86 @@
           </div>
         </fieldset>
 
+        <!-- Radio group inside a form -->
+        <h3 class="text-lg font-semibold mb-3 mt-8 text-heading">Inside a Form</h3>
+        <p class="text-sm text-body-subtle mb-4">
+          When nested inside
+          <code class="text-xs font-mono bg-gray-100 dark:bg-gray-800 px-1 py-0.5 rounded"
+            >.form-container</code
+          >, backgrounds automatically shift one tier deeper for proper contrast.
+        </p>
+        <div class="form-container max-w-lg">
+          <h3 class="form-heading">Create Account</h3>
+          <div class="mb-4">
+            <label for="form-email" class="form-label">Email</label>
+            <input type="email" id="form-email" class="form-input" placeholder="you@example.com" />
+          </div>
+          <fieldset>
+            <legend class="form-label mb-3">Select a data plan:</legend>
+            <div class="radio-group-container">
+              <div class="radio-group-item">
+                <input
+                  type="radio"
+                  name="plan-form"
+                  value="free"
+                  id="plan-form-free"
+                  class="radio-button-input"
+                  checked
+                />
+                <div>
+                  <label
+                    for="plan-form-free"
+                    class="text-sm font-medium text-heading cursor-pointer"
+                    >Free</label
+                  >
+                  <p class="radio-button-helper">100 requests/day, delayed data</p>
+                </div>
+              </div>
+              <div class="radio-group-item">
+                <input
+                  type="radio"
+                  name="plan-form"
+                  value="starter"
+                  id="plan-form-starter"
+                  class="radio-button-input"
+                />
+                <div>
+                  <label
+                    for="plan-form-starter"
+                    class="text-sm font-medium text-heading cursor-pointer"
+                    >Starter</label
+                  >
+                  <p class="radio-button-helper">10,000 requests/day, real-time data</p>
+                </div>
+              </div>
+              <div class="radio-group-item">
+                <input
+                  type="radio"
+                  name="plan-form"
+                  value="trader"
+                  id="plan-form-trader"
+                  class="radio-button-input"
+                />
+                <div>
+                  <label
+                    for="plan-form-trader"
+                    class="text-sm font-medium text-heading cursor-pointer"
+                    >Trader</label
+                  >
+                  <p class="radio-button-helper">
+                    Unlimited requests, real-time data, options chains
+                  </p>
+                </div>
+              </div>
+            </div>
+          </fieldset>
+          <button type="button" class="btn-orange-to-blue mt-4">Sign Up</button>
+        </div>
+
         <!-- Simple radio list (no container) -->
         <h3 class="text-lg font-semibold mb-3 mt-8 text-heading">Simple Radio List</h3>
         <p class="text-sm text-body-subtle mb-4">
-          Standalone radio buttons without a container, for inline use in forms.
+          Standalone radio buttons without a container, for inline use.
         </p>
         <fieldset class="space-y-3">
           <legend class="form-label mb-3">Notification preference:</legend>

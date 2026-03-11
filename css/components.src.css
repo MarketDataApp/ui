@@ -115,7 +115,7 @@
 
 /* ---- Radio Group ---- */
 @utility radio-group-container {
-  @apply bg-neutral-tertiary-medium border border-default rounded-lg divide-y divide-default text-sm font-medium;
+  @apply bg-neutral-secondary-medium border border-default rounded-lg divide-y divide-default text-sm font-medium;
 }
 
 @utility radio-group-item {
@@ -124,7 +124,7 @@
 
 /* ---- Radio Buttons ---- */
 @utility radio-button-input {
-  @apply w-4 h-4 text-brand bg-neutral-quaternary-medium border border-gray rounded-full appearance-none;
+  @apply w-4 h-4 text-brand bg-neutral-tertiary-medium border border-gray rounded-full appearance-none;
   @apply focus:ring-brand-medium focus:ring-1 focus:outline-hidden;
   @apply mt-0.5 shrink-0;
   background-position: center;
@@ -135,6 +135,14 @@
     background-image: url("data:image/svg+xml,%3csvg viewBox='0 0 16 16' fill='white' xmlns='http://www.w3.org/2000/svg'%3e%3ccircle cx='8' cy='8' r='3'/%3e%3c/svg%3e");
     background-size: 100% 100%;
   }
+}
+
+/* Shift tiers one step deeper when nested inside a form-container */
+.form-container .radio-group-container {
+  background-color: var(--color-neutral-tertiary-medium);
+}
+.form-container .radio-button-input:not(:checked) {
+  background-color: var(--color-neutral-quaternary-medium);
 }
 
 @utility radio-button-helper {
