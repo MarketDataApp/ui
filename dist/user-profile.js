@@ -360,7 +360,7 @@ function setupDropdown(trigger, menu, { hover = false } = {}) {
 
   on(trigger, 'click', (e) => {
     e.stopPropagation();
-    toggle();
+    hover ? open() : toggle();
   });
 
   on(document, 'click', (e) => {
