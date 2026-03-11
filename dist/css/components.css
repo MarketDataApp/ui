@@ -1487,7 +1487,7 @@
   .form-container {
     --nested-component-bg: var(--color-neutral-tertiary-medium);
     --nested-input-bg: var(--color-neutral-quaternary-medium);
-    --nested-input-border: var(--color-body-subtle);
+    --nested-input-border: var(--color-gray-300);
     border-radius: var(--radius-lg);
     border-color: var(--color-default-medium);
     background-color: var(--color-neutral-primary-medium);
@@ -1496,6 +1496,9 @@
     box-shadow: var(--tw-inset-shadow), var(--tw-inset-ring-shadow), var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow);
     @media (width >= 64rem) {
       padding: calc(var(--spacing) * 8);
+    }
+    &:where(.dark, .dark *, [data-theme='dark'], [data-theme='dark'] *) {
+      --nested-input-border: var(--color-gray-500);
     }
   }
   .badge {

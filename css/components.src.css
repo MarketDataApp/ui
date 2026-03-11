@@ -69,8 +69,11 @@
 @utility form-container {
   --nested-component-bg: var(--color-neutral-tertiary-medium);
   --nested-input-bg: var(--color-neutral-quaternary-medium);
-  --nested-input-border: var(--color-body-subtle);
+  --nested-input-border: var(--color-gray-300);
   @apply border-default-medium bg-neutral-primary-medium p-4 lg:p-8 rounded-lg shadow-md;
+  &:where(.dark, .dark *, [data-theme='dark'], [data-theme='dark'] *) {
+    --nested-input-border: var(--color-gray-500);
+  }
 }
 
 @utility form-heading {
