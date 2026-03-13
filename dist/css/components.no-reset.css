@@ -101,17 +101,14 @@
   --color-neutral-primary-soft: var(--color-white);
   --color-neutral-primary-medium: var(--color-white);
   --color-neutral-secondary-medium: var(--color-gray-50);
-  --color-neutral-secondary-strong: var(--color-gray-50);
   --color-neutral-tertiary: var(--color-gray-100);
   --color-neutral-tertiary-medium: var(--color-gray-100);
-  --color-neutral-quaternary-medium: var(--color-gray-200);
   --color-gray: var(--color-gray-300);
   --color-heading: var(--color-gray-900);
   --color-body: var(--color-gray-600);
   --color-body-subtle: var(--color-gray-500);
   --color-fg-danger: var(--color-red-600);
   --color-fg-danger-strong: var(--color-red-900);
-  --color-default: var(--color-gray-200);
   --color-default-medium: var(--color-gray-200);
   --color-danger-soft: var(--color-red-50);
   --color-danger: var(--color-red-500);
@@ -268,15 +265,21 @@
   font-weight: var(--font-weight-medium);
 }
 .radio-button-input {
-  background-color: var(--nested-input-bg, var(--color-neutral-tertiary-medium));
-  border-color: var(--nested-input-border, var(--color-gray));
   height: calc(var(--spacing) * 4);
   width: calc(var(--spacing) * 4);
   appearance: none;
   border-radius: calc(infinity * 1px);
   border-style: var(--tw-border-style);
   border-width: 1px;
+  border-color: var(--color-gray-300);
+  background-color: var(--color-gray-50);
   color: var(--color-brand);
+  &:where(.dark, .dark *, [data-theme="dark"], [data-theme="dark"] *) {
+    border-color: var(--color-gray-600);
+  }
+  &:where(.dark, .dark *, [data-theme="dark"], [data-theme="dark"] *) {
+    background-color: var(--color-gray-700);
+  }
   &:focus {
     --tw-ring-shadow: var(--tw-ring-inset,) 0 0 0 calc(1px + var(--tw-ring-offset-width)) var(--tw-ring-color, currentcolor);
     box-shadow: var(--tw-inset-shadow), var(--tw-inset-ring-shadow), var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow);
@@ -342,8 +345,8 @@
   border-radius: var(--radius-lg);
   border-style: var(--tw-border-style);
   border-width: 1px;
-  border-color: var(--color-gray);
-  background-color: var(--color-neutral-tertiary-medium);
+  border-color: var(--color-gray-300);
+  background-color: var(--color-gray-100);
   padding: calc(var(--spacing) * 2.5);
   font-size: var(--text-sm);
   line-height: var(--tw-leading, var(--text-sm--line-height));
@@ -367,6 +370,12 @@
     }
   }
   &:where(.dark, .dark *, [data-theme="dark"], [data-theme="dark"] *) {
+    border-color: var(--color-gray-600);
+  }
+  &:where(.dark, .dark *, [data-theme="dark"], [data-theme="dark"] *) {
+    background-color: var(--color-gray-700);
+  }
+  &:where(.dark, .dark *, [data-theme="dark"], [data-theme="dark"] *) {
     color: var(--color-gray-400);
   }
   &:where(.dark, .dark *, [data-theme="dark"], [data-theme="dark"] *) {
@@ -376,8 +385,6 @@
   }
 }
 .form-dropdown-input {
-  background-color: var(--nested-input-bg, var(--color-neutral-secondary-strong));
-  border-color: var(--nested-input-border, var(--color-gray));
   display: block;
   width: 100%;
   border-radius: var(--radius-lg);
@@ -385,6 +392,8 @@
   border-width: 1px;
   --tw-border-style: solid;
   border-style: solid;
+  border-color: var(--color-gray-300);
+  background-color: var(--color-gray-50);
   padding-block: calc(var(--spacing) * 2.5);
   padding-inline-start: calc(var(--spacing) * 3);
   padding-inline-end: calc(var(--spacing) * 10);
@@ -412,6 +421,12 @@
     }
   }
   &:where(.dark, .dark *, [data-theme="dark"], [data-theme="dark"] *) {
+    border-color: var(--color-gray-600);
+  }
+  &:where(.dark, .dark *, [data-theme="dark"], [data-theme="dark"] *) {
+    background-color: var(--color-gray-700);
+  }
+  &:where(.dark, .dark *, [data-theme="dark"], [data-theme="dark"] *) {
     &::placeholder {
       color: var(--color-gray-400);
     }
@@ -434,8 +449,6 @@
   padding-block: calc(var(--spacing) * 3);
 }
 .form-input {
-  background-color: var(--nested-input-bg, var(--color-neutral-secondary-strong));
-  border-color: var(--nested-input-border, var(--color-gray));
   display: block;
   width: 100%;
   border-radius: var(--radius-lg);
@@ -443,6 +456,8 @@
   border-width: 1px;
   --tw-border-style: solid;
   border-style: solid;
+  border-color: var(--color-gray-300);
+  background-color: var(--color-gray-50);
   padding: calc(var(--spacing) * 2.5);
   font-size: var(--text-sm);
   line-height: var(--tw-leading, var(--text-sm--line-height));
@@ -466,6 +481,12 @@
       outline: 2px solid transparent;
       outline-offset: 2px;
     }
+  }
+  &:where(.dark, .dark *, [data-theme="dark"], [data-theme="dark"] *) {
+    border-color: var(--color-gray-600);
+  }
+  &:where(.dark, .dark *, [data-theme="dark"], [data-theme="dark"] *) {
+    background-color: var(--color-gray-700);
   }
   &:where(.dark, .dark *, [data-theme="dark"], [data-theme="dark"] *) {
     &::placeholder {
@@ -945,7 +966,6 @@
   display: inline;
 }
 .radio-group-container {
-  background-color: var(--nested-input-bg, var(--color-neutral-secondary-strong));
   :where(& > :not(:last-child)) {
     --tw-divide-y-reverse: 0;
     border-bottom-style: var(--tw-border-style);
@@ -954,32 +974,48 @@
     border-bottom-width: calc(1px * calc(1 - var(--tw-divide-y-reverse)));
   }
   :where(& > :not(:last-child)) {
-    border-color: var(--color-default);
+    border-color: var(--color-gray-300);
   }
   border-radius: var(--radius-lg);
   border-style: var(--tw-border-style);
   border-width: 1px;
-  border-color: var(--color-default);
+  --tw-border-style: solid;
+  border-style: solid;
+  border-color: var(--color-gray-300);
+  background-color: var(--color-gray-50);
   font-size: var(--text-sm);
   line-height: var(--tw-leading, var(--text-sm--line-height));
   --tw-font-weight: var(--font-weight-medium);
   font-weight: var(--font-weight-medium);
+  &:where(.dark, .dark *, [data-theme="dark"], [data-theme="dark"] *) {
+    :where(& > :not(:last-child)) {
+      border-color: var(--color-gray-600);
+    }
+  }
+  &:where(.dark, .dark *, [data-theme="dark"], [data-theme="dark"] *) {
+    border-color: var(--color-gray-600);
+  }
+  &:where(.dark, .dark *, [data-theme="dark"], [data-theme="dark"] *) {
+    background-color: var(--color-gray-700);
+  }
 }
 .form-container {
-  --nested-component-bg: var(--color-neutral-tertiary-medium);
-  --nested-input-bg: var(--color-neutral-quaternary-medium);
-  --nested-input-border: var(--color-gray-300);
   border-radius: var(--radius-lg);
-  border-color: var(--color-default-medium);
-  background-color: var(--color-neutral-primary-medium);
+  border-style: var(--tw-border-style);
+  border-width: 1px;
+  border-color: var(--color-gray-200);
+  background-color: var(--color-white);
   padding: calc(var(--spacing) * 4);
   --tw-shadow: 0 4px 6px -1px var(--tw-shadow-color, rgb(0 0 0 / 0.1)), 0 2px 4px -2px var(--tw-shadow-color, rgb(0 0 0 / 0.1));
   box-shadow: var(--tw-inset-shadow), var(--tw-inset-ring-shadow), var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow);
   @media (width >= 64rem) {
     padding: calc(var(--spacing) * 8);
   }
-  &:where(.dark, .dark *, [data-theme='dark'], [data-theme='dark'] *) {
-    --nested-input-border: var(--color-gray-500);
+  &:where(.dark, .dark *, [data-theme="dark"], [data-theme="dark"] *) {
+    border-color: var(--color-gray-700);
+  }
+  &:where(.dark, .dark *, [data-theme="dark"], [data-theme="dark"] *) {
+    background-color: var(--color-gray-800);
   }
 }
 .badge {
