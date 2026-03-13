@@ -64,7 +64,8 @@ function applyTheme(theme) {
 export function initThemeToggle(options) {
   const { container, buttonClass = 'theme-toggle-button' } = options;
 
-  const button = htmlToElement(renderTemplate(buttonTpl, { buttonClass }));
+  const wrapper = htmlToElement(renderTemplate(buttonTpl, { buttonClass }));
+  const button = wrapper.querySelector('button');
   const sunIcon = button.querySelector('.theme-toggle-icon-light');
   const moonIcon = button.querySelector('.theme-toggle-icon-dark');
 
@@ -85,7 +86,7 @@ export function initThemeToggle(options) {
 
   button.addEventListener('click', toggle);
   updateState();
-  container.appendChild(button);
+  container.appendChild(wrapper);
 
   // Listen for system preference changes — apply theme when in system mode
   let mql = null;
@@ -103,7 +104,7 @@ export function initThemeToggle(options) {
   function cleanup() {
     button.removeEventListener('click', toggle);
     if (mql) mql.removeEventListener('change', onSystemChange);
-    if (button.parentNode) button.parentNode.removeChild(button);
+    if (wrapper.parentNode) wrapper.parentNode.removeChild(wrapper);
   }
 
   function resetToSystem() {

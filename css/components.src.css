@@ -327,20 +327,28 @@
 }
 
 /* ---- Theme Toggle ---- */
-@utility theme-toggle-button {
+@utility theme-toggle-wrapper {
+  @apply inline-flex items-center justify-center p-1.5;
+}
+
+/*
+  Scoped selectors — nested under .theme-toggle-wrapper so specificity
+  beats host framework rules like amember's button overrides.
+*/
+.theme-toggle-wrapper .theme-toggle-button {
   @apply inline-flex items-center justify-center w-8 h-8 rounded-full cursor-pointer;
-  @apply bg-transparent text-body border-none p-1.5;
+  @apply bg-transparent text-body border-none p-0;
   @apply hover:bg-neutral-tertiary-medium;
   @apply focus:outline-hidden;
   -webkit-tap-highlight-color: transparent;
   transition: background 0.15s;
 }
 
-@utility theme-toggle-icon-light {
+.theme-toggle-wrapper .theme-toggle-icon-light {
   @apply w-6 h-6;
 }
 
-@utility theme-toggle-icon-dark {
+.theme-toggle-wrapper .theme-toggle-icon-dark {
   @apply w-6 h-6;
 }
 
