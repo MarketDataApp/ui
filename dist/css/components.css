@@ -349,10 +349,6 @@
   .visible {
     visibility: visible;
   }
-  .user-profile-wrapper {
-    position: relative;
-    display: inline-block;
-  }
   .absolute {
     position: absolute;
   }
@@ -644,12 +640,6 @@
   }
   .mb-12 {
     margin-bottom: calc(var(--spacing) * 12);
-  }
-  .user-profile-container {
-    display: inline-flex;
-    min-height: calc(var(--spacing) * 10);
-    align-items: center;
-    min-width: 7.375rem;
   }
   .form-input-disabled {
     display: block;
@@ -1251,12 +1241,6 @@
     display: grid;
     grid-template-columns: repeat(12, minmax(0, 1fr));
     gap: calc(var(--spacing) * 4);
-  }
-  .theme-toggle-wrapper {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    padding: calc(var(--spacing) * 1.5);
   }
   .block {
     display: block;
@@ -2483,6 +2467,16 @@
 .resena-widget .logo__estrella-marca {
   fill: #005128;
 }
+.user-profile-container {
+  display: inline-flex;
+  min-height: calc(var(--spacing) * 10);
+  align-items: center;
+  min-width: 7.375rem;
+}
+.user-profile-wrapper {
+  position: relative;
+  display: inline-block;
+}
 .user-profile-wrapper .user-profile-avatar {
   height: calc(var(--spacing) * 10);
   width: calc(var(--spacing) * 10);
@@ -2659,6 +2653,12 @@
   width: calc(var(--spacing) * 12);
   color: var(--color-body-subtle);
   left: -0.25rem;
+}
+.theme-toggle-wrapper {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: calc(var(--spacing) * 1.5);
 }
 .theme-toggle-wrapper .theme-toggle-button {
   display: inline-flex;

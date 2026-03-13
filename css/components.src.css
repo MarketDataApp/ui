@@ -2,8 +2,10 @@
    Component Source Definitions
    ============================================================
    This file is the single source of truth for all shared
-   component classes. Every class is registered as @utility so
-   consuming Tailwind v4 projects can use @apply.
+   component classes. Consumer-applied classes use @utility so
+   Tailwind v4 projects can use @apply. JS-rendered classes
+   (user-profile, theme-toggle) use plain selectors so they
+   always appear in output regardless of content scanning.
 
    - Tailwind projects: @import this file into your build
    - Non-Tailwind projects: use the compiled components.css
@@ -217,20 +219,24 @@
 }
 
 /* ---- User Profile ---- */
-@utility user-profile-container {
+/*
+  Plain selectors (not @utility) because these classes are rendered by
+  our JS at runtime — consumers' Tailwind content scanners won't find
+  them, so @utility would never emit the rules.
+
+  Scoped selectors nested under .user-profile-wrapper so specificity
+  beats host framework rules like `.navbar a` or Infima link styles.
+  See: https://github.com/MarketDataApp/ui/issues/3
+*/
+.user-profile-container {
   @apply inline-flex items-center min-h-10;
   min-width: 7.375rem; /* 118px — login pill worst-case, prevents CLS */
 }
 
-@utility user-profile-wrapper {
+.user-profile-wrapper {
   @apply relative inline-block;
 }
 
-/*
-  Scoped selectors — nested under .user-profile-wrapper so specificity
-  beats host framework rules like `.navbar a` or Infima link styles.
-  See: https://github.com/MarketDataApp/ui/issues/3
-*/
 .user-profile-wrapper .user-profile-avatar {
   @apply w-10 h-10 rounded-full cursor-pointer;
 }
@@ -327,14 +333,15 @@
 }
 
 /* ---- Theme Toggle ---- */
-@utility theme-toggle-wrapper {
+/*
+  Plain selectors (not @utility) because these classes are rendered by
+  our JS at runtime — consumers' Tailwind content scanners won't find
+  them. Scoped under .theme-toggle-wrapper so specificity beats host
+  framework rules like amember's button overrides.
+*/
+.theme-toggle-wrapper {
   @apply inline-flex items-center justify-center p-1.5;
 }
-
-/*
-  Scoped selectors — nested under .theme-toggle-wrapper so specificity
-  beats host framework rules like amember's button overrides.
-*/
 .theme-toggle-wrapper .theme-toggle-button {
   @apply inline-flex items-center justify-center w-8 h-8 rounded-full cursor-pointer;
   @apply bg-transparent text-body border-none p-0;
