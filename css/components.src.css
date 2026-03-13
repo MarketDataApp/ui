@@ -329,7 +329,7 @@
 /* ---- Theme Toggle ---- */
 @utility theme-toggle-button {
   @apply inline-flex items-center justify-center w-8 h-8 rounded-full cursor-pointer;
-  @apply bg-transparent text-body border-none p-0;
+  @apply bg-transparent text-body border-none p-1.5;
   @apply hover:bg-neutral-tertiary-medium;
   @apply focus:outline-hidden;
   -webkit-tap-highlight-color: transparent;
