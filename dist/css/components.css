@@ -546,9 +546,6 @@
     &:where(.dark, .dark *, [data-theme="dark"], [data-theme="dark"] *) {
       border-color: var(--color-gray-600);
     }
-    &:where(.dark, .dark *, [data-theme="dark"], [data-theme="dark"] *) {
-      background-color: var(--color-gray-900);
-    }
     &:focus {
       --tw-ring-shadow: var(--tw-ring-inset,) 0 0 0 calc(1px + var(--tw-ring-offset-width)) var(--tw-ring-color, currentcolor);
       box-shadow: var(--tw-inset-shadow), var(--tw-inset-ring-shadow), var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow);
@@ -566,6 +563,9 @@
     }
     margin-top: calc(var(--spacing) * 0.5);
     flex-shrink: 0;
+    &:where(.dark, .dark *, [data-theme='dark'], [data-theme='dark'] *) {
+      background-color: var(--radio-btn-bg, var(--color-gray-800));
+    }
     background-position: center;
     background-repeat: no-repeat;
     &:checked {
@@ -1470,6 +1470,7 @@
     }
     &:where(.dark, .dark *, [data-theme='dark'], [data-theme='dark'] *) {
       background-color: var(--radio-group-bg, var(--color-gray-800));
+      --radio-btn-bg: var(--form-radio-btn-bg, var(--color-gray-900));
     }
   }
   .overflow-hidden {
@@ -1495,6 +1496,7 @@
     }
     &:where(.dark, .dark *, [data-theme='dark'], [data-theme='dark'] *) {
       --radio-group-bg: var(--color-gray-700);
+      --form-radio-btn-bg: var(--color-gray-800);
     }
   }
   .badge {
