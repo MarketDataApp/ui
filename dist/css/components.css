@@ -2678,6 +2678,11 @@
       background-color: var(--color-neutral-tertiary-medium);
     }
   }
+  &:hover {
+    @media (hover: hover) {
+      color: var(--color-body);
+    }
+  }
   &:focus {
     --tw-outline-style: none;
     outline-style: none;

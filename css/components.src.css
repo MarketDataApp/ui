@@ -345,7 +345,7 @@
 .theme-toggle-wrapper .theme-toggle-button {
   @apply inline-flex items-center justify-center w-8 h-8 rounded-full cursor-pointer;
   @apply bg-transparent text-body border-none p-0;
-  @apply hover:bg-neutral-tertiary-medium;
+  @apply hover:bg-neutral-tertiary-medium hover:text-body;
   @apply focus:outline-hidden;
   -webkit-tap-highlight-color: transparent;
   transition: background 0.15s;
