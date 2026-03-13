@@ -87,7 +87,9 @@
 }
 
 @utility form-input {
-  @apply shadow-none bg-neutral-secondary-strong border border-solid border-gray text-heading text-sm rounded-lg focus:ring-1 focus:ring-brand focus:border-brand focus:outline-hidden block w-full p-2.5 dark:placeholder-gray-400;
+  background-color: var(--nested-input-bg, var(--color-neutral-secondary-strong));
+  border-color: var(--nested-input-border, var(--color-gray));
+  @apply shadow-none border border-solid text-heading text-sm rounded-lg focus:ring-1 focus:ring-brand focus:border-brand focus:outline-hidden block w-full p-2.5 dark:placeholder-gray-400;
 }
 
 @utility form-input-disabled {
@@ -99,7 +101,9 @@
 }
 
 @utility form-dropdown-input {
-  @apply shadow-xs bg-neutral-secondary-strong border border-gray text-heading text-sm rounded-lg focus:ring-1 focus:ring-brand focus:border-brand focus:outline-hidden block w-full ps-3 pe-10 py-2.5 dark:placeholder-gray-400;
+  background-color: var(--nested-input-bg, var(--color-neutral-secondary-strong));
+  border-color: var(--nested-input-border, var(--color-gray));
+  @apply shadow-xs border border-solid text-heading text-sm rounded-lg focus:ring-1 focus:ring-brand focus:border-brand focus:outline-hidden block w-full ps-3 pe-10 py-2.5 dark:placeholder-gray-400;
   appearance: none;
   background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24'%3e%3cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='m19 9-7 7-7-7'/%3e%3c/svg%3e");
   background-position: right 0.75rem center;
@@ -123,7 +127,7 @@
 
 /* ---- Radio Group ---- */
 @utility radio-group-container {
-  background-color: var(--nested-component-bg, var(--color-neutral-secondary-medium));
+  background-color: var(--nested-input-bg, var(--color-neutral-secondary-strong));
   @apply border border-default rounded-lg divide-y divide-default text-sm font-medium;
 }
 
