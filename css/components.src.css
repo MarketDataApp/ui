@@ -132,7 +132,7 @@
 
 /* ---- Radio Buttons ---- */
 @utility radio-button-input {
-  @apply w-4 h-4 text-brand bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-full appearance-none;
+  @apply w-4 h-4 text-brand bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-600 rounded-full appearance-none;
   @apply focus:ring-brand-medium focus:ring-1 focus:outline-hidden;
   @apply mt-0.5 shrink-0;
   background-position: center;
