@@ -1595,6 +1595,18 @@
       color: var(--color-body);
     }
   }
+  &:active {
+    background-color: transparent;
+  }
+  &:active {
+    color: var(--color-body);
+  }
+  &:focus {
+    background-color: transparent;
+  }
+  &:focus {
+    color: var(--color-body);
+  }
   &:focus {
     --tw-outline-style: none;
     outline-style: none;

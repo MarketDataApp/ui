@@ -346,7 +346,8 @@
   @apply inline-flex items-center justify-center w-8 h-8 rounded-full cursor-pointer;
   @apply bg-transparent text-body border-none p-0;
   @apply hover:bg-neutral-tertiary-medium hover:text-body;
-  @apply focus:outline-hidden;
+  @apply active:bg-transparent active:text-body;
+  @apply focus:outline-hidden focus:bg-transparent focus:text-body;
   -webkit-tap-highlight-color: transparent;
   transition: background 0.15s;
 }
