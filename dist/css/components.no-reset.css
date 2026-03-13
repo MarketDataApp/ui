@@ -995,8 +995,8 @@
   &:where(.dark, .dark *, [data-theme="dark"], [data-theme="dark"] *) {
     border-color: var(--color-gray-600);
   }
-  &:where(.dark, .dark *, [data-theme="dark"], [data-theme="dark"] *) {
-    background-color: var(--color-gray-700);
+  &:where(.dark, .dark *, [data-theme='dark'], [data-theme='dark'] *) {
+    background-color: var(--radio-group-bg, var(--color-gray-800));
   }
 }
 .form-container {
@@ -1016,6 +1016,9 @@
   }
   &:where(.dark, .dark *, [data-theme="dark"], [data-theme="dark"] *) {
     background-color: var(--color-gray-800);
+  }
+  &:where(.dark, .dark *, [data-theme='dark'], [data-theme='dark'] *) {
+    --radio-group-bg: var(--color-gray-700);
   }
 }
 .badge {
