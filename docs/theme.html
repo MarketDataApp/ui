@@ -1,0 +1,541 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Theme / Dark Mode - @marketdataapp/ui</title>
+    <link rel="stylesheet" href="docs.css" />
+    <script>
+      (function () {
+        var match = document.cookie.match(/(?:^|;\s*)theme=(dark|light)/);
+        var saved = match ? match[1] : null;
+        var prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+        if (saved === 'dark' || (!saved && prefersDark)) {
+          document.documentElement.classList.add('dark');
+          document.documentElement.setAttribute('data-theme', 'dark');
+        }
+      })();
+    </script>
+  </head>
+  <body class="default min-h-screen">
+    <!-- Header -->
+    <header class="border-b border-gray-200 dark:border-gray-700 mb-12">
+      <div class="max-w-5xl mx-auto px-4 py-8 flex items-center justify-between">
+        <div>
+          <h1 class="text-3xl font-bold">Theme / Dark Mode</h1>
+          <p class="mt-1 text-gray-500 dark:text-gray-400">
+            <a href="index.html" class="hover:text-gray-900 dark:hover:text-white"
+              >&larr; Back to components</a
+            >
+          </p>
+        </div>
+        <div id="theme-toggle"></div>
+      </div>
+    </header>
+
+    <main class="max-w-5xl mx-auto px-4 pb-16 space-y-16">
+      <!-- Overview -->
+      <section id="overview">
+        <h2 class="text-2xl font-bold mb-6 border-b border-gray-200 dark:border-gray-700 pb-2">
+          Overview
+        </h2>
+        <div class="prose dark:prose-invert max-w-none text-gray-700 dark:text-gray-300 space-y-4">
+          <p>Dark mode is managed by two modules working together:</p>
+          <ul class="list-disc pl-6 space-y-2">
+            <li>
+              <strong>theme.js</strong> &mdash; Cookie-based preference storage. Reads and writes a
+              <code class="font-mono text-xs">theme</code> cookie on
+              <code class="font-mono text-xs">.marketdata.app</code> so the preference syncs across
+              all subdomains.
+            </li>
+            <li>
+              <strong>theme-toggle.js</strong> &mdash; A framework-agnostic sun/moon toggle button
+              that calls <code class="font-mono text-xs">setThemeCookie()</code> on click.
+            </li>
+          </ul>
+          <p>
+            Preference hierarchy: <strong>cookie &gt; OS preference &gt; light (default)</strong>.
+          </p>
+        </div>
+      </section>
+
+      <!-- Setup -->
+      <section id="setup">
+        <h2 class="text-2xl font-bold mb-6 border-b border-gray-200 dark:border-gray-700 pb-2">
+          Setup
+        </h2>
+        <div class="prose dark:prose-invert max-w-none text-gray-700 dark:text-gray-300 space-y-6">
+          <p>
+            Every consuming page needs <strong>two pieces</strong>: an inline script to prevent
+            flash, and the toggle module for user interaction.
+          </p>
+
+          <h3 class="text-lg font-semibold">
+            Step 1: Inline script in <code class="font-mono text-xs">&lt;head&gt;</code>
+          </h3>
+          <p>
+            ES modules (<code class="font-mono text-xs">&lt;script type="module"&gt;</code>) are
+            <strong>always deferred</strong> by the browser &mdash; they execute after HTML parsing,
+            even in <code class="font-mono text-xs">&lt;head&gt;</code>. Without an inline script,
+            the page renders in light mode first, then flashes to dark once the module loads.
+          </p>
+          <p>This inline script runs synchronously before the browser's first paint:</p>
+          <div class="bg-gray-100 dark:bg-gray-800 rounded-lg p-4 overflow-x-auto">
+            <pre
+              class="text-sm font-mono text-gray-800 dark:text-gray-200 whitespace-pre"
+            ><code>&lt;head&gt;
+  &lt;script&gt;
+    (function () {
+      var match = document.cookie.match(/(?:^|;\s*)theme=(dark|light)/);
+      var saved = match ? match[1] : null;
+      var prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+      if (saved === 'dark' || (!saved &amp;&amp; prefersDark)) {
+        document.documentElement.classList.add('dark');
+        document.documentElement.setAttribute('data-theme', 'dark');
+      }
+    })();
+  &lt;/script&gt;
+&lt;/head&gt;</code></pre>
+          </div>
+          <p class="text-sm text-gray-500 dark:text-gray-400">
+            This mirrors the hierarchy from <code class="font-mono text-xs">theme.js</code>: cookie
+            &gt; OS preference &gt; light. Both <code class="font-mono text-xs">.dark</code> class
+            and <code class="font-mono text-xs">data-theme</code> attribute are set for
+            compatibility with Tailwind and Docusaurus conventions.
+          </p>
+
+          <h3 class="text-lg font-semibold">Step 2: Load the toggle module</h3>
+          <p>
+            At the end of <code class="font-mono text-xs">&lt;body&gt;</code>, load the toggle as a
+            module:
+          </p>
+          <div class="bg-gray-100 dark:bg-gray-800 rounded-lg p-4 overflow-x-auto">
+            <pre
+              class="text-sm font-mono text-gray-800 dark:text-gray-200 whitespace-pre"
+            ><code>&lt;script type="module"&gt;
+  import { initThemeToggle } from '@marketdataapp/ui/theme-toggle';
+  initThemeToggle({ container: document.getElementById('theme-toggle') });
+&lt;/script&gt;</code></pre>
+          </div>
+
+          <h3 class="text-lg font-semibold">Why two scripts?</h3>
+          <p>
+            The inline script handles the initial render (no flash). The module handles user
+            interaction and cookie persistence. They must stay in sync &mdash; both use the same
+            <code class="font-mono text-xs">theme</code> cookie and the same preference hierarchy.
+          </p>
+        </div>
+      </section>
+
+      <!-- Theme Toggle Demo -->
+      <section id="theme-toggle-demo">
+        <h2 class="text-2xl font-bold mb-6 border-b border-gray-200 dark:border-gray-700 pb-2">
+          Theme Toggle
+        </h2>
+        <p class="text-gray-500 dark:text-gray-400 mb-6">
+          Light/dark mode toggle using Docusaurus-style sun/moon SVG icons. Persists preference via
+          cross-subdomain cookie on <code class="font-mono text-xs">.marketdata.app</code>.
+        </p>
+
+        <div class="space-y-3">
+          <code class="text-sm font-mono text-gray-500 dark:text-gray-400 block"
+            >initThemeToggle({ container })</code
+          >
+          <div
+            class="border border-gray-200 dark:border-gray-700 rounded-lg p-6 flex items-center gap-4 min-h-[80px]"
+          >
+            <div id="theme-toggle-demo-target"></div>
+            <span class="text-sm text-gray-500 dark:text-gray-400">Click to toggle theme</span>
+          </div>
+        </div>
+
+        <div class="mt-6 flex flex-wrap gap-2">
+          <code class="text-xs font-mono bg-gray-100 dark:bg-gray-800 px-2 py-1 rounded"
+            >initThemeToggle()</code
+          >
+          <code class="text-xs font-mono bg-gray-100 dark:bg-gray-800 px-2 py-1 rounded"
+            >.theme-toggle-button</code
+          >
+          <code class="text-xs font-mono bg-gray-100 dark:bg-gray-800 px-2 py-1 rounded"
+            >.theme-toggle-icon-light</code
+          >
+          <code class="text-xs font-mono bg-gray-100 dark:bg-gray-800 px-2 py-1 rounded"
+            >.theme-toggle-icon-dark</code
+          >
+        </div>
+      </section>
+
+      <!-- theme.js API -->
+      <section id="theme-api">
+        <h2 class="text-2xl font-bold mb-6 border-b border-gray-200 dark:border-gray-700 pb-2">
+          theme.js API
+        </h2>
+        <p class="text-gray-500 dark:text-gray-400 mb-6">
+          Low-level functions for reading and writing the theme preference. Import from
+          <code class="font-mono text-xs">@marketdataapp/ui/theme</code>.
+        </p>
+
+        <div class="space-y-6">
+          <!-- Live state display -->
+          <div class="border border-gray-200 dark:border-gray-700 rounded-lg p-6 space-y-4">
+            <h3 class="text-lg font-semibold">Live State</h3>
+            <p class="text-xs text-gray-400 dark:text-gray-500 mb-2">
+              Toggle the theme above and watch these values update in real time.
+            </p>
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 text-sm">
+              <div class="space-y-2">
+                <div class="flex justify-between">
+                  <span class="text-gray-500 dark:text-gray-400">getThemeCookie()</span>
+                  <code id="api-cookie" class="font-mono text-sm"></code>
+                </div>
+                <div class="flex justify-between">
+                  <span class="text-gray-500 dark:text-gray-400">getUserThemePreference()</span>
+                  <code id="api-user-pref" class="font-mono text-sm"></code>
+                </div>
+                <div class="flex justify-between">
+                  <span class="text-gray-500 dark:text-gray-400">getBrowserThemePreference()</span>
+                  <code id="api-browser-pref" class="font-mono text-sm"></code>
+                </div>
+              </div>
+              <div class="space-y-2">
+                <div class="flex justify-between">
+                  <span class="text-gray-500 dark:text-gray-400">getEffectiveTheme()</span>
+                  <code id="api-effective" class="font-mono text-sm font-bold"></code>
+                </div>
+                <div class="flex justify-between">
+                  <span class="text-gray-500 dark:text-gray-400">isSystemMode()</span>
+                  <code id="api-system-mode" class="font-mono text-sm"></code>
+                </div>
+                <div class="flex justify-between">
+                  <span class="text-gray-500 dark:text-gray-400">html.classList</span>
+                  <code id="api-html-class" class="font-mono text-sm"></code>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Function reference -->
+          <div class="overflow-x-auto">
+            <table class="w-full text-sm text-left">
+              <thead
+                class="text-xs text-gray-500 dark:text-gray-400 uppercase border-b border-gray-200 dark:border-gray-700"
+              >
+                <tr>
+                  <th class="py-3 pr-4">Function</th>
+                  <th class="py-3 pr-4">Returns</th>
+                  <th class="py-3">Description</th>
+                </tr>
+              </thead>
+              <tbody class="text-gray-700 dark:text-gray-300">
+                <tr class="border-b border-gray-100 dark:border-gray-800">
+                  <td class="py-3 pr-4"><code class="font-mono text-xs">getThemeCookie()</code></td>
+                  <td class="py-3 pr-4">
+                    <code class="font-mono text-xs">'dark' | 'light' | null</code>
+                  </td>
+                  <td class="py-3">
+                    Reads the <code class="font-mono text-xs">theme</code> cookie value.
+                  </td>
+                </tr>
+                <tr class="border-b border-gray-100 dark:border-gray-800">
+                  <td class="py-3 pr-4">
+                    <code class="font-mono text-xs">setThemeCookie(theme)</code>
+                  </td>
+                  <td class="py-3 pr-4"><code class="font-mono text-xs">void</code></td>
+                  <td class="py-3">
+                    Sets the cookie on <code class="font-mono text-xs">.marketdata.app</code> with
+                    1-year expiry.
+                  </td>
+                </tr>
+                <tr class="border-b border-gray-100 dark:border-gray-800">
+                  <td class="py-3 pr-4">
+                    <code class="font-mono text-xs">clearThemeCookie()</code>
+                  </td>
+                  <td class="py-3 pr-4"><code class="font-mono text-xs">void</code></td>
+                  <td class="py-3">Clears the cookie, reverting to OS preference.</td>
+                </tr>
+                <tr class="border-b border-gray-100 dark:border-gray-800">
+                  <td class="py-3 pr-4">
+                    <code class="font-mono text-xs">getUserThemePreference()</code>
+                  </td>
+                  <td class="py-3 pr-4">
+                    <code class="font-mono text-xs">'dark' | 'light' | 'no-preference'</code>
+                  </td>
+                  <td class="py-3">
+                    Checks cookie, then localStorage. Returns explicit preference or
+                    <code class="font-mono text-xs">'no-preference'</code>.
+                  </td>
+                </tr>
+                <tr class="border-b border-gray-100 dark:border-gray-800">
+                  <td class="py-3 pr-4">
+                    <code class="font-mono text-xs">getBrowserThemePreference()</code>
+                  </td>
+                  <td class="py-3 pr-4">
+                    <code class="font-mono text-xs">'dark' | 'light' | 'no-preference'</code>
+                  </td>
+                  <td class="py-3">
+                    Returns OS/browser preference via
+                    <code class="font-mono text-xs">prefers-color-scheme</code> media query.
+                  </td>
+                </tr>
+                <tr class="border-b border-gray-100 dark:border-gray-800">
+                  <td class="py-3 pr-4">
+                    <code class="font-mono text-xs">getEffectiveTheme()</code>
+                  </td>
+                  <td class="py-3 pr-4"><code class="font-mono text-xs">'dark' | 'light'</code></td>
+                  <td class="py-3">
+                    Resolves the full hierarchy: cookie &gt; localStorage &gt; OS &gt; light.
+                  </td>
+                </tr>
+                <tr>
+                  <td class="py-3 pr-4"><code class="font-mono text-xs">isSystemMode()</code></td>
+                  <td class="py-3 pr-4"><code class="font-mono text-xs">boolean</code></td>
+                  <td class="py-3">True when no explicit preference is saved (follows OS).</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- CSS Custom Variant -->
+      <section id="css-variant">
+        <h2 class="text-2xl font-bold mb-6 border-b border-gray-200 dark:border-gray-700 pb-2">
+          CSS: Dark Mode Variant
+        </h2>
+        <div class="prose dark:prose-invert max-w-none text-gray-700 dark:text-gray-300 space-y-4">
+          <p>
+            The theme CSS defines a custom variant that supports both Tailwind and Docusaurus
+            conventions:
+          </p>
+          <div class="bg-gray-100 dark:bg-gray-800 rounded-lg p-4 overflow-x-auto">
+            <pre
+              class="text-sm font-mono text-gray-800 dark:text-gray-200 whitespace-pre"
+            ><code>@custom-variant dark (&amp;:where(.dark, .dark *, [data-theme="dark"], [data-theme="dark"] *));</code></pre>
+          </div>
+          <ul class="list-disc pl-6 space-y-2">
+            <li>
+              <code class="font-mono text-xs">.dark</code> class on
+              <code class="font-mono text-xs">&lt;html&gt;</code> &mdash; Tailwind/Flowbite
+              convention
+            </li>
+            <li>
+              <code class="font-mono text-xs">[data-theme="dark"]</code> attribute &mdash;
+              Docusaurus convention
+            </li>
+          </ul>
+          <p>
+            The <code class="font-mono text-xs">:where()</code> wrapper adds
+            <strong>zero specificity</strong>, preventing dark mode selectors from creating
+            specificity inflation.
+          </p>
+
+          <h3 class="text-lg font-semibold">
+            Semantic tokens vs <code class="font-mono text-xs">dark:</code> prefix
+          </h3>
+          <p>
+            Semantic tokens from <code class="font-mono text-xs">theme.css</code> (e.g.
+            <code class="font-mono text-xs">bg-neutral-primary-medium</code>,
+            <code class="font-mono text-xs">text-heading</code>) handle dark mode automatically
+            &mdash; no <code class="font-mono text-xs">dark:</code> prefix needed. Only use
+            <code class="font-mono text-xs">dark:</code> when there's no matching semantic token.
+          </p>
+        </div>
+
+        <!-- Live demo: dark variant -->
+        <div class="mt-6 space-y-3">
+          <h3 class="text-lg font-semibold">Semantic tokens (automatic)</h3>
+          <p class="text-xs text-gray-400 dark:text-gray-500 mb-3">
+            These use semantic tokens from theme.css. Toggle dark mode &mdash; no
+            <code class="font-mono text-xs">dark:</code> prefix needed.
+          </p>
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+            <div class="rounded-lg p-4 bg-neutral-primary-medium border border-default-medium">
+              <code class="text-xs font-mono block mb-2 text-body-subtle"
+                >bg-neutral-primary-medium</code
+              >
+              <p class="text-heading text-sm font-semibold">Heading text</p>
+              <p class="text-body text-sm">Body text</p>
+              <p class="text-body-subtle text-xs">Subtle text</p>
+            </div>
+            <div class="rounded-lg p-4 bg-neutral-secondary-medium border border-default-medium">
+              <code class="text-xs font-mono block mb-2 text-body-subtle"
+                >bg-neutral-secondary-medium</code
+              >
+              <p class="text-heading text-sm font-semibold">Heading text</p>
+              <p class="text-body text-sm">Body text</p>
+            </div>
+            <div class="rounded-lg p-4 bg-neutral-tertiary-medium border border-default-medium">
+              <code class="text-xs font-mono block mb-2 text-body-subtle"
+                >bg-neutral-tertiary-medium</code
+              >
+              <p class="text-heading text-sm font-semibold">Heading text</p>
+              <p class="text-body text-sm">Body text</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="mt-6 space-y-3">
+          <h3 class="text-lg font-semibold">
+            Manual <code class="font-mono text-xs">dark:</code> prefix
+          </h3>
+          <p class="text-xs text-gray-400 dark:text-gray-500 mb-3">
+            When no semantic token exists, use explicit
+            <code class="font-mono text-xs">dark:</code> variants.
+          </p>
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div
+              class="rounded-lg p-4 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700"
+            >
+              <code class="text-xs font-mono block mb-2 text-gray-400 dark:text-gray-500"
+                >bg-white dark:bg-gray-800</code
+              >
+              <p class="text-gray-900 dark:text-white text-sm">Manual dark mode text</p>
+            </div>
+            <div
+              class="rounded-lg p-4 bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800"
+            >
+              <code class="text-xs font-mono block mb-2 text-gray-400 dark:text-gray-500"
+                >bg-blue-50 dark:bg-blue-900/20</code
+              >
+              <p class="text-blue-900 dark:text-blue-200 text-sm">Custom color with dark variant</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Dark Images -->
+      <section id="dark-images">
+        <h2 class="text-2xl font-bold mb-6 border-b border-gray-200 dark:border-gray-700 pb-2">
+          Dark Image Swapping
+        </h2>
+        <p class="text-gray-500 dark:text-gray-400 mb-6">
+          The <code class="font-mono text-xs">dark-images</code> module automatically swaps images
+          between light and dark variants. Toggle the theme to see it in action.
+        </p>
+
+        <div class="space-y-8">
+          <!-- Convention-based -->
+          <div class="space-y-3">
+            <h3 class="text-lg font-semibold">Convention-based (automatic)</h3>
+            <p class="text-xs text-gray-400 dark:text-gray-500 mb-3">
+              Name images with <code class="font-mono">-light</code> or
+              <code class="font-mono">-dark</code> before the extension. The module detects and
+              swaps them automatically. If the alternate image 404s, no swap occurs.
+            </p>
+            <div class="bg-gray-100 dark:bg-gray-800 rounded-lg p-4 overflow-x-auto mb-3">
+              <pre
+                class="text-sm font-mono text-gray-800 dark:text-gray-200 whitespace-pre"
+              ><code>&lt;img src="logo-light.avif" alt="MarketData logo"&gt;</code></pre>
+            </div>
+            <div
+              class="border border-gray-200 dark:border-gray-700 rounded-lg p-6 flex items-center justify-center min-h-30"
+            >
+              <img src="logo-light.avif" alt="MarketData logo" class="max-h-24" />
+            </div>
+          </div>
+
+          <!-- Usage -->
+          <div class="space-y-3">
+            <h3 class="text-lg font-semibold">Usage</h3>
+            <div class="bg-gray-100 dark:bg-gray-800 rounded-lg p-4 overflow-x-auto">
+              <pre
+                class="text-sm font-mono text-gray-800 dark:text-gray-200 whitespace-pre"
+              ><code>import { initDarkImages } from '@marketdataapp/ui/dark-images';
+
+const cleanup = initDarkImages();
+// cleanup() stops all observers</code></pre>
+            </div>
+          </div>
+
+          <!-- Explicit pairs -->
+          <div class="space-y-3">
+            <h3 class="text-lg font-semibold">Explicit pairs</h3>
+            <p class="text-xs text-gray-400 dark:text-gray-500 mb-3">
+              For images that don't follow the naming convention, register pairs manually before
+              calling <code class="font-mono text-xs">initDarkImages()</code>.
+            </p>
+            <div class="bg-gray-100 dark:bg-gray-800 rounded-lg p-4 overflow-x-auto">
+              <pre
+                class="text-sm font-mono text-gray-800 dark:text-gray-200 whitespace-pre"
+              ><code>import { initDarkImages, addImagePair } from '@marketdataapp/ui/dark-images';
+
+addImagePair('chart.png', 'chart-inverted.png');       // suffix match
+addImagePair('/images/photo.jpg', '/images/photo-bw.jpg'); // exact match
+
+const cleanup = initDarkImages();</code></pre>
+            </div>
+          </div>
+        </div>
+
+        <div class="mt-6 flex flex-wrap gap-2">
+          <code class="text-xs font-mono bg-gray-100 dark:bg-gray-800 px-2 py-1 rounded"
+            >initDarkImages()</code
+          >
+          <code class="text-xs font-mono bg-gray-100 dark:bg-gray-800 px-2 py-1 rounded"
+            >addImagePair()</code
+          >
+          <code class="text-xs font-mono bg-gray-100 dark:bg-gray-800 px-2 py-1 rounded"
+            >-light / -dark suffix</code
+          >
+        </div>
+      </section>
+    </main>
+
+    <footer class="border-t border-gray-200 dark:border-gray-700 mt-12">
+      <div
+        class="max-w-5xl mx-auto px-4 py-6 text-sm text-gray-500 dark:text-gray-400 flex justify-between"
+      >
+        <span>@marketdataapp/ui</span>
+        <a
+          href="https://github.com/MarketDataApp/ui"
+          class="hover:text-gray-900 dark:hover:text-white"
+          >GitHub</a
+        >
+      </div>
+    </footer>
+
+    <script type="module">
+      import { initDarkImages } from '../dist/dark-images.js';
+      initDarkImages();
+    </script>
+
+    <script type="module">
+      import { initThemeToggle } from '../dist/theme-toggle.js';
+      import {
+        getThemeCookie,
+        getUserThemePreference,
+        getBrowserThemePreference,
+        getEffectiveTheme,
+        isSystemMode,
+      } from '../dist/theme.js';
+
+      // Theme toggle (header)
+      initThemeToggle({ container: document.getElementById('theme-toggle') });
+      // Theme toggle (demo section)
+      initThemeToggle({ container: document.getElementById('theme-toggle-demo-target') });
+
+      // Live API state display
+      function updateApiState() {
+        document.getElementById('api-cookie').textContent = JSON.stringify(getThemeCookie());
+        document.getElementById('api-user-pref').textContent =
+          JSON.stringify(getUserThemePreference());
+        document.getElementById('api-browser-pref').textContent = JSON.stringify(
+          getBrowserThemePreference(),
+        );
+        document.getElementById('api-effective').textContent = JSON.stringify(getEffectiveTheme());
+        document.getElementById('api-system-mode').textContent = JSON.stringify(isSystemMode());
+        document.getElementById('api-html-class').textContent =
+          document.documentElement.className || '(empty)';
+      }
+
+      updateApiState();
+
+      // Update on theme changes
+      const observer = new MutationObserver(updateApiState);
+      observer.observe(document.documentElement, {
+        attributes: true,
+        attributeFilter: ['class', 'data-theme'],
+      });
+    </script>
+  </body>
+</html>

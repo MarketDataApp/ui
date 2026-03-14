@@ -85,6 +85,41 @@ Dark mode uses a `@custom-variant` that supports both conventions:
 
 The `:where()` wrapper adds **zero specificity**, preventing dark mode selectors from creating specificity inflation.
 
+#### Setup: Preventing Flash of Wrong Theme
+
+ES modules (`<script type="module">`) are **always deferred** by the browser — they execute after the HTML is fully parsed, even when placed in `<head>`. This means `theme.js` cannot prevent a flash of wrong theme (FOWT) on its own.
+
+Every consuming page must include an **inline `<script>` in `<head>`** that reads the theme cookie and applies the `dark` class before the browser's first paint:
+
+```html
+<head>
+  <script>
+    (function () {
+      var match = document.cookie.match(/(?:^|;\s*)theme=(dark|light)/);
+      var saved = match ? match[1] : null;
+      var prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+      if (saved === 'dark' || (!saved && prefersDark)) {
+        document.documentElement.classList.add('dark');
+        document.documentElement.setAttribute('data-theme', 'dark');
+      }
+    })();
+  </script>
+</head>
+```
+
+This mirrors the preference hierarchy from `theme.js`: **cookie > OS preference > light (default)**.
+
+Then, later in the page (typically at the end of `<body>`), load the toggle as a module:
+
+```html
+<script type="module">
+  import { initThemeToggle } from '@marketdataapp/ui/theme-toggle';
+  initThemeToggle({ container: document.getElementById('theme-toggle') });
+</script>
+```
+
+The inline script handles initial render; the module handles user interaction and cookie persistence.
+
 ### Dark Image Swapping
 
 The `dark-images` module automatically swaps images between light and dark variants based on the current theme. Two approaches:
