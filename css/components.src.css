@@ -121,6 +121,7 @@
 
 /* ---- Radio Group ---- */
 @utility radio-group-container {
+  --radio-btn-bg: var(--color-gray-100);
   @apply bg-gray-50 border border-solid border-gray-300 dark:border-gray-600 rounded-lg divide-y divide-gray-300 dark:divide-gray-600 text-sm font-medium;
   &:where(.dark, .dark *, [data-theme='dark'], [data-theme='dark'] *) {
     background-color: var(--radio-group-bg, var(--color-gray-800));
@@ -134,7 +135,8 @@
 
 /* ---- Radio Buttons ---- */
 @utility radio-button-input {
-  @apply w-4 h-4 text-brand bg-white border border-gray-300 dark:border-gray-600 rounded-full appearance-none;
+  background-color: var(--radio-btn-bg, var(--color-gray-50));
+  @apply w-4 h-4 text-brand border border-gray-300 dark:border-gray-600 rounded-full appearance-none;
   @apply focus:ring-brand-medium focus:ring-1 focus:outline-hidden;
   @apply mt-0.5 shrink-0;
   &:where(.dark, .dark *, [data-theme='dark'], [data-theme='dark'] *) {

@@ -265,6 +265,7 @@
   font-weight: var(--font-weight-medium);
 }
 .radio-button-input {
+  background-color: var(--radio-btn-bg, var(--color-gray-50));
   height: calc(var(--spacing) * 4);
   width: calc(var(--spacing) * 4);
   appearance: none;
@@ -272,7 +273,6 @@
   border-style: var(--tw-border-style);
   border-width: 1px;
   border-color: var(--color-gray-300);
-  background-color: var(--color-white);
   color: var(--color-brand);
   &:where(.dark, .dark *, [data-theme="dark"], [data-theme="dark"] *) {
     border-color: var(--color-gray-600);
@@ -966,6 +966,7 @@
   display: inline;
 }
 .radio-group-container {
+  --radio-btn-bg: var(--color-gray-100);
   :where(& > :not(:last-child)) {
     --tw-divide-y-reverse: 0;
     border-bottom-style: var(--tw-border-style);
