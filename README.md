@@ -21,7 +21,7 @@ npm install @marketdataapp/ui@github:MarketDataApp/ui
 | `./theme`                   | `dist/theme.js`                    | Dark/light mode JS: `getThemeCookie`, `setThemeCookie`, `getUserThemePreference`, `getBrowserThemePreference`, `getEffectiveTheme`.                     |
 | `./theme-toggle`            | `dist/theme-toggle.js`             | Sun/moon toggle button for switching dark/light mode. Uses `./theme` for cookie persistence.                                                            |
 | `./dark-images`             | `dist/dark-images.js`              | Automatic dark/light image swapping. Convention-based (`-light`/`-dark` suffix) or explicit pairs via `addImagePair()`.                                 |
-| `./reviews`                 | `dist/reviews.js`                  | Review rating widget with build-time data. Renders large or small variant via `initReviewWidget()`.                                                     |
+| `./reviews`                 | `dist/reviews.js`                  | Review rating widget with build-time data. Renders large or small variant via `initResenaWidget()`.                                                     |
 | `./navbar-overflow`         | `dist/navbar-overflow.js`          | Priority-based auto-hide for navbar items that overflow their container.                                                                                |
 | `./user-profile`            | `dist/user-profile.js`             | Gravatar avatar with optional dropdown menu. Zero dependencies.                                                                                         |
 
@@ -178,13 +178,13 @@ The first argument is the light variant, the second is the dark variant. Match t
 The `reviews` module renders a star-rating widget using data fetched at build time. Available in two sizes:
 
 ```js
-import { initReviewWidget } from '@marketdataapp/ui/reviews';
+import { initResenaWidget } from '@marketdataapp/ui/reviews';
 
 // Large variant (default)
-const cleanup = initReviewWidget({ container: document.getElementById('reviews') });
+const cleanup = initResenaWidget({ container: document.getElementById('reviews') });
 
 // Small variant
-const cleanup = initReviewWidget({ container: el, version: 'small' });
+const cleanup = initResenaWidget({ container: el, version: 'small' });
 
 // cleanup() removes the widget from the DOM
 ```

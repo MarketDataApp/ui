@@ -29,7 +29,7 @@ function htmlToElement(html) {
 }
 
 // ---------------------------------------------------------------------------
-// initReviewWidget
+// initResenaWidget
 // ---------------------------------------------------------------------------
 
 /**
@@ -40,7 +40,7 @@ function htmlToElement(html) {
  * @param {'large'|'small'} [options.version='large'] - Widget variant
  * @returns {() => void} Cleanup function
  */
-export function initReviewWidget(options) {
+export function initResenaWidget(options) {
   const { container, version = 'large' } = options;
 
   const platformName = getPlatformName();

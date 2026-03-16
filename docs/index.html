@@ -1122,7 +1122,7 @@
           <!-- Large widget -->
           <div class="space-y-3">
             <code class="text-sm font-mono text-gray-500 dark:text-gray-400 block"
-              >initReviewWidget({ version: 'large' })</code
+              >initResenaWidget({ version: 'large' })</code
             >
             <p class="text-xs text-gray-400 dark:text-gray-500">
               Resize below 1024px to see the compact view (text labels hide, only stars + logo
@@ -1137,7 +1137,7 @@
           <!-- Small widget -->
           <div class="space-y-3">
             <code class="text-sm font-mono text-gray-500 dark:text-gray-400 block"
-              >initReviewWidget({ version: 'small' })</code
+              >initResenaWidget({ version: 'small' })</code
             >
             <div
               class="border border-gray-200 dark:border-gray-700 rounded-lg p-6 flex items-center min-h-[80px]"
@@ -1148,7 +1148,7 @@
 
         <div class="mt-6 flex flex-wrap gap-2">
           <code class="text-xs font-mono bg-gray-100 dark:bg-gray-800 px-2 py-1 rounded"
-            >initReviewWidget()</code
+            >initResenaWidget()</code
           >
           <code class="text-xs font-mono bg-gray-100 dark:bg-gray-800 px-2 py-1 rounded"
             >.resena-widget</code
@@ -1196,10 +1196,10 @@
     </script>
 
     <script type="module">
-      import { initReviewWidget } from '../dist/reviews.js';
+      import { initResenaWidget } from '../dist/reviews.js';
 
-      initReviewWidget({ container: document.getElementById('review-widget-large') });
-      initReviewWidget({
+      initResenaWidget({ container: document.getElementById('review-widget-large') });
+      initResenaWidget({
         container: document.getElementById('review-widget-small'),
         version: 'small',
       });
