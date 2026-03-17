@@ -215,7 +215,7 @@
 }
 
 @utility grid-content-container {
-  @apply col-span-12 p-4 mx-4 mb-4 bg-neutral-primary-medium rounded-lg shadow sm:p-6 xl:p-8 xl:col-start-2 xl:col-span-10 2xl:col-start-3 2xl:col-span-8 md:mx-6 lg:my-6;
+  @apply col-span-12 p-4 mx-4 mb-4 bg-neutral-primary-medium rounded-lg shadow sm:p-6 xl:p-8 xl:col-start-2 xl:col-span-10 2xl:col-start-3 2xl:col-span-8 md:mx-6 lg:my-8 xl:my-16;
 }
 
 @utility grid-content-position {

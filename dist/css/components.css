@@ -382,13 +382,16 @@
       margin-inline: calc(var(--spacing) * 6);
     }
     @media (width >= 64rem) {
-      margin-block: calc(var(--spacing) * 6);
+      margin-block: calc(var(--spacing) * 8);
     }
     @media (width >= 80rem) {
       grid-column: span 10 / span 10;
     }
     @media (width >= 80rem) {
       grid-column-start: 2;
+    }
+    @media (width >= 80rem) {
+      margin-block: calc(var(--spacing) * 16);
     }
     @media (width >= 80rem) {
       padding: calc(var(--spacing) * 8);
