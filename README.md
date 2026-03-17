@@ -72,6 +72,19 @@ This serves two purposes:
 1. **Tailwind v4 consumers** (amember) import the source file and can `@apply btn-hover-orange` in their own CSS.
 2. **Non-Tailwind consumers** (Docusaurus) use the pre-built CSS where each `@utility` compiles to a plain `.btn-hover-orange { ... }` rule.
 
+### Grid Layout and Content Positioning
+
+`.grid-layout-12` creates a 12-column grid with `gap-4` gutters between columns. The grid itself is edge-to-edge — it has no padding or margin, so columns 1 and 12 sit flush against the container.
+
+Two utilities handle content positioning within the grid. Both include built-in horizontal margin on small screens (`mx-4` / `md:mx-6`) so content never touches the viewport edge. At `xl`+ the margin is removed because the grid columns provide the centering:
+
+- **`.grid-content-position`** — Position only. Spans all 12 columns on mobile, narrows to 10 at `xl`, and 8 at `2xl`. Use this when you want centered placement without any visual styling.
+- **`.grid-content-container`** — Same positioning as above, plus `card-surface` visual treatment (background, border, padding, shadow, rounded corners). Use this for content cards.
+
+Consumers don't need to add their own margin or padding — these utilities handle viewport-edge spacing automatically.
+
+**`.card-surface`** is the shared visual base used by both `.grid-content-container` and `.form-container`. It provides `bg-neutral-primary-medium`, `border-neutral-quaternary`, responsive padding (`p-4 sm:p-6 xl:p-8`), `rounded-lg`, and `shadow-md`.
+
 ### Dark Mode
 
 Dark mode uses a `@custom-variant` that supports both conventions:
@@ -289,6 +302,7 @@ Usage not yet verified.
 - **Forms**: `.form-container`, `.form-heading`, `.form-label`, `.form-input`, `.form-input-disabled`, `.form-input-error`, `.form-dropdown-input`, `.form-helper-text`, `.form-helper-text-error`
 - **Badges**: `.badge .badge-{color}`, `.badge-pill-{color}`
 - **Radio Buttons**: `.radio-button-input`, `.radio-button-helper`
+- **Card Surface**: `.card-surface` (shared visual base: background, border, padding, shadow, rounded corners)
 - **Grid Layout**: `.grid-layout-12`, `.grid-content-container`, `.grid-content-position`
 - **User Profile**: `.user-profile-container`, `.user-profile-wrapper`, `.user-profile-avatar`, `.user-profile-avatar--img`, `.user-profile-avatar--placeholder`, `.user-profile-login-pill`, `.user-profile-dropdown`, `.user-profile-dropdown-header`, `.user-profile-dropdown-name`, `.user-profile-dropdown-email`, `.user-profile-dropdown-menu`, `.user-profile-dropdown-link`, `.user-profile-dropdown-signout`, `.user-profile-dropdown-subtext`, `.user-profile-dropdown-divider-above`, `.user-profile-dropdown-divider-below`
 - **Theme Toggle**: `.theme-toggle-button`, `.theme-toggle-icon-light`, `.theme-toggle-icon-dark`

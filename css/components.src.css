@@ -223,7 +223,7 @@
 }
 
 @utility grid-content-position {
-  @apply col-span-12 xl:col-start-2 xl:col-span-10 2xl:col-start-3 2xl:col-span-8;
+  @apply col-span-12 mx-4 md:mx-6 xl:mx-0 xl:col-start-2 xl:col-span-10 2xl:col-start-3 2xl:col-span-8;
 }
 
 /* ---- User Profile ---- */

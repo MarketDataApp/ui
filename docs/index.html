@@ -574,8 +574,12 @@
         </h2>
         <p class="text-gray-500 dark:text-gray-400 mb-6">
           A 12-column grid system. <code class="font-mono text-xs">.grid-layout-12</code> sets up
-          the grid, then child elements use column spans to control width. Resize your browser to
-          see breakpoint behavior.
+          the grid, then child elements use column spans to control width.
+          <code class="font-mono text-xs">.grid-content-position</code> and
+          <code class="font-mono text-xs">.grid-content-container</code> handle all spacing
+          automatically &mdash; they add horizontal margin on small screens to keep content off the
+          viewport edges, then remove it at larger breakpoints where the grid columns provide the
+          centering. Consumers don't need to add their own margin or padding.
         </p>
 
         <!-- Raw 12-column grid visualization -->
@@ -746,7 +750,13 @@
           Content Containers
         </h3>
         <p class="text-gray-500 dark:text-gray-400 mb-3 text-sm">
-          These preset classes center content and narrow it at wider breakpoints:
+          These preset classes center content and progressively narrow it at wider breakpoints. Both
+          include built-in horizontal margin on small screens (<code class="font-mono text-xs"
+            >mx-4</code
+          >
+          / <code class="font-mono text-xs">md:mx-6</code>) so content never touches the viewport
+          edge. At <code class="font-mono text-xs">xl</code>+ the margin is removed because the grid
+          columns handle the inset.
         </p>
         <div
           class="border border-dashed border-gray-300 dark:border-gray-600 rounded-lg p-2 bg-gray-50 dark:bg-gray-800/50 space-y-2 mb-2"
@@ -772,7 +782,8 @@
             >
               .grid-content-position<br />
               <span class="text-[10px] text-gray-400"
-                >span-12 &rarr; xl:span-10 &rarr; 2xl:span-8 (no styling, just position)</span
+                >span-12 + mx-4 &rarr; xl:span-10 + mx-0 &rarr; 2xl:span-8 (position + margin
+                only)</span
               >
             </div>
           </div>
@@ -781,7 +792,8 @@
               <p class="text-xs font-mono text-gray-600 dark:text-gray-300 text-center">
                 .grid-content-container<br />
                 <span class="text-[10px] text-gray-400"
-                  >same centering + background, shadow, padding, rounded corners</span
+                  >same centering + margin + card-surface (background, border, padding, shadow,
+                  rounded corners)</span
                 >
               </p>
             </div>
@@ -797,6 +809,9 @@
           >
           <code class="text-xs font-mono bg-gray-100 dark:bg-gray-800 px-2 py-1 rounded"
             >.grid-content-position</code
+          >
+          <code class="text-xs font-mono bg-gray-100 dark:bg-gray-800 px-2 py-1 rounded"
+            >.card-surface</code
           >
         </div>
       </section>
