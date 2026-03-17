@@ -388,7 +388,7 @@
       margin-inline: calc(var(--spacing) * 6);
     }
     @media (width >= 64rem) {
-      margin-block: calc(var(--spacing) * 8);
+      margin-bottom: calc(var(--spacing) * 8);
     }
     @media (width >= 80rem) {
       grid-column: span 10 / span 10;
@@ -400,7 +400,7 @@
       margin-inline: calc(var(--spacing) * 0);
     }
     @media (width >= 80rem) {
-      margin-block: calc(var(--spacing) * 16);
+      margin-bottom: calc(var(--spacing) * 16);
     }
     @media (width >= 96rem) {
       grid-column: span 8 / span 8;
@@ -2185,6 +2185,11 @@
   .md\:grid-cols-5 {
     @media (width >= 48rem) {
       grid-template-columns: repeat(5, minmax(0, 1fr));
+    }
+  }
+  .lg\:p-8 {
+    @media (width >= 64rem) {
+      padding: calc(var(--spacing) * 8);
     }
   }
   .lg\:px-10 {

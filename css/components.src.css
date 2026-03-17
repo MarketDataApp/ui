@@ -219,7 +219,7 @@
 }
 
 @utility grid-content-container {
-  @apply card-surface col-span-12 mx-4 mb-4 xl:mx-0 xl:col-start-2 xl:col-span-10 2xl:col-start-3 2xl:col-span-8 md:mx-6 lg:my-8 xl:my-16;
+  @apply card-surface col-span-12 mx-4 mb-4 xl:mx-0 xl:col-start-2 xl:col-span-10 2xl:col-start-3 2xl:col-span-8 md:mx-6 lg:mb-8 xl:mb-16;
 }
 
 @utility grid-content-position {
