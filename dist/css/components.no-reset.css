@@ -103,6 +103,7 @@
   --color-neutral-secondary-medium: var(--color-gray-50);
   --color-neutral-tertiary: var(--color-gray-100);
   --color-neutral-tertiary-medium: var(--color-gray-100);
+  --color-neutral-quaternary: var(--color-gray-200);
   --color-gray: var(--color-gray-300);
   --color-heading: var(--color-gray-900);
   --color-body: var(--color-gray-600);
@@ -123,12 +124,18 @@
   margin-inline: calc(var(--spacing) * 4);
   margin-bottom: calc(var(--spacing) * 4);
   border-radius: var(--radius-lg);
+  border-style: var(--tw-border-style);
+  border-width: 1px;
+  border-color: var(--color-neutral-quaternary);
   background-color: var(--color-neutral-primary-medium);
   padding: calc(var(--spacing) * 4);
-  --tw-shadow: 0 1px 3px 0 var(--tw-shadow-color, rgb(0 0 0 / 0.1)), 0 1px 2px -1px var(--tw-shadow-color, rgb(0 0 0 / 0.1));
+  --tw-shadow: 0 4px 6px -1px var(--tw-shadow-color, rgb(0 0 0 / 0.1)), 0 2px 4px -2px var(--tw-shadow-color, rgb(0 0 0 / 0.1));
   box-shadow: var(--tw-inset-shadow), var(--tw-inset-ring-shadow), var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow);
   @media (width >= 40rem) {
     padding: calc(var(--spacing) * 6);
+  }
+  @media (width >= 80rem) {
+    padding: calc(var(--spacing) * 8);
   }
   @media (width >= 48rem) {
     margin-inline: calc(var(--spacing) * 6);
@@ -143,10 +150,10 @@
     grid-column-start: 2;
   }
   @media (width >= 80rem) {
-    margin-block: calc(var(--spacing) * 16);
+    margin-inline: calc(var(--spacing) * 0);
   }
   @media (width >= 80rem) {
-    padding: calc(var(--spacing) * 8);
+    margin-block: calc(var(--spacing) * 16);
   }
   @media (width >= 96rem) {
     grid-column: span 8 / span 8;
@@ -1008,19 +1015,16 @@
   border-radius: var(--radius-lg);
   border-style: var(--tw-border-style);
   border-width: 1px;
-  border-color: var(--color-gray-200);
-  background-color: var(--color-white);
+  border-color: var(--color-neutral-quaternary);
+  background-color: var(--color-neutral-primary-medium);
   padding: calc(var(--spacing) * 4);
   --tw-shadow: 0 4px 6px -1px var(--tw-shadow-color, rgb(0 0 0 / 0.1)), 0 2px 4px -2px var(--tw-shadow-color, rgb(0 0 0 / 0.1));
   box-shadow: var(--tw-inset-shadow), var(--tw-inset-ring-shadow), var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow);
-  @media (width >= 64rem) {
+  @media (width >= 40rem) {
+    padding: calc(var(--spacing) * 6);
+  }
+  @media (width >= 80rem) {
     padding: calc(var(--spacing) * 8);
-  }
-  &:where(.dark, .dark *, [data-theme="dark"], [data-theme="dark"] *) {
-    border-color: var(--color-gray-700);
-  }
-  &:where(.dark, .dark *, [data-theme="dark"], [data-theme="dark"] *) {
-    background-color: var(--color-gray-800);
   }
   &:where(.dark, .dark *, [data-theme='dark'], [data-theme='dark'] *) {
     --radio-group-bg: var(--color-gray-700);
@@ -1673,6 +1677,11 @@
   height: calc(var(--spacing) * 6);
   width: calc(var(--spacing) * 6);
 }
+@property --tw-border-style {
+  syntax: "*";
+  inherits: false;
+  initial-value: solid;
+}
 @property --tw-shadow {
   syntax: "*";
   inherits: false;
@@ -1738,11 +1747,6 @@
   inherits: false;
   initial-value: 0 0 #0000;
 }
-@property --tw-border-style {
-  syntax: "*";
-  inherits: false;
-  initial-value: solid;
-}
 @property --tw-font-weight {
   syntax: "*";
   inherits: false;
@@ -1768,6 +1772,7 @@
 
   @supports ((-webkit-hyphens: none) and (not (margin-trim: inline))) or ((-moz-orient: inline) and (not (color:rgb(from red r g b)))) {
     *, ::before, ::after, ::backdrop {
+      --tw-border-style: solid;
       --tw-shadow: 0 0 #0000;
       --tw-shadow-color: initial;
       --tw-shadow-alpha: 100%;
@@ -1782,7 +1787,6 @@
       --tw-ring-offset-width: 0px;
       --tw-ring-offset-color: #fff;
       --tw-ring-offset-shadow: 0 0 #0000;
-      --tw-border-style: solid;
       --tw-font-weight: initial;
       --tw-leading: initial;
       --tw-tracking: initial;

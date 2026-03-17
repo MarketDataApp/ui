@@ -68,8 +68,12 @@
 }
 
 /* ---- Forms ---- */
+@utility card-surface {
+  @apply bg-neutral-primary-medium border border-neutral-quaternary p-4 sm:p-6 xl:p-8 rounded-lg shadow-md;
+}
+
 @utility form-container {
-  @apply bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 p-4 lg:p-8 rounded-lg shadow-md;
+  @apply card-surface;
   &:where(.dark, .dark *, [data-theme='dark'], [data-theme='dark'] *) {
     --radio-group-bg: var(--color-gray-700);
     --form-radio-btn-bg: var(--color-gray-800);
@@ -215,7 +219,7 @@
 }
 
 @utility grid-content-container {
-  @apply col-span-12 p-4 mx-4 mb-4 bg-neutral-primary-medium rounded-lg shadow sm:p-6 xl:p-8 xl:col-start-2 xl:col-span-10 2xl:col-start-3 2xl:col-span-8 md:mx-6 lg:my-8 xl:my-16;
+  @apply card-surface col-span-12 mx-4 mb-4 xl:mx-0 xl:col-start-2 xl:col-span-10 2xl:col-start-3 2xl:col-span-8 md:mx-6 lg:my-8 xl:my-16;
 }
 
 @utility grid-content-position {
