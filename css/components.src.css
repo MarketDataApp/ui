@@ -213,6 +213,35 @@
   @apply text-xs font-medium me-2 px-2.5 py-0.5 rounded-full font-sans bg-red-100 text-red-800 border border-red-400 dark:bg-red-900 dark:text-red-300 capitalize;
 }
 
+/* ---- CTA Banner ---- */
+@utility cta-banner {
+  @apply bg-white dark:bg-gray-900;
+}
+
+@utility cta-banner-inner {
+  @apply py-8 px-4 mx-auto max-w-screen-xl lg:py-16 lg:px-6;
+}
+
+@utility cta-banner-card {
+  @apply p-6 text-white bg-gray-900 rounded-lg dark:bg-gray-800 md:p-12;
+}
+
+@utility cta-banner-content {
+  @apply lg:flex lg:gap-24 gap-16 justify-between items-center;
+}
+
+@utility cta-banner-heading {
+  @apply w-full mb-4 text-3xl tracking-tight font-extrabold sm:text-4xl text-white;
+}
+
+@utility cta-banner-action {
+  @apply w-full mt-6 lg:mt-0;
+}
+
+@utility cta-banner-text {
+  @apply font-light text-gray-400 sm:text-xl mb-4;
+}
+
 /* ---- Grid Layout ---- */
 @utility grid-layout-12 {
   @apply grid grid-cols-12 gap-4;

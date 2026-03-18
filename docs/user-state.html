@@ -772,6 +772,164 @@
         </div>
       </section>
 
+      <!-- CTA Banner Component -->
+      <section id="cta-banner">
+        <h2 class="text-2xl font-bold mb-6 border-b border-gray-200 dark:border-gray-700 pb-2">
+          CTA Banner
+        </h2>
+        <p class="text-gray-700 dark:text-gray-300 mb-4">
+          A call-to-action banner that dynamically swaps content based on user state. Uses
+          <code class="font-mono text-xs">data-user-state</code> to show different headings,
+          subtext, and buttons for logged-out, free/trial, and paid users.
+        </p>
+
+        <!-- Logged out CTA -->
+        <div class="space-y-8">
+          <div>
+            <p class="text-xs text-gray-400 dark:text-gray-500 mb-3">
+              Mocked as <strong>logged out</strong>
+            </p>
+            <div id="cta-logged-out">
+              <section class="cta-banner">
+                <div class="cta-banner-inner">
+                  <div class="cta-banner-card">
+                    <div data-user-state="logged-out" hidden class="cta-banner-content">
+                      <div class="cta-banner-heading">
+                        Winning trades are born from superior data.
+                      </div>
+                      <div class="cta-banner-action">
+                        <p class="cta-banner-text">
+                          Free 30 day demo for new accounts. No credit card required.
+                        </p>
+                        <a href="#" class="btn-blue-to-orange">Sign up for free</a>
+                      </div>
+                    </div>
+                    <div data-user-state="free trial" hidden class="cta-banner-content">
+                      <div class="cta-banner-heading">
+                        Upgrade to unlock the full power of MarketData.
+                      </div>
+                      <div class="cta-banner-action">
+                        <p class="cta-banner-text">
+                          Get real-time data, advanced endpoints, and priority support.
+                        </p>
+                        <a href="#" class="btn-blue-to-orange">View plans</a>
+                      </div>
+                    </div>
+                    <div data-user-state="paid" hidden class="cta-banner-content">
+                      <div class="cta-banner-heading">
+                        You're getting the best market data available.
+                      </div>
+                      <div class="cta-banner-action">
+                        <p class="cta-banner-text">
+                          Explore our docs to get the most out of your subscription.
+                        </p>
+                        <a href="#" class="btn-blue-to-orange">Read the docs</a>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </section>
+            </div>
+          </div>
+
+          <!-- Paid CTA -->
+          <div>
+            <p class="text-xs text-gray-400 dark:text-gray-500 mb-3">
+              Mocked as <strong>paid user</strong>
+            </p>
+            <div id="cta-paid">
+              <section class="cta-banner">
+                <div class="cta-banner-inner">
+                  <div class="cta-banner-card">
+                    <div data-user-state="logged-out" hidden class="cta-banner-content">
+                      <div class="cta-banner-heading">
+                        Winning trades are born from superior data.
+                      </div>
+                      <div class="cta-banner-action">
+                        <p class="cta-banner-text">
+                          Free 30 day demo for new accounts. No credit card required.
+                        </p>
+                        <a href="#" class="btn-blue-to-orange">Sign up for free</a>
+                      </div>
+                    </div>
+                    <div data-user-state="free trial" hidden class="cta-banner-content">
+                      <div class="cta-banner-heading">
+                        Upgrade to unlock the full power of MarketData.
+                      </div>
+                      <div class="cta-banner-action">
+                        <p class="cta-banner-text">
+                          Get real-time data, advanced endpoints, and priority support.
+                        </p>
+                        <a href="#" class="btn-blue-to-orange">View plans</a>
+                      </div>
+                    </div>
+                    <div data-user-state="paid" hidden class="cta-banner-content">
+                      <div class="cta-banner-heading">
+                        You're getting the best market data available.
+                      </div>
+                      <div class="cta-banner-action">
+                        <p class="cta-banner-text">
+                          Explore our docs to get the most out of your subscription.
+                        </p>
+                        <a href="#" class="btn-blue-to-orange">Read the docs</a>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </section>
+            </div>
+          </div>
+
+          <!-- Trial CTA -->
+          <div>
+            <p class="text-xs text-gray-400 dark:text-gray-500 mb-3">
+              Mocked as <strong>free trial user</strong>
+            </p>
+            <div id="cta-trial">
+              <section class="cta-banner">
+                <div class="cta-banner-inner">
+                  <div class="cta-banner-card">
+                    <div data-user-state="logged-out" hidden class="cta-banner-content">
+                      <div class="cta-banner-heading">
+                        Winning trades are born from superior data.
+                      </div>
+                      <div class="cta-banner-action">
+                        <p class="cta-banner-text">
+                          Free 30 day demo for new accounts. No credit card required.
+                        </p>
+                        <a href="#" class="btn-blue-to-orange">Sign up for free</a>
+                      </div>
+                    </div>
+                    <div data-user-state="free trial" hidden class="cta-banner-content">
+                      <div class="cta-banner-heading">
+                        Upgrade to unlock the full power of MarketData.
+                      </div>
+                      <div class="cta-banner-action">
+                        <p class="cta-banner-text">
+                          Get real-time data, advanced endpoints, and priority support.
+                        </p>
+                        <a href="#" class="btn-blue-to-orange">View plans</a>
+                      </div>
+                    </div>
+                    <div data-user-state="paid" hidden class="cta-banner-content">
+                      <div class="cta-banner-heading">
+                        You're getting the best market data available.
+                      </div>
+                      <div class="cta-banner-action">
+                        <p class="cta-banner-text">
+                          Explore our docs to get the most out of your subscription.
+                        </p>
+                        <a href="#" class="btn-blue-to-orange">Read the docs</a>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </section>
+            </div>
+          </div>
+        </div>
+      </section>
+
       <!-- How It Works -->
       <section id="how-it-works">
         <h2 class="text-2xl font-bold mb-6 border-b border-gray-200 dark:border-gray-700 pb-2">
@@ -931,6 +1089,20 @@
       });
       initUserState({
         root: document.getElementById('visibility-trial'),
+        apiUrl: mockTrialUrl,
+      });
+
+      // CTA Banner demos
+      initUserState({
+        root: document.getElementById('cta-logged-out'),
+        apiUrl: mockLoggedOutUrl,
+      });
+      initUserState({
+        root: document.getElementById('cta-paid'),
+        apiUrl: mockPaidUrl,
+      });
+      initUserState({
+        root: document.getElementById('cta-trial'),
         apiUrl: mockTrialUrl,
       });
 
