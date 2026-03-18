@@ -1,5 +1,38 @@
 # Changelog
 
+## 4.0.0
+
+### Breaking Changes
+
+- **`fetchUser()` and `_clearCache()` are no longer exported from `@marketdataapp/ui/user-profile`**. Import them from `@marketdataapp/ui/user` instead.
+- **`fetchUser()` no longer accepts an `onInvalidate` callback**. Use `onUserChange()` from `@marketdataapp/ui/user` to subscribe to user state changes (including logout).
+- **`fetchUser()` now has a 1-minute TTL cache**. Calls within 60 seconds of the last fetch return cached data without triggering a background revalidation. Previously, every call with cached data triggered a background fetch.
+
+### New
+
+- **`@marketdataapp/ui/user` module** — standalone user state management, decoupled from the user-profile UI component. Multiple components can share user state without redundant API calls.
+- **`onUserChange(callback)`** — subscribe to user state changes. Returns an unsubscribe function. Callbacks receive the new user object or `null` on logout.
+- **Request deduplication** — concurrent `fetchUser()` calls share a single in-flight request.
+
+### Migration
+
+```js
+// Before
+import { fetchUser, _clearCache } from '@marketdataapp/ui/user-profile';
+
+// After
+import { fetchUser, _clearCache, onUserChange } from '@marketdataapp/ui/user';
+
+// Before (onInvalidate callback)
+const user = await fetchUser({ onInvalidate: renderLoggedOut });
+
+// After (subscriber pattern)
+const unsub = onUserChange((user) => {
+  if (!user) renderLoggedOut();
+});
+const user = await fetchUser();
+```
+
 ## 3.2.0
 
 ### New

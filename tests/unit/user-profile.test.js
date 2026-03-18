@@ -1,9 +1,5 @@
-import {
-  getGravatarUrl,
-  fetchUser,
-  initUserProfile,
-  _clearCache,
-} from '../../dist/user-profile.js';
+import { getGravatarUrl, initUserProfile } from '../../dist/user-profile.js';
+import { fetchUser, _clearCache } from '../../dist/user.js';
 
 // ---------------------------------------------------------------------------
 // sessionStorage mock (Node.js 22+ has a built-in one that may interfere)
@@ -175,7 +171,7 @@ describe('fetchUser', () => {
     });
   });
 
-  it('returns cached data on second call (stale-while-revalidate)', async () => {
+  it('returns cached data on second call within TTL without revalidation', async () => {
     globalThis.fetch = vi.fn().mockResolvedValue({
       ok: true,
       json: () => Promise.resolve(mockUser),
@@ -184,11 +180,10 @@ describe('fetchUser', () => {
     const first = await fetchUser();
     expect(first).toEqual(mockUser);
 
-    // Second call returns cached immediately
+    // Second call within TTL returns cached — no background revalidation
     const second = await fetchUser();
     expect(second).toEqual(mockUser);
-    // fetch was called for the first request + the background revalidation
-    expect(fetch).toHaveBeenCalledTimes(2);
+    expect(fetch).toHaveBeenCalledTimes(1);
   });
 
   it('falls back to sessionStorage cache when memory cache is cleared', async () => {

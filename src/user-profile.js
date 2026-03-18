@@ -6,6 +6,7 @@
  * Gravatar avatar with optional dropdown menu (logged in).
  */
 
+import { fetchUser, onUserChange } from './user.js';
 import {
   placeholder as placeholderTpl,
   login as loginTpl,
@@ -177,94 +178,6 @@ export function getGravatarUrl(email, options = {}) {
 }
 
 // ---------------------------------------------------------------------------
-// Fetch User with stale-while-revalidate caching
-// ---------------------------------------------------------------------------
-
-const DEFAULT_API_URL = 'https://dashboard.marketdata.app/api/user/';
-const CACHE_KEY = 'marketdata_user';
-
-/** Module-level cache for the current session. */
-let _memoryCache = null;
-
-/**
- * Fetches the current user from the MarketData API.
- * Uses stale-while-revalidate: returns cached data immediately and
- * refreshes in the background.
- *
- * @param {Object} [options]
- * @param {string} [options.apiUrl] - Override the API endpoint
- * @returns {Promise<Object|null>} User object or null on any error
- */
-export async function fetchUser(options = {}) {
-  const apiUrl = options.apiUrl || DEFAULT_API_URL;
-
-  // Try memory cache first, then sessionStorage
-  let cached = _memoryCache;
-  if (!cached) {
-    try {
-      const stored = sessionStorage.getItem(CACHE_KEY);
-      if (stored) {
-        cached = JSON.parse(stored);
-        _memoryCache = cached;
-      }
-    } catch {
-      // sessionStorage unavailable or corrupt — continue without cache
-    }
-  }
-
-  // If we have cached data, return it immediately and revalidate in background
-  if (cached) {
-    fetchAndCache(apiUrl)
-      .then((fresh) => {
-        if (!fresh && options.onInvalidate) options.onInvalidate();
-      })
-      .catch(() => {});
-    return cached;
-  }
-
-  // No cache — must wait for network
-  return fetchAndCache(apiUrl);
-}
-
-async function fetchAndCache(apiUrl, retries = 2, delay = 1000) {
-  try {
-    const res = await fetch(apiUrl, { credentials: 'include' });
-    if (!res.ok) {
-      _memoryCache = null;
-      try {
-        sessionStorage.removeItem(CACHE_KEY);
-      } catch {}
-      return null;
-    }
-    const user = await res.json();
-    _memoryCache = user;
-    try {
-      sessionStorage.setItem(CACHE_KEY, JSON.stringify(user));
-    } catch {
-      // Storage full or unavailable
-    }
-    return user;
-  } catch {
-    // Network error — retry with exponential backoff
-    if (retries > 0) {
-      await new Promise((r) => setTimeout(r, delay));
-      return fetchAndCache(apiUrl, retries - 1, delay * 2);
-    }
-    return null;
-  }
-}
-
-/** Clear all caches. Useful for testing. */
-export function _clearCache() {
-  _memoryCache = null;
-  try {
-    sessionStorage.removeItem(CACHE_KEY);
-  } catch {
-    // ignore
-  }
-}
-
-// ---------------------------------------------------------------------------
 // HTML template helpers
 // ---------------------------------------------------------------------------
 
@@ -417,8 +330,13 @@ export async function initUserProfile(options) {
   } = options;
 
   let dropdownCleanup = null;
+  let unsubscribe = null;
 
   function clearContainer() {
+    if (unsubscribe) {
+      unsubscribe();
+      unsubscribe = null;
+    }
     if (dropdownCleanup) {
       dropdownCleanup();
       dropdownCleanup = null;
@@ -464,10 +382,11 @@ export async function initUserProfile(options) {
   skeletonPill.setAttribute('aria-hidden', 'true');
   container.appendChild(skeletonWrapper);
 
-  const user = await fetchUser({
-    ...(apiUrl ? { apiUrl } : {}),
-    onInvalidate: renderLoggedOut,
+  unsubscribe = onUserChange((updatedUser) => {
+    if (!updatedUser) renderLoggedOut();
   });
+
+  const user = await fetchUser(apiUrl ? { apiUrl } : {});
 
   // Remove skeleton before rendering real state
   clearContainer();
@@ -514,6 +433,10 @@ export async function initUserProfile(options) {
     container.style.minWidth = 'auto';
 
     return () => {
+      if (unsubscribe) {
+        unsubscribe();
+        unsubscribe = null;
+      }
       while (container.firstChild) container.removeChild(container.firstChild);
     };
   }

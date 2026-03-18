@@ -1,0 +1,536 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>User State - @marketdataapp/ui</title>
+    <link rel="stylesheet" href="docs.css" />
+    <script>
+      (function () {
+        var match = document.cookie.match(/(?:^|;\s*)theme=(dark|light)/);
+        var saved = match ? match[1] : null;
+        var prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+        if (saved === 'dark' || (!saved && prefersDark)) {
+          document.documentElement.classList.add('dark');
+          document.documentElement.setAttribute('data-theme', 'dark');
+        }
+      })();
+    </script>
+  </head>
+  <body class="default min-h-screen">
+    <!-- Header -->
+    <header class="border-b border-gray-200 dark:border-gray-700 mb-12">
+      <div class="max-w-5xl mx-auto px-4 py-8 flex items-center justify-between">
+        <div>
+          <h1 class="text-3xl font-bold">User State</h1>
+          <p class="mt-1 text-gray-500 dark:text-gray-400">
+            <a href="index.html" class="hover:text-gray-900 dark:hover:text-white"
+              >&larr; Back to components</a
+            >
+          </p>
+        </div>
+        <div id="theme-toggle"></div>
+      </div>
+    </header>
+
+    <main class="max-w-5xl mx-auto px-4 pb-16 space-y-16">
+      <!-- Overview -->
+      <section id="overview">
+        <h2 class="text-2xl font-bold mb-6 border-b border-gray-200 dark:border-gray-700 pb-2">
+          Overview
+        </h2>
+        <div class="prose dark:prose-invert max-w-none text-gray-700 dark:text-gray-300 space-y-4">
+          <p>
+            The <strong>user</strong> module provides shared user state management for
+            <code class="font-mono text-xs">*.marketdata.app</code>. It decouples user data fetching
+            from any specific UI component so that multiple components on the same page can share a
+            single user state without redundant API calls.
+          </p>
+          <ul class="list-disc pl-6 space-y-2">
+            <li>
+              <strong>Stale-while-revalidate</strong> with a 1-minute TTL &mdash; returns cached
+              data instantly, refreshes in the background only when stale.
+            </li>
+            <li>
+              <strong>Request deduplication</strong> &mdash; concurrent calls share a single
+              in-flight request.
+            </li>
+            <li>
+              <strong>Subscriber pattern</strong> &mdash; components subscribe to state changes
+              (including logout) via <code class="font-mono text-xs">onUserChange()</code>.
+            </li>
+          </ul>
+          <p>
+            Import from
+            <code class="font-mono text-xs">@marketdataapp/ui/user</code>.
+          </p>
+        </div>
+      </section>
+
+      <!-- API Reference -->
+      <section id="api">
+        <h2 class="text-2xl font-bold mb-6 border-b border-gray-200 dark:border-gray-700 pb-2">
+          API Reference
+        </h2>
+        <p class="text-gray-500 dark:text-gray-400 mb-6">
+          Import from <code class="font-mono text-xs">@marketdataapp/ui/user</code>.
+        </p>
+
+        <div class="overflow-x-auto">
+          <table class="w-full text-sm text-left">
+            <thead
+              class="text-xs text-gray-500 dark:text-gray-400 uppercase border-b border-gray-200 dark:border-gray-700"
+            >
+              <tr>
+                <th class="py-3 pr-4">Function</th>
+                <th class="py-3 pr-4">Returns</th>
+                <th class="py-3">Description</th>
+              </tr>
+            </thead>
+            <tbody class="text-gray-700 dark:text-gray-300">
+              <tr class="border-b border-gray-100 dark:border-gray-800">
+                <td class="py-3 pr-4">
+                  <code class="font-mono text-xs">fetchUser(options?)</code>
+                </td>
+                <td class="py-3 pr-4">
+                  <code class="font-mono text-xs">Promise&lt;Object|null&gt;</code>
+                </td>
+                <td class="py-3">
+                  Fetch the current user. Returns cached data within TTL; revalidates in background
+                  when stale. Pass
+                  <code class="font-mono text-xs">{ apiUrl }</code> to override the endpoint.
+                </td>
+              </tr>
+              <tr class="border-b border-gray-100 dark:border-gray-800">
+                <td class="py-3 pr-4">
+                  <code class="font-mono text-xs">onUserChange(callback)</code>
+                </td>
+                <td class="py-3 pr-4">
+                  <code class="font-mono text-xs">() =&gt; void</code>
+                </td>
+                <td class="py-3">
+                  Subscribe to user state changes. Callback receives the new user object or
+                  <code class="font-mono text-xs">null</code> on logout. Returns an unsubscribe
+                  function.
+                </td>
+              </tr>
+              <tr>
+                <td class="py-3 pr-4">
+                  <code class="font-mono text-xs">_clearCache()</code>
+                </td>
+                <td class="py-3 pr-4"><code class="font-mono text-xs">void</code></td>
+                <td class="py-3">Reset all caches and state. For testing only.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- Caching Behavior -->
+      <section id="caching">
+        <h2 class="text-2xl font-bold mb-6 border-b border-gray-200 dark:border-gray-700 pb-2">
+          Caching Behavior
+        </h2>
+        <div class="prose dark:prose-invert max-w-none text-gray-700 dark:text-gray-300 space-y-4">
+          <p>
+            <code class="font-mono text-xs">fetchUser()</code> resolves through three tiers before
+            hitting the network:
+          </p>
+          <ol class="list-decimal pl-6 space-y-1">
+            <li>
+              <strong>Memory cache</strong> &mdash; module-level variable (fastest, current page
+              session)
+            </li>
+            <li>
+              <strong>sessionStorage</strong> &mdash; key
+              <code class="font-mono text-xs">marketdata_user</code> (persists across same-tab
+              navigations)
+            </li>
+            <li>
+              <strong>Network fetch</strong> &mdash;
+              <code class="font-mono text-xs">GET /api/user/</code> with
+              <code class="font-mono text-xs">credentials: 'include'</code>
+            </li>
+          </ol>
+
+          <h3 class="text-lg font-semibold">TTL (1 minute)</h3>
+          <p>
+            After a successful fetch, the result is considered <strong>fresh</strong> for 60
+            seconds. Within the TTL, <code class="font-mono text-xs">fetchUser()</code> returns
+            cached data immediately with zero network activity. After the TTL expires, it returns
+            the stale cache and kicks off a background revalidation.
+          </p>
+
+          <h3 class="text-lg font-semibold">Request Deduplication</h3>
+          <p>
+            If a fetch is already in flight, additional calls return the same promise instead of
+            starting a new request. Three components calling
+            <code class="font-mono text-xs">fetchUser()</code> simultaneously result in a single
+            network request.
+          </p>
+        </div>
+
+        <!-- Flow diagram -->
+        <div class="mt-6 bg-gray-100 dark:bg-gray-800 rounded-lg p-4 overflow-x-auto">
+          <pre
+            class="text-sm font-mono text-gray-800 dark:text-gray-200 whitespace-pre"
+          ><code>fetchUser()
+  |
+  +-- cache hit?
+  |     +-- fresh (< 60s) --> return cached (no network)
+  |     +-- stale (>= 60s) --> return cached + revalidate in background
+  |
+  +-- cache miss --> await network fetch (deduplicated)
+        +-- success --> cache result, notify subscribers if data changed
+        +-- failure --> retry up to 2x with exponential backoff</code></pre>
+        </div>
+      </section>
+
+      <!-- Subscriber Pattern -->
+      <section id="subscribers">
+        <h2 class="text-2xl font-bold mb-6 border-b border-gray-200 dark:border-gray-700 pb-2">
+          Subscriber Pattern
+        </h2>
+        <div class="prose dark:prose-invert max-w-none text-gray-700 dark:text-gray-300 space-y-4">
+          <p>
+            <code class="font-mono text-xs">onUserChange(callback)</code> lets any component react
+            to user state changes without polling or re-fetching.
+          </p>
+
+          <h3 class="text-lg font-semibold">When subscribers are notified</h3>
+          <ul class="list-disc pl-6 space-y-1">
+            <li>
+              A background revalidation returns <strong>different data</strong> than what was cached
+              (user profile updated)
+            </li>
+            <li>
+              A background revalidation returns an error after previously having a cached user
+              (<strong>logout detected</strong> &mdash; callback receives
+              <code class="font-mono text-xs">null</code>)
+            </li>
+          </ul>
+
+          <h3 class="text-lg font-semibold">When subscribers are NOT notified</h3>
+          <ul class="list-disc pl-6 space-y-1">
+            <li>Cache is within TTL (no revalidation happens at all)</li>
+            <li>Background revalidation returns the same data</li>
+          </ul>
+        </div>
+
+        <div class="mt-6 bg-gray-100 dark:bg-gray-800 rounded-lg p-4 overflow-x-auto">
+          <pre
+            class="text-sm font-mono text-gray-800 dark:text-gray-200 whitespace-pre"
+          ><code>import { fetchUser, onUserChange } from '@marketdataapp/ui/user';
+
+// Subscribe to changes
+const unsub = onUserChange((user) => {
+  if (user) {
+    console.log('User updated:', user.name);
+  } else {
+    console.log('User logged out');
+    showLoginButton();
+  }
+});
+
+// Fetch user (subscribers notified if data changes)
+const user = await fetchUser();
+
+// Later: clean up
+unsub();</code></pre>
+        </div>
+      </section>
+
+      <!-- Live State Display -->
+      <section id="live-state">
+        <h2 class="text-2xl font-bold mb-6 border-b border-gray-200 dark:border-gray-700 pb-2">
+          Live State
+        </h2>
+        <p class="text-gray-500 dark:text-gray-400 mb-6">
+          Current cache state on this page. Hit "Force Revalidate" to clear the cache and re-fetch.
+        </p>
+
+        <div class="border border-gray-200 dark:border-gray-700 rounded-lg p-6 space-y-4">
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 text-sm">
+            <div class="space-y-3">
+              <div class="flex justify-between">
+                <span class="text-gray-500 dark:text-gray-400">fetchUser() result</span>
+                <code id="state-user" class="font-mono text-xs truncate max-w-48"></code>
+              </div>
+              <div class="flex justify-between">
+                <span class="text-gray-500 dark:text-gray-400">Last fetch time</span>
+                <code id="state-last-fetch" class="font-mono text-xs"></code>
+              </div>
+              <div class="flex justify-between">
+                <span class="text-gray-500 dark:text-gray-400">Cache age</span>
+                <code id="state-cache-age" class="font-mono text-xs"></code>
+              </div>
+            </div>
+            <div class="space-y-3">
+              <div class="flex justify-between">
+                <span class="text-gray-500 dark:text-gray-400">Cache status</span>
+                <code id="state-cache-status" class="font-mono text-xs font-bold"></code>
+              </div>
+              <div class="flex justify-between">
+                <span class="text-gray-500 dark:text-gray-400">Subscriber notifications</span>
+                <code id="state-notify-count" class="font-mono text-xs">0</code>
+              </div>
+            </div>
+          </div>
+
+          <div class="pt-4 border-t border-gray-200 dark:border-gray-700">
+            <button
+              id="force-revalidate"
+              class="px-4 py-2 text-sm font-medium rounded-lg bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors"
+            >
+              Force Revalidate
+            </button>
+            <span
+              id="revalidate-feedback"
+              class="ml-3 text-xs text-gray-400 dark:text-gray-500"
+            ></span>
+          </div>
+        </div>
+      </section>
+
+      <!-- User Profile Component -->
+      <section id="user-profile">
+        <h2 class="text-2xl font-bold mb-6 border-b border-gray-200 dark:border-gray-700 pb-2">
+          User Profile Component
+        </h2>
+        <div class="prose dark:prose-invert max-w-none text-gray-700 dark:text-gray-300 space-y-4">
+          <p>
+            The <strong>user-profile</strong> component is the first consumer of the user state
+            module. It renders a login button (logged out) or Gravatar avatar with optional dropdown
+            menu (logged in). Internally it calls
+            <code class="font-mono text-xs">fetchUser()</code> and subscribes via
+            <code class="font-mono text-xs">onUserChange()</code> for logout detection.
+          </p>
+          <p>
+            Import from
+            <code class="font-mono text-xs">@marketdataapp/ui/user-profile</code>.
+          </p>
+        </div>
+
+        <div class="mt-6 bg-gray-100 dark:bg-gray-800 rounded-lg p-4 overflow-x-auto">
+          <pre
+            class="text-sm font-mono text-gray-800 dark:text-gray-200 whitespace-pre"
+          ><code>import { initUserProfile } from '@marketdataapp/ui/user-profile';
+
+const cleanup = await initUserProfile({
+  container: document.getElementById('my-avatar'),
+  dropdown: true,          // enable dropdown menu
+  // loginUrl, logoutUrl, dashboardUrl, etc. — all customizable
+});
+
+// cleanup() removes DOM and unsubscribes from user state</code></pre>
+        </div>
+
+        <div class="mt-12 space-y-12">
+          <!-- Live components -->
+          <div>
+            <h3 class="text-lg font-semibold mb-3">Live (real API)</h3>
+            <p class="text-xs text-gray-400 dark:text-gray-500 mb-3">
+              These hit the real API. Result depends on your login state.
+            </p>
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-8">
+              <div class="space-y-3">
+                <code class="text-sm font-mono text-gray-500 dark:text-gray-400 block"
+                  >initUserProfile({ dropdown: false })</code
+                >
+                <div
+                  class="border border-gray-200 dark:border-gray-700 rounded-lg p-6 flex items-center justify-center min-h-[80px]"
+                  id="user-profile-live-no-dropdown"
+                ></div>
+              </div>
+              <div class="space-y-3">
+                <code class="text-sm font-mono text-gray-500 dark:text-gray-400 block"
+                  >initUserProfile({ dropdown: true })</code
+                >
+                <div
+                  class="border border-gray-200 dark:border-gray-700 rounded-lg p-6 flex items-center justify-center min-h-[80px] relative"
+                  id="user-profile-live-dropdown"
+                ></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Logged-out states -->
+          <div>
+            <h3 class="text-lg font-semibold mb-3">Logged Out</h3>
+            <p class="text-xs text-gray-400 dark:text-gray-500 mb-3">
+              Mocked with a <code class="font-mono">data:</code> URI that returns null.
+            </p>
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-8">
+              <div class="space-y-3">
+                <code class="text-sm font-mono text-gray-500 dark:text-gray-400 block"
+                  >dropdown: false</code
+                >
+                <div
+                  class="border border-gray-200 dark:border-gray-700 rounded-lg p-6 flex items-center justify-center min-h-[80px]"
+                  id="user-profile-logout-no-dropdown"
+                ></div>
+              </div>
+              <div class="space-y-3">
+                <code class="text-sm font-mono text-gray-500 dark:text-gray-400 block"
+                  >dropdown: true (guest dropdown)</code
+                >
+                <div
+                  class="border border-gray-200 dark:border-gray-700 rounded-lg p-6 flex items-center justify-center min-h-[80px] relative"
+                  id="user-profile-logout-dropdown"
+                ></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Logged-in states -->
+          <div>
+            <h3 class="text-lg font-semibold mb-3">Logged In</h3>
+            <p class="text-xs text-gray-400 dark:text-gray-500 mb-3">
+              Mocked with a <code class="font-mono">data:</code> URI returning a user object.
+            </p>
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-8">
+              <div class="space-y-3">
+                <code class="text-sm font-mono text-gray-500 dark:text-gray-400 block"
+                  >dropdown: false</code
+                >
+                <div
+                  class="border border-gray-200 dark:border-gray-700 rounded-lg p-6 flex items-center justify-center min-h-[80px]"
+                  id="user-profile-login-no-dropdown"
+                ></div>
+              </div>
+              <div class="space-y-3">
+                <code class="text-sm font-mono text-gray-500 dark:text-gray-400 block"
+                  >dropdown: true</code
+                >
+                <div
+                  class="border border-gray-200 dark:border-gray-700 rounded-lg p-6 flex items-center justify-center min-h-[80px] relative"
+                  id="user-profile-login-dropdown"
+                ></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer class="border-t border-gray-200 dark:border-gray-700 mt-12">
+      <div
+        class="max-w-5xl mx-auto px-4 py-6 text-sm text-gray-500 dark:text-gray-400 flex justify-between"
+      >
+        <span>@marketdataapp/ui</span>
+        <a
+          href="https://github.com/MarketDataApp/ui"
+          class="hover:text-gray-900 dark:hover:text-white"
+          >GitHub</a
+        >
+      </div>
+    </footer>
+
+    <script type="module">
+      import { initThemeToggle } from '../dist/theme-toggle.js';
+      initThemeToggle({ container: document.getElementById('theme-toggle') });
+    </script>
+
+    <script type="module">
+      import { fetchUser, onUserChange, _clearCache, _getLastFetchTime } from '../dist/user.js';
+      import { initUserProfile } from '../dist/user-profile.js';
+
+      // -----------------------------------------------------------------------
+      // User Profile demos
+      // -----------------------------------------------------------------------
+      const mockLoggedOutUrl = 'data:application/json,null';
+      const mockUser = { login: 'jdoe', email: 'jitewaboh@lagify.com', name: 'Jane Doe' };
+      const mockLoggedInUrl =
+        'data:application/json,' + encodeURIComponent(JSON.stringify(mockUser));
+
+      // Live (real API)
+      initUserProfile({ container: document.getElementById('user-profile-live-no-dropdown') });
+      initUserProfile({
+        container: document.getElementById('user-profile-live-dropdown'),
+        dropdown: true,
+      });
+
+      // Logged out (mocked)
+      initUserProfile({
+        container: document.getElementById('user-profile-logout-no-dropdown'),
+        apiUrl: mockLoggedOutUrl,
+      });
+      initUserProfile({
+        container: document.getElementById('user-profile-logout-dropdown'),
+        dropdown: true,
+        apiUrl: mockLoggedOutUrl,
+      });
+
+      // Logged in (mocked)
+      initUserProfile({
+        container: document.getElementById('user-profile-login-no-dropdown'),
+        apiUrl: mockLoggedInUrl,
+      });
+      initUserProfile({
+        container: document.getElementById('user-profile-login-dropdown'),
+        dropdown: true,
+        apiUrl: mockLoggedInUrl,
+      });
+
+      // -----------------------------------------------------------------------
+      // Live State display
+      // -----------------------------------------------------------------------
+      const elUser = document.getElementById('state-user');
+      const elLastFetch = document.getElementById('state-last-fetch');
+      const elCacheAge = document.getElementById('state-cache-age');
+      const elCacheStatus = document.getElementById('state-cache-status');
+      const elNotifyCount = document.getElementById('state-notify-count');
+      const elFeedback = document.getElementById('revalidate-feedback');
+
+      let notifyCount = 0;
+
+      // Track subscriber notifications
+      onUserChange(() => {
+        notifyCount++;
+        elNotifyCount.textContent = String(notifyCount);
+        updateStateDisplay();
+      });
+
+      async function updateStateDisplay() {
+        const lastFetch = _getLastFetchTime();
+        const now = Date.now();
+        const age = lastFetch ? Math.round((now - lastFetch) / 1000) : null;
+        const fresh = age !== null && age < 60;
+
+        elLastFetch.textContent = lastFetch ? new Date(lastFetch).toLocaleTimeString() : 'never';
+        elCacheAge.textContent = age !== null ? age + 's' : 'n/a';
+        elCacheStatus.textContent = age === null ? 'empty' : fresh ? 'fresh' : 'stale';
+
+        // Fetch to display current value (uses cache if fresh)
+        const user = await fetchUser();
+        elUser.textContent = user ? user.login || user.email : 'null';
+      }
+
+      // Initial display
+      updateStateDisplay();
+
+      // Refresh age display every second
+      setInterval(() => {
+        const lastFetch = _getLastFetchTime();
+        if (lastFetch) {
+          const age = Math.round((Date.now() - lastFetch) / 1000);
+          elCacheAge.textContent = age + 's';
+          elCacheStatus.textContent = age < 60 ? 'fresh' : 'stale';
+        }
+      }, 1000);
+
+      // Force Revalidate button
+      document.getElementById('force-revalidate').addEventListener('click', async () => {
+        elFeedback.textContent = 'Clearing cache...';
+        _clearCache();
+        elFeedback.textContent = 'Fetching...';
+        await fetchUser();
+        elFeedback.textContent = 'Done!';
+        updateStateDisplay();
+        setTimeout(() => {
+          elFeedback.textContent = '';
+        }, 2000);
+      });
+    </script>
+  </body>
+</html>

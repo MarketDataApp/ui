@@ -668,6 +668,9 @@
   .mb-12 {
     margin-bottom: calc(var(--spacing) * 12);
   }
+  .ml-3 {
+    margin-left: calc(var(--spacing) * 3);
+  }
   .form-input-disabled {
     display: block;
     width: 100%;
@@ -1355,6 +1358,9 @@
   .max-w-5xl {
     max-width: var(--container-5xl);
   }
+  .max-w-48 {
+    max-width: calc(var(--spacing) * 48);
+  }
   .max-w-lg {
     max-width: var(--container-lg);
   }
@@ -1384,6 +1390,9 @@
   }
   .resize-x {
     resize: horizontal;
+  }
+  .list-decimal {
+    list-style-type: decimal;
   }
   .list-disc {
     list-style-type: disc;
@@ -1426,6 +1435,13 @@
   }
   .gap-8 {
     gap: calc(var(--spacing) * 8);
+  }
+  .space-y-1 {
+    :where(& > :not(:last-child)) {
+      --tw-space-y-reverse: 0;
+      margin-block-start: calc(calc(var(--spacing) * 1) * var(--tw-space-y-reverse));
+      margin-block-end: calc(calc(var(--spacing) * 1) * calc(1 - var(--tw-space-y-reverse)));
+    }
   }
   .space-y-2 {
     :where(& > :not(:last-child)) {
@@ -1511,6 +1527,11 @@
       background-color: var(--radio-group-bg, var(--color-gray-800));
       --radio-btn-bg: var(--form-radio-btn-bg, var(--color-gray-900));
     }
+  }
+  .truncate {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
   }
   .overflow-hidden {
     overflow: hidden;
@@ -1797,6 +1818,9 @@
   .bg-gray-100 {
     background-color: var(--color-gray-100);
   }
+  .bg-gray-200 {
+    background-color: var(--color-gray-200);
+  }
   .bg-gray-200\/50 {
     background-color: color-mix(in srgb, oklch(92.8% 0.006 264.531) 50%, transparent);
     @supports (color: color-mix(in lab, red, red)) {
@@ -1907,6 +1931,9 @@
   }
   .py-8 {
     padding-block: calc(var(--spacing) * 8);
+  }
+  .pt-4 {
+    padding-top: calc(var(--spacing) * 4);
   }
   .pr-4 {
     padding-right: calc(var(--spacing) * 4);
@@ -2101,10 +2128,22 @@
     transition-timing-function: var(--tw-ease, var(--default-transition-timing-function));
     transition-duration: var(--tw-duration, var(--default-transition-duration));
   }
+  .transition-colors {
+    transition-property: color, background-color, border-color, outline-color, text-decoration-color, fill, stroke, --tw-gradient-from, --tw-gradient-via, --tw-gradient-to;
+    transition-timing-function: var(--tw-ease, var(--default-transition-timing-function));
+    transition-duration: var(--tw-duration, var(--default-transition-duration));
+  }
   .hover\:bg-gray-100 {
     &:hover {
       @media (hover: hover) {
         background-color: var(--color-gray-100);
+      }
+    }
+  }
+  .hover\:bg-gray-300 {
+    &:hover {
+      @media (hover: hover) {
+        background-color: var(--color-gray-300);
       }
     }
   }
@@ -2302,6 +2341,11 @@
       background-color: var(--color-gray-600);
     }
   }
+  .dark\:bg-gray-700 {
+    &:where(.dark, .dark *, [data-theme="dark"], [data-theme="dark"] *) {
+      background-color: var(--color-gray-700);
+    }
+  }
   .dark\:bg-gray-700\/30 {
     &:where(.dark, .dark *, [data-theme="dark"], [data-theme="dark"] *) {
       background-color: color-mix(in srgb, oklch(37.3% 0.034 259.733) 30%, transparent);
@@ -2382,6 +2426,15 @@
     &:where(.dark, .dark *, [data-theme="dark"], [data-theme="dark"] *) {
       --tw-shadow: 0 0 0 1px var(--tw-shadow-color, rgba(255, 255, 255, 0.4)) inset;
       box-shadow: var(--tw-inset-shadow), var(--tw-inset-ring-shadow), var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow);
+    }
+  }
+  .dark\:hover\:bg-gray-600 {
+    &:where(.dark, .dark *, [data-theme="dark"], [data-theme="dark"] *) {
+      &:hover {
+        @media (hover: hover) {
+          background-color: var(--color-gray-600);
+        }
+      }
     }
   }
   .dark\:hover\:bg-gray-700 {

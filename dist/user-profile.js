@@ -8,6 +8,7 @@
  * Gravatar avatar with optional dropdown menu (logged in).
  */
 
+import { fetchUser, onUserChange } from './user.js';
 const placeholderTpl = "<div class=\"user-profile-avatar user-profile-avatar--placeholder\"><svg xmlns=\"http://www.w3.org/2000/svg\" fill=\"currentColor\" viewBox=\"0 0 20 20\"><path fill-rule=\"evenodd\" d=\"M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z\" clip-rule=\"evenodd\"/></svg></div>";
 const loginTpl = "<div class=\"user-profile-wrapper\">\n  <a href=\"{{loginUrl}}\" class=\"user-profile-login-pill\">\n    <svg xmlns=\"http://www.w3.org/2000/svg\" fill=\"currentColor\" viewBox=\"0 0 20 20\"><path fill-rule=\"evenodd\" d=\"M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z\" clip-rule=\"evenodd\"/></svg>\n    <span>{{loginText}}</span>\n  </a>\n</div>";
 const loginDropdownTpl = "<div class=\"user-profile-wrapper\">\n  <button class=\"user-profile-login-pill\" aria-expanded=\"false\">\n    <svg xmlns=\"http://www.w3.org/2000/svg\" fill=\"currentColor\" viewBox=\"0 0 20 20\"><path fill-rule=\"evenodd\" d=\"M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z\" clip-rule=\"evenodd\"/></svg>\n    <span>Log in</span>\n    <svg xmlns=\"http://www.w3.org/2000/svg\" fill=\"none\" viewBox=\"0 0 24 24\" stroke=\"currentColor\" stroke-width=\"2\"><path stroke-linecap=\"round\" stroke-linejoin=\"round\" d=\"m19 9-7 7-7-7\"/></svg>\n  </button>\n  <div class=\"user-profile-dropdown hidden\">\n    <ul class=\"user-profile-dropdown-menu\">\n      <li class=\"user-profile-dropdown-divider-above\">\n        <a href=\"{{loginUrl}}\" class=\"user-profile-dropdown-link\">Log in</a>\n      </li>\n      <li class=\"user-profile-dropdown-divider-below\">\n        <a href=\"{{signupUrl}}\" class=\"user-profile-dropdown-link\"\n          >{{signupText}}<br /><span class=\"user-profile-dropdown-subtext\"\n            >No card required</span\n          ></a\n        >\n      </li>\n    </ul>\n  </div>\n</div>";
@@ -177,94 +178,6 @@ export function getGravatarUrl(email, options = {}) {
 }
 
 // ---------------------------------------------------------------------------
-// Fetch User with stale-while-revalidate caching
-// ---------------------------------------------------------------------------
-
-const DEFAULT_API_URL = 'https://dashboard.marketdata.app/api/user/';
-const CACHE_KEY = 'marketdata_user';
-
-/** Module-level cache for the current session. */
-let _memoryCache = null;
-
-/**
- * Fetches the current user from the MarketData API.
- * Uses stale-while-revalidate: returns cached data immediately and
- * refreshes in the background.
- *
- * @param {Object} [options]
- * @param {string} [options.apiUrl] - Override the API endpoint
- * @returns {Promise<Object|null>} User object or null on any error
- */
-export async function fetchUser(options = {}) {
-  const apiUrl = options.apiUrl || DEFAULT_API_URL;
-
-  // Try memory cache first, then sessionStorage
-  let cached = _memoryCache;
-  if (!cached) {
-    try {
-      const stored = sessionStorage.getItem(CACHE_KEY);
-      if (stored) {
-        cached = JSON.parse(stored);
-        _memoryCache = cached;
-      }
-    } catch {
-      // sessionStorage unavailable or corrupt — continue without cache
-    }
-  }
-
-  // If we have cached data, return it immediately and revalidate in background
-  if (cached) {
-    fetchAndCache(apiUrl)
-      .then((fresh) => {
-        if (!fresh && options.onInvalidate) options.onInvalidate();
-      })
-      .catch(() => {});
-    return cached;
-  }
-
-  // No cache — must wait for network
-  return fetchAndCache(apiUrl);
-}
-
-async function fetchAndCache(apiUrl, retries = 2, delay = 1000) {
-  try {
-    const res = await fetch(apiUrl, { credentials: 'include' });
-    if (!res.ok) {
-      _memoryCache = null;
-      try {
-        sessionStorage.removeItem(CACHE_KEY);
-      } catch {}
-      return null;
-    }
-    const user = await res.json();
-    _memoryCache = user;
-    try {
-      sessionStorage.setItem(CACHE_KEY, JSON.stringify(user));
-    } catch {
-      // Storage full or unavailable
-    }
-    return user;
-  } catch {
-    // Network error — retry with exponential backoff
-    if (retries > 0) {
-      await new Promise((r) => setTimeout(r, delay));
-      return fetchAndCache(apiUrl, retries - 1, delay * 2);
-    }
-    return null;
-  }
-}
-
-/** Clear all caches. Useful for testing. */
-export function _clearCache() {
-  _memoryCache = null;
-  try {
-    sessionStorage.removeItem(CACHE_KEY);
-  } catch {
-    // ignore
-  }
-}
-
-// ---------------------------------------------------------------------------
 // HTML template helpers
 // ---------------------------------------------------------------------------
 
@@ -417,8 +330,13 @@ export async function initUserProfile(options) {
   } = options;
 
   let dropdownCleanup = null;
+  let unsubscribe = null;
 
   function clearContainer() {
+    if (unsubscribe) {
+      unsubscribe();
+      unsubscribe = null;
+    }
     if (dropdownCleanup) {
       dropdownCleanup();
       dropdownCleanup = null;
@@ -464,10 +382,11 @@ export async function initUserProfile(options) {
   skeletonPill.setAttribute('aria-hidden', 'true');
   container.appendChild(skeletonWrapper);
 
-  const user = await fetchUser({
-    ...(apiUrl ? { apiUrl } : {}),
-    onInvalidate: renderLoggedOut,
+  unsubscribe = onUserChange((updatedUser) => {
+    if (!updatedUser) renderLoggedOut();
   });
+
+  const user = await fetchUser(apiUrl ? { apiUrl } : {});
 
   // Remove skeleton before rendering real state
   clearContainer();
@@ -514,6 +433,10 @@ export async function initUserProfile(options) {
     container.style.minWidth = 'auto';
 
     return () => {
+      if (unsubscribe) {
+        unsubscribe();
+        unsubscribe = null;
+      }
       while (container.firstChild) container.removeChild(container.firstChild);
     };
   }

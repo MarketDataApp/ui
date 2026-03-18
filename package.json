@@ -16,6 +16,7 @@
     "./css/components.src": "./css/components.src.css",
     "./css/theme": "./css/theme.css",
     "./navbar-overflow": "./dist/navbar-overflow.js",
+    "./user": "./dist/user.js",
     "./user-profile": "./dist/user-profile.js",
     "./theme-toggle": "./dist/theme-toggle.js",
     "./reviews": "./dist/reviews.js",

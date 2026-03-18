@@ -28,6 +28,7 @@ const HEADER = '// Auto-generated from src/ by scripts/build-js.js — do not ed
 const FILES_WITH_LOCAL_IMPORTS = ['user-profile.js', 'theme-toggle.js', 'reviews.js'];
 const FILES_WITHOUT_LOCAL_IMPORTS = [
   'theme.js',
+  'user.js',
   'navbar-overflow.js',
   'reviews.platform.js',
   'dark-images.js',
