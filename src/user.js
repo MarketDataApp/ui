@@ -73,6 +73,17 @@ function _notifySubscribers(user) {
 export async function fetchUser(options = {}) {
   const apiUrl = options.apiUrl || DEFAULT_API_URL;
 
+  // Custom apiUrl bypasses cache/dedup entirely (used for demos and testing)
+  if (options.apiUrl) {
+    try {
+      const res = await fetch(apiUrl, { credentials: 'include' });
+      if (!res.ok) return null;
+      return await res.json();
+    } catch {
+      return null;
+    }
+  }
+
   // Try memory cache first, then sessionStorage
   let cached = _memoryCache;
   if (!cached) {
