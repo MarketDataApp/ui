@@ -32,22 +32,11 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      - name: Build docs CSS
-        run: npx tailwindcss -i docs/docs.input.css -o docs/docs.css
+      - name: Build
+        run: npm run build
 
       - name: Assemble site
-        run: |
-          mkdir -p _site/docs _site/dist
-          CACHE_BUST="${GITHUB_SHA:0:7}"
-          for f in docs/*.html; do
-            sed "s|\.css\"|.css?v=$CACHE_BUST\"|; s|\.js';|.js?v=$CACHE_BUST';|" "$f" > "_site/docs/$(basename "$f")"
-          done
-          cp -n docs/*.avif _site/docs/ 2>/dev/null || true
-          cp docs/docs.css "_site/docs/docs.css"
-          for f in dist/user.js dist/user-profile.js dist/theme-toggle.js dist/theme.js dist/navbar-overflow.js dist/dark-images.js dist/reviews.js dist/reviews.platform.js; do
-            sed "s|\.js';|.js?v=$CACHE_BUST';|" "$f" > "_site/$f"
-          done
-          echo '<meta http-equiv="refresh" content="0;url=docs/">' > _site/index.html
+        run: npm run build:site
 
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v3
