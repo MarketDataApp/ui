@@ -44,7 +44,7 @@ jobs:
           done
           cp -n docs/*.avif _site/docs/ 2>/dev/null || true
           cp docs/docs.css "_site/docs/docs.css"
-          cp dist/user-profile.js dist/theme-toggle.js dist/theme.js dist/navbar-overflow.js dist/dark-images.js dist/reviews.js dist/reviews.platform.js _site/dist/
+          cp dist/user.js dist/user-profile.js dist/theme-toggle.js dist/theme.js dist/navbar-overflow.js dist/dark-images.js dist/reviews.js dist/reviews.platform.js _site/dist/
           echo '<meta http-equiv="refresh" content="0;url=docs/">' > _site/index.html
 
       - name: Upload Pages artifact
