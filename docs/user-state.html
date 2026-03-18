@@ -432,6 +432,10 @@ const cleanup = await initUserProfile({
     </script>
 
     <script type="module">
+      // Double quotes prevent the deploy workflow's cache-bust sed from adding
+      // a ?v=hash suffix. This ensures the browser resolves the same module URL
+      // as user-profile.js's internal `import ... from './user.js'`, so they
+      // share a single module instance (and therefore shared cache/state).
       import { fetchUser, onUserChange, _clearCache, _getLastFetchTime } from '../dist/user.js';
       import { initUserProfile } from '../dist/user-profile.js';
 
