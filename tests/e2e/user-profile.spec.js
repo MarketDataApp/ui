@@ -8,7 +8,7 @@
  */
 import { test, expect } from '@playwright/test';
 
-const BASE_URL = 'https://dev.marketdata.app/ui/docs/';
+const BASE_URL = 'https://dev.marketdata.app/ui/docs/user-state.html';
 
 test.describe('User profile component', () => {
   test.beforeEach(async ({ page }) => {
