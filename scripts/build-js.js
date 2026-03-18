@@ -29,6 +29,7 @@ const FILES_WITH_LOCAL_IMPORTS = ['user-profile.js', 'theme-toggle.js', 'reviews
 const FILES_WITHOUT_LOCAL_IMPORTS = [
   'theme.js',
   'user.js',
+  'user-state.js',
   'navbar-overflow.js',
   'reviews.platform.js',
   'dark-images.js',

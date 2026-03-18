@@ -18,6 +18,7 @@
     "./navbar-overflow": "./dist/navbar-overflow.js",
     "./user": "./dist/user.js",
     "./user-profile": "./dist/user-profile.js",
+    "./user-state": "./dist/user-state.js",
     "./theme-toggle": "./dist/theme-toggle.js",
     "./reviews": "./dist/reviews.js",
     "./dark-images": "./dist/dark-images.js"

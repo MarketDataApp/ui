@@ -460,6 +460,236 @@
         </div>
       </section>
 
+      <!-- User State Visibility -->
+      <section id="visibility">
+        <h2 class="text-2xl font-bold mb-6 border-b border-gray-200 dark:border-gray-700 pb-2">
+          User State Visibility
+        </h2>
+        <p class="text-gray-700 dark:text-gray-300 mb-4">
+          Declarative show/hide for any element based on user state. Mark elements with
+          <code class="font-mono text-xs">data-user-state</code> and the
+          <code class="font-mono text-xs">hidden</code> attribute. After
+          <code class="font-mono text-xs">initUserState()</code> resolves, matching elements are
+          revealed.
+        </p>
+
+        <!-- Usage example -->
+        <h3 class="text-lg font-semibold mb-3">Usage</h3>
+        <div class="bg-gray-100 dark:bg-gray-800 rounded-lg p-4 overflow-x-auto mb-6">
+          <pre
+            class="text-sm font-mono text-gray-800 dark:text-gray-200 whitespace-pre"
+          ><code>&lt;div data-user-state="logged-in" hidden&gt;Welcome back!&lt;/div&gt;
+&lt;div data-user-state="logged-out" hidden&gt;Please log in&lt;/div&gt;
+&lt;div data-user-state="paid" hidden&gt;Premium content&lt;/div&gt;
+&lt;div data-user-state="free" hidden&gt;Upgrade now&lt;/div&gt;
+&lt;div data-user-state="trial" hidden&gt;Trial ends soon&lt;/div&gt;
+&lt;div data-user-state="product:quant" hidden&gt;Quant features&lt;/div&gt;
+&lt;div data-user-state="paid trial" hidden&gt;All non-free users (OR)&lt;/div&gt;
+
+&lt;script type="module"&gt;
+  import { initUserState } from '@marketdataapp/ui/user-state';
+  initUserState();
+&lt;/script&gt;</code></pre>
+        </div>
+
+        <!-- Conditions reference -->
+        <h3 class="text-lg font-semibold mb-3">Conditions</h3>
+        <div class="overflow-x-auto mb-8">
+          <table class="w-full text-sm text-left">
+            <thead
+              class="text-xs text-gray-500 dark:text-gray-400 uppercase border-b border-gray-200 dark:border-gray-700"
+            >
+              <tr>
+                <th class="py-3 pr-4">Condition</th>
+                <th class="py-3">Matches when</th>
+              </tr>
+            </thead>
+            <tbody class="text-gray-700 dark:text-gray-300">
+              <tr class="border-b border-gray-100 dark:border-gray-800">
+                <td class="py-3 pr-4"><code class="font-mono text-xs">logged-in</code></td>
+                <td class="py-3">User is authenticated</td>
+              </tr>
+              <tr class="border-b border-gray-100 dark:border-gray-800">
+                <td class="py-3 pr-4"><code class="font-mono text-xs">logged-out</code></td>
+                <td class="py-3">User is not authenticated</td>
+              </tr>
+              <tr class="border-b border-gray-100 dark:border-gray-800">
+                <td class="py-3 pr-4"><code class="font-mono text-xs">paid</code></td>
+                <td class="py-3"><code class="font-mono text-xs">user.paid === true</code></td>
+              </tr>
+              <tr class="border-b border-gray-100 dark:border-gray-800">
+                <td class="py-3 pr-4"><code class="font-mono text-xs">free</code></td>
+                <td class="py-3">
+                  Logged in and <code class="font-mono text-xs">user.paid === false</code>
+                </td>
+              </tr>
+              <tr class="border-b border-gray-100 dark:border-gray-800">
+                <td class="py-3 pr-4"><code class="font-mono text-xs">trial</code></td>
+                <td class="py-3"><code class="font-mono text-xs">user.trial === true</code></td>
+              </tr>
+              <tr>
+                <td class="py-3 pr-4">
+                  <code class="font-mono text-xs">product:&lt;slug&gt;</code>
+                </td>
+                <td class="py-3">User has the named product (case-insensitive)</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <p class="text-xs text-gray-400 dark:text-gray-500 mb-8">
+          Space-separated conditions use OR logic &mdash; the element is shown if
+          <strong>any</strong> condition matches.
+        </p>
+
+        <!-- Live demos -->
+        <h3 class="text-lg font-semibold mb-3">Live Demos</h3>
+        <div class="space-y-8">
+          <!-- Logged-out mock -->
+          <div>
+            <p class="text-xs text-gray-400 dark:text-gray-500 mb-3">
+              Mocked as <strong>logged out</strong> (API returns null)
+            </p>
+            <div
+              id="visibility-logged-out"
+              class="border border-gray-200 dark:border-gray-700 rounded-lg p-6 space-y-2"
+            >
+              <div data-user-state="logged-in" hidden>
+                <span
+                  class="inline-block px-3 py-1 rounded-full text-xs font-medium bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300"
+                  >logged-in: Welcome back!</span
+                >
+              </div>
+              <div data-user-state="logged-out" hidden>
+                <span
+                  class="inline-block px-3 py-1 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-300"
+                  >logged-out: Please log in</span
+                >
+              </div>
+              <div data-user-state="paid" hidden>
+                <span
+                  class="inline-block px-3 py-1 rounded-full text-xs font-medium bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-300"
+                  >paid: Premium content</span
+                >
+              </div>
+              <div data-user-state="free" hidden>
+                <span
+                  class="inline-block px-3 py-1 rounded-full text-xs font-medium bg-orange-100 text-orange-800 dark:bg-orange-900 dark:text-orange-300"
+                  >free: Upgrade now</span
+                >
+              </div>
+              <div data-user-state="trial" hidden>
+                <span
+                  class="inline-block px-3 py-1 rounded-full text-xs font-medium bg-purple-100 text-purple-800 dark:bg-purple-900 dark:text-purple-300"
+                  >trial: Trial ends soon</span
+                >
+              </div>
+              <div data-user-state="product:quant" hidden>
+                <span
+                  class="inline-block px-3 py-1 rounded-full text-xs font-medium bg-indigo-100 text-indigo-800 dark:bg-indigo-900 dark:text-indigo-300"
+                  >product:quant</span
+                >
+              </div>
+            </div>
+          </div>
+
+          <!-- Paid user mock -->
+          <div>
+            <p class="text-xs text-gray-400 dark:text-gray-500 mb-3">
+              Mocked as <strong>paid user</strong> with product "quant"
+            </p>
+            <div
+              id="visibility-paid"
+              class="border border-gray-200 dark:border-gray-700 rounded-lg p-6 space-y-2"
+            >
+              <div data-user-state="logged-in" hidden>
+                <span
+                  class="inline-block px-3 py-1 rounded-full text-xs font-medium bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300"
+                  >logged-in: Welcome back!</span
+                >
+              </div>
+              <div data-user-state="logged-out" hidden>
+                <span
+                  class="inline-block px-3 py-1 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-300"
+                  >logged-out: Please log in</span
+                >
+              </div>
+              <div data-user-state="paid" hidden>
+                <span
+                  class="inline-block px-3 py-1 rounded-full text-xs font-medium bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-300"
+                  >paid: Premium content</span
+                >
+              </div>
+              <div data-user-state="free" hidden>
+                <span
+                  class="inline-block px-3 py-1 rounded-full text-xs font-medium bg-orange-100 text-orange-800 dark:bg-orange-900 dark:text-orange-300"
+                  >free: Upgrade now</span
+                >
+              </div>
+              <div data-user-state="trial" hidden>
+                <span
+                  class="inline-block px-3 py-1 rounded-full text-xs font-medium bg-purple-100 text-purple-800 dark:bg-purple-900 dark:text-purple-300"
+                  >trial: Trial ends soon</span
+                >
+              </div>
+              <div data-user-state="product:quant" hidden>
+                <span
+                  class="inline-block px-3 py-1 rounded-full text-xs font-medium bg-indigo-100 text-indigo-800 dark:bg-indigo-900 dark:text-indigo-300"
+                  >product:quant</span
+                >
+              </div>
+            </div>
+          </div>
+
+          <!-- Free trial user mock -->
+          <div>
+            <p class="text-xs text-gray-400 dark:text-gray-500 mb-3">
+              Mocked as <strong>free trial user</strong> with product "starter-trial"
+            </p>
+            <div
+              id="visibility-trial"
+              class="border border-gray-200 dark:border-gray-700 rounded-lg p-6 space-y-2"
+            >
+              <div data-user-state="logged-in" hidden>
+                <span
+                  class="inline-block px-3 py-1 rounded-full text-xs font-medium bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300"
+                  >logged-in: Welcome back!</span
+                >
+              </div>
+              <div data-user-state="logged-out" hidden>
+                <span
+                  class="inline-block px-3 py-1 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-300"
+                  >logged-out: Please log in</span
+                >
+              </div>
+              <div data-user-state="paid" hidden>
+                <span
+                  class="inline-block px-3 py-1 rounded-full text-xs font-medium bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-300"
+                  >paid: Premium content</span
+                >
+              </div>
+              <div data-user-state="free" hidden>
+                <span
+                  class="inline-block px-3 py-1 rounded-full text-xs font-medium bg-orange-100 text-orange-800 dark:bg-orange-900 dark:text-orange-300"
+                  >free: Upgrade now</span
+                >
+              </div>
+              <div data-user-state="trial" hidden>
+                <span
+                  class="inline-block px-3 py-1 rounded-full text-xs font-medium bg-purple-100 text-purple-800 dark:bg-purple-900 dark:text-purple-300"
+                  >trial: Trial ends soon</span
+                >
+              </div>
+              <div data-user-state="product:starter-trial" hidden>
+                <span
+                  class="inline-block px-3 py-1 rounded-full text-xs font-medium bg-indigo-100 text-indigo-800 dark:bg-indigo-900 dark:text-indigo-300"
+                  >product:starter-trial</span
+                >
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
       <!-- How It Works -->
       <section id="how-it-works">
         <h2 class="text-2xl font-bold mb-6 border-b border-gray-200 dark:border-gray-700 pb-2">
@@ -539,7 +769,15 @@
       // User Profile demos
       // -----------------------------------------------------------------------
       const mockLoggedOutUrl = 'data:application/json,null';
-      const mockUser = { login: 'jdoe', email: 'jitewaboh@lagify.com', name: 'Jane Doe' };
+      const mockUser = {
+        login: 'jdoe',
+        email: 'jitewaboh@lagify.com',
+        name: 'Jane Doe',
+        products: ['quant'],
+        paid: true,
+        trial: false,
+        expires: '2026-12-31',
+      };
       const mockLoggedInUrl =
         'data:application/json,' + encodeURIComponent(JSON.stringify(mockUser));
 
@@ -570,6 +808,48 @@
         container: document.getElementById('user-profile-login-dropdown'),
         dropdown: true,
         apiUrl: mockLoggedInUrl,
+      });
+
+      // -----------------------------------------------------------------------
+      // User State Visibility demos
+      // -----------------------------------------------------------------------
+      import { initUserState } from '../dist/user-state.js';
+
+      const mockPaidUser = {
+        login: 'cparksch2',
+        email: 'christopher.parks@gmail.com',
+        name: 'Christopher Parks',
+        products: ['quant'],
+        paid: true,
+        trial: false,
+        expires: '2026-03-20',
+      };
+      const mockPaidUrl =
+        'data:application/json,' + encodeURIComponent(JSON.stringify(mockPaidUser));
+
+      const mockTrialUser = {
+        login: 'trial_user',
+        email: 'trial@example.com',
+        name: 'Trial User',
+        products: ['starter-trial'],
+        paid: false,
+        trial: true,
+        expires: '2026-04-01',
+      };
+      const mockTrialUrl =
+        'data:application/json,' + encodeURIComponent(JSON.stringify(mockTrialUser));
+
+      initUserState({
+        root: document.getElementById('visibility-logged-out'),
+        apiUrl: mockLoggedOutUrl,
+      });
+      initUserState({
+        root: document.getElementById('visibility-paid'),
+        apiUrl: mockPaidUrl,
+      });
+      initUserState({
+        root: document.getElementById('visibility-trial'),
+        apiUrl: mockTrialUrl,
       });
 
       // -----------------------------------------------------------------------
