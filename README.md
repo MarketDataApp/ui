@@ -23,7 +23,9 @@ npm install @marketdataapp/ui@github:MarketDataApp/ui
 | `./dark-images`             | `dist/dark-images.js`              | Automatic dark/light image swapping. Convention-based (`-light`/`-dark` suffix) or explicit pairs via `addImagePair()`.                                 |
 | `./reviews`                 | `dist/reviews.js`                  | Review rating widget with build-time data. Renders large or small variant via `initResenaWidget()`.                                                     |
 | `./navbar-overflow`         | `dist/navbar-overflow.js`          | Priority-based auto-hide for navbar items that overflow their container.                                                                                |
+| `./user`                    | `dist/user.js`                     | Shared user state: `fetchUser` (stale-while-revalidate cache, dedup, retries), `onUserChange` (subscriber pattern).                                     |
 | `./user-profile`            | `dist/user-profile.js`             | Gravatar avatar with optional dropdown menu. Zero dependencies.                                                                                         |
+| `./user-state`              | `dist/user-state.js`               | Declarative show/hide for elements based on user auth and subscription state.                                                                           |
 
 ## CSS Architecture
 
@@ -210,6 +212,84 @@ import { reviewRating, reviewCount, reviewLabel } from '@marketdataapp/ui/review
 
 Build-time data is refreshed by `npm run build:fetch-reviews`, which runs as part of `npm run build`.
 
+### User State Visibility
+
+The `user-state` module provides declarative show/hide for any HTML element based on the current user's authentication and subscription state. It builds on the shared `fetchUser()` cache and `onUserChange()` subscriber pattern from `user.js` — no separate fetching or caching.
+
+#### Usage
+
+Mark elements with `data-user-state` and the native `hidden` attribute. Call `initUserState()` to resolve visibility:
+
+```html
+<div data-user-state="logged-in" hidden>Welcome back!</div>
+<div data-user-state="logged-out" hidden>Please log in</div>
+<div data-user-state="paid" hidden>Premium content</div>
+<div data-user-state="free" hidden>Upgrade now</div>
+<div data-user-state="trial" hidden>Your trial ends soon</div>
+<div data-user-state="product:quant" hidden>Quant-only feature</div>
+
+<script type="module">
+  import { initUserState } from '@marketdataapp/ui/user-state';
+  initUserState();
+</script>
+```
+
+After `fetchUser()` resolves, matching elements have `hidden` removed. Non-matching elements stay hidden. No custom CSS is needed — the native `hidden` attribute handles everything.
+
+#### Conditions
+
+| Condition        | Matches when                        |
+| ---------------- | ----------------------------------- |
+| `logged-in`      | User is authenticated               |
+| `logged-out`     | User is not authenticated (null)    |
+| `paid`           | `user.paid === true`                |
+| `free`           | Logged in and `user.paid === false` |
+| `trial`          | `user.trial === true`               |
+| `product:<slug>` | `user.products` includes the slug   |
+
+All comparisons are **case-insensitive**. Product slugs are lowercase with hyphens (e.g. `starter-trial`, `free-forever`).
+
+**OR logic:** Space-separated conditions are evaluated with OR — the element is shown if **any** condition matches:
+
+```html
+<div data-user-state="paid trial" hidden>All non-free users</div>
+```
+
+#### Options
+
+```js
+initUserState({
+  root: document.getElementById('my-section'), // scope DOM queries (default: document)
+  apiUrl: 'https://...', // override API endpoint (for testing/demos)
+});
+```
+
+#### How it stays in sync
+
+`initUserState()` subscribes to `onUserChange()`, so elements automatically re-evaluate if user state changes (e.g. login/logout in another tab, plan upgrade detected by background revalidation). The cleanup function unsubscribes and re-hides all elements:
+
+```js
+const cleanup = await initUserState();
+// later...
+cleanup(); // unsubscribes, re-hides all [data-user-state] elements
+```
+
+#### API response shape
+
+The `/api/user/` endpoint returns pre-computed fields — no client-side mapping needed:
+
+```json
+{
+  "login": "cparksch2",
+  "name": "Christopher Parks",
+  "email": "christopher.parks@gmail.com",
+  "products": ["quant"],
+  "paid": true,
+  "trial": false,
+  "expires": "2026-03-20"
+}
+```
+
 ### Theme Tokens
 
 `css/theme.css` defines all shared design tokens inside `@theme {}`:
@@ -315,7 +395,9 @@ Usage not yet verified.
 - **`dist/dark-images.js`** — Automatic dark/light image swapping (convention + explicit pairs)
 - **`dist/reviews.js`** — Review rating widget (large/small variants, build-time data, zero deps)
 - **`dist/navbar-overflow.js`** — Priority-based auto-hide for navbar items
+- **`dist/user.js`** — Shared user state management (fetch, cache, subscribe)
 - **`dist/user-profile.js`** — Gravatar avatar + dropdown menu (zero deps, templates inlined)
+- **`dist/user-state.js`** — Declarative show/hide based on user auth and subscription state
 
 ## Known Issues and Lessons Learned
 
