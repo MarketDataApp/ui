@@ -22,7 +22,7 @@
     <header class="border-b border-gray-200 dark:border-gray-700 mb-12">
       <div class="max-w-5xl mx-auto px-4 py-8 flex items-center justify-between">
         <div>
-          <h1 class="text-3xl font-bold">User State</h1>
+          <h1 class="text-3xl font-bold">User Profile</h1>
           <p class="mt-1 text-gray-500 dark:text-gray-400">
             <a href="index.html" class="hover:text-gray-900 dark:hover:text-white"
               >&larr; Back to components</a
@@ -34,49 +34,334 @@
     </header>
 
     <main class="max-w-5xl mx-auto px-4 pb-16 space-y-16">
-      <!-- Overview -->
-      <section id="overview">
+      <!-- Quick Start -->
+      <section id="quick-start">
         <h2 class="text-2xl font-bold mb-6 border-b border-gray-200 dark:border-gray-700 pb-2">
-          Overview
+          Quick Start
         </h2>
-        <div class="prose dark:prose-invert max-w-none text-gray-700 dark:text-gray-300 space-y-4">
-          <p>
-            The <strong>user</strong> module provides shared user state management for
-            <code class="font-mono text-xs">*.marketdata.app</code>. It decouples user data fetching
-            from any specific UI component so that multiple components on the same page can share a
-            single user state without redundant API calls.
-          </p>
-          <ul class="list-disc pl-6 space-y-2">
-            <li>
-              <strong>Stale-while-revalidate</strong> with a 1-minute TTL &mdash; returns cached
-              data instantly, refreshes in the background only when stale.
-            </li>
-            <li>
-              <strong>Request deduplication</strong> &mdash; concurrent calls share a single
-              in-flight request.
-            </li>
-            <li>
-              <strong>Subscriber pattern</strong> &mdash; components subscribe to state changes
-              (including logout) via <code class="font-mono text-xs">onUserChange()</code>.
-            </li>
-          </ul>
-          <p>
-            Import from
-            <code class="font-mono text-xs">@marketdataapp/ui/user</code>.
-          </p>
+        <p class="text-gray-700 dark:text-gray-300 mb-6">
+          Drop-in avatar with login/logout handling. Shows a login button when logged out, Gravatar
+          avatar when logged in. Optional dropdown menu with dashboard, profile, and logout links.
+        </p>
+
+        <!-- Astro 6 Example -->
+        <h3 class="text-lg font-semibold mb-3">Astro 6</h3>
+        <div class="bg-gray-100 dark:bg-gray-800 rounded-lg p-4 overflow-x-auto">
+          <pre
+            class="text-sm font-mono text-gray-800 dark:text-gray-200 whitespace-pre"
+          ><code>&lt;!-- src/components/UserAvatar.astro --&gt;
+&lt;div id="user-avatar"&gt;&lt;/div&gt;
+
+&lt;script&gt;
+  import { initUserProfile } from '@marketdataapp/ui/user-profile';
+
+  initUserProfile({
+    container: document.getElementById('user-avatar'),
+    dropdown: true,
+  });
+&lt;/script&gt;</code></pre>
+        </div>
+        <p class="text-xs text-gray-400 dark:text-gray-500 mt-2 mb-6">
+          That's it. The component handles fetching user state, rendering, and cleanup
+          automatically.
+        </p>
+
+        <!-- Navbar example -->
+        <h3 class="text-lg font-semibold mb-3">In a navbar</h3>
+        <div class="bg-gray-100 dark:bg-gray-800 rounded-lg p-4 overflow-x-auto">
+          <pre
+            class="text-sm font-mono text-gray-800 dark:text-gray-200 whitespace-pre"
+          ><code>&lt;!-- src/components/Navbar.astro --&gt;
+&lt;nav class="flex items-center justify-between px-4 py-2"&gt;
+  &lt;a href="/"&gt;Logo&lt;/a&gt;
+  &lt;div id="user-nav"&gt;&lt;/div&gt;
+&lt;/nav&gt;
+
+&lt;script&gt;
+  import { initUserProfile } from '@marketdataapp/ui/user-profile';
+
+  const cleanup = await initUserProfile({
+    container: document.getElementById('user-nav'),
+    dropdown: true,
+    loginUrl: 'https://dashboard.marketdata.app/marketdata/login',
+    dashboardUrl: 'https://dashboard.marketdata.app/marketdata/member',
+  });
+
+  // cleanup() removes DOM and unsubscribes — call on page teardown if needed
+&lt;/script&gt;</code></pre>
+        </div>
+
+        <!-- Avatar only (no dropdown) -->
+        <h3 class="text-lg font-semibold mb-3 mt-6">Avatar only (no dropdown)</h3>
+        <div class="bg-gray-100 dark:bg-gray-800 rounded-lg p-4 overflow-x-auto">
+          <pre
+            class="text-sm font-mono text-gray-800 dark:text-gray-200 whitespace-pre"
+          ><code>&lt;div id="avatar"&gt;&lt;/div&gt;
+
+&lt;script&gt;
+  import { initUserProfile } from '@marketdataapp/ui/user-profile';
+
+  initUserProfile({
+    container: document.getElementById('avatar'),
+    dropdown: false, // default
+  });
+&lt;/script&gt;</code></pre>
         </div>
       </section>
 
-      <!-- API Reference -->
-      <section id="api">
+      <!-- Live Demos -->
+      <section id="demos">
         <h2 class="text-2xl font-bold mb-6 border-b border-gray-200 dark:border-gray-700 pb-2">
-          API Reference
+          Live Demos
         </h2>
-        <p class="text-gray-500 dark:text-gray-400 mb-6">
-          Import from <code class="font-mono text-xs">@marketdataapp/ui/user</code>.
+
+        <div class="space-y-12">
+          <!-- Live components -->
+          <div>
+            <h3 class="text-lg font-semibold mb-3">Live (real API)</h3>
+            <p class="text-xs text-gray-400 dark:text-gray-500 mb-3">
+              Hits the real API. Result depends on your login state.
+            </p>
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-8">
+              <div class="space-y-3">
+                <code class="text-sm font-mono text-gray-500 dark:text-gray-400 block"
+                  >dropdown: false</code
+                >
+                <div
+                  class="border border-gray-200 dark:border-gray-700 rounded-lg p-6 flex items-center justify-center min-h-20"
+                  id="user-profile-live-no-dropdown"
+                ></div>
+              </div>
+              <div class="space-y-3">
+                <code class="text-sm font-mono text-gray-500 dark:text-gray-400 block"
+                  >dropdown: true</code
+                >
+                <div
+                  class="border border-gray-200 dark:border-gray-700 rounded-lg p-6 flex items-center justify-center min-h-20 relative"
+                  id="user-profile-live-dropdown"
+                ></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Logged-out states -->
+          <div>
+            <h3 class="text-lg font-semibold mb-3">Logged Out</h3>
+            <p class="text-xs text-gray-400 dark:text-gray-500 mb-3">
+              Mocked with a <code class="font-mono">data:</code> URI that returns null.
+            </p>
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-8">
+              <div class="space-y-3">
+                <code class="text-sm font-mono text-gray-500 dark:text-gray-400 block"
+                  >dropdown: false</code
+                >
+                <div
+                  class="border border-gray-200 dark:border-gray-700 rounded-lg p-6 flex items-center justify-center min-h-20"
+                  id="user-profile-logout-no-dropdown"
+                ></div>
+              </div>
+              <div class="space-y-3">
+                <code class="text-sm font-mono text-gray-500 dark:text-gray-400 block"
+                  >dropdown: true (guest dropdown)</code
+                >
+                <div
+                  class="border border-gray-200 dark:border-gray-700 rounded-lg p-6 flex items-center justify-center min-h-20 relative"
+                  id="user-profile-logout-dropdown"
+                ></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Logged-in states -->
+          <div>
+            <h3 class="text-lg font-semibold mb-3">Logged In</h3>
+            <p class="text-xs text-gray-400 dark:text-gray-500 mb-3">
+              Mocked with a <code class="font-mono">data:</code> URI returning a user object.
+            </p>
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-8">
+              <div class="space-y-3">
+                <code class="text-sm font-mono text-gray-500 dark:text-gray-400 block"
+                  >dropdown: false</code
+                >
+                <div
+                  class="border border-gray-200 dark:border-gray-700 rounded-lg p-6 flex items-center justify-center min-h-20"
+                  id="user-profile-login-no-dropdown"
+                ></div>
+              </div>
+              <div class="space-y-3">
+                <code class="text-sm font-mono text-gray-500 dark:text-gray-400 block"
+                  >dropdown: true</code
+                >
+                <div
+                  class="border border-gray-200 dark:border-gray-700 rounded-lg p-6 flex items-center justify-center min-h-20 relative"
+                  id="user-profile-login-dropdown"
+                ></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Options -->
+      <section id="options">
+        <h2 class="text-2xl font-bold mb-6 border-b border-gray-200 dark:border-gray-700 pb-2">
+          Options
+        </h2>
+        <div class="overflow-x-auto">
+          <table class="w-full text-sm text-left">
+            <thead
+              class="text-xs text-gray-500 dark:text-gray-400 uppercase border-b border-gray-200 dark:border-gray-700"
+            >
+              <tr>
+                <th class="py-3 pr-4">Option</th>
+                <th class="py-3 pr-4">Default</th>
+                <th class="py-3">Description</th>
+              </tr>
+            </thead>
+            <tbody class="text-gray-700 dark:text-gray-300">
+              <tr class="border-b border-gray-100 dark:border-gray-800">
+                <td class="py-3 pr-4">
+                  <code class="font-mono text-xs">container</code>
+                </td>
+                <td class="py-3 pr-4"><em class="text-gray-400">required</em></td>
+                <td class="py-3">DOM element to render into.</td>
+              </tr>
+              <tr class="border-b border-gray-100 dark:border-gray-800">
+                <td class="py-3 pr-4">
+                  <code class="font-mono text-xs">dropdown</code>
+                </td>
+                <td class="py-3 pr-4"><code class="font-mono text-xs">false</code></td>
+                <td class="py-3">Enable dropdown menu on avatar click.</td>
+              </tr>
+              <tr class="border-b border-gray-100 dark:border-gray-800">
+                <td class="py-3 pr-4">
+                  <code class="font-mono text-xs">loginUrl</code>
+                </td>
+                <td class="py-3 pr-4">
+                  <code class="font-mono text-xs">.../login</code>
+                </td>
+                <td class="py-3">Where the login button links to.</td>
+              </tr>
+              <tr class="border-b border-gray-100 dark:border-gray-800">
+                <td class="py-3 pr-4">
+                  <code class="font-mono text-xs">loginText</code>
+                </td>
+                <td class="py-3 pr-4">
+                  <code class="font-mono text-xs">"Log in"</code>
+                </td>
+                <td class="py-3">Login button label.</td>
+              </tr>
+              <tr class="border-b border-gray-100 dark:border-gray-800">
+                <td class="py-3 pr-4">
+                  <code class="font-mono text-xs">signupUrl</code>
+                </td>
+                <td class="py-3 pr-4">
+                  <code class="font-mono text-xs">.../signup</code>
+                </td>
+                <td class="py-3">Where the signup button links to (guest dropdown).</td>
+              </tr>
+              <tr class="border-b border-gray-100 dark:border-gray-800">
+                <td class="py-3 pr-4">
+                  <code class="font-mono text-xs">signupText</code>
+                </td>
+                <td class="py-3 pr-4">
+                  <code class="font-mono text-xs">"Start Free Trial"</code>
+                </td>
+                <td class="py-3">Signup button label.</td>
+              </tr>
+              <tr class="border-b border-gray-100 dark:border-gray-800">
+                <td class="py-3 pr-4">
+                  <code class="font-mono text-xs">logoutUrl</code>
+                </td>
+                <td class="py-3 pr-4">
+                  <code class="font-mono text-xs">.../logout</code>
+                </td>
+                <td class="py-3">Logout link in the dropdown.</td>
+              </tr>
+              <tr class="border-b border-gray-100 dark:border-gray-800">
+                <td class="py-3 pr-4">
+                  <code class="font-mono text-xs">dashboardUrl</code>
+                </td>
+                <td class="py-3 pr-4">
+                  <code class="font-mono text-xs">.../member</code>
+                </td>
+                <td class="py-3">Dashboard link in the dropdown.</td>
+              </tr>
+              <tr class="border-b border-gray-100 dark:border-gray-800">
+                <td class="py-3 pr-4">
+                  <code class="font-mono text-xs">profileUrl</code>
+                </td>
+                <td class="py-3 pr-4">
+                  <code class="font-mono text-xs">.../profile</code>
+                </td>
+                <td class="py-3">Profile link in the dropdown.</td>
+              </tr>
+              <tr class="border-b border-gray-100 dark:border-gray-800">
+                <td class="py-3 pr-4">
+                  <code class="font-mono text-xs">planUrl</code>
+                </td>
+                <td class="py-3 pr-4">
+                  <code class="font-mono text-xs">.../signup</code>
+                </td>
+                <td class="py-3">Plan/upgrade link in the dropdown.</td>
+              </tr>
+              <tr class="border-b border-gray-100 dark:border-gray-800">
+                <td class="py-3 pr-4">
+                  <code class="font-mono text-xs">menuItems</code>
+                </td>
+                <td class="py-3 pr-4"><code class="font-mono text-xs">[]</code></td>
+                <td class="py-3">
+                  Additional dropdown items. Array of
+                  <code class="font-mono text-xs">{ label, url }</code>.
+                </td>
+              </tr>
+              <tr>
+                <td class="py-3 pr-4">
+                  <code class="font-mono text-xs">apiUrl</code>
+                </td>
+                <td class="py-3 pr-4">
+                  <code class="font-mono text-xs">.../api/user/</code>
+                </td>
+                <td class="py-3">Override the user API endpoint (useful for testing/mocking).</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- Using fetchUser Directly -->
+      <section id="fetch-user">
+        <h2 class="text-2xl font-bold mb-6 border-b border-gray-200 dark:border-gray-700 pb-2">
+          Using <code class="font-mono text-xl">fetchUser</code> Directly
+        </h2>
+        <p class="text-gray-700 dark:text-gray-300 mb-4">
+          If you need user data without the avatar component, import the user state module directly.
         </p>
 
-        <div class="overflow-x-auto">
+        <div class="bg-gray-100 dark:bg-gray-800 rounded-lg p-4 overflow-x-auto">
+          <pre
+            class="text-sm font-mono text-gray-800 dark:text-gray-200 whitespace-pre"
+          ><code>&lt;!-- src/components/Greeting.astro --&gt;
+&lt;p id="greeting"&gt;&lt;/p&gt;
+
+&lt;script&gt;
+  import { fetchUser, onUserChange } from '@marketdataapp/ui/user';
+
+  const el = document.getElementById('greeting');
+
+  function render(user) {
+    el.textContent = user ? `Hello, ${user.name}` : 'Welcome, guest';
+  }
+
+  // Initial render
+  render(await fetchUser());
+
+  // React to login/logout changes
+  onUserChange(render);
+&lt;/script&gt;</code></pre>
+        </div>
+
+        <div class="mt-6 overflow-x-auto">
           <table class="w-full text-sm text-left">
             <thead
               class="text-xs text-gray-500 dark:text-gray-400 uppercase border-b border-gray-200 dark:border-gray-700"
@@ -96,22 +381,19 @@
                   <code class="font-mono text-xs">Promise&lt;Object|null&gt;</code>
                 </td>
                 <td class="py-3">
-                  Fetch the current user. Returns cached data within TTL; revalidates in background
-                  when stale. Pass
-                  <code class="font-mono text-xs">{ apiUrl }</code> to override the endpoint.
+                  Get the current user. Returns cached data within TTL, revalidates in background
+                  when stale.
                 </td>
               </tr>
               <tr class="border-b border-gray-100 dark:border-gray-800">
                 <td class="py-3 pr-4">
-                  <code class="font-mono text-xs">onUserChange(callback)</code>
+                  <code class="font-mono text-xs">onUserChange(cb)</code>
                 </td>
                 <td class="py-3 pr-4">
                   <code class="font-mono text-xs">() =&gt; void</code>
                 </td>
                 <td class="py-3">
-                  Subscribe to user state changes. Callback receives the new user object or
-                  <code class="font-mono text-xs">null</code> on logout. Returns an unsubscribe
-                  function.
+                  Subscribe to user state changes. Returns an unsubscribe function.
                 </td>
               </tr>
               <tr>
@@ -123,120 +405,6 @@
               </tr>
             </tbody>
           </table>
-        </div>
-      </section>
-
-      <!-- Caching Behavior -->
-      <section id="caching">
-        <h2 class="text-2xl font-bold mb-6 border-b border-gray-200 dark:border-gray-700 pb-2">
-          Caching Behavior
-        </h2>
-        <div class="prose dark:prose-invert max-w-none text-gray-700 dark:text-gray-300 space-y-4">
-          <p>
-            <code class="font-mono text-xs">fetchUser()</code> resolves through three tiers before
-            hitting the network:
-          </p>
-          <ol class="list-decimal pl-6 space-y-1">
-            <li>
-              <strong>Memory cache</strong> &mdash; module-level variable (fastest, current page
-              session)
-            </li>
-            <li>
-              <strong>sessionStorage</strong> &mdash; key
-              <code class="font-mono text-xs">marketdata_user</code> (persists across same-tab
-              navigations)
-            </li>
-            <li>
-              <strong>Network fetch</strong> &mdash;
-              <code class="font-mono text-xs">GET /api/user/</code> with
-              <code class="font-mono text-xs">credentials: 'include'</code>
-            </li>
-          </ol>
-
-          <h3 class="text-lg font-semibold">TTL (1 minute)</h3>
-          <p>
-            After a successful fetch, the result is considered <strong>fresh</strong> for 60
-            seconds. Within the TTL, <code class="font-mono text-xs">fetchUser()</code> returns
-            cached data immediately with zero network activity. After the TTL expires, it returns
-            the stale cache and kicks off a background revalidation.
-          </p>
-
-          <h3 class="text-lg font-semibold">Request Deduplication</h3>
-          <p>
-            If a fetch is already in flight, additional calls return the same promise instead of
-            starting a new request. Three components calling
-            <code class="font-mono text-xs">fetchUser()</code> simultaneously result in a single
-            network request.
-          </p>
-        </div>
-
-        <!-- Flow diagram -->
-        <div class="mt-6 bg-gray-100 dark:bg-gray-800 rounded-lg p-4 overflow-x-auto">
-          <pre
-            class="text-sm font-mono text-gray-800 dark:text-gray-200 whitespace-pre"
-          ><code>fetchUser()
-  |
-  +-- cache hit?
-  |     +-- fresh (< 60s) --> return cached (no network)
-  |     +-- stale (>= 60s) --> return cached + revalidate in background
-  |
-  +-- cache miss --> await network fetch (deduplicated)
-        +-- success --> cache result, notify subscribers if data changed
-        +-- failure --> retry up to 2x with exponential backoff</code></pre>
-        </div>
-      </section>
-
-      <!-- Subscriber Pattern -->
-      <section id="subscribers">
-        <h2 class="text-2xl font-bold mb-6 border-b border-gray-200 dark:border-gray-700 pb-2">
-          Subscriber Pattern
-        </h2>
-        <div class="prose dark:prose-invert max-w-none text-gray-700 dark:text-gray-300 space-y-4">
-          <p>
-            <code class="font-mono text-xs">onUserChange(callback)</code> lets any component react
-            to user state changes without polling or re-fetching.
-          </p>
-
-          <h3 class="text-lg font-semibold">When subscribers are notified</h3>
-          <ul class="list-disc pl-6 space-y-1">
-            <li>
-              A background revalidation returns <strong>different data</strong> than what was cached
-              (user profile updated)
-            </li>
-            <li>
-              A background revalidation returns an error after previously having a cached user
-              (<strong>logout detected</strong> &mdash; callback receives
-              <code class="font-mono text-xs">null</code>)
-            </li>
-          </ul>
-
-          <h3 class="text-lg font-semibold">When subscribers are NOT notified</h3>
-          <ul class="list-disc pl-6 space-y-1">
-            <li>Cache is within TTL (no revalidation happens at all)</li>
-            <li>Background revalidation returns the same data</li>
-          </ul>
-        </div>
-
-        <div class="mt-6 bg-gray-100 dark:bg-gray-800 rounded-lg p-4 overflow-x-auto">
-          <pre
-            class="text-sm font-mono text-gray-800 dark:text-gray-200 whitespace-pre"
-          ><code>import { fetchUser, onUserChange } from '@marketdataapp/ui/user';
-
-// Subscribe to changes
-const unsub = onUserChange((user) => {
-  if (user) {
-    console.log('User updated:', user.name);
-  } else {
-    console.log('User logged out');
-    showLoginButton();
-  }
-});
-
-// Fetch user (subscribers notified if data changes)
-const user = await fetchUser();
-
-// Later: clean up
-unsub();</code></pre>
         </div>
       </section>
 
@@ -292,123 +460,55 @@ unsub();</code></pre>
         </div>
       </section>
 
-      <!-- User Profile Component -->
-      <section id="user-profile">
+      <!-- How It Works -->
+      <section id="how-it-works">
         <h2 class="text-2xl font-bold mb-6 border-b border-gray-200 dark:border-gray-700 pb-2">
-          User Profile Component
+          How It Works
         </h2>
         <div class="prose dark:prose-invert max-w-none text-gray-700 dark:text-gray-300 space-y-4">
           <p>
-            The <strong>user-profile</strong> component is the first consumer of the user state
-            module. It renders a login button (logged out) or Gravatar avatar with optional dropdown
-            menu (logged in). Internally it calls
-            <code class="font-mono text-xs">fetchUser()</code> and subscribes via
-            <code class="font-mono text-xs">onUserChange()</code> for logout detection.
+            The user module handles caching and request deduplication so you don't have to. Multiple
+            components on the same page share a single user state with zero redundant API calls.
           </p>
+
+          <h3 class="text-lg font-semibold">Caching</h3>
           <p>
-            Import from
-            <code class="font-mono text-xs">@marketdataapp/ui/user-profile</code>.
+            <code class="font-mono text-xs">fetchUser()</code> checks three tiers before hitting the
+            network: an in-memory cache, then <code class="font-mono text-xs">sessionStorage</code>,
+            then <code class="font-mono text-xs">GET /api/user/</code>. Results are fresh for 60
+            seconds. After that, stale data is returned immediately while a background revalidation
+            runs.
+          </p>
+
+          <h3 class="text-lg font-semibold">Request Deduplication</h3>
+          <p>
+            If a fetch is already in flight, additional calls return the same promise. Three
+            components calling <code class="font-mono text-xs">fetchUser()</code> simultaneously
+            result in a single network request.
+          </p>
+
+          <h3 class="text-lg font-semibold">Subscriber Notifications</h3>
+          <p>
+            <code class="font-mono text-xs">onUserChange(callback)</code> fires when a background
+            revalidation detects changed data (profile update) or an error after a previously cached
+            user (logout). It does <strong>not</strong> fire when the cache is fresh or when
+            revalidation returns the same data.
           </p>
         </div>
 
+        <!-- Flow diagram -->
         <div class="mt-6 bg-gray-100 dark:bg-gray-800 rounded-lg p-4 overflow-x-auto">
           <pre
             class="text-sm font-mono text-gray-800 dark:text-gray-200 whitespace-pre"
-          ><code>import { initUserProfile } from '@marketdataapp/ui/user-profile';
-
-const cleanup = await initUserProfile({
-  container: document.getElementById('my-avatar'),
-  dropdown: true,          // enable dropdown menu
-  // loginUrl, logoutUrl, dashboardUrl, etc. — all customizable
-});
-
-// cleanup() removes DOM and unsubscribes from user state</code></pre>
-        </div>
-
-        <div class="mt-12 space-y-12">
-          <!-- Live components -->
-          <div>
-            <h3 class="text-lg font-semibold mb-3">Live (real API)</h3>
-            <p class="text-xs text-gray-400 dark:text-gray-500 mb-3">
-              These hit the real API. Result depends on your login state.
-            </p>
-            <div class="grid grid-cols-1 sm:grid-cols-2 gap-8">
-              <div class="space-y-3">
-                <code class="text-sm font-mono text-gray-500 dark:text-gray-400 block"
-                  >initUserProfile({ dropdown: false })</code
-                >
-                <div
-                  class="border border-gray-200 dark:border-gray-700 rounded-lg p-6 flex items-center justify-center min-h-[80px]"
-                  id="user-profile-live-no-dropdown"
-                ></div>
-              </div>
-              <div class="space-y-3">
-                <code class="text-sm font-mono text-gray-500 dark:text-gray-400 block"
-                  >initUserProfile({ dropdown: true })</code
-                >
-                <div
-                  class="border border-gray-200 dark:border-gray-700 rounded-lg p-6 flex items-center justify-center min-h-[80px] relative"
-                  id="user-profile-live-dropdown"
-                ></div>
-              </div>
-            </div>
-          </div>
-
-          <!-- Logged-out states -->
-          <div>
-            <h3 class="text-lg font-semibold mb-3">Logged Out</h3>
-            <p class="text-xs text-gray-400 dark:text-gray-500 mb-3">
-              Mocked with a <code class="font-mono">data:</code> URI that returns null.
-            </p>
-            <div class="grid grid-cols-1 sm:grid-cols-2 gap-8">
-              <div class="space-y-3">
-                <code class="text-sm font-mono text-gray-500 dark:text-gray-400 block"
-                  >dropdown: false</code
-                >
-                <div
-                  class="border border-gray-200 dark:border-gray-700 rounded-lg p-6 flex items-center justify-center min-h-[80px]"
-                  id="user-profile-logout-no-dropdown"
-                ></div>
-              </div>
-              <div class="space-y-3">
-                <code class="text-sm font-mono text-gray-500 dark:text-gray-400 block"
-                  >dropdown: true (guest dropdown)</code
-                >
-                <div
-                  class="border border-gray-200 dark:border-gray-700 rounded-lg p-6 flex items-center justify-center min-h-[80px] relative"
-                  id="user-profile-logout-dropdown"
-                ></div>
-              </div>
-            </div>
-          </div>
-
-          <!-- Logged-in states -->
-          <div>
-            <h3 class="text-lg font-semibold mb-3">Logged In</h3>
-            <p class="text-xs text-gray-400 dark:text-gray-500 mb-3">
-              Mocked with a <code class="font-mono">data:</code> URI returning a user object.
-            </p>
-            <div class="grid grid-cols-1 sm:grid-cols-2 gap-8">
-              <div class="space-y-3">
-                <code class="text-sm font-mono text-gray-500 dark:text-gray-400 block"
-                  >dropdown: false</code
-                >
-                <div
-                  class="border border-gray-200 dark:border-gray-700 rounded-lg p-6 flex items-center justify-center min-h-[80px]"
-                  id="user-profile-login-no-dropdown"
-                ></div>
-              </div>
-              <div class="space-y-3">
-                <code class="text-sm font-mono text-gray-500 dark:text-gray-400 block"
-                  >dropdown: true</code
-                >
-                <div
-                  class="border border-gray-200 dark:border-gray-700 rounded-lg p-6 flex items-center justify-center min-h-[80px] relative"
-                  id="user-profile-login-dropdown"
-                ></div>
-              </div>
-            </div>
-          </div>
+          ><code>fetchUser()
+  |
+  +-- cache hit?
+  |     +-- fresh (&lt; 60s) --&gt; return cached (no network)
+  |     +-- stale (&gt;= 60s) --&gt; return cached + revalidate in background
+  |
+  +-- cache miss --&gt; await network fetch (deduplicated)
+        +-- success --&gt; cache result, notify subscribers if data changed
+        +-- failure --&gt; retry up to 2x with exponential backoff</code></pre>
         </div>
       </section>
     </main>
