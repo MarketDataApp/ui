@@ -57,7 +57,7 @@ export function evaluateCondition(condition, user) {
  * @param {Object|null} user - User object or null
  * @param {HTMLElement|Document} root - Scope for DOM queries
  */
-function resolveElements(user, root) {
+export function resolveElements(user, root) {
   const elements = root.querySelectorAll('[data-user-state]');
   for (const el of elements) {
     const conditions = el.getAttribute('data-user-state').split(/\s+/).filter(Boolean);

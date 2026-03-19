@@ -68,13 +68,18 @@ for (const file of readdirSync(DOCS)) {
   console.log(`  _site/docs/${file}`);
 }
 
-// 2. Copy docs assets (CSS, images)
+// 2. Copy docs assets (CSS, images, JS)
 cpSync(resolve(DOCS, 'docs.css'), resolve(SITE, 'docs', 'docs.css'));
 console.log('  _site/docs/docs.css');
 
 for (const file of readdirSync(DOCS)) {
   if (/\.(avif|png|svg|ico)$/.test(file)) {
     cpSync(resolve(DOCS, file), resolve(SITE, 'docs', file));
+    console.log(`  _site/docs/${file}`);
+  }
+  if (file.endsWith('.js')) {
+    const content = readFileSync(resolve(DOCS, file), 'utf8');
+    writeFileSync(resolve(SITE, 'docs', file), cacheBustImports(content));
     console.log(`  _site/docs/${file}`);
   }
 }

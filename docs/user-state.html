@@ -33,6 +33,14 @@
       </div>
     </header>
 
+    <!-- Sticky State Simulator Picker -->
+    <div
+      id="state-simulator"
+      class="sticky top-0 z-40 bg-white/90 dark:bg-gray-900/90 backdrop-blur border-b border-gray-200 dark:border-gray-700"
+    >
+      <div class="max-w-5xl mx-auto px-4 py-3"></div>
+    </div>
+
     <main class="max-w-5xl mx-auto px-4 pb-16 space-y-16">
       <!-- Quick Start -->
       <section id="quick-start">
@@ -226,11 +234,11 @@
             </div>
           </div>
 
-          <!-- Logged-out states -->
+          <!-- Simulated states (driven by sticky picker) -->
           <div>
-            <h3 class="text-lg font-semibold mb-3">Logged Out</h3>
+            <h3 class="text-lg font-semibold mb-3">Simulated</h3>
             <p class="text-xs text-gray-400 dark:text-gray-500 mb-3">
-              Mocked with a <code class="font-mono">data:</code> URI that returns null.
+              Driven by the state picker above. Switch states to see the avatar react.
             </p>
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-8">
               <div class="space-y-3">
@@ -239,35 +247,7 @@
                 >
                 <div
                   class="border border-gray-200 dark:border-gray-700 rounded-lg p-6 flex items-center justify-center min-h-20"
-                  id="user-profile-logout-no-dropdown"
-                ></div>
-              </div>
-              <div class="space-y-3">
-                <code class="text-sm font-mono text-gray-500 dark:text-gray-400 block"
-                  >dropdown: true (guest dropdown)</code
-                >
-                <div
-                  class="border border-gray-200 dark:border-gray-700 rounded-lg p-6 flex items-center justify-center min-h-20 relative"
-                  id="user-profile-logout-dropdown"
-                ></div>
-              </div>
-            </div>
-          </div>
-
-          <!-- Logged-in states -->
-          <div>
-            <h3 class="text-lg font-semibold mb-3">Logged In</h3>
-            <p class="text-xs text-gray-400 dark:text-gray-500 mb-3">
-              Mocked with a <code class="font-mono">data:</code> URI returning a user object.
-            </p>
-            <div class="grid grid-cols-1 sm:grid-cols-2 gap-8">
-              <div class="space-y-3">
-                <code class="text-sm font-mono text-gray-500 dark:text-gray-400 block"
-                  >dropdown: false</code
-                >
-                <div
-                  class="border border-gray-200 dark:border-gray-700 rounded-lg p-6 flex items-center justify-center min-h-20"
-                  id="user-profile-login-no-dropdown"
+                  data-simulator-profile="no-dropdown"
                 ></div>
               </div>
               <div class="space-y-3">
@@ -276,7 +256,7 @@
                 >
                 <div
                   class="border border-gray-200 dark:border-gray-700 rounded-lg p-6 flex items-center justify-center min-h-20 relative"
-                  id="user-profile-login-dropdown"
+                  data-simulator-profile="dropdown"
                 ></div>
               </div>
             </div>
@@ -623,151 +603,56 @@
           <strong>any</strong> condition matches.
         </p>
 
-        <!-- Live demos -->
-        <h3 class="text-lg font-semibold mb-3">Live Demos</h3>
-        <div class="space-y-8">
-          <!-- Logged-out mock -->
-          <div>
-            <p class="text-xs text-gray-400 dark:text-gray-500 mb-3">
-              Mocked as <strong>logged out</strong> (API returns null)
-            </p>
-            <div
-              id="visibility-logged-out"
-              class="border border-gray-200 dark:border-gray-700 rounded-lg p-6 space-y-2"
+        <!-- Live demo (driven by simulator) -->
+        <h3 class="text-lg font-semibold mb-3">Live Demo</h3>
+        <p class="text-xs text-gray-400 dark:text-gray-500 mb-3">
+          Use the state picker above to see which badges appear for each user type.
+        </p>
+        <div
+          data-simulator-root
+          class="border border-gray-200 dark:border-gray-700 rounded-lg p-6 space-y-2"
+        >
+          <div data-user-state="logged-in" hidden>
+            <span
+              class="inline-block px-3 py-1 rounded-full text-xs font-medium bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300"
+              >logged-in: Welcome back!</span
             >
-              <div data-user-state="logged-in" hidden>
-                <span
-                  class="inline-block px-3 py-1 rounded-full text-xs font-medium bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300"
-                  >logged-in: Welcome back!</span
-                >
-              </div>
-              <div data-user-state="logged-out" hidden>
-                <span
-                  class="inline-block px-3 py-1 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-300"
-                  >logged-out: Please log in</span
-                >
-              </div>
-              <div data-user-state="paid" hidden>
-                <span
-                  class="inline-block px-3 py-1 rounded-full text-xs font-medium bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-300"
-                  >paid: Premium content</span
-                >
-              </div>
-              <div data-user-state="free" hidden>
-                <span
-                  class="inline-block px-3 py-1 rounded-full text-xs font-medium bg-orange-100 text-orange-800 dark:bg-orange-900 dark:text-orange-300"
-                  >free: Upgrade now</span
-                >
-              </div>
-              <div data-user-state="trial" hidden>
-                <span
-                  class="inline-block px-3 py-1 rounded-full text-xs font-medium bg-purple-100 text-purple-800 dark:bg-purple-900 dark:text-purple-300"
-                  >trial: Trial ends soon</span
-                >
-              </div>
-              <div data-user-state="product:quant" hidden>
-                <span
-                  class="inline-block px-3 py-1 rounded-full text-xs font-medium bg-indigo-100 text-indigo-800 dark:bg-indigo-900 dark:text-indigo-300"
-                  >product:quant</span
-                >
-              </div>
-            </div>
           </div>
-
-          <!-- Paid user mock -->
-          <div>
-            <p class="text-xs text-gray-400 dark:text-gray-500 mb-3">
-              Mocked as <strong>paid user</strong> with product "quant"
-            </p>
-            <div
-              id="visibility-paid"
-              class="border border-gray-200 dark:border-gray-700 rounded-lg p-6 space-y-2"
+          <div data-user-state="logged-out" hidden>
+            <span
+              class="inline-block px-3 py-1 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-300"
+              >logged-out: Please log in</span
             >
-              <div data-user-state="logged-in" hidden>
-                <span
-                  class="inline-block px-3 py-1 rounded-full text-xs font-medium bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300"
-                  >logged-in: Welcome back!</span
-                >
-              </div>
-              <div data-user-state="logged-out" hidden>
-                <span
-                  class="inline-block px-3 py-1 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-300"
-                  >logged-out: Please log in</span
-                >
-              </div>
-              <div data-user-state="paid" hidden>
-                <span
-                  class="inline-block px-3 py-1 rounded-full text-xs font-medium bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-300"
-                  >paid: Premium content</span
-                >
-              </div>
-              <div data-user-state="free" hidden>
-                <span
-                  class="inline-block px-3 py-1 rounded-full text-xs font-medium bg-orange-100 text-orange-800 dark:bg-orange-900 dark:text-orange-300"
-                  >free: Upgrade now</span
-                >
-              </div>
-              <div data-user-state="trial" hidden>
-                <span
-                  class="inline-block px-3 py-1 rounded-full text-xs font-medium bg-purple-100 text-purple-800 dark:bg-purple-900 dark:text-purple-300"
-                  >trial: Trial ends soon</span
-                >
-              </div>
-              <div data-user-state="product:quant" hidden>
-                <span
-                  class="inline-block px-3 py-1 rounded-full text-xs font-medium bg-indigo-100 text-indigo-800 dark:bg-indigo-900 dark:text-indigo-300"
-                  >product:quant</span
-                >
-              </div>
-            </div>
           </div>
-
-          <!-- Free trial user mock -->
-          <div>
-            <p class="text-xs text-gray-400 dark:text-gray-500 mb-3">
-              Mocked as <strong>free trial user</strong> with product "starter-trial"
-            </p>
-            <div
-              id="visibility-trial"
-              class="border border-gray-200 dark:border-gray-700 rounded-lg p-6 space-y-2"
+          <div data-user-state="paid" hidden>
+            <span
+              class="inline-block px-3 py-1 rounded-full text-xs font-medium bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-300"
+              >paid: Premium content</span
             >
-              <div data-user-state="logged-in" hidden>
-                <span
-                  class="inline-block px-3 py-1 rounded-full text-xs font-medium bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300"
-                  >logged-in: Welcome back!</span
-                >
-              </div>
-              <div data-user-state="logged-out" hidden>
-                <span
-                  class="inline-block px-3 py-1 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-300"
-                  >logged-out: Please log in</span
-                >
-              </div>
-              <div data-user-state="paid" hidden>
-                <span
-                  class="inline-block px-3 py-1 rounded-full text-xs font-medium bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-300"
-                  >paid: Premium content</span
-                >
-              </div>
-              <div data-user-state="free" hidden>
-                <span
-                  class="inline-block px-3 py-1 rounded-full text-xs font-medium bg-orange-100 text-orange-800 dark:bg-orange-900 dark:text-orange-300"
-                  >free: Upgrade now</span
-                >
-              </div>
-              <div data-user-state="trial" hidden>
-                <span
-                  class="inline-block px-3 py-1 rounded-full text-xs font-medium bg-purple-100 text-purple-800 dark:bg-purple-900 dark:text-purple-300"
-                  >trial: Trial ends soon</span
-                >
-              </div>
-              <div data-user-state="product:starter-trial" hidden>
-                <span
-                  class="inline-block px-3 py-1 rounded-full text-xs font-medium bg-indigo-100 text-indigo-800 dark:bg-indigo-900 dark:text-indigo-300"
-                  >product:starter-trial</span
-                >
-              </div>
-            </div>
+          </div>
+          <div data-user-state="free" hidden>
+            <span
+              class="inline-block px-3 py-1 rounded-full text-xs font-medium bg-orange-100 text-orange-800 dark:bg-orange-900 dark:text-orange-300"
+              >free: Upgrade now</span
+            >
+          </div>
+          <div data-user-state="trial" hidden>
+            <span
+              class="inline-block px-3 py-1 rounded-full text-xs font-medium bg-purple-100 text-purple-800 dark:bg-purple-900 dark:text-purple-300"
+              >trial: Trial ends soon</span
+            >
+          </div>
+          <div data-user-state="product:quant" hidden>
+            <span
+              class="inline-block px-3 py-1 rounded-full text-xs font-medium bg-indigo-100 text-indigo-800 dark:bg-indigo-900 dark:text-indigo-300"
+              >product:quant</span
+            >
+          </div>
+          <div data-user-state="product:starter-trial" hidden>
+            <span
+              class="inline-block px-3 py-1 rounded-full text-xs font-medium bg-indigo-100 text-indigo-800 dark:bg-indigo-900 dark:text-indigo-300"
+              >product:starter-trial</span
+            >
           </div>
         </div>
       </section>
@@ -783,150 +668,49 @@
           subtext, and buttons for logged-out, free/trial, and paid users.
         </p>
 
-        <!-- Logged out CTA -->
-        <div class="space-y-8">
-          <div>
-            <p class="text-xs text-gray-400 dark:text-gray-500 mb-3">
-              Mocked as <strong>logged out</strong>
-            </p>
-            <div id="cta-logged-out">
-              <section class="cta-banner">
-                <div class="cta-banner-inner">
-                  <div class="cta-banner-card">
-                    <div data-user-state="logged-out" hidden class="cta-banner-content">
-                      <div class="cta-banner-heading">
-                        Winning trades are born from superior data.
-                      </div>
-                      <div class="cta-banner-action">
-                        <p class="cta-banner-text">
-                          Free 30 day demo for new accounts. No credit card required.
-                        </p>
-                        <a href="#" class="btn-blue-to-orange">Sign up for free</a>
-                      </div>
-                    </div>
-                    <div data-user-state="free trial" hidden class="cta-banner-content">
-                      <div class="cta-banner-heading">
-                        Upgrade to unlock the full power of MarketData.
-                      </div>
-                      <div class="cta-banner-action">
-                        <p class="cta-banner-text">
-                          Get real-time data, advanced endpoints, and priority support.
-                        </p>
-                        <a href="#" class="btn-blue-to-orange">View plans</a>
-                      </div>
-                    </div>
-                    <div data-user-state="paid" hidden class="cta-banner-content">
-                      <div class="cta-banner-heading">
-                        You're getting the best market data available.
-                      </div>
-                      <div class="cta-banner-action">
-                        <p class="cta-banner-text">
-                          Explore our docs to get the most out of your subscription.
-                        </p>
-                        <a href="#" class="btn-blue-to-orange">Read the docs</a>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </section>
-            </div>
-          </div>
+        <p class="text-xs text-gray-400 dark:text-gray-500 mb-3">
+          Use the state picker above to see the CTA change for each user type.
+        </p>
 
-          <!-- Paid CTA -->
-          <div>
-            <p class="text-xs text-gray-400 dark:text-gray-500 mb-3">
-              Mocked as <strong>paid user</strong>
-            </p>
-            <div id="cta-paid">
-              <section class="cta-banner">
-                <div class="cta-banner-inner">
-                  <div class="cta-banner-card">
-                    <div data-user-state="logged-out" hidden class="cta-banner-content">
-                      <div class="cta-banner-heading">
-                        Winning trades are born from superior data.
-                      </div>
-                      <div class="cta-banner-action">
-                        <p class="cta-banner-text">
-                          Free 30 day demo for new accounts. No credit card required.
-                        </p>
-                        <a href="#" class="btn-blue-to-orange">Sign up for free</a>
-                      </div>
-                    </div>
-                    <div data-user-state="free trial" hidden class="cta-banner-content">
-                      <div class="cta-banner-heading">
-                        Upgrade to unlock the full power of MarketData.
-                      </div>
-                      <div class="cta-banner-action">
-                        <p class="cta-banner-text">
-                          Get real-time data, advanced endpoints, and priority support.
-                        </p>
-                        <a href="#" class="btn-blue-to-orange">View plans</a>
-                      </div>
-                    </div>
-                    <div data-user-state="paid" hidden class="cta-banner-content">
-                      <div class="cta-banner-heading">
-                        You're getting the best market data available.
-                      </div>
-                      <div class="cta-banner-action">
-                        <p class="cta-banner-text">
-                          Explore our docs to get the most out of your subscription.
-                        </p>
-                        <a href="#" class="btn-blue-to-orange">Read the docs</a>
-                      </div>
-                    </div>
+        <!-- Single CTA banner instance (driven by simulator) -->
+        <div data-simulator-root>
+          <section class="cta-banner">
+            <div class="cta-banner-inner">
+              <div class="cta-banner-card">
+                <div data-user-state="logged-out" hidden class="cta-banner-content">
+                  <div class="cta-banner-heading">Winning trades are born from superior data.</div>
+                  <div class="cta-banner-action">
+                    <p class="cta-banner-text">
+                      Free 30 day demo for new accounts. No credit card required.
+                    </p>
+                    <a href="#" class="btn-blue-to-orange">Sign up for free</a>
                   </div>
                 </div>
-              </section>
-            </div>
-          </div>
-
-          <!-- Trial CTA -->
-          <div>
-            <p class="text-xs text-gray-400 dark:text-gray-500 mb-3">
-              Mocked as <strong>free trial user</strong>
-            </p>
-            <div id="cta-trial">
-              <section class="cta-banner">
-                <div class="cta-banner-inner">
-                  <div class="cta-banner-card">
-                    <div data-user-state="logged-out" hidden class="cta-banner-content">
-                      <div class="cta-banner-heading">
-                        Winning trades are born from superior data.
-                      </div>
-                      <div class="cta-banner-action">
-                        <p class="cta-banner-text">
-                          Free 30 day demo for new accounts. No credit card required.
-                        </p>
-                        <a href="#" class="btn-blue-to-orange">Sign up for free</a>
-                      </div>
-                    </div>
-                    <div data-user-state="free trial" hidden class="cta-banner-content">
-                      <div class="cta-banner-heading">
-                        Upgrade to unlock the full power of MarketData.
-                      </div>
-                      <div class="cta-banner-action">
-                        <p class="cta-banner-text">
-                          Get real-time data, advanced endpoints, and priority support.
-                        </p>
-                        <a href="#" class="btn-blue-to-orange">View plans</a>
-                      </div>
-                    </div>
-                    <div data-user-state="paid" hidden class="cta-banner-content">
-                      <div class="cta-banner-heading">
-                        You're getting the best market data available.
-                      </div>
-                      <div class="cta-banner-action">
-                        <p class="cta-banner-text">
-                          Explore our docs to get the most out of your subscription.
-                        </p>
-                        <a href="#" class="btn-blue-to-orange">Read the docs</a>
-                      </div>
-                    </div>
+                <div data-user-state="free trial" hidden class="cta-banner-content">
+                  <div class="cta-banner-heading">
+                    Upgrade to unlock the full power of MarketData.
+                  </div>
+                  <div class="cta-banner-action">
+                    <p class="cta-banner-text">
+                      Get real-time data, advanced endpoints, and priority support.
+                    </p>
+                    <a href="#" class="btn-blue-to-orange">View plans</a>
                   </div>
                 </div>
-              </section>
+                <div data-user-state="paid" hidden class="cta-banner-content">
+                  <div class="cta-banner-heading">
+                    You're getting the best market data available.
+                  </div>
+                  <div class="cta-banner-action">
+                    <p class="cta-banner-text">
+                      Explore our docs to get the most out of your subscription.
+                    </p>
+                    <a href="#" class="btn-blue-to-orange">Read the docs</a>
+                  </div>
+                </div>
+              </div>
             </div>
-          </div>
+          </section>
         </div>
       </section>
 
@@ -1004,106 +788,23 @@
     <script type="module">
       import { fetchUser, onUserChange, _clearCache, _getLastFetchTime } from '../dist/user.js';
       import { initUserProfile } from '../dist/user-profile.js';
+      import { initSimulator } from './simulator.js';
 
       // -----------------------------------------------------------------------
-      // User Profile demos
+      // User Profile demos (live API only — simulated states handled by picker)
       // -----------------------------------------------------------------------
-      const mockLoggedOutUrl = 'data:application/json,null';
-      const mockUser = {
-        login: 'jdoe',
-        email: 'jitewaboh@lagify.com',
-        name: 'Jane Doe',
-        products: ['quant'],
-        paid: true,
-        trial: false,
-        expires: '2026-12-31',
-      };
-      const mockLoggedInUrl =
-        'data:application/json,' + encodeURIComponent(JSON.stringify(mockUser));
-
-      // Live (real API)
       initUserProfile({ container: document.getElementById('user-profile-live-no-dropdown') });
       initUserProfile({
         container: document.getElementById('user-profile-live-dropdown'),
         dropdown: true,
       });
 
-      // Logged out (mocked)
-      initUserProfile({
-        container: document.getElementById('user-profile-logout-no-dropdown'),
-        apiUrl: mockLoggedOutUrl,
-      });
-      initUserProfile({
-        container: document.getElementById('user-profile-logout-dropdown'),
-        dropdown: true,
-        apiUrl: mockLoggedOutUrl,
-      });
-
-      // Logged in (mocked)
-      initUserProfile({
-        container: document.getElementById('user-profile-login-no-dropdown'),
-        apiUrl: mockLoggedInUrl,
-      });
-      initUserProfile({
-        container: document.getElementById('user-profile-login-dropdown'),
-        dropdown: true,
-        apiUrl: mockLoggedInUrl,
-      });
-
       // -----------------------------------------------------------------------
-      // User State Visibility demos
+      // State Simulator — drives all [data-simulator-root] and
+      // [data-simulator-profile] elements on the page
       // -----------------------------------------------------------------------
-      import { initUserState } from '../dist/user-state.js';
-
-      const mockPaidUser = {
-        login: 'cparksch2',
-        email: 'christopher.parks@gmail.com',
-        name: 'Christopher Parks',
-        products: ['quant'],
-        paid: true,
-        trial: false,
-        expires: '2026-03-20',
-      };
-      const mockPaidUrl =
-        'data:application/json,' + encodeURIComponent(JSON.stringify(mockPaidUser));
-
-      const mockTrialUser = {
-        login: 'trial_user',
-        email: 'trial@example.com',
-        name: 'Trial User',
-        products: ['starter-trial'],
-        paid: false,
-        trial: true,
-        expires: '2026-04-01',
-      };
-      const mockTrialUrl =
-        'data:application/json,' + encodeURIComponent(JSON.stringify(mockTrialUser));
-
-      initUserState({
-        root: document.getElementById('visibility-logged-out'),
-        apiUrl: mockLoggedOutUrl,
-      });
-      initUserState({
-        root: document.getElementById('visibility-paid'),
-        apiUrl: mockPaidUrl,
-      });
-      initUserState({
-        root: document.getElementById('visibility-trial'),
-        apiUrl: mockTrialUrl,
-      });
-
-      // CTA Banner demos
-      initUserState({
-        root: document.getElementById('cta-logged-out'),
-        apiUrl: mockLoggedOutUrl,
-      });
-      initUserState({
-        root: document.getElementById('cta-paid'),
-        apiUrl: mockPaidUrl,
-      });
-      initUserState({
-        root: document.getElementById('cta-trial'),
-        apiUrl: mockTrialUrl,
+      initSimulator({
+        container: document.querySelector('#state-simulator > div'),
       });
 
       // -----------------------------------------------------------------------
