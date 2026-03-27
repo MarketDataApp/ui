@@ -523,6 +523,65 @@
           </div>
         </fieldset>
 
+        <!-- Inline radio buttons -->
+        <h3 class="text-lg font-semibold mb-3 mt-8 text-heading">Inline Radio Buttons</h3>
+        <p class="text-sm text-body-subtle mb-4">
+          Horizontal radio buttons for compact yes/no or short-option questions.
+        </p>
+        <fieldset>
+          <legend class="form-label mb-3">Enable notifications?</legend>
+          <div class="flex items-center gap-x-4 text-sm">
+            <label class="flex items-center gap-2 cursor-pointer">
+              <input
+                type="radio"
+                name="enable-notify"
+                value="yes"
+                class="radio-button-input mt-0"
+                checked
+              />
+              <span class="font-medium text-heading">Yes</span>
+            </label>
+            <label class="flex items-center gap-2 cursor-pointer">
+              <input type="radio" name="enable-notify" value="no" class="radio-button-input mt-0" />
+              <span class="font-medium text-heading">No</span>
+            </label>
+          </div>
+        </fieldset>
+
+        <fieldset class="mt-6">
+          <legend class="form-label mb-3">Preferred contact method:</legend>
+          <div class="flex items-center gap-x-4 text-sm">
+            <label class="flex items-center gap-2 cursor-pointer">
+              <input
+                type="radio"
+                name="contact-method"
+                value="email"
+                class="radio-button-input mt-0"
+                checked
+              />
+              <span class="font-medium text-heading">Email</span>
+            </label>
+            <label class="flex items-center gap-2 cursor-pointer">
+              <input
+                type="radio"
+                name="contact-method"
+                value="phone"
+                class="radio-button-input mt-0"
+              />
+              <span class="font-medium text-heading">Phone</span>
+            </label>
+            <label class="flex items-center gap-2 cursor-pointer">
+              <input
+                type="radio"
+                name="contact-method"
+                value="sms"
+                class="radio-button-input mt-0"
+              />
+              <span class="font-medium text-heading">SMS</span>
+            </label>
+          </div>
+        </fieldset>
+
         <div class="mt-6 flex flex-wrap gap-2">
           <code class="text-xs font-mono bg-gray-100 dark:bg-gray-800 px-2 py-1 rounded"
             >.radio-group-container</code
