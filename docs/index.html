@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@marketdataapp/ui - Component Library</title>
     <link rel="stylesheet" href="docs.css" />
-    <script>
+    <script data-cfasync="false">
       (function () {
         var match = document.cookie.match(/(?:^|;\s*)theme=(dark|light)/);
         var saved = match ? match[1] : null;
@@ -1030,7 +1030,7 @@
       </div>
     </footer>
 
-    <script type="module">
+    <script data-cfasync="false" type="module">
       import { initNavbarOverflow } from '../dist/navbar-overflow.js';
 
       initNavbarOverflow({
@@ -1045,14 +1045,14 @@
       });
     </script>
 
-    <script type="module">
+    <script data-cfasync="false" type="module">
       import { initThemeToggle } from '../dist/theme-toggle.js';
 
       // Theme toggle (header)
       initThemeToggle({ container: document.getElementById('theme-toggle') });
     </script>
 
-    <script type="module">
+    <script data-cfasync="false" type="module">
       import { initResenaWidget } from '../dist/reviews.js';
 
       initResenaWidget({ container: document.getElementById('review-widget-large') });

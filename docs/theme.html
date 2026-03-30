@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Theme / Dark Mode - @marketdataapp/ui</title>
     <link rel="stylesheet" href="docs.css" />
-    <script>
+    <script data-cfasync="false">
       (function () {
         var match = document.cookie.match(/(?:^|;\s*)theme=(dark|light)/);
         var saved = match ? match[1] : null;
@@ -79,12 +79,18 @@
             even in <code class="font-mono text-xs">&lt;head&gt;</code>. Without an inline script,
             the page renders in light mode first, then flashes to dark once the module loads.
           </p>
-          <p>This inline script runs synchronously before the browser's first paint:</p>
+          <p>
+            Place this inline script as the <strong>first element</strong> in
+            <code class="font-mono text-xs">&lt;head&gt;</code>, before any
+            <code class="font-mono text-xs">&lt;link&gt;</code> or
+            <code class="font-mono text-xs">&lt;style&gt;</code> tags. It runs synchronously before
+            the browser's first paint:
+          </p>
           <div class="bg-gray-100 dark:bg-gray-800 rounded-lg p-4 overflow-x-auto">
             <pre
               class="text-sm font-mono text-gray-800 dark:text-gray-200 whitespace-pre"
             ><code>&lt;head&gt;
-  &lt;script&gt;
+  &lt;script data-cfasync="false"&gt;
     (function () {
       var match = document.cookie.match(/(?:^|;\s*)theme=(dark|light)/);
       var saved = match ? match[1] : null;
@@ -97,6 +103,12 @@
   &lt;/script&gt;
 &lt;/head&gt;</code></pre>
           </div>
+          <p class="text-sm text-gray-500 dark:text-gray-400">
+            The <code class="font-mono text-xs">data-cfasync="false"</code> attribute prevents
+            Cloudflare Rocket Loader from deferring this script. Without it, Rocket Loader rewrites
+            the tag to <code class="font-mono text-xs">type="text/rocketscript"</code>, causing a
+            flash of wrong theme on first paint.
+          </p>
           <p class="text-sm text-gray-500 dark:text-gray-400">
             This mirrors the hierarchy from <code class="font-mono text-xs">theme.js</code>: cookie
             &gt; OS preference &gt; light. Both <code class="font-mono text-xs">.dark</code> class
@@ -112,7 +124,7 @@
           <div class="bg-gray-100 dark:bg-gray-800 rounded-lg p-4 overflow-x-auto">
             <pre
               class="text-sm font-mono text-gray-800 dark:text-gray-200 whitespace-pre"
-            ><code>&lt;script type="module"&gt;
+            ><code>&lt;script data-cfasync="false" type="module"&gt;
   import { initThemeToggle } from '@marketdataapp/ui/theme-toggle';
   initThemeToggle({ container: document.getElementById('theme-toggle') });
 &lt;/script&gt;</code></pre>
@@ -494,12 +506,12 @@ const cleanup = initDarkImages();</code></pre>
       </div>
     </footer>
 
-    <script type="module">
+    <script data-cfasync="false" type="module">
       import { initDarkImages } from '../dist/dark-images.js';
       initDarkImages();
     </script>
 
-    <script type="module">
+    <script data-cfasync="false" type="module">
       import { initThemeToggle } from '../dist/theme-toggle.js';
       import {
         getThemeCookie,

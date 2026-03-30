@@ -104,11 +104,11 @@ The `:where()` wrapper adds **zero specificity**, preventing dark mode selectors
 
 ES modules (`<script type="module">`) are **always deferred** by the browser — they execute after the HTML is fully parsed, even when placed in `<head>`. This means `theme.js` cannot prevent a flash of wrong theme (FOWT) on its own.
 
-Every consuming page must include an **inline `<script>` in `<head>`** that reads the theme cookie and applies the `dark` class before the browser's first paint:
+Every consuming page must include an **inline `<script>` as the first element in `<head>`** (before any `<link>` or `<style>` tags) that reads the theme cookie and applies the `dark` class before the browser's first paint:
 
 ```html
 <head>
-  <script>
+  <script data-cfasync="false">
     (function () {
       var match = document.cookie.match(/(?:^|;\s*)theme=(dark|light)/);
       var saved = match ? match[1] : null;
@@ -122,12 +122,14 @@ Every consuming page must include an **inline `<script>` in `<head>`** that read
 </head>
 ```
 
+> **Note:** The `data-cfasync="false"` attribute prevents Cloudflare Rocket Loader from deferring this script. Without it, Rocket Loader may rewrite the tag to `type="text/rocketscript"`, causing a flash of wrong theme on first paint.
+
 This mirrors the preference hierarchy from `theme.js`: **cookie > OS preference > light (default)**.
 
 Then, later in the page (typically at the end of `<body>`), load the toggle as a module:
 
 ```html
-<script type="module">
+<script data-cfasync="false" type="module">
   import { initThemeToggle } from '@marketdataapp/ui/theme-toggle';
   initThemeToggle({ container: document.getElementById('theme-toggle') });
 </script>
@@ -228,7 +230,7 @@ Mark elements with `data-user-state` and the native `hidden` attribute. Call `in
 <div data-user-state="trial" hidden>Your trial ends soon</div>
 <div data-user-state="product:quant" hidden>Quant-only feature</div>
 
-<script type="module">
+<script data-cfasync="false" type="module">
   import { initUserState } from '@marketdataapp/ui/user-state';
   initUserState();
 </script>
