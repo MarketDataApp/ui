@@ -298,14 +298,122 @@
                     Resolves the full hierarchy: cookie &gt; localStorage &gt; OS &gt; light.
                   </td>
                 </tr>
-                <tr>
+                <tr class="border-b border-gray-100 dark:border-gray-800">
                   <td class="py-3 pr-4"><code class="font-mono text-xs">isSystemMode()</code></td>
                   <td class="py-3 pr-4"><code class="font-mono text-xs">boolean</code></td>
                   <td class="py-3">True when no explicit preference is saved (follows OS).</td>
                 </tr>
+                <tr>
+                  <td class="py-3 pr-4">
+                    <code class="font-mono text-xs">onThemeChange(callback)</code>
+                  </td>
+                  <td class="py-3 pr-4"><code class="font-mono text-xs">() =&gt; void</code></td>
+                  <td class="py-3">
+                    Subscribe to theme changes. Callback receives
+                    <code class="font-mono text-xs">'dark'</code> or
+                    <code class="font-mono text-xs">'light'</code>. Returns an unsubscribe function.
+                  </td>
+                </tr>
               </tbody>
             </table>
           </div>
+        </div>
+      </section>
+
+      <!-- onThemeChange -->
+      <section id="on-theme-change">
+        <h2 class="text-2xl font-bold mb-6 border-b border-gray-200 dark:border-gray-700 pb-2">
+          onThemeChange()
+        </h2>
+        <div class="prose dark:prose-invert max-w-none text-gray-700 dark:text-gray-300 space-y-4">
+          <p>
+            Subscribe to theme changes with a callback. Useful for JS-driven reactions that can't be
+            handled with CSS <code class="font-mono text-xs">dark:</code> variants alone &mdash;
+            swapping Lottie animations, re-rendering charts, updating canvas elements, etc.
+          </p>
+          <p>
+            Detects changes via both the
+            <code class="font-mono text-xs">.dark</code> class (Tailwind) and the
+            <code class="font-mono text-xs">data-theme</code> attribute (Docusaurus), plus
+            <code class="font-mono text-xs">prefers-color-scheme</code> media query changes. Uses a
+            single shared <code class="font-mono text-xs">MutationObserver</code> internally &mdash;
+            multiple subscribers don't create multiple observers.
+          </p>
+        </div>
+
+        <div class="mt-6 space-y-6">
+          <!-- Usage -->
+          <div class="space-y-3">
+            <h3 class="text-lg font-semibold">Usage</h3>
+            <div class="bg-gray-100 dark:bg-gray-800 rounded-lg p-4 overflow-x-auto">
+              <pre
+                class="text-sm font-mono text-gray-800 dark:text-gray-200 whitespace-pre"
+              ><code>import { onThemeChange } from '@marketdataapp/ui/theme';
+
+const unsubscribe = onThemeChange((theme) =&gt; {
+  // theme is 'dark' or 'light'
+  console.log('Theme changed to:', theme);
+});
+
+// Later, to stop listening:
+unsubscribe();</code></pre>
+            </div>
+          </div>
+
+          <!-- Real-world examples -->
+          <div class="space-y-3">
+            <h3 class="text-lg font-semibold">Examples</h3>
+            <div class="bg-gray-100 dark:bg-gray-800 rounded-lg p-4 overflow-x-auto">
+              <pre
+                class="text-sm font-mono text-gray-800 dark:text-gray-200 whitespace-pre"
+              ><code>// Reload a Lottie animation with the alternate JSON file
+onThemeChange((theme) =&gt; {
+  player.destroy();
+  player.load(theme === 'dark' ? '/anim-dark.json' : '/anim-light.json');
+});
+
+// Re-render a chart with theme-appropriate colors
+onThemeChange((theme) =&gt; {
+  chart.updateOptions({
+    theme: { mode: theme },
+  });
+});</code></pre>
+            </div>
+          </div>
+
+          <!-- Live demo -->
+          <div class="space-y-3">
+            <h3 class="text-lg font-semibold">Live Demo</h3>
+            <p class="text-xs text-gray-400 dark:text-gray-500 mb-3">
+              Toggle the theme and watch the log update. This page uses
+              <code class="font-mono text-xs">onThemeChange()</code> to track every theme switch.
+            </p>
+            <div
+              class="border border-gray-200 dark:border-gray-700 rounded-lg p-6 space-y-3 min-h-20"
+            >
+              <div class="flex items-center gap-3">
+                <span class="text-sm text-gray-500 dark:text-gray-400">Current theme:</span>
+                <code id="otc-current-theme" class="font-mono text-sm font-bold"></code>
+              </div>
+              <div class="flex items-center gap-3">
+                <span class="text-sm text-gray-500 dark:text-gray-400">Change count:</span>
+                <code id="otc-change-count" class="font-mono text-sm">0</code>
+              </div>
+              <div
+                id="otc-log"
+                class="text-xs font-mono text-gray-400 dark:text-gray-500 space-y-1 max-h-32 overflow-y-auto"
+              ></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="mt-6 flex flex-wrap gap-2">
+          <code class="text-xs font-mono bg-gray-100 dark:bg-gray-800 px-2 py-1 rounded"
+            >onThemeChange()</code
+          >
+          <code class="text-xs font-mono bg-gray-100 dark:bg-gray-800 px-2 py-1 rounded"
+            >unsubscribe()</code
+          >
         </div>
       </section>
 
@@ -519,6 +627,7 @@ const cleanup = initDarkImages();</code></pre>
         getBrowserThemePreference,
         getEffectiveTheme,
         isSystemMode,
+        onThemeChange,
       } from '../dist/theme.js';
 
       // Theme toggle (header)
@@ -542,11 +651,22 @@ const cleanup = initDarkImages();</code></pre>
 
       updateApiState();
 
-      // Update on theme changes
-      const observer = new MutationObserver(updateApiState);
-      observer.observe(document.documentElement, {
-        attributes: true,
-        attributeFilter: ['class', 'data-theme'],
+      // Update API state and onThemeChange demo on theme changes
+      let changeCount = 0;
+      const initialTheme = document.documentElement.classList.contains('dark') ? 'dark' : 'light';
+      document.getElementById('otc-current-theme').textContent = initialTheme;
+
+      onThemeChange((theme) => {
+        updateApiState();
+
+        // onThemeChange live demo
+        changeCount++;
+        document.getElementById('otc-current-theme').textContent = theme;
+        document.getElementById('otc-change-count').textContent = changeCount;
+        const log = document.getElementById('otc-log');
+        const entry = document.createElement('div');
+        entry.textContent = `${new Date().toLocaleTimeString()} → ${theme}`;
+        log.prepend(entry);
       });
     </script>
   </body>

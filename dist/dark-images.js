@@ -1,5 +1,7 @@
 // Auto-generated from src/ by scripts/build-js.js — do not edit manually
 
+import { onThemeChange } from './theme.js';
+
 /**
  * @module dark-images
  * Automatic dark/light image swapping for *.marketdata.app.
@@ -179,6 +181,8 @@ function isCandidate(src) {
 let activeCleanup = null;
 
 function currentTheme() {
+  const dataTheme = document.documentElement.getAttribute('data-theme');
+  if (dataTheme === 'dark' || dataTheme === 'light') return dataTheme;
   return document.documentElement.classList.contains('dark') ? 'dark' : 'light';
 }
 
@@ -189,7 +193,7 @@ function currentTheme() {
  * return the same cleanup function. Calling cleanup allows re-initialization.
  *
  * Watches for:
- * - Theme changes via class mutations on <html> (`.dark` added/removed)
+ * - Theme changes via class or data-theme on <html> (Tailwind and Docusaurus)
  * - New <img> elements added to the DOM (SPA navigation, lazy loading, etc.)
  * - src attribute changes on existing <img> elements
  *
@@ -203,19 +207,9 @@ export function initDarkImages() {
   // Initial swap
   swapAllImages(currentTheme());
 
-  // Watch for theme changes via class mutations on <html>
-  let lastTheme = currentTheme();
-  const themeObserver = new MutationObserver(() => {
-    const theme = currentTheme();
-    if (theme !== lastTheme) {
-      lastTheme = theme;
-      swapAllImages(theme);
-    }
-  });
-
-  themeObserver.observe(document.documentElement, {
-    attributes: true,
-    attributeFilter: ['class'],
+  // Watch for theme changes (class, data-theme, or system preference)
+  const unsubTheme = onThemeChange((theme) => {
+    swapAllImages(theme);
   });
 
   // Watch for new/changed images in the DOM
@@ -249,7 +243,7 @@ export function initDarkImages() {
   });
 
   activeCleanup = () => {
-    themeObserver.disconnect();
+    unsubTheme();
     domObserver.disconnect();
     activeCleanup = null;
   };

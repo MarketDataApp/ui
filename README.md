@@ -18,7 +18,7 @@ npm install @marketdataapp/ui@github:MarketDataApp/ui
 | `./css/components.src`      | `css/components.src.css`           | Raw `@utility` definitions. Import into your own Tailwind v4 build to use `@apply` with shared classes.                                                 |
 | `./css/components`          | `dist/css/components.css`          | Pre-built CSS (full Tailwind including preflight reset), unlayered. For standalone consumers.                                                           |
 | `./css/components.no-reset` | `dist/css/components.no-reset.css` | Pre-built CSS without preflight reset, unlayered. For framework consumers with their own reset (e.g. Docusaurus).                                       |
-| `./theme`                   | `dist/theme.js`                    | Dark/light mode JS: `getThemeCookie`, `setThemeCookie`, `getUserThemePreference`, `getBrowserThemePreference`, `getEffectiveTheme`.                     |
+| `./theme`                   | `dist/theme.js`                    | Dark/light mode JS: `getThemeCookie`, `setThemeCookie`, `getUserThemePreference`, `getBrowserThemePreference`, `getEffectiveTheme`, `onThemeChange`.    |
 | `./theme-toggle`            | `dist/theme-toggle.js`             | Sun/moon toggle button for switching dark/light mode. Uses `./theme` for cookie persistence.                                                            |
 | `./dark-images`             | `dist/dark-images.js`              | Automatic dark/light image swapping. Convention-based (`-light`/`-dark` suffix) or explicit pairs via `addImagePair()`.                                 |
 | `./reviews`                 | `dist/reviews.js`                  | Review rating widget with build-time data. Renders large or small variant via `initResenaWidget()`.                                                     |
@@ -392,7 +392,7 @@ Usage not yet verified.
 
 ### JS Modules (build outputs in `dist/`)
 
-- **`dist/theme.js`** — Cross-subdomain dark/light mode via `.marketdata.app` cookie
+- **`dist/theme.js`** — Cross-subdomain dark/light mode via `.marketdata.app` cookie + `onThemeChange()` subscriber
 - **`dist/theme-toggle.js`** — Sun/moon toggle button with cookie persistence
 - **`dist/dark-images.js`** — Automatic dark/light image swapping (convention + explicit pairs)
 - **`dist/reviews.js`** — Review rating widget (large/small variants, build-time data, zero deps)

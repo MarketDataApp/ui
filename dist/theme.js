@@ -7,7 +7,7 @@
  * Preference hierarchy: cookie > localStorage > system preference > light (default).
  * The cookie is set on .marketdata.app so the theme persists across subdomains.
  *
- * This module handles preference detection only — no DOM manipulation.
+ * This module handles preference detection and theme change observation.
  * Each property (Amember, Docusaurus, etc.) applies the theme its own way.
  */
 
@@ -70,4 +70,78 @@ export function getEffectiveTheme() {
   }
 
   return 'light';
+}
+
+// ---------------------------------------------------------------------------
+// Theme change observer
+// ---------------------------------------------------------------------------
+
+const _themeSubscribers = new Set();
+let _themeObserver = null;
+let _mediaQuery = null;
+let _lastObservedTheme = null;
+
+/**
+ * Resolve the currently applied theme from the DOM.
+ * Checks data-theme (Docusaurus) first, then the dark class (Tailwind).
+ */
+function _resolveTheme() {
+  const dataTheme = document.documentElement.getAttribute('data-theme');
+  if (dataTheme === 'dark' || dataTheme === 'light') return dataTheme;
+  return document.documentElement.classList.contains('dark') ? 'dark' : 'light';
+}
+
+function _handleThemeChange() {
+  const theme = _resolveTheme();
+  if (theme !== _lastObservedTheme) {
+    _lastObservedTheme = theme;
+    for (const cb of _themeSubscribers) {
+      try {
+        cb(theme);
+      } catch {
+        // subscriber errors must not break others
+      }
+    }
+  }
+}
+
+function _startObserving() {
+  _lastObservedTheme = _resolveTheme();
+
+  _themeObserver = new MutationObserver(_handleThemeChange);
+  _themeObserver.observe(document.documentElement, {
+    attributes: true,
+    attributeFilter: ['class', 'data-theme'],
+  });
+
+  _mediaQuery = window.matchMedia?.('(prefers-color-scheme: dark)');
+  _mediaQuery?.addEventListener?.('change', _handleThemeChange);
+}
+
+function _stopObserving() {
+  _themeObserver?.disconnect();
+  _themeObserver = null;
+  _mediaQuery?.removeEventListener?.('change', _handleThemeChange);
+  _mediaQuery = null;
+  _lastObservedTheme = null;
+}
+
+/**
+ * Subscribe to theme changes. The callback fires whenever the applied theme
+ * changes — via the `class` attribute (Tailwind `dark` class), the `data-theme`
+ * attribute (Docusaurus), or a `prefers-color-scheme` media query change.
+ *
+ * Internally manages a single shared MutationObserver (created on first
+ * subscriber, disconnected when the last unsubscribes).
+ *
+ * @param {function('dark'|'light'): void} callback
+ * @returns {function(): void} Unsubscribe function
+ */
+export function onThemeChange(callback) {
+  _themeSubscribers.add(callback);
+  if (_themeSubscribers.size === 1) _startObserving();
+  return () => {
+    _themeSubscribers.delete(callback);
+    if (_themeSubscribers.size === 0) _stopObserving();
+  };
 }

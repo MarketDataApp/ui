@@ -6,6 +6,7 @@ import {
   getUserThemePreference,
   getBrowserThemePreference,
   getEffectiveTheme,
+  onThemeChange,
 } from '../../dist/theme.js';
 
 // ---------------------------------------------------------------------------
@@ -43,6 +44,31 @@ Object.defineProperty(globalThis, 'localStorage', {
   writable: true,
   configurable: true,
 });
+
+// ---------------------------------------------------------------------------
+// DOM helpers for onThemeChange tests
+// ---------------------------------------------------------------------------
+
+function setDarkClass() {
+  document.documentElement.classList.add('dark');
+}
+
+function setLightClass() {
+  document.documentElement.classList.remove('dark');
+}
+
+function setDataTheme(value) {
+  document.documentElement.setAttribute('data-theme', value);
+}
+
+function clearDataTheme() {
+  document.documentElement.removeAttribute('data-theme');
+}
+
+/** Flush microtasks so MutationObserver callbacks fire. */
+async function flush() {
+  await new Promise((r) => setTimeout(r, 0));
+}
 
 // ---------------------------------------------------------------------------
 // Helpers
@@ -84,6 +110,9 @@ beforeEach(() => {
   resetCookies();
   // Reset localStorage
   localStorage.clear();
+  // Reset DOM theme state
+  setLightClass();
+  clearDataTheme();
   // Restore all mocks
   vi.restoreAllMocks();
   // Default matchMedia that matches nothing
@@ -280,5 +309,166 @@ describe('isSystemMode', () => {
   it('returns true when localStorage has an invalid value', () => {
     localStorage.setItem('theme', 'blue');
     expect(isSystemMode()).toBe(true);
+  });
+});
+
+// ---------------------------------------------------------------------------
+// onThemeChange
+// ---------------------------------------------------------------------------
+describe('onThemeChange', () => {
+  it('fires callback when dark class is added', async () => {
+    const cb = vi.fn();
+    const unsub = onThemeChange(cb);
+
+    setDarkClass();
+    await flush();
+
+    expect(cb).toHaveBeenCalledWith('dark');
+    expect(cb).toHaveBeenCalledTimes(1);
+    unsub();
+  });
+
+  it('fires callback when dark class is removed', async () => {
+    setDarkClass();
+    const cb = vi.fn();
+    const unsub = onThemeChange(cb);
+
+    setLightClass();
+    await flush();
+
+    expect(cb).toHaveBeenCalledWith('light');
+    expect(cb).toHaveBeenCalledTimes(1);
+    unsub();
+  });
+
+  it('fires callback when data-theme changes to dark', async () => {
+    const cb = vi.fn();
+    const unsub = onThemeChange(cb);
+
+    setDataTheme('dark');
+    await flush();
+
+    expect(cb).toHaveBeenCalledWith('dark');
+    expect(cb).toHaveBeenCalledTimes(1);
+    unsub();
+  });
+
+  it('fires callback when data-theme changes from dark to light', async () => {
+    setDataTheme('dark');
+    const cb = vi.fn();
+    const unsub = onThemeChange(cb);
+
+    setDataTheme('light');
+    await flush();
+
+    expect(cb).toHaveBeenCalledWith('light');
+    expect(cb).toHaveBeenCalledTimes(1);
+    unsub();
+  });
+
+  it('does not fire when theme has not actually changed', async () => {
+    const cb = vi.fn();
+    const unsub = onThemeChange(cb);
+
+    // Add an unrelated class — theme is still light
+    document.documentElement.classList.add('some-other-class');
+    await flush();
+
+    expect(cb).not.toHaveBeenCalled();
+    document.documentElement.classList.remove('some-other-class');
+    unsub();
+  });
+
+  it('returns an unsubscribe function that stops callbacks', async () => {
+    const cb = vi.fn();
+    const unsub = onThemeChange(cb);
+
+    unsub();
+
+    setDarkClass();
+    await flush();
+
+    expect(cb).not.toHaveBeenCalled();
+  });
+
+  it('supports multiple subscribers', async () => {
+    const cb1 = vi.fn();
+    const cb2 = vi.fn();
+    const unsub1 = onThemeChange(cb1);
+    const unsub2 = onThemeChange(cb2);
+
+    setDarkClass();
+    await flush();
+
+    expect(cb1).toHaveBeenCalledWith('dark');
+    expect(cb2).toHaveBeenCalledWith('dark');
+    unsub1();
+    unsub2();
+  });
+
+  it('unsubscribing one does not affect others', async () => {
+    const cb1 = vi.fn();
+    const cb2 = vi.fn();
+    const unsub1 = onThemeChange(cb1);
+    const unsub2 = onThemeChange(cb2);
+
+    unsub1();
+
+    setDarkClass();
+    await flush();
+
+    expect(cb1).not.toHaveBeenCalled();
+    expect(cb2).toHaveBeenCalledWith('dark');
+    unsub2();
+  });
+
+  it('subscriber errors do not break other subscribers', async () => {
+    const bad = vi.fn(() => {
+      throw new Error('boom');
+    });
+    const good = vi.fn();
+    const unsub1 = onThemeChange(bad);
+    const unsub2 = onThemeChange(good);
+
+    setDarkClass();
+    await flush();
+
+    expect(bad).toHaveBeenCalled();
+    expect(good).toHaveBeenCalledWith('dark');
+    unsub1();
+    unsub2();
+  });
+
+  it('data-theme takes precedence over class', async () => {
+    const cb = vi.fn();
+    const unsub = onThemeChange(cb);
+
+    // First, go dark via class
+    setDarkClass();
+    await flush();
+    expect(cb).toHaveBeenCalledWith('dark');
+
+    // Now set data-theme='light' — should override the dark class
+    cb.mockClear();
+    setDataTheme('light');
+    await flush();
+
+    expect(cb).toHaveBeenCalledWith('light');
+    unsub();
+  });
+
+  it('can re-subscribe after all subscribers unsubscribe', async () => {
+    const cb1 = vi.fn();
+    const unsub1 = onThemeChange(cb1);
+    unsub1(); // observer torn down
+
+    const cb2 = vi.fn();
+    const unsub2 = onThemeChange(cb2); // fresh observer
+
+    setDarkClass();
+    await flush();
+
+    expect(cb2).toHaveBeenCalledWith('dark');
+    unsub2();
   });
 });
