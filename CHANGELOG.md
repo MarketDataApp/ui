@@ -1,5 +1,22 @@
 # Changelog
 
+## 4.2.0
+
+### New
+
+- **TypeScript type declarations** — every JS module entry point (`./theme`, `./navbar-overflow`, `./user`, `./user-profile`, `./user-state`, `./theme-toggle`, `./reviews`, `./dark-images`) now ships with a `.d.ts` file alongside its `.js`. TypeScript consumers can import named exports cleanly without `as any` casts, and get full autocomplete and parameter type checking.
+- Type declarations are generated from the existing JSDoc comments via `tsc --allowJs --emitDeclarationOnly`, so they stay in sync with the implementation automatically.
+- **`User` type** exported from `@marketdataapp/ui/user` — describes the user object shape (`login`, `name`, `email`, `paid`, `trial`, `products`).
+
+### Fixes
+
+- Corrected several JSDoc annotations that either had non-standard syntax or did not match runtime behavior:
+  - `onThemeChange()` callback parameter type
+  - `initThemeToggle()` return type (actually returns `{ cleanup, resetToSystem }`, was documented as `() => void`)
+  - `getThemeCookie()`, `getEffectiveTheme()`, `getUserThemePreference()`, `getBrowserThemePreference()` now declare their literal union return types
+
+Closes #12.
+
 ## 4.0.0
 
 ### Breaking Changes

@@ -9,13 +9,19 @@
  * Each property (Amember, Docusaurus, etc.) applies the theme its own way.
  */
 
-/** Reads the theme cookie value ('dark' | 'light' | null). */
+/**
+ * Reads the theme cookie value.
+ * @returns {'dark' | 'light' | null}
+ */
 export function getThemeCookie() {
   const match = document.cookie.match(/(?:^|;\s*)theme=(dark|light)/);
-  return match ? match[1] : null;
+  return match ? /** @type {'dark' | 'light'} */ (match[1]) : null;
 }
 
-/** Sets the theme cookie on .marketdata.app with a 1-year expiry. */
+/**
+ * Sets the theme cookie on .marketdata.app with a 1-year expiry.
+ * @param {'dark' | 'light'} theme
+ */
 export function setThemeCookie(theme) {
   document.cookie = `theme=${theme}; domain=.marketdata.app; path=/; max-age=31536000; SameSite=Lax`;
 }
@@ -30,7 +36,10 @@ export function isSystemMode() {
   return getUserThemePreference() === 'no-preference';
 }
 
-/** Returns the user's explicitly saved preference (cookie > localStorage), or 'no-preference'. */
+/**
+ * Returns the user's explicitly saved preference (cookie > localStorage), or 'no-preference'.
+ * @returns {'dark' | 'light' | 'no-preference'}
+ */
 export function getUserThemePreference() {
   const cookieTheme = getThemeCookie();
   if (cookieTheme) return cookieTheme;
@@ -44,7 +53,10 @@ export function getUserThemePreference() {
   return 'no-preference';
 }
 
-/** Returns the browser/OS theme preference via matchMedia, or 'no-preference'. */
+/**
+ * Returns the browser/OS theme preference via matchMedia, or 'no-preference'.
+ * @returns {'dark' | 'light' | 'no-preference'}
+ */
 export function getBrowserThemePreference() {
   if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
     return 'dark';
@@ -55,7 +67,10 @@ export function getBrowserThemePreference() {
   }
 }
 
-/** Returns the effective theme by checking cookie > localStorage > system > 'light'. */
+/**
+ * Returns the effective theme by checking cookie > localStorage > system > 'light'.
+ * @returns {'dark' | 'light'}
+ */
 export function getEffectiveTheme() {
   const userThemePreference = getUserThemePreference();
   if (userThemePreference !== 'no-preference') {
@@ -132,8 +147,8 @@ function _stopObserving() {
  * Internally manages a single shared MutationObserver (created on first
  * subscriber, disconnected when the last unsubscribes).
  *
- * @param {function('dark'|'light'): void} callback
- * @returns {function(): void} Unsubscribe function
+ * @param {(theme: 'dark' | 'light') => void} callback
+ * @returns {() => void} Unsubscribe function
  */
 export function onThemeChange(callback) {
   _themeSubscribers.add(callback);

@@ -59,7 +59,7 @@ function applyTheme(theme) {
  * @param {Object} options
  * @param {HTMLElement} options.container - DOM element to render into
  * @param {string} [options.buttonClass='theme-toggle-button'] - CSS class on the button
- * @returns {() => void} Cleanup function that removes the toggle and event listeners
+ * @returns {{ cleanup: () => void, resetToSystem: () => void }} Object with cleanup() to remove the toggle and event listeners, and resetToSystem() to clear the user preference and follow OS theme
  */
 export function initThemeToggle(options) {
   const { container, buttonClass = 'theme-toggle-button' } = options;

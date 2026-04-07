@@ -10,24 +10,49 @@
     "url": "https://github.com/MarketDataApp/ui.git"
   },
   "exports": {
-    "./theme": "./dist/theme.js",
+    "./theme": {
+      "types": "./dist/theme.d.ts",
+      "default": "./dist/theme.js"
+    },
     "./css/components": "./dist/css/components.css",
     "./css/components.no-reset": "./dist/css/components.no-reset.css",
     "./css/components.src": "./css/components.src.css",
     "./css/theme": "./css/theme.css",
-    "./navbar-overflow": "./dist/navbar-overflow.js",
-    "./user": "./dist/user.js",
-    "./user-profile": "./dist/user-profile.js",
-    "./user-state": "./dist/user-state.js",
-    "./theme-toggle": "./dist/theme-toggle.js",
-    "./reviews": "./dist/reviews.js",
-    "./dark-images": "./dist/dark-images.js"
+    "./navbar-overflow": {
+      "types": "./dist/navbar-overflow.d.ts",
+      "default": "./dist/navbar-overflow.js"
+    },
+    "./user": {
+      "types": "./dist/user.d.ts",
+      "default": "./dist/user.js"
+    },
+    "./user-profile": {
+      "types": "./dist/user-profile.d.ts",
+      "default": "./dist/user-profile.js"
+    },
+    "./user-state": {
+      "types": "./dist/user-state.d.ts",
+      "default": "./dist/user-state.js"
+    },
+    "./theme-toggle": {
+      "types": "./dist/theme-toggle.d.ts",
+      "default": "./dist/theme-toggle.js"
+    },
+    "./reviews": {
+      "types": "./dist/reviews.d.ts",
+      "default": "./dist/reviews.js"
+    },
+    "./dark-images": {
+      "types": "./dist/dark-images.d.ts",
+      "default": "./dist/dark-images.js"
+    }
   },
   "scripts": {
-    "build": "npm run build:fetch-reviews && npm run build:templates && npm run build:js && npm run build:css",
+    "build": "npm run build:fetch-reviews && npm run build:templates && npm run build:js && npm run build:types && npm run build:css",
     "build:fetch-reviews": "node scripts/fetch-reviews.js",
     "build:templates": "node scripts/build-templates.js",
     "build:js": "node scripts/build-js.js",
+    "build:types": "rm -f dist/*.d.ts && tsc -p tsconfig.json",
     "build:css": "tailwindcss -i css/components.input.css -o dist/css/components.css && tailwindcss -i css/components.no-reset.input.css -o dist/css/components.no-reset.css && node scripts/unlayer.js && tailwindcss -i docs/docs.input.css -o docs/docs.css",
     "build:site": "node scripts/build-site.js",
     "dev": "concurrently -n css,docs,serve -c blue,yellow,green \"npm:dev:css\" \"npm:dev:docs-css\" \"npm:dev:serve\"",
@@ -53,6 +78,7 @@
     "lint-staged": "^16.3.2",
     "prettier": "^3.8.1",
     "serve": "^14.2.5",
+    "typescript": "^5.9.3",
     "vitest": "^2.0.0"
   }
 }

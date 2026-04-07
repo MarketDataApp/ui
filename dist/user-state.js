@@ -19,6 +19,8 @@
 
 import { fetchUser, onUserChange } from './user.js';
 
+/** @typedef {import('./user.js').User} User */
+
 // ---------------------------------------------------------------------------
 // Condition evaluation
 // ---------------------------------------------------------------------------
@@ -27,7 +29,7 @@ import { fetchUser, onUserChange } from './user.js';
  * Evaluates a single condition against the user object.
  *
  * @param {string} condition - One of: logged-in, logged-out, paid, free, trial, product:<slug>
- * @param {Object|null} user - User object from fetchUser(), or null if logged out
+ * @param {User | null} user - User object from fetchUser(), or null if logged out
  * @returns {boolean}
  */
 export function evaluateCondition(condition, user) {
@@ -56,7 +58,7 @@ export function evaluateCondition(condition, user) {
  * Resolves visibility for all `[data-user-state]` elements.
  * Elements whose conditions match get `hidden` removed; others get `hidden` set.
  *
- * @param {Object|null} user - User object or null
+ * @param {User | null} user - User object or null
  * @param {HTMLElement|Document} root - Scope for DOM queries
  */
 export function resolveElements(user, root) {

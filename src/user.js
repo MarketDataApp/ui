@@ -7,6 +7,16 @@
  * can share a single user state without redundant API calls.
  */
 
+/**
+ * @typedef {Object} User
+ * @property {string} [login]
+ * @property {string} [name]
+ * @property {string} [email]
+ * @property {boolean} [paid]
+ * @property {boolean} [trial]
+ * @property {string[]} [products]
+ */
+
 // ---------------------------------------------------------------------------
 // Constants
 // ---------------------------------------------------------------------------
@@ -33,8 +43,8 @@ const _subscribers = new Set();
  * The callback fires when a background revalidation detects that user data
  * has changed (including logout, where `user` will be `null`).
  *
- * @param {function(Object|null): void} callback - Receives the new user object or null
- * @returns {function(): void} Unsubscribe function
+ * @param {(user: User | null) => void} callback - Receives the new user object or null
+ * @returns {() => void} Unsubscribe function
  */
 export function onUserChange(callback) {
   _subscribers.add(callback);
@@ -68,7 +78,7 @@ function _notifySubscribers(user) {
  *
  * @param {Object} [options]
  * @param {string} [options.apiUrl] - Override the API endpoint
- * @returns {Promise<Object|null>} User object or null on any error
+ * @returns {Promise<User | null>} User object or null on any error
  */
 export async function fetchUser(options = {}) {
   const apiUrl = options.apiUrl || DEFAULT_API_URL;

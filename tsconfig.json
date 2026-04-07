@@ -1,0 +1,18 @@
+{
+  "compilerOptions": {
+    "allowJs": true,
+    "checkJs": false,
+    "declaration": true,
+    "emitDeclarationOnly": true,
+    "declarationDir": "dist",
+    "rootDir": "dist",
+    "module": "esnext",
+    "moduleResolution": "bundler",
+    "target": "esnext",
+    "skipLibCheck": true,
+    "strict": false,
+    "lib": ["ES2022", "DOM"]
+  },
+  "include": ["dist/**/*.js"],
+  "exclude": ["dist/**/*.d.ts", "node_modules"]
+}
