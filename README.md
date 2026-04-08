@@ -12,20 +12,20 @@ npm install @marketdataapp/ui@github:MarketDataApp/ui
 
 ## Exports
 
-| Export                      | File                               | Description                                                                                                                                             |
-| --------------------------- | ---------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `./css/theme`               | `css/theme.css`                    | All design tokens: brand colors, fonts, shadows, Flowbite semantic UI tokens (neutrals, text, borders, status). Import into your own Tailwind v4 build. |
-| `./css/components.src`      | `css/components.src.css`           | Raw `@utility` definitions. Import into your own Tailwind v4 build to use `@apply` with shared classes.                                                 |
-| `./css/components`          | `dist/css/components.css`          | Pre-built CSS (full Tailwind including preflight reset), unlayered. For standalone consumers.                                                           |
-| `./css/components.no-reset` | `dist/css/components.no-reset.css` | Pre-built CSS without preflight reset, unlayered. For framework consumers with their own reset (e.g. Docusaurus).                                       |
-| `./theme`                   | `dist/theme.js`                    | Dark/light mode JS: `getThemeCookie`, `setThemeCookie`, `getUserThemePreference`, `getBrowserThemePreference`, `getEffectiveTheme`, `onThemeChange`.    |
-| `./theme-toggle`            | `dist/theme-toggle.js`             | Sun/moon toggle button for switching dark/light mode. Uses `./theme` for cookie persistence.                                                            |
-| `./dark-images`             | `dist/dark-images.js`              | Automatic dark/light image swapping. Convention-based (`-light`/`-dark` suffix) or explicit pairs via `addImagePair()`.                                 |
-| `./reviews`                 | `dist/reviews.js`                  | Review rating widget with build-time data. Renders large or small variant via `initResenaWidget()`.                                                     |
-| `./navbar-overflow`         | `dist/navbar-overflow.js`          | Priority-based auto-hide for navbar items that overflow their container.                                                                                |
-| `./user`                    | `dist/user.js`                     | Shared user state: `fetchUser` (stale-while-revalidate cache, dedup, retries), `onUserChange` (subscriber pattern).                                     |
-| `./user-profile`            | `dist/user-profile.js`             | Gravatar avatar with optional dropdown menu. Zero dependencies.                                                                                         |
-| `./user-state`              | `dist/user-state.js`               | Declarative show/hide for elements based on user auth and subscription state.                                                                           |
+| Export                      | File                               | Description                                                                                                                                                                                                                                  |
+| --------------------------- | ---------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `./css/theme`               | `css/theme.css`                    | All design tokens: brand colors, fonts, shadows, Flowbite semantic UI tokens (neutrals, text, borders, status). Import into your own Tailwind v4 build.                                                                                      |
+| `./css/components.src`      | `css/components.src.css`           | Raw `@utility` definitions. Import into your own Tailwind v4 build to use `@apply` with shared classes.                                                                                                                                      |
+| `./css/components`          | `dist/css/components.css`          | Pre-built CSS (full Tailwind including preflight reset), unlayered. For standalone consumers.                                                                                                                                                |
+| `./css/components.no-reset` | `dist/css/components.no-reset.css` | Pre-built CSS without preflight reset, unlayered. For framework consumers with their own reset (e.g. Docusaurus).                                                                                                                            |
+| `./theme`                   | `dist/theme.js`                    | Dark/light mode JS: `getThemeCookie`, `setThemeCookie`, `clearThemeCookie`, `isSystemMode`, `getUserThemePreference`, `getBrowserThemePreference`, `getEffectiveTheme`, `onThemeChange`, `syncThemeCookie`, `migrateLocalStoragePreference`. |
+| `./theme-toggle`            | `dist/theme-toggle.js`             | Sun/moon toggle button for switching dark/light mode. Uses `./theme` for cookie persistence.                                                                                                                                                 |
+| `./dark-images`             | `dist/dark-images.js`              | Automatic dark/light image swapping. Convention-based (`-light`/`-dark` suffix) or explicit pairs via `addImagePair()`.                                                                                                                      |
+| `./reviews`                 | `dist/reviews.js`                  | Review rating widget with build-time data. Renders large or small variant via `initResenaWidget()`.                                                                                                                                          |
+| `./navbar-overflow`         | `dist/navbar-overflow.js`          | Priority-based auto-hide for navbar items that overflow their container.                                                                                                                                                                     |
+| `./user`                    | `dist/user.js`                     | Shared user state: `fetchUser` (stale-while-revalidate cache, dedup, retries), `onUserChange` (subscriber pattern).                                                                                                                          |
+| `./user-profile`            | `dist/user-profile.js`             | Gravatar avatar with optional dropdown menu. Zero dependencies.                                                                                                                                                                              |
+| `./user-state`              | `dist/user-state.js`               | Declarative show/hide for elements based on user auth and subscription state.                                                                                                                                                                |
 
 ## CSS Architecture
 
@@ -104,7 +104,7 @@ The `:where()` wrapper adds **zero specificity**, preventing dark mode selectors
 
 ES modules (`<script type="module">`) are **always deferred** by the browser — they execute after the HTML is fully parsed, even when placed in `<head>`. This means `theme.js` cannot prevent a flash of wrong theme (FOWT) on its own.
 
-Every consuming page must include an **inline `<script>` as the first element in `<head>`** (before any `<link>` or `<style>` tags) that reads the theme cookie and applies the `dark` class before the browser's first paint:
+Every consuming page must include an **inline `<script>` as the first element in `<head>`** (before any `<link>` or `<style>` tags) that reads the theme cookie and applies the theme class/attribute before the browser's first paint:
 
 ```html
 <head>
@@ -113,14 +113,15 @@ Every consuming page must include an **inline `<script>` as the first element in
       var match = document.cookie.match(/(?:^|;\s*)theme=(dark|light)/);
       var saved = match ? match[1] : null;
       var prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-      if (saved === 'dark' || (!saved && prefersDark)) {
-        document.documentElement.classList.add('dark');
-        document.documentElement.setAttribute('data-theme', 'dark');
-      }
+      var dark = saved === 'dark' || (!saved && prefersDark);
+      document.documentElement.classList.add(dark ? 'dark' : 'light');
+      document.documentElement.setAttribute('data-theme', dark ? 'dark' : 'light');
     })();
   </script>
 </head>
 ```
+
+Both branches run on every load, so `.dark` / `.light` and `[data-theme="dark"]` / `[data-theme="light"]` are always set symmetrically. Consumers can rely on any of those four selectors at initial paint and after every toggle.
 
 > **Note:** The `data-cfasync="false"` attribute prevents Cloudflare Rocket Loader from deferring this script. Without it, Rocket Loader may rewrite the tag to `type="text/rocketscript"`, causing a flash of wrong theme on first paint.
 
@@ -136,6 +137,19 @@ Then, later in the page (typically at the end of `<body>`), load the toggle as a
 ```
 
 The inline script handles initial render; the module handles user interaction and cookie persistence.
+
+#### Cross-subdomain cookie sync for external toggles (Docusaurus, etc.)
+
+When the consuming site uses its own theme toggle (e.g. Docusaurus's built-in switcher, which flips `data-theme` on `<html>` directly), our cross-subdomain cookie won't update automatically — the external toggle doesn't know about it. Call `syncThemeCookie()` once on page load to bridge the gap:
+
+```js
+import { syncThemeCookie } from '@marketdataapp/ui/theme';
+syncThemeCookie();
+```
+
+`syncThemeCookie()` subscribes a `MutationObserver` to `<html>` (reusing the shared one from `onThemeChange`) and writes the theme cookie whenever the applied theme changes. It has a **system-mode safeguard**: if no cookie exists (meaning the user is following OS preference), it will not write one, so OS-following users stay OS-following. It also runs `migrateLocalStoragePreference()` on subscribe, copying any legacy `localStorage.theme` value into the cookie on first load.
+
+`theme-toggle.js` (our own sun/moon toggle) writes the cookie on click and does **not** need `syncThemeCookie()`. Only external toggles do.
 
 ### Dark Image Swapping
 

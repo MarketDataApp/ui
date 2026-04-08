@@ -10,10 +10,9 @@
         var match = document.cookie.match(/(?:^|;\s*)theme=(dark|light)/);
         var saved = match ? match[1] : null;
         var prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-        if (saved === 'dark' || (!saved && prefersDark)) {
-          document.documentElement.classList.add('dark');
-          document.documentElement.setAttribute('data-theme', 'dark');
-        }
+        var dark = saved === 'dark' || (!saved && prefersDark);
+        document.documentElement.classList.add(dark ? 'dark' : 'light');
+        document.documentElement.setAttribute('data-theme', dark ? 'dark' : 'light');
       })();
     </script>
   </head>
@@ -95,10 +94,9 @@
       var match = document.cookie.match(/(?:^|;\s*)theme=(dark|light)/);
       var saved = match ? match[1] : null;
       var prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-      if (saved === 'dark' || (!saved &amp;&amp; prefersDark)) {
-        document.documentElement.classList.add('dark');
-        document.documentElement.setAttribute('data-theme', 'dark');
-      }
+      var dark = saved === 'dark' || (!saved &amp;&amp; prefersDark);
+      document.documentElement.classList.add(dark ? 'dark' : 'light');
+      document.documentElement.setAttribute('data-theme', dark ? 'dark' : 'light');
     })();
   &lt;/script&gt;
 &lt;/head&gt;</code></pre>
@@ -111,9 +109,14 @@
           </p>
           <p class="text-sm text-gray-500 dark:text-gray-400">
             This mirrors the hierarchy from <code class="font-mono text-xs">theme.js</code>: cookie
-            &gt; OS preference &gt; light. Both <code class="font-mono text-xs">.dark</code> class
-            and <code class="font-mono text-xs">data-theme</code> attribute are set for
-            compatibility with Tailwind and Docusaurus conventions.
+            &gt; OS preference &gt; light. Class and
+            <code class="font-mono text-xs">data-theme</code> attribute are set
+            <strong>symmetrically</strong> in both branches &mdash;
+            <code class="font-mono text-xs">.dark</code> /
+            <code class="font-mono text-xs">.light</code> and
+            <code class="font-mono text-xs">[data-theme="dark"]</code> /
+            <code class="font-mono text-xs">[data-theme="light"]</code> are always present from the
+            first paint, so consumers can rely on any of those four selectors.
           </p>
 
           <h3 class="text-lg font-semibold">Step 2: Load the toggle module</h3>
@@ -303,7 +306,7 @@
                   <td class="py-3 pr-4"><code class="font-mono text-xs">boolean</code></td>
                   <td class="py-3">True when no explicit preference is saved (follows OS).</td>
                 </tr>
-                <tr>
+                <tr class="border-b border-gray-100 dark:border-gray-800">
                   <td class="py-3 pr-4">
                     <code class="font-mono text-xs">onThemeChange(callback)</code>
                   </td>
@@ -312,6 +315,32 @@
                     Subscribe to theme changes. Callback receives
                     <code class="font-mono text-xs">'dark'</code> or
                     <code class="font-mono text-xs">'light'</code>. Returns an unsubscribe function.
+                  </td>
+                </tr>
+                <tr class="border-b border-gray-100 dark:border-gray-800">
+                  <td class="py-3 pr-4">
+                    <code class="font-mono text-xs">syncThemeCookie()</code>
+                  </td>
+                  <td class="py-3 pr-4"><code class="font-mono text-xs">() =&gt; void</code></td>
+                  <td class="py-3">
+                    Subscribe the cross-subdomain cookie to live theme changes. Writes the cookie
+                    only when an explicit preference already exists (preserves system mode). Runs
+                    <code class="font-mono text-xs">migrateLocalStoragePreference()</code> on
+                    subscribe. For consumers whose toggle flips DOM attributes directly (e.g.
+                    Docusaurus). Returns an unsubscribe function.
+                  </td>
+                </tr>
+                <tr>
+                  <td class="py-3 pr-4">
+                    <code class="font-mono text-xs">migrateLocalStoragePreference()</code>
+                  </td>
+                  <td class="py-3 pr-4">
+                    <code class="font-mono text-xs">'dark' | 'light' | null</code>
+                  </td>
+                  <td class="py-3">
+                    One-shot migration of a legacy
+                    <code class="font-mono text-xs">localStorage.theme</code> value into the cookie,
+                    iff no cookie exists yet. No-op if the cookie is already set.
                   </td>
                 </tr>
               </tbody>
@@ -628,7 +657,13 @@ const cleanup = initDarkImages();</code></pre>
         getEffectiveTheme,
         isSystemMode,
         onThemeChange,
+        syncThemeCookie,
       } from '../dist/theme.js';
+
+      // Keep the cross-subdomain cookie in sync with live theme changes,
+      // and promote any legacy localStorage value into the cookie on load.
+      // Safe in system mode: only writes the cookie when one already exists.
+      syncThemeCookie();
 
       // Theme toggle (header)
       initThemeToggle({ container: document.getElementById('theme-toggle') });

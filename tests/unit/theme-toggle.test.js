@@ -70,10 +70,12 @@ function mockMatchMediaWithCallbacks(initialPreference) {
 
 function setLightMode() {
   document.documentElement.classList.remove('dark');
+  document.documentElement.classList.add('light');
   document.documentElement.setAttribute('data-theme', 'light');
 }
 
 function setDarkMode() {
+  document.documentElement.classList.remove('light');
   document.documentElement.classList.add('dark');
   document.documentElement.setAttribute('data-theme', 'dark');
 }
@@ -160,6 +162,7 @@ describe('initThemeToggle', () => {
     const button = container.querySelector('button');
     button.click();
     expect(document.documentElement.classList.contains('dark')).toBe(true);
+    expect(document.documentElement.classList.contains('light')).toBe(false);
     expect(document.documentElement.getAttribute('data-theme')).toBe('dark');
   });
 
@@ -169,7 +172,33 @@ describe('initThemeToggle', () => {
     const button = container.querySelector('button');
     button.click();
     expect(document.documentElement.classList.contains('dark')).toBe(false);
+    expect(document.documentElement.classList.contains('light')).toBe(true);
     expect(document.documentElement.getAttribute('data-theme')).toBe('light');
+  });
+
+  it('toggling sets .light and .dark classes symmetrically across multiple clicks', () => {
+    setLightMode();
+    initThemeToggle({ container });
+    const button = container.querySelector('button');
+    const html = document.documentElement;
+
+    // Click 1: light -> dark
+    button.click();
+    expect(html.classList.contains('dark')).toBe(true);
+    expect(html.classList.contains('light')).toBe(false);
+    expect(html.getAttribute('data-theme')).toBe('dark');
+
+    // Click 2: dark -> light
+    button.click();
+    expect(html.classList.contains('dark')).toBe(false);
+    expect(html.classList.contains('light')).toBe(true);
+    expect(html.getAttribute('data-theme')).toBe('light');
+
+    // Click 3: light -> dark
+    button.click();
+    expect(html.classList.contains('dark')).toBe(true);
+    expect(html.classList.contains('light')).toBe(false);
+    expect(html.getAttribute('data-theme')).toBe('dark');
   });
 
   it('updates icon visibility after toggle', () => {
@@ -205,6 +234,7 @@ describe('initThemeToggle', () => {
     button.click();
     button.click();
     expect(document.documentElement.classList.contains('dark')).toBe(false);
+    expect(document.documentElement.classList.contains('light')).toBe(true);
     expect(document.documentElement.getAttribute('data-theme')).toBe('light');
   });
 
@@ -219,6 +249,7 @@ describe('initThemeToggle', () => {
 
       trigger(true); // OS changed to dark
       expect(document.documentElement.classList.contains('dark')).toBe(true);
+      expect(document.documentElement.classList.contains('light')).toBe(false);
       expect(document.documentElement.getAttribute('data-theme')).toBe('dark');
     });
 
@@ -229,6 +260,7 @@ describe('initThemeToggle', () => {
 
       trigger(false); // OS changed to light
       expect(document.documentElement.classList.contains('dark')).toBe(false);
+      expect(document.documentElement.classList.contains('light')).toBe(true);
       expect(document.documentElement.getAttribute('data-theme')).toBe('light');
     });
 
@@ -282,6 +314,7 @@ describe('initThemeToggle', () => {
       mockMatchMediaWithCallbacks('light');
       resetToSystem();
       expect(document.documentElement.classList.contains('dark')).toBe(false);
+      expect(document.documentElement.classList.contains('light')).toBe(true);
       expect(document.documentElement.getAttribute('data-theme')).toBe('light');
     });
 

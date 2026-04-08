@@ -4,6 +4,16 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Navbar Overflow - Detection Methods</title>
+    <script data-cfasync="false">
+      (function () {
+        var match = document.cookie.match(/(?:^|;\s*)theme=(dark|light)/);
+        var saved = match ? match[1] : null;
+        var prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+        var dark = saved === 'dark' || (!saved && prefersDark);
+        document.documentElement.classList.add(dark ? 'dark' : 'light');
+        document.documentElement.setAttribute('data-theme', dark ? 'dark' : 'light');
+      })();
+    </script>
     <link rel="stylesheet" href="../dist/css/components.css" />
     <style>
       /* Shared navbar styling */

@@ -9,6 +9,10 @@
  *
  * This module handles preference detection and theme change observation.
  * Each property (Amember, Docusaurus, etc.) applies the theme its own way.
+ *
+ * For consumers whose theme toggle flips <html> attributes directly (e.g.
+ * Docusaurus), call syncThemeCookie() once on page load to keep our
+ * cross-subdomain cookie in sync with whatever writes to the DOM.
  */
 
 /**
@@ -40,6 +44,10 @@ export function isSystemMode() {
 
 /**
  * Returns the user's explicitly saved preference (cookie > localStorage), or 'no-preference'.
+ *
+ * This is a pure getter. Call migrateLocalStoragePreference() (or
+ * syncThemeCookie(), which wraps it) if you want a legacy localStorage value
+ * promoted into the cookie.
  * @returns {'dark' | 'light' | 'no-preference'}
  */
 export function getUserThemePreference() {
@@ -47,12 +55,23 @@ export function getUserThemePreference() {
   if (cookieTheme) return cookieTheme;
 
   const localTheme = localStorage.getItem('theme');
-  if (localTheme === 'dark' || localTheme === 'light') {
-    setThemeCookie(localTheme);
-    return localTheme;
-  }
+  if (localTheme === 'dark' || localTheme === 'light') return localTheme;
 
   return 'no-preference';
+}
+
+/**
+ * One-shot migration: if a legacy localStorage `theme` value exists and no
+ * cookie is set, copy it into the cookie. Safe to call repeatedly — a no-op
+ * once the cookie is present.
+ * @returns {'dark' | 'light' | null} the migrated value, or null if nothing to migrate
+ */
+export function migrateLocalStoragePreference() {
+  if (getThemeCookie()) return null;
+  const localTheme = localStorage.getItem('theme');
+  if (localTheme !== 'dark' && localTheme !== 'light') return null;
+  setThemeCookie(localTheme);
+  return localTheme;
 }
 
 /**
@@ -159,4 +178,27 @@ export function onThemeChange(callback) {
     _themeSubscribers.delete(callback);
     if (_themeSubscribers.size === 0) _stopObserving();
   };
+}
+
+/**
+ * Subscribe the cross-subdomain theme cookie to live theme changes. Writes
+ * the cookie whenever the applied theme changes — but ONLY if the user
+ * already has an explicit preference (cookie already set). This preserves
+ * "system mode" for users without a cookie: their DOM can follow OS changes
+ * without silently getting promoted out of system mode.
+ *
+ * Also runs migrateLocalStoragePreference() once on subscribe so consumers
+ * with a legacy localStorage value get migrated to the cookie automatically.
+ *
+ * Intended for consumers whose theme toggle flips DOM attributes directly
+ * (e.g. Docusaurus) and therefore can't call setThemeCookie() themselves.
+ * Our own theme-toggle.js writes the cookie on click and does not need this.
+ *
+ * @returns {() => void} Unsubscribe function
+ */
+export function syncThemeCookie() {
+  migrateLocalStoragePreference();
+  return onThemeChange((theme) => {
+    if (getThemeCookie()) setThemeCookie(theme);
+  });
 }

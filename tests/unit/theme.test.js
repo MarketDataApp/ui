@@ -7,6 +7,8 @@ import {
   getBrowserThemePreference,
   getEffectiveTheme,
   onThemeChange,
+  syncThemeCookie,
+  migrateLocalStoragePreference,
 } from '../../dist/theme.js';
 
 // ---------------------------------------------------------------------------
@@ -191,11 +193,12 @@ describe('getUserThemePreference', () => {
     expect(getUserThemePreference()).toBe('light');
   });
 
-  it('migrates localStorage value to a cookie when used as fallback', () => {
+  it('is a pure getter — does not write the cookie as a side effect', () => {
     localStorage.setItem('theme', 'dark');
-    getUserThemePreference();
-    // After migration the cookie should be readable
-    expect(getThemeCookie()).toBe('dark');
+    expect(getUserThemePreference()).toBe('dark');
+    // The getter must not promote localStorage into the cookie.
+    // Migration is the job of migrateLocalStoragePreference() / syncThemeCookie().
+    expect(getThemeCookie()).toBe(null);
   });
 
   it('returns "no-preference" when neither cookie nor localStorage is set', () => {
@@ -469,6 +472,149 @@ describe('onThemeChange', () => {
     await flush();
 
     expect(cb2).toHaveBeenCalledWith('dark');
+    unsub2();
+  });
+});
+
+// ---------------------------------------------------------------------------
+// migrateLocalStoragePreference
+// ---------------------------------------------------------------------------
+describe('migrateLocalStoragePreference', () => {
+  it('copies a valid localStorage theme into the cookie when no cookie exists', () => {
+    localStorage.setItem('theme', 'dark');
+    const result = migrateLocalStoragePreference();
+    expect(result).toBe('dark');
+    expect(getThemeCookie()).toBe('dark');
+  });
+
+  it('copies "light" too, not just "dark"', () => {
+    localStorage.setItem('theme', 'light');
+    const result = migrateLocalStoragePreference();
+    expect(result).toBe('light');
+    expect(getThemeCookie()).toBe('light');
+  });
+
+  it('is a no-op when a cookie already exists', () => {
+    document.cookie = 'theme=light';
+    localStorage.setItem('theme', 'dark');
+    const result = migrateLocalStoragePreference();
+    expect(result).toBe(null);
+    // Existing cookie is not overwritten
+    expect(getThemeCookie()).toBe('light');
+  });
+
+  it('is a no-op when localStorage has no theme value', () => {
+    const result = migrateLocalStoragePreference();
+    expect(result).toBe(null);
+    expect(getThemeCookie()).toBe(null);
+  });
+
+  it('is a no-op when localStorage has an invalid theme value', () => {
+    localStorage.setItem('theme', 'blue');
+    const result = migrateLocalStoragePreference();
+    expect(result).toBe(null);
+    expect(getThemeCookie()).toBe(null);
+  });
+
+  it('is safe to call repeatedly', () => {
+    localStorage.setItem('theme', 'dark');
+    expect(migrateLocalStoragePreference()).toBe('dark');
+    // Second call sees the cookie and bails out
+    expect(migrateLocalStoragePreference()).toBe(null);
+    expect(getThemeCookie()).toBe('dark');
+  });
+});
+
+// ---------------------------------------------------------------------------
+// syncThemeCookie
+// ---------------------------------------------------------------------------
+describe('syncThemeCookie', () => {
+  it('writes the cookie when data-theme changes and a cookie already exists', async () => {
+    // Use setThemeCookie() to prime — setting document.cookie directly creates
+    // an un-domained cookie that shadows the domain-scoped one setThemeCookie writes.
+    setThemeCookie('light');
+    const unsub = syncThemeCookie();
+
+    setDataTheme('dark');
+    await flush();
+
+    expect(getThemeCookie()).toBe('dark');
+    unsub();
+  });
+
+  it('writes the cookie when the dark class is toggled and a cookie already exists', async () => {
+    setThemeCookie('light');
+    const unsub = syncThemeCookie();
+
+    setDarkClass();
+    await flush();
+
+    expect(getThemeCookie()).toBe('dark');
+    unsub();
+  });
+
+  it('does NOT write the cookie in system mode (no cookie set)', async () => {
+    // System mode: no cookie, no localStorage
+    const unsub = syncThemeCookie();
+    expect(getThemeCookie()).toBe(null); // nothing to migrate, nothing written
+
+    setDataTheme('dark');
+    await flush();
+
+    // Critical: OS flipping dark must NOT promote a system-mode user out of system mode
+    expect(getThemeCookie()).toBe(null);
+    unsub();
+  });
+
+  it('runs migrateLocalStoragePreference on subscribe', () => {
+    localStorage.setItem('theme', 'dark');
+    expect(getThemeCookie()).toBe(null);
+
+    const unsub = syncThemeCookie();
+    // Legacy localStorage value should have been promoted immediately
+    expect(getThemeCookie()).toBe('dark');
+    unsub();
+  });
+
+  it('after migration, subsequent theme changes keep the cookie in sync', async () => {
+    // Start from a dark DOM so toggling to light is an actual change event.
+    setDarkClass();
+    localStorage.setItem('theme', 'dark');
+    const unsub = syncThemeCookie();
+    expect(getThemeCookie()).toBe('dark');
+
+    setLightClass();
+    await flush();
+    expect(getThemeCookie()).toBe('light');
+
+    setDarkClass();
+    await flush();
+    expect(getThemeCookie()).toBe('dark');
+    unsub();
+  });
+
+  it('unsubscribe stops the cookie from being updated', async () => {
+    setThemeCookie('light');
+    const unsub = syncThemeCookie();
+    unsub();
+
+    setDataTheme('dark');
+    await flush();
+
+    // Cookie unchanged because we unsubscribed
+    expect(getThemeCookie()).toBe('light');
+  });
+
+  it('reuses the shared onThemeChange observer (no duplicate writes for multiple subscribers)', async () => {
+    setThemeCookie('light');
+    const unsub1 = syncThemeCookie();
+    const unsub2 = syncThemeCookie();
+
+    setDataTheme('dark');
+    await flush();
+
+    expect(getThemeCookie()).toBe('dark');
+    unsub1();
     unsub2();
   });
 });

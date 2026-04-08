@@ -10,10 +10,9 @@
         var match = document.cookie.match(/(?:^|;\s*)theme=(dark|light)/);
         var saved = match ? match[1] : null;
         var prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-        if (saved === 'dark' || (!saved && prefersDark)) {
-          document.documentElement.classList.add('dark');
-          document.documentElement.setAttribute('data-theme', 'dark');
-        }
+        var dark = saved === 'dark' || (!saved && prefersDark);
+        document.documentElement.classList.add(dark ? 'dark' : 'light');
+        document.documentElement.setAttribute('data-theme', dark ? 'dark' : 'light');
       })();
     </script>
   </head>
