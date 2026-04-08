@@ -1,5 +1,28 @@
 # Changelog
 
+## 4.3.0
+
+### New
+
+- **Symmetric theme DOM contract** — `applyTheme()` and the inline FOUC snippets now write both `.dark` / `.light` classes and `[data-theme="dark"]` / `[data-theme="light"]` attributes symmetrically in both branches. All four selectors are present from first paint and after every toggle, so consumers can write rules like `html.light { … }` or `html[data-theme="light"] { … }` reliably.
+- **`syncThemeCookie()`** export from `@marketdataapp/ui/theme` — subscribes the cross-subdomain theme cookie to live DOM theme changes via the shared `onThemeChange` observer. Intended for consumers whose theme toggle flips DOM attributes directly (e.g. Docusaurus's built-in switcher) and therefore can't call `setThemeCookie()` themselves. Includes a **system-mode safeguard**: only writes the cookie when one already exists, so users following OS preference (no cookie) stay OS-following even when their OS flips dark. Returns an unsubscribe function.
+- **`migrateLocalStoragePreference()`** export from `@marketdataapp/ui/theme` — one-shot migration of any legacy `localStorage.theme` value into the cross-subdomain cookie. No-op if a cookie already exists. `syncThemeCookie()` calls it automatically on subscribe, so most consumers don't need to call it directly.
+
+### Changed
+
+- **`getUserThemePreference()` is now a pure getter.** It previously had a surprising side effect of writing a cookie during a read, when falling back to `localStorage`. The migration logic moved to the new `migrateLocalStoragePreference()` function. Consumers who relied on the implicit migration should call `syncThemeCookie()` (or `migrateLocalStoragePreference()` directly) on page load.
+
+### Fixes
+
+- **[docs/navbar-overflow.html](docs/navbar-overflow.html)** was missing the inline FOUC theme-init snippet, causing a flash of wrong theme on first paint. Added.
+
+### Compatibility
+
+- Adding the `.light` class is additive — existing consumers using `html.dark` selectors or Tailwind `dark:` variants are unaffected.
+- `theme.js`'s internal `_resolveTheme()` already reads `data-theme` first with a fallback to the `.dark` class, so existing reactive consumers of `onThemeChange()` keep working.
+
+Closes #13.
+
 ## 4.2.0
 
 ### New
