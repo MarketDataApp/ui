@@ -27,6 +27,14 @@
   /* ---- Border Radius ---- */
   --radius-base: 12px;
 
+  /* ---- Typography overrides ---- */
+  /* Flowbite's default theme (flowbite/src/themes/default.css) ships a typo:
+     --leading-none: 1px (should be unitless 1). It crushes line-height to a
+     single pixel everywhere leading-none is applied, including all btn-*
+     utilities in components.src.css. Override here so any consumer that
+     imports this file after Flowbite's default theme gets the correct value. */
+  --leading-none: 1;
+
   /* ---- MarketData Brand Colors ---- */
   --color-marketdata-lightorange: #ffdfb9;
   --color-marketdata-darkorange: #e83155;
