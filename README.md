@@ -394,7 +394,7 @@ Usage not yet verified.
 
 ### Component Classes
 
-- **Buttons**: `.btn-orange-to-blue`, `.btn-blue-to-orange`, `.btn-hover-orange`, `.btn-hover-blue`
+- **Buttons**: `.btn-orange-to-blue`, `.btn-blue-to-orange`, `.btn-hover-orange`, `.btn-hover-blue`, `.btn-orange-to-outline`, `.btn-blue-to-outline`
 - **Forms**: `.form-container`, `.form-heading`, `.form-label`, `.form-input`, `.form-input-disabled`, `.form-input-error`, `.form-dropdown-input`, `.form-helper-text`, `.form-helper-text-error`
 - **Badges**: `.badge .badge-{color}`, `.badge-pill-{color}`
 - **Radio Buttons**: `.radio-button-input`, `.radio-button-helper`

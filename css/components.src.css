@@ -22,7 +22,7 @@
 
 /* ---- Buttons ---- */
 @utility btn-orange-to-blue {
-  @apply inline-flex max-w-max no-underline text-center py-2.5 px-7 lg:px-10 lg:py-3.5 rounded-3xl;
+  @apply inline-flex items-center gap-2 max-w-max no-underline text-center py-2.5 px-7 lg:px-10 lg:py-3.5 rounded-3xl;
   @apply font-quicksand text-xs lg:text-base lg:leading-none font-medium tracking-tight leading-none;
   @apply border-none bg-gradient-orange text-white;
   @apply shadow-diffuse;
@@ -33,7 +33,7 @@
 }
 
 @utility btn-blue-to-orange {
-  @apply inline-flex max-w-max no-underline text-center py-2.5 px-7 lg:px-10 lg:py-3.5 rounded-3xl;
+  @apply inline-flex items-center gap-2 max-w-max no-underline text-center py-2.5 px-7 lg:px-10 lg:py-3.5 rounded-3xl;
   @apply font-quicksand text-xs lg:text-base lg:leading-none font-medium tracking-tight leading-none;
   @apply border-none bg-gradient-blue text-white;
   @apply shadow-line;
@@ -44,7 +44,7 @@
 }
 
 @utility btn-hover-orange {
-  @apply inline-flex max-w-max no-underline text-center py-2.5 px-7 lg:px-10 lg:py-3.5 rounded-3xl;
+  @apply inline-flex items-center gap-2 max-w-max no-underline text-center py-2.5 px-7 lg:px-10 lg:py-3.5 rounded-3xl;
   @apply font-quicksand text-xs lg:text-base lg:leading-none font-medium tracking-tight leading-none;
   @apply bg-transparent text-marketdata-darkblue;
   @apply shadow-line dark:shadow-darkline dark:text-white;
@@ -56,7 +56,7 @@
 }
 
 @utility btn-hover-blue {
-  @apply inline-flex max-w-max no-underline text-center py-2.5 px-7 lg:px-10 lg:py-3.5 rounded-3xl;
+  @apply inline-flex items-center gap-2 max-w-max no-underline text-center py-2.5 px-7 lg:px-10 lg:py-3.5 rounded-3xl;
   @apply font-quicksand text-xs lg:text-base lg:leading-none font-medium tracking-tight leading-none;
   @apply bg-transparent text-marketdata-darkblue;
   @apply shadow-line dark:shadow-darkline dark:text-white;
@@ -64,6 +64,32 @@
   @apply focus:ring-4 focus:outline-hidden focus:ring-brand-medium;
   @apply cursor-pointer disabled:cursor-not-allowed disabled:opacity-50;
   @apply disabled:hover:bg-none disabled:hover:bg-transparent disabled:hover:text-marketdata-darkblue dark:disabled:hover:text-white disabled:hover:shadow-line dark:disabled:hover:shadow-darkline;
+  @apply hover:!no-underline;
+}
+
+@utility btn-orange-to-outline {
+  @apply inline-flex items-center gap-2 max-w-max no-underline text-center py-2.5 px-7 lg:px-10 lg:py-3.5 rounded-3xl;
+  @apply font-quicksand text-xs lg:text-base lg:leading-none font-medium tracking-tight leading-none;
+  @apply border-none bg-gradient-orange text-white;
+  @apply shadow-diffuse;
+  @apply hover:bg-none hover:text-marketdata-darkblue dark:hover:text-white;
+  @apply hover:shadow-line dark:hover:shadow-darkline;
+  @apply focus:ring-4 focus:outline-hidden focus:ring-pink-200 dark:focus:ring-pink-800;
+  @apply cursor-pointer disabled:cursor-not-allowed disabled:opacity-50;
+  @apply disabled:hover:bg-gradient-orange disabled:hover:text-white disabled:hover:shadow-diffuse;
+  @apply hover:!no-underline;
+}
+
+@utility btn-blue-to-outline {
+  @apply inline-flex items-center gap-2 max-w-max no-underline text-center py-2.5 px-7 lg:px-10 lg:py-3.5 rounded-3xl;
+  @apply font-quicksand text-xs lg:text-base lg:leading-none font-medium tracking-tight leading-none;
+  @apply border-none bg-gradient-blue text-white;
+  @apply shadow-line;
+  @apply hover:bg-none hover:text-marketdata-darkblue dark:hover:text-white;
+  @apply hover:shadow-line dark:hover:shadow-darkline;
+  @apply focus:ring-4 focus:outline-hidden focus:ring-brand-medium;
+  @apply cursor-pointer disabled:cursor-not-allowed disabled:opacity-50;
+  @apply disabled:hover:bg-gradient-blue disabled:hover:text-white disabled:hover:shadow-line;
   @apply hover:!no-underline;
 }
 
