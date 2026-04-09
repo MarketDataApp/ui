@@ -1,5 +1,11 @@
 # Changelog
 
+## 4.6.1
+
+### Fixes
+
+- **Button labels no longer wrap in narrow containers.** Added `whitespace-nowrap` to all six `btn-*` utilities (`btn-orange-to-blue`, `btn-blue-to-orange`, `btn-outline-to-orange`, `btn-outline-to-blue`, `btn-orange-to-outline`, `btn-blue-to-outline`) so labels stay on a single line by default. Consumers that were locally patching this with a wrapper class can drop the workaround on next package bump.
+
 ## 4.6.0
 
 ### Changed
