@@ -1,5 +1,15 @@
 # Changelog
 
+## 4.5.0
+
+### New
+
+- **`btn-orange-to-outline`** — new primary-CTA button utility that starts as an orange-filled button with the pink drop shadow and transitions to an outlined button with an inset line border on hover. Completes the `btn-hover-orange` pair in reverse (that one starts outlined and fills in; this one starts filled and de-emphasizes). Designed for in-page primary CTAs like "Send Message", "Contact Sales", and hero calls-to-action.
+- **`btn-blue-to-outline`** — symmetric blue-filled → outlined variant, added for matrix completeness alongside the orange counterpart.
+- **Icon-ready button utilities** — all six `btn-*` utilities now include `items-center gap-2` in their base layout. Consumers can drop an icon child next to the text without manually patching alignment. Previously, `inline-flex` without `items-center` defaulted to baseline alignment and icons sat slightly above the text.
+
+Closes #15.
+
 ## 4.4.0
 
 ### Fixes
