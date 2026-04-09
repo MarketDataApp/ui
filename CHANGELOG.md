@@ -1,5 +1,13 @@
 # Changelog
 
+## 4.4.0
+
+### Fixes
+
+- **Override Flowbite's broken `--leading-none: 1px` token.** Flowbite v4.0.1 ships a typo in its default theme (`--leading-none: 1px` instead of unitless `1`) that crushes line-height to a single pixel on every button utility (`btn-orange-to-blue`, `btn-blue-to-orange`, `btn-hover-orange`, `btn-hover-blue`), since they all `@apply leading-none`. Added `--leading-none: 1` to [css/theme.css](css/theme.css) so the override propagates to any consumer that imports our theme after Flowbite's default. Also fixed the same typo in [css/flowbite-theme.css](css/flowbite-theme.css) (a reference copy of upstream) to kill the latent trap if a future consumer ever imports it directly.
+
+Closes #14.
+
 ## 4.3.0
 
 ### New
