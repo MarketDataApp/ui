@@ -1,5 +1,15 @@
 # Changelog
 
+## 4.6.0
+
+### Changed
+
+- **Renamed outlined-default buttons to follow the `btn-{from}-to-{to}` matrix.** `btn-hover-orange` → `btn-outline-to-orange` and `btn-hover-blue` → `btn-outline-to-blue`. The "hover" naming predates the full matrix and isn't descriptive now that every button changes on hover; the new names describe the starting and ending states symmetrically, matching the rest of the button family (`btn-orange-to-blue`, `btn-blue-to-orange`, `btn-orange-to-outline`, `btn-blue-to-outline`).
+
+### Deprecated
+
+- **`btn-hover-orange` and `btn-hover-blue`** — kept as aliases that fully inline the new utilities' properties, so existing consumers continue to work without any change. Prefer the new names in new code. The aliases may be removed in a future major version.
+
 ## 4.5.0
 
 ### New
