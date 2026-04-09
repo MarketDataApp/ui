@@ -908,6 +908,7 @@
     padding-inline: calc(var(--spacing) * 7);
     padding-block: calc(var(--spacing) * 2.5);
     text-align: center;
+    white-space: nowrap;
     text-decoration-line: none;
     @media (width >= 64rem) {
       padding-inline: calc(var(--spacing) * 10);
@@ -1033,6 +1034,7 @@
     padding-inline: calc(var(--spacing) * 7);
     padding-block: calc(var(--spacing) * 2.5);
     text-align: center;
+    white-space: nowrap;
     text-decoration-line: none;
     @media (width >= 64rem) {
       padding-inline: calc(var(--spacing) * 10);
@@ -1153,6 +1155,7 @@
     padding-inline: calc(var(--spacing) * 7);
     padding-block: calc(var(--spacing) * 2.5);
     text-align: center;
+    white-space: nowrap;
     text-decoration-line: none;
     @media (width >= 64rem) {
       padding-inline: calc(var(--spacing) * 10);
@@ -1251,6 +1254,7 @@
     padding-inline: calc(var(--spacing) * 7);
     padding-block: calc(var(--spacing) * 2.5);
     text-align: center;
+    white-space: nowrap;
     text-decoration-line: none;
     @media (width >= 64rem) {
       padding-inline: calc(var(--spacing) * 10);
@@ -1344,6 +1348,7 @@
     padding-inline: calc(var(--spacing) * 7);
     padding-block: calc(var(--spacing) * 2.5);
     text-align: center;
+    white-space: nowrap;
     text-decoration-line: none;
     @media (width >= 64rem) {
       padding-inline: calc(var(--spacing) * 10);
@@ -1485,6 +1490,7 @@
     padding-inline: calc(var(--spacing) * 7);
     padding-block: calc(var(--spacing) * 2.5);
     text-align: center;
+    white-space: nowrap;
     text-decoration-line: none;
     @media (width >= 64rem) {
       padding-inline: calc(var(--spacing) * 10);
@@ -1626,6 +1632,7 @@
     padding-inline: calc(var(--spacing) * 7);
     padding-block: calc(var(--spacing) * 2.5);
     text-align: center;
+    white-space: nowrap;
     text-decoration-line: none;
     @media (width >= 64rem) {
       padding-inline: calc(var(--spacing) * 10);
@@ -1762,6 +1769,7 @@
     padding-inline: calc(var(--spacing) * 7);
     padding-block: calc(var(--spacing) * 2.5);
     text-align: center;
+    white-space: nowrap;
     text-decoration-line: none;
     @media (width >= 64rem) {
       padding-inline: calc(var(--spacing) * 10);
