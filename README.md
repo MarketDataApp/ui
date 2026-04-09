@@ -61,8 +61,8 @@ The `scripts/unlayer.js` post-build step strips all `@layer` declarations and un
 Every shared component class is defined in `css/components.src.css` as an `@utility` with `@apply`:
 
 ```css
-@utility btn-hover-orange {
-  @apply inline-flex max-w-max no-underline text-center py-2.5 px-7 ...;
+@utility btn-outline-to-orange {
+  @apply inline-flex items-center gap-2 max-w-max no-underline text-center py-2.5 px-7 ...;
   @apply bg-transparent text-marketdata-darkblue;
   @apply shadow-line dark:shadow-darkline dark:text-white;
   @apply hover:bg-gradient-orange hover:text-white hover:shadow-diffuse;
@@ -71,8 +71,8 @@ Every shared component class is defined in `css/components.src.css` as an `@util
 
 This serves two purposes:
 
-1. **Tailwind v4 consumers** (amember) import the source file and can `@apply btn-hover-orange` in their own CSS.
-2. **Non-Tailwind consumers** (Docusaurus) use the pre-built CSS where each `@utility` compiles to a plain `.btn-hover-orange { ... }` rule.
+1. **Tailwind v4 consumers** (amember) import the source file and can `@apply btn-outline-to-orange` in their own CSS.
+2. **Non-Tailwind consumers** (Docusaurus) use the pre-built CSS where each `@utility` compiles to a plain `.btn-outline-to-orange { ... }` rule.
 
 ### Grid Layout and Content Positioning
 
@@ -394,7 +394,7 @@ Usage not yet verified.
 
 ### Component Classes
 
-- **Buttons**: `.btn-orange-to-blue`, `.btn-blue-to-orange`, `.btn-hover-orange`, `.btn-hover-blue`, `.btn-orange-to-outline`, `.btn-blue-to-outline`
+- **Buttons**: `.btn-orange-to-blue`, `.btn-blue-to-orange`, `.btn-outline-to-orange`, `.btn-outline-to-blue`, `.btn-orange-to-outline`, `.btn-blue-to-outline` (all named as `btn-{from}-to-{to}`). Deprecated aliases: `.btn-hover-orange` → `.btn-outline-to-orange`, `.btn-hover-blue` → `.btn-outline-to-blue`.
 - **Forms**: `.form-container`, `.form-heading`, `.form-label`, `.form-input`, `.form-input-disabled`, `.form-input-error`, `.form-dropdown-input`, `.form-helper-text`, `.form-helper-text-error`
 - **Badges**: `.badge .badge-{color}`, `.badge-pill-{color}`
 - **Radio Buttons**: `.radio-button-input`, `.radio-button-helper`

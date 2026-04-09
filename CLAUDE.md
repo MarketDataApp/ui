@@ -38,7 +38,7 @@ This works because `@apply` inlines custom property declarations onto the DOM el
 - Flowbite semantic UI tokens (neutral surfaces, text/foreground, borders, status backgrounds with dark mode overrides; danger customized to red instead of Flowbite's default rose)
 - Shared typography (font families, Google Fonts references)
 - Shared gradients and shadows
-- Shared component classes used across properties: buttons (btn-orange-to-blue, btn-hover-orange), forms, badges, grid layout, radio buttons
+- Shared component classes used across properties: buttons (btn-orange-to-blue, btn-outline-to-orange, and other btn-{from}-to-{to} variants), forms, badges, grid layout, radio buttons
 - Dark mode logic (shared JS for theme toggle + cookie across subdomains)
 
 ## What does NOT belong here

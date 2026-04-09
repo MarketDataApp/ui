@@ -43,7 +43,7 @@
   @apply hover:!no-underline;
 }
 
-@utility btn-hover-orange {
+@utility btn-outline-to-orange {
   @apply inline-flex items-center gap-2 max-w-max no-underline text-center py-2.5 px-7 lg:px-10 lg:py-3.5 rounded-3xl;
   @apply font-quicksand text-xs lg:text-base lg:leading-none font-medium tracking-tight leading-none;
   @apply bg-transparent text-marketdata-darkblue;
@@ -55,7 +55,7 @@
   @apply hover:!no-underline;
 }
 
-@utility btn-hover-blue {
+@utility btn-outline-to-blue {
   @apply inline-flex items-center gap-2 max-w-max no-underline text-center py-2.5 px-7 lg:px-10 lg:py-3.5 rounded-3xl;
   @apply font-quicksand text-xs lg:text-base lg:leading-none font-medium tracking-tight leading-none;
   @apply bg-transparent text-marketdata-darkblue;
@@ -65,6 +65,18 @@
   @apply cursor-pointer disabled:cursor-not-allowed disabled:opacity-50;
   @apply disabled:hover:bg-none disabled:hover:bg-transparent disabled:hover:text-marketdata-darkblue dark:disabled:hover:text-white disabled:hover:shadow-line dark:disabled:hover:shadow-darkline;
   @apply hover:!no-underline;
+}
+
+/* Deprecated aliases — prefer btn-outline-to-{color}. The "hover" naming
+   predates the full btn-{from}-to-{to} matrix and isn't descriptive now
+   that every button changes on hover. These aliases are kept for backward
+   compatibility and may be removed in a future major version. */
+@utility btn-hover-orange {
+  @apply btn-outline-to-orange;
+}
+
+@utility btn-hover-blue {
+  @apply btn-outline-to-blue;
 }
 
 @utility btn-orange-to-outline {
