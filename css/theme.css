@@ -15,6 +15,11 @@
 @import './flowbite-theme.css';
 
 @theme {
+  /* ---- Fix upstream Flowbite typo: --leading-none ships as `1px` (line-height
+     should be unitless `1`); without this every leading-none usage crushes to a
+     single pixel. ---- */
+  --leading-none: 1;
+
   /* ---- Fonts (override Flowbite's Inter stack with system fonts) ---- */
   --font-sans:
     system-ui, -apple-system, 'Segoe UI', Roboto, Ubuntu, Cantarell, 'Noto Sans', sans-serif,

@@ -464,7 +464,7 @@
         <fieldset>
           <legend class="form-label mb-3">Select a data plan:</legend>
           <div class="radio-group-container max-w-lg">
-            <div class="radio-group-item">
+            <label class="radio-group-item">
               <input
                 type="radio"
                 name="plan-standalone"
@@ -473,16 +473,12 @@
                 class="radio-button-input"
                 checked
               />
-              <div>
-                <label
-                  for="plan-standalone-free"
-                  class="text-sm font-medium text-heading cursor-pointer"
-                  >Free</label
-                >
-                <p class="radio-button-helper">100 requests/day, delayed data</p>
-              </div>
-            </div>
-            <div class="radio-group-item">
+              <span class="block">
+                <span class="block text-sm font-medium text-heading">Free</span>
+                <span class="radio-button-helper">100 requests/day, delayed data</span>
+              </span>
+            </label>
+            <label class="radio-group-item">
               <input
                 type="radio"
                 name="plan-standalone"
@@ -490,16 +486,12 @@
                 id="plan-standalone-starter"
                 class="radio-button-input"
               />
-              <div>
-                <label
-                  for="plan-standalone-starter"
-                  class="text-sm font-medium text-heading cursor-pointer"
-                  >Starter</label
-                >
-                <p class="radio-button-helper">10,000 requests/day, real-time data</p>
-              </div>
-            </div>
-            <div class="radio-group-item">
+              <span class="block">
+                <span class="block text-sm font-medium text-heading">Starter</span>
+                <span class="radio-button-helper">10,000 requests/day, real-time data</span>
+              </span>
+            </label>
+            <label class="radio-group-item">
               <input
                 type="radio"
                 name="plan-standalone"
@@ -507,17 +499,13 @@
                 id="plan-standalone-trader"
                 class="radio-button-input"
               />
-              <div>
-                <label
-                  for="plan-standalone-trader"
-                  class="text-sm font-medium text-heading cursor-pointer"
-                  >Trader</label
-                >
-                <p class="radio-button-helper">
+              <span class="block">
+                <span class="block text-sm font-medium text-heading">Trader</span>
+                <span class="radio-button-helper">
                   Unlimited requests, real-time data, options chains
-                </p>
-              </div>
-            </div>
+                </span>
+              </span>
+            </label>
           </div>
         </fieldset>
 
@@ -538,7 +526,7 @@
           <fieldset>
             <legend class="form-label mb-3">Select a data plan:</legend>
             <div class="radio-group-container">
-              <div class="radio-group-item">
+              <label class="radio-group-item">
                 <input
                   type="radio"
                   name="plan-form"
@@ -547,16 +535,12 @@
                   class="radio-button-input"
                   checked
                 />
-                <div>
-                  <label
-                    for="plan-form-free"
-                    class="text-sm font-medium text-heading cursor-pointer"
-                    >Free</label
-                  >
-                  <p class="radio-button-helper">100 requests/day, delayed data</p>
-                </div>
-              </div>
-              <div class="radio-group-item">
+                <span class="block">
+                  <span class="block text-sm font-medium text-heading">Free</span>
+                  <span class="radio-button-helper">100 requests/day, delayed data</span>
+                </span>
+              </label>
+              <label class="radio-group-item">
                 <input
                   type="radio"
                   name="plan-form"
@@ -564,16 +548,12 @@
                   id="plan-form-starter"
                   class="radio-button-input"
                 />
-                <div>
-                  <label
-                    for="plan-form-starter"
-                    class="text-sm font-medium text-heading cursor-pointer"
-                    >Starter</label
-                  >
-                  <p class="radio-button-helper">10,000 requests/day, real-time data</p>
-                </div>
-              </div>
-              <div class="radio-group-item">
+                <span class="block">
+                  <span class="block text-sm font-medium text-heading">Starter</span>
+                  <span class="radio-button-helper">10,000 requests/day, real-time data</span>
+                </span>
+              </label>
+              <label class="radio-group-item">
                 <input
                   type="radio"
                   name="plan-form"
@@ -581,17 +561,13 @@
                   id="plan-form-trader"
                   class="radio-button-input"
                 />
-                <div>
-                  <label
-                    for="plan-form-trader"
-                    class="text-sm font-medium text-heading cursor-pointer"
-                    >Trader</label
-                  >
-                  <p class="radio-button-helper">
+                <span class="block">
+                  <span class="block text-sm font-medium text-heading">Trader</span>
+                  <span class="radio-button-helper">
                     Unlimited requests, real-time data, options chains
-                  </p>
-                </div>
-              </div>
+                  </span>
+                </span>
+              </label>
             </div>
           </fieldset>
           <button type="button" class="btn-orange-to-blue mt-4">Sign Up</button>
@@ -604,7 +580,7 @@
         </p>
         <fieldset class="space-y-3">
           <legend class="form-label mb-3">Notification preference:</legend>
-          <div class="flex items-start gap-3 text-sm">
+          <label class="flex items-start gap-3 text-sm cursor-pointer">
             <input
               type="radio"
               name="notify"
@@ -613,14 +589,12 @@
               class="radio-button-input"
               checked
             />
-            <div>
-              <label for="notify-email" class="font-medium text-heading cursor-pointer"
-                >Email</label
-              >
-              <p class="radio-button-helper">Get notified via email</p>
-            </div>
-          </div>
-          <div class="flex items-start gap-3 text-sm">
+            <span class="block">
+              <span class="block font-medium text-heading">Email</span>
+              <span class="radio-button-helper">Get notified via email</span>
+            </span>
+          </label>
+          <label class="flex items-start gap-3 text-sm cursor-pointer">
             <input
               type="radio"
               name="notify"
@@ -628,12 +602,12 @@
               id="notify-sms"
               class="radio-button-input"
             />
-            <div>
-              <label for="notify-sms" class="font-medium text-heading cursor-pointer">SMS</label>
-              <p class="radio-button-helper">Get notified via text message</p>
-            </div>
-          </div>
-          <div class="flex items-start gap-3 text-sm">
+            <span class="block">
+              <span class="block font-medium text-heading">SMS</span>
+              <span class="radio-button-helper">Get notified via text message</span>
+            </span>
+          </label>
+          <label class="flex items-start gap-3 text-sm cursor-pointer">
             <input
               type="radio"
               name="notify"
@@ -641,11 +615,11 @@
               id="notify-none"
               class="radio-button-input"
             />
-            <div>
-              <label for="notify-none" class="font-medium text-heading cursor-pointer">None</label>
-              <p class="radio-button-helper">No notifications</p>
-            </div>
-          </div>
+            <span class="block">
+              <span class="block font-medium text-heading">None</span>
+              <span class="radio-button-helper">No notifications</span>
+            </span>
+          </label>
         </fieldset>
 
         <!-- Inline radio buttons -->
@@ -707,6 +681,48 @@
           </div>
         </fieldset>
 
+        <h3 class="text-lg font-semibold mb-3 mt-8 text-heading">Disabled</h3>
+        <p class="text-sm text-body-subtle mb-4">
+          Add the
+          <code class="text-xs font-mono bg-gray-100 dark:bg-gray-800 px-1 py-0.5 rounded"
+            >disabled</code
+          >
+          attribute &mdash; the border lightens, the label dims, and
+          <code class="text-xs font-mono bg-gray-100 dark:bg-gray-800 px-1 py-0.5 rounded"
+            >cursor-not-allowed</code
+          >
+          is applied automatically.
+        </p>
+        <div class="radio-group-container max-w-lg">
+          <label class="radio-group-item">
+            <input
+              disabled
+              type="radio"
+              name="plan-disabled"
+              value="free"
+              class="radio-button-input"
+            />
+            <span class="block">
+              <span class="block text-sm font-medium text-heading">Free</span>
+              <span class="radio-button-helper">100 requests/day, delayed data</span>
+            </span>
+          </label>
+          <label class="radio-group-item">
+            <input
+              disabled
+              checked
+              type="radio"
+              name="plan-disabled"
+              value="starter"
+              class="radio-button-input"
+            />
+            <span class="block">
+              <span class="block text-sm font-medium text-heading">Starter (selected)</span>
+              <span class="radio-button-helper">10,000 requests/day, real-time data</span>
+            </span>
+          </label>
+        </div>
+
         <div class="mt-6 flex flex-wrap gap-2">
           <code class="text-xs font-mono bg-gray-100 dark:bg-gray-800 px-2 py-1 rounded"
             >.radio-group-container</code
@@ -752,21 +768,19 @@
 
         <h3 class="text-lg font-semibold mb-3 mt-8 text-heading">Disabled</h3>
         <p class="text-sm text-body-subtle mb-4">
-          Adding the
+          Add the
           <code class="text-xs font-mono bg-gray-100 dark:bg-gray-800 px-1 py-0.5 rounded"
             >disabled</code
           >
-          attribute lightens the border. Pair with
+          attribute &mdash; the border lightens, the sibling label dims, and
           <code class="text-xs font-mono bg-gray-100 dark:bg-gray-800 px-1 py-0.5 rounded"
-            >.text-fg-disabled</code
+            >cursor-not-allowed</code
           >
-          on the label.
+          is applied automatically.
         </p>
         <div class="flex items-center mb-4">
           <input disabled id="disabled-checkbox" type="checkbox" value="" class="checkbox-input" />
-          <label
-            for="disabled-checkbox"
-            class="select-none ms-2 text-sm font-medium text-fg-disabled"
+          <label for="disabled-checkbox" class="select-none ms-2 text-sm font-medium text-heading"
             >Disabled checkbox</label
           >
         </div>
@@ -781,7 +795,7 @@
           />
           <label
             for="disabled-checked-checkbox"
-            class="select-none ms-2 text-sm font-medium text-fg-disabled"
+            class="select-none ms-2 text-sm font-medium text-heading"
             >Disabled checked</label
           >
         </div>

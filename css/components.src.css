@@ -172,30 +172,65 @@
 }
 
 @utility radio-group-item {
-  @apply flex items-start w-full px-4 py-3 gap-3;
+  @apply flex items-start w-full px-4 py-3 gap-3 cursor-pointer;
 }
 
 /* ---- Radio Buttons ---- */
 @utility radio-button-input {
   background-color: var(--radio-btn-bg, var(--color-gray-50));
   @apply w-4 h-4 text-brand border border-gray-300 dark:border-gray-600 rounded-full appearance-none;
-  @apply focus:ring-brand-medium focus:ring-1 focus:outline-hidden;
-  @apply mt-0.5 shrink-0;
+  @apply focus:ring-2 focus:ring-brand-subtle focus:outline-hidden;
+  @apply mt-0.5 shrink-0 relative;
+  @apply disabled:border-light disabled:cursor-not-allowed;
   &:where(.dark, .dark *, [data-theme='dark'], [data-theme='dark'] *) {
     background-color: var(--radio-btn-bg, var(--color-gray-800));
   }
-  background-position: center;
-  background-repeat: no-repeat;
   &:checked {
+    border-color: var(--color-brand);
+  }
+  &:checked::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 0.9rem;
+    height: 0.9rem;
+    border-radius: 100%;
     background-color: var(--color-brand);
-    border-color: transparent;
-    background-image: url("data:image/svg+xml,%3csvg viewBox='0 0 16 16' fill='white' xmlns='http://www.w3.org/2000/svg'%3e%3ccircle cx='8' cy='8' r='3'/%3e%3c/svg%3e");
-    background-size: 100% 100%;
+    transform: translate(-50%, -50%);
+  }
+  &:checked::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 0.35rem;
+    height: 0.35rem;
+    border-radius: 100%;
+    background-color: var(--color-white);
+    transform: translate(-50%, -50%);
   }
 }
 
 @utility radio-button-helper {
-  @apply text-xs font-normal text-body-subtle;
+  @apply block text-xs font-normal text-body-subtle;
+}
+
+/* When a checkbox or radio input is disabled, automatically dim the
+   associated label and disable interaction. Covers both sibling labels
+   (input + label) and wrapping labels (label > input + content). Inner
+   spans with explicit text-heading / radio-button-helper colors are
+   targeted so the dim color wins. */
+:where(.checkbox-input, .radio-button-input):disabled ~ label {
+  color: var(--color-fg-disabled);
+  cursor: not-allowed;
+}
+label:has(:where(.checkbox-input, .radio-button-input):disabled) {
+  cursor: not-allowed;
+}
+label:has(:where(.checkbox-input, .radio-button-input):disabled)
+  :where(.text-heading, .radio-button-helper) {
+  color: var(--color-fg-disabled);
 }
 
 /* ---- Checkboxes ---- */
@@ -203,7 +238,7 @@
   @apply w-4 h-4 text-brand border border-default-medium rounded-xs bg-neutral-secondary-medium appearance-none;
   @apply focus:ring-2 focus:ring-brand-soft focus:outline-hidden;
   @apply shrink-0;
-  @apply disabled:border-light;
+  @apply disabled:border-light disabled:cursor-not-allowed;
   background-position: center;
   background-repeat: no-repeat;
   &:checked {
