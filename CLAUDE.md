@@ -11,7 +11,7 @@ Shared Tailwind CSS theme and components for all MarketData properties (\*.marke
 - `dist/` contains all **build outputs** committed for consumers: 4 JS files + `dist/css/` with 2 CSS files
 - `src/templates/` contains HTML/SVG templates; `scripts/build-templates.js` compiles them to intermediate `src/*.templates.js` files (gitignored), then `scripts/build-js.js` inlines them into `dist/` JS outputs
 - Build pipeline: `npm run build` runs three stages: `build:templates` → `build:js` → `build:css`
-- `css/theme.css` defines all design tokens via `@theme {}` — brand colors, Flowbite semantic UI tokens (neutrals, text, borders, status), and dark mode overrides. Consumed by projects that run their own Tailwind build.
+- `css/theme.css` is the active design system entry point. It `@import`s `css/flowbite-theme.css` (full Flowbite Design System token set: radius scale, neutrals, brand, status, dark-mode overrides — generated via the Flowbite MCP theme generator) and then overrides only the font stack to use system fonts. It also adds MarketData-specific tokens that Flowbite does not provide: brand hexes, Docusaurus admonition colors, and custom shadows. Consumed by projects that run their own Tailwind build.
 - `css/components.src.css` defines all shared component classes as `@utility` with `@apply` — the single source of truth
 - Two CSS build outputs in `dist/css/`, both unlayered (see README.md for details):
   - `dist/css/components.css` — full build with preflight reset (for standalone consumers)
@@ -35,7 +35,7 @@ This works because `@apply` inlines custom property declarations onto the DOM el
 ## What belongs here
 
 - Brand colors (marketdata.\*, note, tip, info, warning, danger)
-- Flowbite semantic UI tokens (neutral surfaces, text/foreground, borders, status backgrounds with dark mode overrides; danger customized to red instead of Flowbite's default rose)
+- Flowbite semantic UI tokens (neutral surfaces, text/foreground, borders, status backgrounds with dark mode overrides) — imported wholesale from `flowbite-theme.css`
 - Shared typography (font families, Google Fonts references)
 - Shared gradients and shadows
 - Shared component classes used across properties: buttons (btn-orange-to-blue, btn-outline-to-orange, and other btn-{from}-to-{to} variants), forms, badges, grid layout, radio buttons

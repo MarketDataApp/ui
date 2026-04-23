@@ -1,6 +1,6 @@
 {
   "name": "@marketdataapp/ui",
-  "version": "4.6.1",
+  "version": "4.7.0",
   "description": "Shared UI theme and component styles for MarketData properties",
   "license": "UNLICENSED",
   "type": "module",

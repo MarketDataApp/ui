@@ -2,11 +2,11 @@
  * Flowbite v4 / Tailwind v4 theme for MarketData brand.
  *
  * Generated from brand color #3B82F6 via Flowbite MCP theme generator.
- * This file is NOT imported — it's saved as a reference for the full
- * Flowbite token set (brand + UI tokens combined).
+ * Imported by theme.css as the base layer; theme.css then overrides
+ * font definitions with the MarketData system-font stack.
  *
- * Active tokens all live in theme.css (brand + UI semantic tokens combined).
- * Danger tokens are customized to use red instead of Flowbite's default rose.
+ * To regenerate: re-run the Flowbite MCP theme generator and paste
+ * over this file. theme.css will continue to override fonts on top.
  */
 
 @theme {

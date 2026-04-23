@@ -723,6 +723,123 @@
         </div>
       </section>
 
+      <!-- Checkboxes -->
+      <section id="checkboxes">
+        <h2 class="text-2xl font-bold mb-6 border-b border-gray-200 dark:border-gray-700 pb-2">
+          Checkboxes
+        </h2>
+
+        <h3 class="text-lg font-semibold mb-3 text-heading">Default</h3>
+        <p class="text-sm text-body-subtle mb-4">
+          The standard Flowbite checkbox using brand-soft focus ring with full dark-mode support.
+        </p>
+        <div class="flex items-center mb-4">
+          <input id="default-checkbox" type="checkbox" value="" class="checkbox-input" />
+          <label
+            for="default-checkbox"
+            class="select-none ms-2 text-sm font-medium text-heading cursor-pointer"
+            >Default checkbox</label
+          >
+        </div>
+        <div class="flex items-center mb-4">
+          <input checked id="checked-checkbox" type="checkbox" value="" class="checkbox-input" />
+          <label
+            for="checked-checkbox"
+            class="select-none ms-2 text-sm font-medium text-heading cursor-pointer"
+            >Checked state</label
+          >
+        </div>
+
+        <h3 class="text-lg font-semibold mb-3 mt-8 text-heading">Disabled</h3>
+        <p class="text-sm text-body-subtle mb-4">
+          Adding the
+          <code class="text-xs font-mono bg-gray-100 dark:bg-gray-800 px-1 py-0.5 rounded"
+            >disabled</code
+          >
+          attribute lightens the border. Pair with
+          <code class="text-xs font-mono bg-gray-100 dark:bg-gray-800 px-1 py-0.5 rounded"
+            >.text-fg-disabled</code
+          >
+          on the label.
+        </p>
+        <div class="flex items-center mb-4">
+          <input disabled id="disabled-checkbox" type="checkbox" value="" class="checkbox-input" />
+          <label
+            for="disabled-checkbox"
+            class="select-none ms-2 text-sm font-medium text-fg-disabled"
+            >Disabled checkbox</label
+          >
+        </div>
+        <div class="flex items-center mb-4">
+          <input
+            disabled
+            checked
+            id="disabled-checked-checkbox"
+            type="checkbox"
+            value=""
+            class="checkbox-input"
+          />
+          <label
+            for="disabled-checked-checkbox"
+            class="select-none ms-2 text-sm font-medium text-fg-disabled"
+            >Disabled checked</label
+          >
+        </div>
+
+        <h3 class="text-lg font-semibold mb-3 mt-8 text-heading">Inside a Form</h3>
+        <p class="text-sm text-body-subtle mb-4">
+          Checkboxes work the same inside a
+          <code class="text-xs font-mono bg-gray-100 dark:bg-gray-800 px-1 py-0.5 rounded"
+            >.form-container</code
+          >.
+        </p>
+        <div class="form-container max-w-lg">
+          <h3 class="form-heading">Notification Settings</h3>
+          <fieldset>
+            <legend class="form-label mb-3">Send me email about:</legend>
+            <div class="space-y-2">
+              <div class="flex items-center">
+                <input
+                  id="notify-product"
+                  type="checkbox"
+                  value=""
+                  class="checkbox-input"
+                  checked
+                />
+                <label
+                  for="notify-product"
+                  class="select-none ms-2 text-sm font-medium text-heading cursor-pointer"
+                  >Product updates</label
+                >
+              </div>
+              <div class="flex items-center">
+                <input id="notify-billing" type="checkbox" value="" class="checkbox-input" />
+                <label
+                  for="notify-billing"
+                  class="select-none ms-2 text-sm font-medium text-heading cursor-pointer"
+                  >Billing reminders</label
+                >
+              </div>
+              <div class="flex items-center">
+                <input id="notify-marketing" type="checkbox" value="" class="checkbox-input" />
+                <label
+                  for="notify-marketing"
+                  class="select-none ms-2 text-sm font-medium text-heading cursor-pointer"
+                  >Marketing &amp; promotions</label
+                >
+              </div>
+            </div>
+          </fieldset>
+          <button type="button" class="btn-orange-to-blue mt-4">Save preferences</button>
+        </div>
+
+        <div class="mt-6 flex flex-wrap gap-2">
+          <code class="text-xs font-mono bg-gray-100 dark:bg-gray-800 px-2 py-1 rounded"
+            >.checkbox-input</code
+          >
+        </div>
+      </section>
+
       <!-- Badges -->
       <section id="badges">
         <h2 class="text-2xl font-bold mb-6 border-b border-gray-200 dark:border-gray-700 pb-2">
