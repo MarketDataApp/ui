@@ -114,33 +114,463 @@
           </div>
         </div>
 
-        <h3 class="text-lg font-semibold mb-4">Semantic Colors</h3>
-        <div class="space-y-3">
-          <div
-            class="p-4 rounded-lg border-l-4 bg-[rgb(253,253,254)] border-[rgb(212,213,216)] text-[rgb(71,71,72)] dark:bg-[rgb(71,71,72)] dark:border-[rgb(212,213,216)] dark:text-[rgb(253,253,254)]"
-          >
-            <strong>Note</strong> &mdash; bg / border / text with dark mode variants
+        <h3 class="text-lg font-semibold mb-2">Semantic Colors</h3>
+        <p class="text-sm text-body-subtle mb-4">
+          Token triplets (background / border / text) for each admonition type, with dedicated dark
+          variants. See the <a href="#admonitions" class="underline">Admonitions</a> section below
+          for the rendered component.
+        </p>
+        <div class="space-y-5">
+          <!-- Note -->
+          <div>
+            <div class="text-sm font-semibold mb-2">Note</div>
+            <div
+              class="grid grid-cols-[repeat(3,minmax(0,1fr))_0.5rem_repeat(3,minmax(0,1fr))] gap-1"
+            >
+              <div
+                class="h-10 rounded border border-default-medium bg-[var(--color-note-bg)]"
+                title="--color-note-bg"
+              ></div>
+              <div
+                class="h-10 rounded border border-default-medium bg-[var(--color-note-border)]"
+                title="--color-note-border"
+              ></div>
+              <div
+                class="h-10 rounded border border-default-medium bg-[var(--color-note-text)]"
+                title="--color-note-text"
+              ></div>
+              <div></div>
+              <div
+                class="h-10 rounded border border-default-medium bg-[var(--color-note-darkbg)]"
+                title="--color-note-darkbg"
+              ></div>
+              <div
+                class="h-10 rounded border border-default-medium bg-[var(--color-note-darkborder)]"
+                title="--color-note-darkborder"
+              ></div>
+              <div
+                class="h-10 rounded border border-default-medium bg-[var(--color-note-darktext)]"
+                title="--color-note-darktext"
+              ></div>
+            </div>
+            <div
+              class="grid grid-cols-[repeat(3,minmax(0,1fr))_0.5rem_repeat(3,minmax(0,1fr))] gap-1 mt-1 text-[10px] font-mono text-body-subtle"
+            >
+              <span>bg</span>
+              <span>border</span>
+              <span>text</span>
+              <span></span>
+              <span>darkbg</span>
+              <span>darkborder</span>
+              <span>darktext</span>
+            </div>
           </div>
-          <div
-            class="p-4 rounded-lg border-l-4 bg-[rgb(230,246,230)] border-[rgb(0,148,0)] text-[rgb(0,49,0)] dark:bg-[rgb(0,49,0)] dark:border-[rgb(0,148,0)] dark:text-[rgb(230,246,230)]"
-          >
-            <strong>Tip</strong> &mdash; bg / border / text with dark mode variants
+
+          <!-- Tip -->
+          <div>
+            <div class="text-sm font-semibold mb-2">Tip</div>
+            <div
+              class="grid grid-cols-[repeat(3,minmax(0,1fr))_0.5rem_repeat(3,minmax(0,1fr))] gap-1"
+            >
+              <div
+                class="h-10 rounded border border-default-medium bg-[var(--color-tip-bg)]"
+                title="--color-tip-bg"
+              ></div>
+              <div
+                class="h-10 rounded border border-default-medium bg-[var(--color-tip-border)]"
+                title="--color-tip-border"
+              ></div>
+              <div
+                class="h-10 rounded border border-default-medium bg-[var(--color-tip-text)]"
+                title="--color-tip-text"
+              ></div>
+              <div></div>
+              <div
+                class="h-10 rounded border border-default-medium bg-[var(--color-tip-darkbg)]"
+                title="--color-tip-darkbg"
+              ></div>
+              <div
+                class="h-10 rounded border border-default-medium bg-[var(--color-tip-darkborder)]"
+                title="--color-tip-darkborder"
+              ></div>
+              <div
+                class="h-10 rounded border border-default-medium bg-[var(--color-tip-darktext)]"
+                title="--color-tip-darktext"
+              ></div>
+            </div>
           </div>
-          <div
-            class="p-4 rounded-lg border-l-4 bg-[rgb(238,249,253)] border-[rgb(76,179,212)] text-[rgb(25,60,71)] dark:bg-[rgb(25,60,71)] dark:border-[rgb(76,179,212)] dark:text-[rgb(238,249,253)]"
-          >
-            <strong>Info</strong> &mdash; bg / border / text with dark mode variants
+
+          <!-- Info -->
+          <div>
+            <div class="text-sm font-semibold mb-2">Info</div>
+            <div
+              class="grid grid-cols-[repeat(3,minmax(0,1fr))_0.5rem_repeat(3,minmax(0,1fr))] gap-1"
+            >
+              <div
+                class="h-10 rounded border border-default-medium bg-[var(--color-info-bg)]"
+                title="--color-info-bg"
+              ></div>
+              <div
+                class="h-10 rounded border border-default-medium bg-[var(--color-info-border)]"
+                title="--color-info-border"
+              ></div>
+              <div
+                class="h-10 rounded border border-default-medium bg-[var(--color-info-text)]"
+                title="--color-info-text"
+              ></div>
+              <div></div>
+              <div
+                class="h-10 rounded border border-default-medium bg-[var(--color-info-darkbg)]"
+                title="--color-info-darkbg"
+              ></div>
+              <div
+                class="h-10 rounded border border-default-medium bg-[var(--color-info-darkborder)]"
+                title="--color-info-darkborder"
+              ></div>
+              <div
+                class="h-10 rounded border border-default-medium bg-[var(--color-info-darktext)]"
+                title="--color-info-darktext"
+              ></div>
+            </div>
           </div>
-          <div
-            class="p-4 rounded-lg border-l-4 bg-[rgb(255,248,230)] border-[rgb(230,167,0)] text-[rgb(77,56,0)] dark:bg-[rgb(77,56,0)] dark:border-[rgb(230,167,0)] dark:text-[rgb(255,248,230)]"
-          >
-            <strong>Warning</strong> &mdash; bg / border / text with dark mode variants
+
+          <!-- Warning -->
+          <div>
+            <div class="text-sm font-semibold mb-2">Warning</div>
+            <div
+              class="grid grid-cols-[repeat(3,minmax(0,1fr))_0.5rem_repeat(3,minmax(0,1fr))] gap-1"
+            >
+              <div
+                class="h-10 rounded border border-default-medium bg-[var(--color-warning-bg)]"
+                title="--color-warning-bg"
+              ></div>
+              <div
+                class="h-10 rounded border border-default-medium bg-[var(--color-warning-border)]"
+                title="--color-warning-border"
+              ></div>
+              <div
+                class="h-10 rounded border border-default-medium bg-[var(--color-warning-text)]"
+                title="--color-warning-text"
+              ></div>
+              <div></div>
+              <div
+                class="h-10 rounded border border-default-medium bg-[var(--color-warning-darkbg)]"
+                title="--color-warning-darkbg"
+              ></div>
+              <div
+                class="h-10 rounded border border-default-medium bg-[var(--color-warning-darkborder)]"
+                title="--color-warning-darkborder"
+              ></div>
+              <div
+                class="h-10 rounded border border-default-medium bg-[var(--color-warning-darktext)]"
+                title="--color-warning-darktext"
+              ></div>
+            </div>
           </div>
-          <div
-            class="p-4 rounded-lg border-l-4 bg-[rgb(255,235,236)] border-[rgb(225,50,56)] text-[rgb(75,17,19)] dark:bg-[rgb(75,17,19)] dark:border-[rgb(225,50,56)] dark:text-[rgb(255,235,236)]"
-          >
-            <strong>Danger</strong> &mdash; bg / border / text with dark mode variants
+
+          <!-- Danger -->
+          <div>
+            <div class="text-sm font-semibold mb-2">Danger</div>
+            <div
+              class="grid grid-cols-[repeat(3,minmax(0,1fr))_0.5rem_repeat(3,minmax(0,1fr))] gap-1"
+            >
+              <div
+                class="h-10 rounded border border-default-medium bg-[var(--color-danger-bg)]"
+                title="--color-danger-bg"
+              ></div>
+              <div
+                class="h-10 rounded border border-default-medium bg-[var(--color-danger-border)]"
+                title="--color-danger-border"
+              ></div>
+              <div
+                class="h-10 rounded border border-default-medium bg-[var(--color-danger-text)]"
+                title="--color-danger-text"
+              ></div>
+              <div></div>
+              <div
+                class="h-10 rounded border border-default-medium bg-[var(--color-danger-darkbg)]"
+                title="--color-danger-darkbg"
+              ></div>
+              <div
+                class="h-10 rounded border border-default-medium bg-[var(--color-danger-darkborder)]"
+                title="--color-danger-darkborder"
+              ></div>
+              <div
+                class="h-10 rounded border border-default-medium bg-[var(--color-danger-darktext)]"
+                title="--color-danger-darktext"
+              ></div>
+            </div>
           </div>
+        </div>
+      </section>
+
+      <!-- Admonitions -->
+      <section id="admonitions">
+        <h2 class="text-2xl font-bold mb-2 border-b border-gray-200 dark:border-gray-700 pb-2">
+          Admonitions
+        </h2>
+        <p class="text-gray-500 dark:text-gray-400 mb-6">
+          Docusaurus-style callout boxes. Five built-in types, each with its own icon (sourced from
+          Docusaurus). Supports custom titles, multiple paragraphs, links, inline code, lists, and
+          more.
+        </p>
+
+        <!-- Default types -->
+        <h3 class="text-lg font-semibold mb-3 text-heading">Default Types</h3>
+        <p class="text-sm text-body-subtle mb-4">
+          Each type uses its semantic color tokens for background, left border, and text — and ships
+          with the matching SVG icon.
+        </p>
+        <div class="space-y-3 mb-10">
+          <div class="admonition admonition-note">
+            <div class="admonition-heading">
+              <span class="admonition-icon"></span>
+              <span>Note</span>
+            </div>
+            <div class="admonition-content">
+              <p>
+                Some <strong>content</strong> with <em>Markdown</em> <code>syntax</code>. Check
+                <a href="https://www.marketdata.app/docs/api/">this api</a>.
+              </p>
+            </div>
+          </div>
+
+          <div class="admonition admonition-tip">
+            <div class="admonition-heading">
+              <span class="admonition-icon"></span>
+              <span>Tip</span>
+            </div>
+            <div class="admonition-content">
+              <p>
+                Some <strong>content</strong> with <em>Markdown</em> <code>syntax</code>. Check
+                <a href="https://www.marketdata.app/docs/api/">this api</a>.
+              </p>
+            </div>
+          </div>
+
+          <div class="admonition admonition-info">
+            <div class="admonition-heading">
+              <span class="admonition-icon"></span>
+              <span>Info</span>
+            </div>
+            <div class="admonition-content">
+              <p>
+                Some <strong>content</strong> with <em>Markdown</em> <code>syntax</code>. Check
+                <a href="https://www.marketdata.app/docs/api/">this api</a>.
+              </p>
+            </div>
+          </div>
+
+          <div class="admonition admonition-warning">
+            <div class="admonition-heading">
+              <span class="admonition-icon"></span>
+              <span>Warning</span>
+            </div>
+            <div class="admonition-content">
+              <p>
+                Some <strong>content</strong> with <em>Markdown</em> <code>syntax</code>. Check
+                <a href="https://www.marketdata.app/docs/api/">this api</a>.
+              </p>
+            </div>
+          </div>
+
+          <div class="admonition admonition-danger">
+            <div class="admonition-heading">
+              <span class="admonition-icon"></span>
+              <span>Danger</span>
+            </div>
+            <div class="admonition-content">
+              <p>
+                Some <strong>content</strong> with <em>Markdown</em> <code>syntax</code>. Check
+                <a href="https://www.marketdata.app/docs/api/">this api</a>.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Custom titles -->
+        <h3 class="text-lg font-semibold mb-3 text-heading">Custom Titles</h3>
+        <p class="text-sm text-body-subtle mb-4">
+          Replace the default label with anything — including markdown formatting. Mirrors the
+          Docusaurus
+          <code class="text-xs font-mono bg-gray-100 dark:bg-gray-800 px-1 py-0.5 rounded"
+            >:::tip[Custom Title]</code
+          >
+          syntax.
+        </p>
+        <div class="space-y-3 mb-10">
+          <div class="admonition admonition-tip">
+            <div class="admonition-heading">
+              <span class="admonition-icon"></span>
+              <span>Pro Tip!</span>
+            </div>
+            <div class="admonition-content">
+              <p>
+                You can rate-limit your requests with the
+                <code>X-Api-Ratelimit-Reset</code> header — no need to poll.
+              </p>
+            </div>
+          </div>
+
+          <div class="admonition admonition-info">
+            <div class="admonition-heading">
+              <span class="admonition-icon"></span>
+              <span>Did you know?</span>
+            </div>
+            <div class="admonition-content">
+              <p>
+                Our <strong>real-time</strong> data feeds use the same
+                <em>NMS-distributed</em> sources as the major exchanges.
+              </p>
+            </div>
+          </div>
+
+          <div class="admonition admonition-warning">
+            <div class="admonition-heading">
+              <span class="admonition-icon"></span>
+              <span>Heads up &mdash; rate limit changes</span>
+            </div>
+            <div class="admonition-content">
+              <p>Free-tier requests are capped at 100/day starting in May.</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Multiple paragraphs + lists + links -->
+        <h3 class="text-lg font-semibold mb-3 text-heading">Rich Content</h3>
+        <p class="text-sm text-body-subtle mb-4">
+          Multiple paragraphs, ordered/unordered lists, inline code, and links all flow naturally
+          inside
+          <code class="text-xs font-mono bg-gray-100 dark:bg-gray-800 px-1 py-0.5 rounded"
+            >.admonition-content</code
+          >.
+        </p>
+        <div class="space-y-3 mb-10">
+          <div class="admonition admonition-info">
+            <div class="admonition-heading">
+              <span class="admonition-icon"></span>
+              <span>Migrating from v3</span>
+            </div>
+            <div class="admonition-content">
+              <p>
+                Upgrading the SDK from v3 to v4 is mostly a drop-in replacement, but there are a few
+                breaking changes you should know about.
+              </p>
+              <p>The most common migration steps:</p>
+              <ol>
+                <li>
+                  Replace <code>marketdata.client(key)</code> with
+                  <code>new MarketData({ apiKey: key })</code>.
+                </li>
+                <li>Switch from positional arguments to keyword options on every endpoint.</li>
+                <li>
+                  Update error handling — exceptions are now <code>MarketDataError</code> subclasses
+                  rather than plain <code>Error</code>.
+                </li>
+              </ol>
+              <p>
+                For the full diff, see the
+                <a href="https://www.marketdata.app/docs/sdk/python/migration-v4">migration guide</a
+                >.
+              </p>
+            </div>
+          </div>
+
+          <div class="admonition admonition-danger">
+            <div class="admonition-heading">
+              <span class="admonition-icon"></span>
+              <span>Don&rsquo;t commit your API key</span>
+            </div>
+            <div class="admonition-content">
+              <p>If your API key ever ends up in a public repo, rotate it immediately:</p>
+              <ul>
+                <li>
+                  Open your
+                  <a href="https://www.marketdata.app/dashboard/api-keys">API Keys</a> page.
+                </li>
+                <li>Click <strong>Revoke</strong> on the leaked key.</li>
+                <li>Generate a new one and update your environment variables.</li>
+              </ul>
+              <p>
+                Leaked keys can be abused before our anomaly detection catches the spike — rotation
+                is always faster than recovery.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <!-- No icon variant -->
+        <h3 class="text-lg font-semibold mb-3 text-heading">Without an Icon</h3>
+        <p class="text-sm text-body-subtle mb-4">
+          Omit
+          <code class="text-xs font-mono bg-gray-100 dark:bg-gray-800 px-1 py-0.5 rounded"
+            >.admonition-icon</code
+          >
+          for a text-only heading. Drop the heading entirely if you only need the colored container.
+        </p>
+        <div class="space-y-3 mb-10">
+          <div class="admonition admonition-note">
+            <div class="admonition-heading">
+              <span>Note</span>
+            </div>
+            <div class="admonition-content">
+              <p>An admonition heading without the leading icon — title text only.</p>
+            </div>
+          </div>
+
+          <div class="admonition admonition-tip">
+            <div class="admonition-content">
+              <p>
+                <strong>Tip:</strong> A bare admonition with no heading at all — just the colored
+                container around inline content. Useful for short asides where the visual treatment
+                is enough context.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Markup pattern -->
+        <h3 class="text-lg font-semibold mb-3 text-heading">Markup Pattern</h3>
+        <pre
+          class="text-xs font-mono bg-gray-100 dark:bg-gray-800 p-4 rounded-lg overflow-x-auto"
+        ><code>&lt;div class="admonition admonition-tip"&gt;
+  &lt;div class="admonition-heading"&gt;
+    &lt;span class="admonition-icon"&gt;&lt;/span&gt;
+    &lt;span&gt;Pro Tip!&lt;/span&gt;
+  &lt;/div&gt;
+  &lt;div class="admonition-content"&gt;
+    &lt;p&gt;Some &lt;strong&gt;content&lt;/strong&gt; with &lt;a href="..."&gt;a link&lt;/a&gt;.&lt;/p&gt;
+  &lt;/div&gt;
+&lt;/div&gt;</code></pre>
+
+        <div class="mt-6 flex flex-wrap gap-2">
+          <code class="text-xs font-mono bg-gray-100 dark:bg-gray-800 px-2 py-1 rounded"
+            >.admonition</code
+          >
+          <code class="text-xs font-mono bg-gray-100 dark:bg-gray-800 px-2 py-1 rounded"
+            >.admonition-note</code
+          >
+          <code class="text-xs font-mono bg-gray-100 dark:bg-gray-800 px-2 py-1 rounded"
+            >.admonition-tip</code
+          >
+          <code class="text-xs font-mono bg-gray-100 dark:bg-gray-800 px-2 py-1 rounded"
+            >.admonition-info</code
+          >
+          <code class="text-xs font-mono bg-gray-100 dark:bg-gray-800 px-2 py-1 rounded"
+            >.admonition-warning</code
+          >
+          <code class="text-xs font-mono bg-gray-100 dark:bg-gray-800 px-2 py-1 rounded"
+            >.admonition-danger</code
+          >
+          <code class="text-xs font-mono bg-gray-100 dark:bg-gray-800 px-2 py-1 rounded"
+            >.admonition-heading</code
+          >
+          <code class="text-xs font-mono bg-gray-100 dark:bg-gray-800 px-2 py-1 rounded"
+            >.admonition-icon</code
+          >
+          <code class="text-xs font-mono bg-gray-100 dark:bg-gray-800 px-2 py-1 rounded"
+            >.admonition-content</code
+          >
         </div>
       </section>
 
