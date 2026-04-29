@@ -1,5 +1,11 @@
 # Changelog
 
+## 4.8.0
+
+### New
+
+- **Admonition components** — `.admonition` plus type modifiers (`.admonition-note`, `.admonition-tip`, `.admonition-info`, `.admonition-warning`, `.admonition-danger`) and sub-components (`.admonition-heading`, `.admonition-icon`, `.admonition-content`). Type modifiers set `--admonition-bg`/`--border`/`--text`/`--icon` custom properties that cascade into the heading and icon, so consumers using `@apply admonition admonition-note` on their own classes get the full styling without descendant selectors. Icons are masked with `currentColor` using the exact SVG paths from Docusaurus's classic theme, so they always match the active text color. Supports custom titles, multiple paragraphs, lists, links, inline code, and a heading-less variant. The "Semantic Colors" preview in [docs/index.html](docs/index.html) is now a real token-swatch reference and is followed by a new Admonitions section demonstrating each variation.
+
 ## 4.6.1
 
 ### Fixes
