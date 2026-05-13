@@ -1319,6 +1319,143 @@
         </div>
       </section>
 
+      <!-- Links -->
+      <section id="links">
+        <h2 class="text-2xl font-bold mb-2 border-b border-gray-200 dark:border-gray-700 pb-2">
+          Links
+        </h2>
+        <p class="text-gray-500 dark:text-gray-400 mb-6">
+          Drop-in utility for decorating outbound links. Add
+          <code class="text-xs font-mono bg-gray-100 dark:bg-gray-800 px-1 py-0.5 rounded"
+            >.external-link</code
+          >
+          to any
+          <code class="text-xs font-mono bg-gray-100 dark:bg-gray-800 px-1 py-0.5 rounded"
+            >&lt;a&gt;</code
+          >
+          and a trailing icon is added via
+          <code class="text-xs font-mono bg-gray-100 dark:bg-gray-800 px-1 py-0.5 rounded"
+            >::after</code
+          >. No companion classes, no inline SVG, no sizing or color props.
+        </p>
+
+        <h3 class="text-lg font-semibold mb-3 text-heading">Default</h3>
+        <p class="text-sm text-body-subtle mb-4">
+          The icon inherits its size and color from the parent.
+        </p>
+        <p class="mb-10">
+          See the
+          <a
+            class="external-link underline"
+            href="https://www.marketdata.app/docs/api/"
+            target="_blank"
+            rel="noopener"
+            >Market Data API reference</a
+          >
+          for the full list of endpoints.
+        </p>
+
+        <h3 class="text-lg font-semibold mb-3 text-heading">Sizes via inheritance</h3>
+        <p class="text-sm text-body-subtle mb-4">
+          The icon is sized in <code class="text-xs font-mono">em</code>, so a link in an
+          <code class="text-xs font-mono">&lt;h2&gt;</code> gets a larger arrow and a link in
+          <code class="text-xs font-mono">&lt;small&gt;</code> gets a smaller one — no class changes
+          needed at the call site.
+        </p>
+        <div class="space-y-3 mb-10">
+          <h2 class="text-2xl font-bold">
+            <a
+              class="external-link underline"
+              href="https://www.marketdata.app/"
+              target="_blank"
+              rel="noopener"
+              >Heading-sized link</a
+            >
+          </h2>
+          <p class="text-base">
+            <a
+              class="external-link underline"
+              href="https://www.marketdata.app/"
+              target="_blank"
+              rel="noopener"
+              >Body-sized link</a
+            >
+          </p>
+          <p class="text-xs text-body-subtle">
+            <a
+              class="external-link underline"
+              href="https://www.marketdata.app/"
+              target="_blank"
+              rel="noopener"
+              >Footer-sized link</a
+            >
+          </p>
+        </div>
+
+        <h3 class="text-lg font-semibold mb-3 text-heading">Colors via inheritance</h3>
+        <p class="text-sm text-body-subtle mb-4">
+          The icon is masked with
+          <code class="text-xs font-mono">currentColor</code>, so it tracks the link's color through
+          <code class="text-xs font-mono">:hover</code>, dark mode, and any context override
+          automatically. Hover the links below to see the icon recolor.
+        </p>
+        <div class="space-y-3 mb-10">
+          <p>
+            Default link color:
+            <a
+              class="external-link underline"
+              href="https://www.marketdata.app/"
+              target="_blank"
+              rel="noopener"
+              >exchange entitlements</a
+            >.
+          </p>
+          <p>
+            Brand-colored link:
+            <a
+              class="external-link underline text-brand hover:text-brand-strong"
+              href="https://www.marketdata.app/"
+              target="_blank"
+              rel="noopener"
+              >View pricing</a
+            >.
+          </p>
+          <p>
+            Danger-colored link:
+            <a
+              class="external-link underline text-fg-danger hover:text-fg-danger-strong"
+              href="https://www.marketdata.app/"
+              target="_blank"
+              rel="noopener"
+              >Revoke API key</a
+            >.
+          </p>
+          <p class="p-4 rounded-lg bg-marketdata-darkblue text-white">
+            On a dark surface:
+            <a
+              class="external-link underline text-white"
+              href="https://www.marketdata.app/"
+              target="_blank"
+              rel="noopener"
+              >FINRA disclosures</a
+            >.
+          </p>
+        </div>
+
+        <h3 class="text-lg font-semibold mb-3 text-heading">Markup Pattern</h3>
+        <pre
+          class="text-xs font-mono bg-gray-100 dark:bg-gray-800 p-4 rounded-lg overflow-x-auto"
+        ><code>&lt;a class="external-link" href="https://..." target="_blank" rel="noopener"&gt;
+  exchange entitlements
+&lt;/a&gt;</code></pre>
+
+        <div class="mt-6 flex flex-wrap gap-2">
+          <code class="text-xs font-mono bg-gray-100 dark:bg-gray-800 px-2 py-1 rounded"
+            >.external-link</code
+          >
+        </div>
+      </section>
+
       <!-- Grid Layout -->
       <section id="grid-layout">
         <h2 class="text-2xl font-bold mb-6 border-b border-gray-200 dark:border-gray-700 pb-2">
