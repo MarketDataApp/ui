@@ -1,5 +1,13 @@
 # Changelog
 
+## 4.9.0
+
+### New
+
+- **`.external-link` utility** — drop-in decorator for outbound links. Add `class="external-link"` to any `<a>` and a trailing Heroicons "arrow-top-right-on-square" icon is rendered via `::after`. No companion classes, no inline SVG, no sizing or color props from the caller. The icon is sized in `em` so it scales with the parent font-size (a link in an `<h2>` gets a proportionally larger arrow than one in `<small>`), and masked with `currentColor` so it tracks the link's color through `:hover`, dark mode, and any context override automatically. Replaces the duplicated inline-SVG + companion-class pattern currently in `marketdata-amember`'s FINRA and legal-documents pages. New "Links" section in [docs/index.html](docs/index.html) demonstrates the size and color inheritance.
+
+Closes #16.
+
 ## 4.8.0
 
 ### New
