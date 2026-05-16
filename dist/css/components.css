@@ -928,6 +928,11 @@
     }
     &:where(.dark, .dark *, [data-theme="dark"], [data-theme="dark"] *) {
       &:disabled {
+        background-color: var(--color-gray-700);
+      }
+    }
+    &:where(.dark, .dark *, [data-theme="dark"], [data-theme="dark"] *) {
+      &:disabled {
         color: var(--color-gray-400);
       }
     }
@@ -1014,7 +1019,17 @@
     }
     &:where(.dark, .dark *, [data-theme="dark"], [data-theme="dark"] *) {
       &:read-only {
+        background-color: var(--color-gray-700);
+      }
+    }
+    &:where(.dark, .dark *, [data-theme="dark"], [data-theme="dark"] *) {
+      &:read-only {
         color: var(--color-gray-400);
+      }
+    }
+    &:where(.dark, .dark *, [data-theme="dark"], [data-theme="dark"] *) {
+      &:disabled {
+        background-color: var(--color-gray-700);
       }
     }
     &:where(.dark, .dark *, [data-theme="dark"], [data-theme="dark"] *) {
@@ -3186,6 +3201,11 @@
     -webkit-user-select: none;
     user-select: none;
   }
+  .read-only\:bg-gray-100 {
+    &:read-only {
+      background-color: var(--color-gray-100);
+    }
+  }
   .hover\:bg-gray-100 {
     &:hover {
       @media (hover: hover) {
@@ -3281,6 +3301,11 @@
   .disabled\:cursor-not-allowed {
     &:disabled {
       cursor: not-allowed;
+    }
+  }
+  .disabled\:bg-gray-100 {
+    &:disabled {
+      background-color: var(--color-gray-100);
     }
   }
   .disabled\:opacity-50 {
@@ -3517,6 +3542,13 @@
       box-shadow: var(--tw-inset-shadow), var(--tw-inset-ring-shadow), var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow);
     }
   }
+  .dark\:read-only\:bg-gray-700 {
+    &:where(.dark, .dark *, [data-theme="dark"], [data-theme="dark"] *) {
+      &:read-only {
+        background-color: var(--color-gray-700);
+      }
+    }
+  }
   .dark\:hover\:bg-gray-600 {
     &:where(.dark, .dark *, [data-theme="dark"], [data-theme="dark"] *) {
       &:hover {
@@ -3550,6 +3582,13 @@
         @media (hover: hover) {
           color: var(--color-white);
         }
+      }
+    }
+  }
+  .dark\:disabled\:bg-gray-700 {
+    &:where(.dark, .dark *, [data-theme="dark"], [data-theme="dark"] *) {
+      &:disabled {
+        background-color: var(--color-gray-700);
       }
     }
   }

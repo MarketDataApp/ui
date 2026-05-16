@@ -1,5 +1,13 @@
 # Changelog
 
+## 4.9.2
+
+### Fixes
+
+- **Dark-mode background for disabled / readonly `form-input` and `form-dropdown-input`.** Follow-up to v4.9.1: the new `disabled:bg-gray-100` and `read-only:bg-gray-100` modifiers had no `dark:` companion, so they won in both modes and overrode the base `dark:bg-gray-700`. In dark mode a disabled input rendered with a light gray-100 background against gray-400 text — hard to read and visually popped out as if active. Added `dark:disabled:bg-gray-700` and `dark:read-only:bg-gray-700` to `form-input`, and `dark:disabled:bg-gray-700` to `form-dropdown-input`, so the disabled/readonly background now tracks the active theme (matches the existing `form-input-disabled` utility's light+dark pairing).
+
+Closes #18.
+
 ## 4.9.1
 
 ### Fixes
