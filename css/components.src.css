@@ -127,7 +127,9 @@
 }
 
 @utility form-input {
-  @apply shadow-none bg-gray-50 dark:bg-gray-700 border border-solid border-gray-300 dark:border-gray-600 text-heading text-sm rounded-base focus:ring-1 focus:ring-brand focus:border-brand focus:outline-hidden block w-full p-2.5 dark:placeholder-gray-400;
+  @apply shadow-none bg-gray-50 dark:bg-gray-700 border border-solid border-gray-300 dark:border-gray-600 text-heading text-sm rounded-base focus:ring-1 focus:ring-brand focus:border-brand focus:outline-hidden block w-full p-2.5 dark:placeholder-gray-400
+         disabled:bg-gray-100 disabled:cursor-not-allowed disabled:text-gray-900 dark:disabled:text-gray-400
+         read-only:bg-gray-100 read-only:cursor-not-allowed read-only:text-gray-900 dark:read-only:text-gray-400;
 }
 
 @utility form-input-disabled {
@@ -139,7 +141,8 @@
 }
 
 @utility form-dropdown-input {
-  @apply shadow-xs bg-gray-50 dark:bg-gray-700 border border-solid border-gray-300 dark:border-gray-600 text-heading text-sm rounded-base focus:ring-1 focus:ring-brand focus:border-brand focus:outline-hidden block w-full ps-3 pe-10 py-2.5 dark:placeholder-gray-400;
+  @apply shadow-xs bg-gray-50 dark:bg-gray-700 border border-solid border-gray-300 dark:border-gray-600 text-heading text-sm rounded-base focus:ring-1 focus:ring-brand focus:border-brand focus:outline-hidden block w-full ps-3 pe-10 py-2.5 dark:placeholder-gray-400
+         disabled:bg-gray-100 disabled:cursor-not-allowed disabled:text-gray-900 dark:disabled:text-gray-400;
   appearance: none;
   background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24'%3e%3cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='m19 9-7 7-7-7'/%3e%3c/svg%3e");
   background-position: right 0.75rem center;

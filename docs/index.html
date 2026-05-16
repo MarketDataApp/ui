@@ -826,12 +826,18 @@
             <label class="form-label">API Key</label>
             <input
               type="text"
-              class="form-input-disabled"
+              class="form-input"
               placeholder="sk-..."
               value="sk-abc123...xyz"
               disabled
             />
             <p class="form-helper-text">contact support to regenerate</p>
+          </div>
+
+          <div class="mb-4">
+            <label class="form-label">Account ID</label>
+            <input type="text" class="form-input" value="acct_42a7c1" readonly />
+            <p class="form-helper-text">assigned at signup, included in form submissions</p>
           </div>
 
           <div class="mb-4">
@@ -841,6 +847,14 @@
               <option>Starter</option>
               <option selected>Trader</option>
             </select>
+          </div>
+
+          <div class="mb-4">
+            <label class="form-label">Billing Region</label>
+            <select class="form-dropdown-input" disabled>
+              <option selected>United States</option>
+            </select>
+            <p class="form-helper-text">contact support to change billing region</p>
           </div>
 
           <button class="btn-orange-to-blue mt-2">Save Changes</button>

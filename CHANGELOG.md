@@ -1,5 +1,13 @@
 # Changelog
 
+## 4.9.1
+
+### Fixes
+
+- **`form-input` and `form-dropdown-input` now auto-style `disabled` / `readonly` states.** Both utilities previously left the disabled-state wiring to consumers, so any input with `class="form-input"` and the `disabled` attribute kept its active styling (light bg, focus ring) and visually invited interaction it couldn't accept. Every consuming property was patching this with the same one-line bridge rule (`input:disabled { @apply form-input-disabled }`). The fix bakes `disabled:` and `read-only:` modifiers directly into `form-input` (gray-100 bg, `cursor-not-allowed`, dimmed text) and `disabled:` into `form-dropdown-input`, so the correct state styling now travels with the base utility. `form-input-disabled` is unchanged and remains available for fake-disabled / loading states. `readonly` is included because read-only inputs ARE submitted with the form (unlike disabled) and consumers occasionally use them when they want the value to flow; visually they're indistinguishable from disabled to the user. The Forms section in [docs/index.html](docs/index.html) now demonstrates the new behavior with both a disabled `form-input`, a readonly `form-input`, and a disabled `form-dropdown-input`.
+
+Closes #17.
+
 ## 4.9.0
 
 ### New
