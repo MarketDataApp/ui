@@ -1,5 +1,11 @@
 # Changelog
 
+## 4.9.3
+
+### Fixes
+
+- **Danger semantic tokens now use Tailwind's red palette instead of rose.** Repointed `--color-danger-soft/-/-medium/-strong/-subtle` and `--color-fg-danger/-strong` in [css/flowbite-theme.css](css/flowbite-theme.css) from `--color-rose-*` to the same steps of `--color-red-*`, in both the light root block and the `.dark` block. Rose has a pink cast that read more like a brand accent than an error state next to our blue/orange brand colors; standard red matches what consumers expect for danger/error UI. The MarketData-specific Docusaurus admonition colors in [css/theme.css](css/theme.css) (`--color-danger-bg/-border/-text/-darkbg/-darkborder/-darktext`) are unchanged — those are tuned to match the Docusaurus admonition palette, not Tailwind red.
+
 ## 4.9.2
 
 ### Fixes
