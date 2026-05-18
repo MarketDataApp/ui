@@ -1,21 +1,17 @@
 import { test as setup, expect } from '@playwright/test';
 
 const authFile = 'tests/e2e/.auth/user.json';
-const TEST_USERS = ['playwright-free', 'playwright-starter', 'playwright-affiliate'];
 
 setup('authenticate', async ({ page }) => {
-  const pass = process.env.AMEMBER_TEST_PASS;
+  const autoLoginUrl = process.env.AMEMBER_AUTOLOGIN_URL;
 
-  if (!pass) {
-    throw new Error('AMEMBER_TEST_PASS environment variable is required for authenticated tests');
+  if (!autoLoginUrl) {
+    throw new Error(
+      'AMEMBER_AUTOLOGIN_URL environment variable is required for authenticated tests',
+    );
   }
 
-  const user = TEST_USERS[Math.floor(Math.random() * TEST_USERS.length)];
-
-  await page.goto('https://dashboard.marketdata.app/marketdata/login');
-  await page.getByRole('textbox', { name: 'Username/Email' }).fill(user);
-  await page.getByRole('textbox', { name: 'Password' }).fill(pass);
-  await page.getByRole('button', { name: 'Login' }).click();
+  await page.goto(autoLoginUrl);
 
   // Wait for the amember_nr session cookie — this is the auth gate.
   // The cookie arrives before the redirect completes, so polling for it

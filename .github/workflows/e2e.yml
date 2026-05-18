@@ -27,7 +27,7 @@ jobs:
 
       - name: Run e2e tests
         env:
-          AMEMBER_TEST_PASS: ${{ secrets.AMEMBER_TEST_PASS }}
+          AMEMBER_AUTOLOGIN_URL: ${{ secrets.AMEMBER_AUTOLOGIN_URL }}
         run: npx playwright test
 
       - name: Upload test results

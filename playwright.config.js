@@ -1,7 +1,7 @@
 import { readFileSync } from 'node:fs';
 import { defineConfig } from '@playwright/test';
 
-// Load .env file so AMEMBER_TEST_PASS (and any future vars) are available
+// Load .env file so AMEMBER_AUTOLOGIN_URL (and any future vars) are available
 // regardless of how Playwright is invoked (npm run test:e2e, npx playwright test, etc.)
 try {
   for (const line of readFileSync('.env', 'utf8').split('\n')) {
