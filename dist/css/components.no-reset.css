@@ -2412,6 +2412,11 @@
 [data-copy-button] > [data-copy-success] {
   color: var(--color-fg-brand);
 }
+@keyframes spinner-rotate {
+  to {
+    transform: rotate(360deg);
+  }
+}
 :where(.checkbox-input, .radio-button-input):disabled ~ label {
   color: var(--color-fg-disabled);
   cursor: not-allowed;

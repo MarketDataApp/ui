@@ -797,6 +797,52 @@
         </div>
       </section>
 
+      <!-- Spinner -->
+      <section id="spinner">
+        <h2 class="text-2xl font-bold mb-6 border-b border-gray-200 dark:border-gray-700 pb-2">
+          Spinner
+        </h2>
+        <p class="text-gray-500 dark:text-gray-400 mb-6">
+          Indeterminate loading indicator. The SVG track + arc live entirely in CSS via
+          <code class="text-xs font-mono">mask-image</code>, so consumer markup is just one empty
+          wrapper with <code class="text-xs font-mono">role="status"</code> and an
+          <code class="text-xs font-mono">sr-only</code> label. Default size is
+          <code class="text-xs font-mono">w-8 h-8</code>; override with any Tailwind width/height
+          utility. The arc follows <code class="text-xs font-mono">currentColor</code> — set it with
+          any <code class="text-xs font-mono">text-*</code> utility. The track defaults to
+          <code class="text-xs font-mono">neutral-tertiary</code>; override via the
+          <code class="text-xs font-mono">--spinner-track</code> custom property.
+        </p>
+
+        <div class="flex items-center gap-6 flex-wrap">
+          <div role="status" class="spinner">
+            <span class="sr-only">Loading...</span>
+          </div>
+          <div role="status" class="spinner w-12 h-12">
+            <span class="sr-only">Loading...</span>
+          </div>
+          <div role="status" class="spinner w-16 h-16">
+            <span class="sr-only">Loading...</span>
+          </div>
+          <div role="status" class="spinner w-12 h-12 text-green-500">
+            <span class="sr-only">Loading...</span>
+          </div>
+          <div
+            role="status"
+            class="spinner w-12 h-12 text-marketdata-darkblue"
+            style="--spinner-track: rgb(254 215 170)"
+          >
+            <span class="sr-only">Loading...</span>
+          </div>
+        </div>
+
+        <div class="mt-6 flex flex-wrap gap-2">
+          <code class="text-xs font-mono bg-gray-100 dark:bg-gray-800 px-2 py-1 rounded"
+            >.spinner</code
+          >
+        </div>
+      </section>
+
       <!-- Forms -->
       <section id="forms">
         <h2 class="text-2xl font-bold mb-6 border-b border-gray-200 dark:border-gray-700 pb-2">

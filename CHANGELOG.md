@@ -1,5 +1,13 @@
 # Changelog
 
+## 4.10.0
+
+### New
+
+- **Copy-to-clipboard input** — `.copy-input-group`, `.copy-input`, `.copy-input-compact`, `.copy-input-button`, `.copy-input-icon-button`, `.copy-input-action`, `.copy-input-tooltip` plus `.copy-icon` / `.copy-icon-clipboard` / `.copy-icon-check`. A readonly text input with a copy button overlaid on the trailing edge, in two visual variants: a labeled "Copy" / "Copied" button, and a compact icon-only button with a Flowbite-style tooltip ("Copy to clipboard" / "Copied!"). Auto-init with a single `initCopyButton()` call — the script scans the DOM for `[data-copy-input-group]` wrappers and wires every pair. The button copies `data-copy-value` if set, otherwise `input.value`. Success state holds for 2s, then the tooltip auto-hides and stays hidden until the user fully disengages (no hover and no focus) — matching Flowbite's `tooltip.hide()` semantics without pulling in the Flowbite JS runtime. Icon paths (clipboard + clipboard-with-check) live entirely in CSS via `mask-image`, so consumer markup is just `<span class="copy-icon copy-icon-clipboard"></span>` with no duplicated SVG. Exported as `@marketdataapp/ui/copy-button`; demo in the new "Copy Input" section of [docs/index.html](docs/index.html).
+
+- **`.spinner` utility** — indeterminate loading indicator. Single empty wrapper with `role="status"` and an `sr-only` label; the two-color SVG (neutral track ring + brand-colored rotating arc) is rendered entirely in CSS via stacked `::before` / `::after` mask layers, so there's no inline SVG markup. Default size is `w-8 h-8`; override with any Tailwind width/height utility. Arc color follows `currentColor` (set with any `text-*` utility); track color defaults to `neutral-tertiary` and can be overridden via the `--spinner-track` custom property. New "Spinner" section in [docs/index.html](docs/index.html) demonstrates the size and color customization.
+
 ## 4.9.3
 
 ### Fixes

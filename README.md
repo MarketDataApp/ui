@@ -26,6 +26,7 @@ npm install @marketdataapp/ui@github:MarketDataApp/ui
 | `./user`                    | `dist/user.js`                     | Shared user state: `fetchUser` (stale-while-revalidate cache, dedup, retries), `onUserChange` (subscriber pattern).                                                                                                                          |
 | `./user-profile`            | `dist/user-profile.js`             | Gravatar avatar with optional dropdown menu. Zero dependencies.                                                                                                                                                                              |
 | `./user-state`              | `dist/user-state.js`               | Declarative show/hide for elements based on user auth and subscription state.                                                                                                                                                                |
+| `./copy-button`             | `dist/copy-button.js`              | Auto-init copy-to-clipboard input + button. `initCopyButton({ root })` scans the DOM for `[data-copy-input-group]` wrappers and wires each one. Returns a cleanup fn.                                                                        |
 
 ## CSS Architecture
 
@@ -396,6 +397,8 @@ Usage not yet verified.
 
 - **Buttons**: `.btn-orange-to-blue`, `.btn-blue-to-orange`, `.btn-outline-to-orange`, `.btn-outline-to-blue`, `.btn-orange-to-outline`, `.btn-blue-to-outline` (all named as `btn-{from}-to-{to}`). Deprecated aliases: `.btn-hover-orange` → `.btn-outline-to-orange`, `.btn-hover-blue` → `.btn-outline-to-blue`.
 - **Forms**: `.form-container`, `.form-heading`, `.form-label`, `.form-input`, `.form-input-disabled`, `.form-input-error`, `.form-dropdown-input`, `.form-helper-text`, `.form-helper-text-error`
+- **Copy Input**: `.copy-input-group`, `.copy-input`, `.copy-input-compact`, `.copy-input-button` (text variant), `.copy-input-icon-button` + `.copy-input-action` + `.copy-input-tooltip` (icon-only variant with hover tooltip), `.copy-icon` + `.copy-icon-clipboard` / `.copy-icon-check` (mask-image icons). Paired with `dist/copy-button.js`.
+- **Spinner**: `.spinner` — indeterminate loading indicator with neutral track + brand-colored rotating arc, both rendered via `mask-image` (no SVG in consumer markup). Arc color follows `currentColor` (`text-*`); track color overridable via the `--spinner-track` custom property.
 - **Badges**: `.badge .badge-{color}`, `.badge-pill-{color}`
 - **Radio Buttons**: `.radio-button-input`, `.radio-button-helper`
 - **Card Surface**: `.card-surface` (shared visual base: background, border, padding, shadow, rounded corners)
@@ -414,6 +417,7 @@ Usage not yet verified.
 - **`dist/user.js`** — Shared user state management (fetch, cache, subscribe)
 - **`dist/user-profile.js`** — Gravatar avatar + dropdown menu (zero deps, templates inlined)
 - **`dist/user-state.js`** — Declarative show/hide based on user auth and subscription state
+- **`dist/copy-button.js`** — Auto-init copy-to-clipboard input + button (scans `[data-copy-input-group]`; supports text and icon-only variants with tooltip)
 
 ## Known Issues and Lessons Learned
 
