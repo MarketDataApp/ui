@@ -894,6 +894,159 @@
         </div>
       </section>
 
+      <!-- Copy Input -->
+      <section id="copy-input">
+        <h2 class="text-2xl font-bold mb-6 border-b border-gray-200 dark:border-gray-700 pb-2">
+          Copy Input
+        </h2>
+        <p class="text-gray-500 dark:text-gray-400 mb-6">
+          Readonly input with an overlaid copy-to-clipboard button. Click the button to copy the
+          input's value; success state resets after 2 seconds. Multiple instances on a page operate
+          independently. Pass <code class="text-xs font-mono">data-copy-value</code> on the button
+          to copy a value other than the visible text.
+        </p>
+
+        <div class="space-y-4 max-w-md">
+          <!-- Plain copy -->
+          <div class="copy-input-group" data-copy-input-group>
+            <label for="copy-demo-install" class="sr-only">Install command</label>
+            <input
+              id="copy-demo-install"
+              type="text"
+              class="copy-input"
+              value="npm install @marketdataapp/ui"
+              data-copy-input
+              readonly
+            />
+            <button type="button" class="copy-input-button" data-copy-button>
+              <span data-copy-default>
+                <span class="copy-icon copy-icon-clipboard"></span>
+                Copy
+              </span>
+              <span data-copy-success hidden>
+                <span class="copy-icon copy-icon-check"></span>
+                Copied
+              </span>
+            </button>
+          </div>
+
+          <!-- Second instance — proves no ID-collision -->
+          <div class="copy-input-group" data-copy-input-group>
+            <label for="copy-demo-key" class="sr-only">API key</label>
+            <input
+              id="copy-demo-key"
+              type="text"
+              class="copy-input"
+              value="md_live_abc123xyz789"
+              data-copy-input
+              readonly
+            />
+            <button type="button" class="copy-input-button" data-copy-button>
+              <span data-copy-default>
+                <span class="copy-icon copy-icon-clipboard"></span>
+                Copy
+              </span>
+              <span data-copy-success hidden>
+                <span class="copy-icon copy-icon-check"></span>
+                Copied
+              </span>
+            </button>
+          </div>
+
+          <!-- Third instance — data-copy-value override -->
+          <div class="copy-input-group" data-copy-input-group>
+            <label for="copy-demo-truncated" class="sr-only">Long token (truncated display)</label>
+            <input
+              id="copy-demo-truncated"
+              type="text"
+              class="copy-input"
+              value="md_live_…(truncated)"
+              data-copy-input
+              readonly
+            />
+            <button
+              type="button"
+              class="copy-input-button"
+              data-copy-button
+              data-copy-value="md_live_thefullsecretvaluethatistoolongtodisplayinline"
+            >
+              <span data-copy-default>
+                <span class="copy-icon copy-icon-clipboard"></span>
+                Copy
+              </span>
+              <span data-copy-success hidden>
+                <span class="copy-icon copy-icon-check"></span>
+                Copied
+              </span>
+            </button>
+          </div>
+        </div>
+
+        <h3 class="text-lg font-semibold mt-8 mb-3">Icon-only variant</h3>
+        <p class="text-gray-500 dark:text-gray-400 mb-4">
+          Tighter footprint — just the icon, with a tooltip on hover. Pair
+          <code class="text-xs font-mono">.copy-input-compact</code> with
+          <code class="text-xs font-mono">.copy-input-icon-button</code>.
+        </p>
+
+        <div class="space-y-4 max-w-xs">
+          <div class="copy-input-group" data-copy-input-group>
+            <label for="copy-demo-icon" class="sr-only">Install command</label>
+            <input
+              id="copy-demo-icon"
+              type="text"
+              class="copy-input-compact"
+              value="npm install @marketdataapp/ui"
+              data-copy-input
+              readonly
+            />
+            <div class="copy-input-action">
+              <button
+                type="button"
+                class="copy-input-icon-button"
+                data-copy-button
+                aria-label="Copy to clipboard"
+              >
+                <span class="copy-icon copy-icon-clipboard" data-copy-default></span>
+                <span class="copy-icon copy-icon-check" data-copy-success hidden></span>
+              </button>
+              <div class="copy-input-tooltip" data-copy-tooltip role="tooltip">
+                <span data-copy-default>Copy to clipboard</span>
+                <span data-copy-success hidden>Copied!</span>
+                <div class="tooltip-arrow"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="mt-6 flex flex-wrap gap-2">
+          <code class="text-xs font-mono bg-gray-100 dark:bg-gray-800 px-2 py-1 rounded"
+            >initCopyButton()</code
+          >
+          <code class="text-xs font-mono bg-gray-100 dark:bg-gray-800 px-2 py-1 rounded"
+            >.copy-input-group</code
+          >
+          <code class="text-xs font-mono bg-gray-100 dark:bg-gray-800 px-2 py-1 rounded"
+            >.copy-input</code
+          >
+          <code class="text-xs font-mono bg-gray-100 dark:bg-gray-800 px-2 py-1 rounded"
+            >.copy-input-compact</code
+          >
+          <code class="text-xs font-mono bg-gray-100 dark:bg-gray-800 px-2 py-1 rounded"
+            >.copy-input-button</code
+          >
+          <code class="text-xs font-mono bg-gray-100 dark:bg-gray-800 px-2 py-1 rounded"
+            >.copy-input-action</code
+          >
+          <code class="text-xs font-mono bg-gray-100 dark:bg-gray-800 px-2 py-1 rounded"
+            >.copy-input-icon-button</code
+          >
+          <code class="text-xs font-mono bg-gray-100 dark:bg-gray-800 px-2 py-1 rounded"
+            >.copy-input-tooltip</code
+          >
+        </div>
+      </section>
+
       <!-- Radio Group -->
       <section id="radio-buttons">
         <h2 class="text-2xl font-bold mb-6 border-b border-gray-200 dark:border-gray-700 pb-2">
@@ -1887,6 +2040,12 @@
 
       // Theme toggle (header)
       initThemeToggle({ container: document.getElementById('theme-toggle') });
+    </script>
+
+    <script data-cfasync="false" type="module">
+      import { initCopyButton } from '../dist/copy-button.js';
+
+      initCopyButton();
     </script>
 
     <script data-cfasync="false" type="module">

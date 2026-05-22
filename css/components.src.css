@@ -164,6 +164,155 @@
   @apply mt-2 text-sm text-fg-danger;
 }
 
+/* ---- Copy Input ----
+   Input with an absolutely-positioned copy button overlaid on the trailing
+   edge. The button reads either the input's value or a `data-copy-value`
+   override and writes it to the clipboard via src/copy-button.js. Tokens
+   come from flowbite-theme.css so dark mode is automatic. */
+@utility copy-input-group {
+  @apply relative w-full;
+}
+
+@utility copy-input {
+  @apply form-input pe-24;
+  @apply read-only:cursor-default disabled:cursor-default;
+}
+
+/* Tighter right padding for the icon-only variant (copy-input-icon-button). */
+@utility copy-input-compact {
+  @apply form-input pe-10;
+  @apply read-only:cursor-default disabled:cursor-default;
+}
+
+@utility copy-input-button {
+  @apply absolute end-1.5 top-1/2 -translate-y-1/2 inline-flex items-center;
+  @apply text-body bg-neutral-primary-strong border border-default-strong;
+  @apply hover:bg-neutral-quaternary-medium hover:text-heading;
+  @apply focus:outline-none;
+  @apply focus-visible:ring-4 focus-visible:ring-neutral-tertiary-soft;
+  @apply active:ring-4 active:ring-neutral-tertiary-soft;
+  @apply font-medium leading-5 rounded text-xs px-3 py-1.5 cursor-pointer;
+}
+
+/* Wrapper that anchors the icon button (and its tooltip) to the input's
+   trailing edge. The tooltip then centers itself horizontally relative to
+   this wrapper, which is the size of the button. */
+@utility copy-input-action {
+  @apply absolute end-2 top-1/2 -translate-y-1/2 inline-flex;
+}
+
+/* Icon-only copy button. Minimal: no border, hover-tinted background.
+   Positioned by its parent .copy-input-action; pair with .copy-input-compact
+   for a tighter input. */
+@utility copy-input-icon-button {
+  @apply inline-flex items-center justify-center p-1.5 rounded cursor-pointer;
+  @apply text-body bg-transparent border-none;
+  @apply hover:bg-neutral-quaternary-medium hover:text-heading;
+}
+
+/* Tooltip shown above the copy button on hover/focus. Centered over the
+   .copy-input-action wrapper. Styling matches Flowbite's tooltip exactly:
+   text-sm, rounded-base, transition duration-300, with a rotated-square
+   .tooltip-arrow inside (instead of popper-positioned). Text content is
+   two state-paired spans toggled by JS. */
+@utility copy-input-tooltip {
+  @apply absolute z-10 bottom-full left-1/2 -translate-x-1/2 mb-2 inline-block;
+  @apply px-3 py-2 text-sm font-medium text-white bg-dark rounded-base shadow-xs;
+  @apply opacity-0 invisible pointer-events-none;
+  @apply whitespace-nowrap;
+  /* Transition both opacity AND visibility so the arrow (which overrides
+     the inherited visibility:hidden via its own visibility:visible on
+     ::before) stays in sync with the fading text. Without this, the text
+     would vanish instantly (visibility flip) while the arrow lingers as
+     opacity transitions on its own. */
+  transition-property: opacity, visibility;
+  transition-duration: 300ms;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Arrow — rotated square that picks up the tooltip's background. The
+   .tooltip-arrow markup mirrors Flowbite's so existing Flowbite users see
+   familiar structure; we just hard-code "above the button" placement. */
+.copy-input-tooltip .tooltip-arrow,
+.copy-input-tooltip .tooltip-arrow::before {
+  position: absolute;
+  width: 8px;
+  height: 8px;
+  background: inherit;
+}
+.copy-input-tooltip .tooltip-arrow {
+  visibility: hidden;
+  bottom: -4px;
+  left: 50%;
+  margin-left: -4px;
+}
+.copy-input-tooltip .tooltip-arrow::before {
+  content: '';
+  visibility: visible;
+  transform: rotate(45deg);
+}
+
+/* Reveal the tooltip while the action wrapper is hovered or focused —
+   selecting text in the input shouldn't trigger it. */
+.copy-input-action:hover [data-copy-tooltip],
+.copy-input-action:focus-within [data-copy-tooltip] {
+  opacity: 1;
+  visibility: visible;
+}
+
+/* JS-managed state override. During the 2s success window, force the
+   tooltip visible even if the user moves their mouse away. After the
+   window, force it hidden even if the user is still hovering — matches
+   Flowbite's tooltip.show()/tooltip.hide() behavior. Cooldown clears on
+   mouseleave or blur via src/copy-button.js. Placed after the hover
+   rules so equal-specificity stateful rules win. */
+.copy-input-action[data-copy-state='success'] [data-copy-tooltip] {
+  opacity: 1;
+  visibility: visible;
+}
+.copy-input-action[data-copy-state='cooldown'] [data-copy-tooltip] {
+  opacity: 0;
+  visibility: hidden;
+}
+
+/* Copy/check icons rendered via mask-image so the SVG paths live in CSS
+   instead of being duplicated in every consumer's markup. Color follows
+   currentColor — apply e.g. text-fg-brand on the success span to tint. */
+@utility copy-icon {
+  @apply inline-block shrink-0 w-4 h-4;
+  background-color: currentColor;
+  -webkit-mask-image: var(--copy-icon);
+  mask-image: var(--copy-icon);
+  -webkit-mask-size: contain;
+  mask-size: contain;
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+  -webkit-mask-position: center;
+  mask-position: center;
+}
+
+/* Lay out the icon + label inside a copy button's state span. Scoped to
+   direct children of [data-copy-button] so the tooltip's own
+   [data-copy-default]/[data-copy-success] spans are unaffected. */
+[data-copy-button] > [data-copy-default],
+[data-copy-button] > [data-copy-success] {
+  @apply inline-flex items-center gap-1.5 font-semibold;
+}
+
+/* Brand-color the success state — cascades to both the icon (via the
+   currentColor mask) and any label text inside the same span. */
+[data-copy-button] > [data-copy-success] {
+  @apply text-fg-brand;
+}
+
+@utility copy-icon-clipboard {
+  --copy-icon: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24'%3e%3cpath stroke='black' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M15 4h3a1 1 0 0 1 1 1v15a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1V5a1 1 0 0 1 1-1h3m0 3h6m-6 5h6m-6 4h6M10 3v4h4V3h-4Z'/%3e%3c/svg%3e");
+}
+
+@utility copy-icon-check {
+  --copy-icon: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24'%3e%3cpath stroke='black' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M15 4h3a1 1 0 0 1 1 1v15a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1V5a1 1 0 0 1 1-1h3m0 3h6m-6 7 2 2 4-4m-5-9v4h4V3h-4Z'/%3e%3c/svg%3e");
+}
+
 /* ---- Radio Group ---- */
 @utility radio-group-container {
   --radio-btn-bg: var(--color-gray-100);

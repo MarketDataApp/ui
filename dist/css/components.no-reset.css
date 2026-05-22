@@ -95,6 +95,7 @@
   --font-weight-light: 300;
   --font-weight-normal: 400;
   --font-weight-medium: 500;
+  --font-weight-semibold: 600;
   --font-weight-bold: 700;
   --font-weight-extrabold: 800;
   --tracking-tight: -0.4px;
@@ -112,6 +113,7 @@
   --color-body: var(--color-gray-600);
   --color-body-subtle: var(--color-gray-500);
   --color-heading: var(--color-gray-900);
+  --color-fg-brand: var(--color-blue-700);
   --color-fg-danger: var(--color-red-700);
   --color-fg-danger-strong: var(--color-red-900);
   --color-fg-disabled: var(--color-gray-400);
@@ -2370,6 +2372,45 @@
 }
 .resena-widget .logo__estrella-marca {
   fill: #005128;
+}
+.copy-input-tooltip .tooltip-arrow, .copy-input-tooltip .tooltip-arrow::before {
+  position: absolute;
+  width: 8px;
+  height: 8px;
+  background: inherit;
+}
+.copy-input-tooltip .tooltip-arrow {
+  visibility: hidden;
+  bottom: -4px;
+  left: 50%;
+  margin-left: -4px;
+}
+.copy-input-tooltip .tooltip-arrow::before {
+  content: '';
+  visibility: visible;
+  transform: rotate(45deg);
+}
+.copy-input-action:hover [data-copy-tooltip], .copy-input-action:focus-within [data-copy-tooltip] {
+  opacity: 1;
+  visibility: visible;
+}
+.copy-input-action[data-copy-state='success'] [data-copy-tooltip] {
+  opacity: 1;
+  visibility: visible;
+}
+.copy-input-action[data-copy-state='cooldown'] [data-copy-tooltip] {
+  opacity: 0;
+  visibility: hidden;
+}
+[data-copy-button] > [data-copy-default], [data-copy-button] > [data-copy-success] {
+  display: inline-flex;
+  align-items: center;
+  gap: calc(var(--spacing) * 1.5);
+  --tw-font-weight: var(--font-weight-semibold);
+  font-weight: var(--font-weight-semibold);
+}
+[data-copy-button] > [data-copy-success] {
+  color: var(--color-fg-brand);
 }
 :where(.checkbox-input, .radio-button-input):disabled ~ label {
   color: var(--color-fg-disabled);

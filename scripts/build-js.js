@@ -33,6 +33,7 @@ const FILES_WITHOUT_LOCAL_IMPORTS = [
   'navbar-overflow.js',
   'reviews.platform.js',
   'dark-images.js',
+  'copy-button.js',
 ];
 
 // ---------------------------------------------------------------------------

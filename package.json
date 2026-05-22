@@ -42,6 +42,10 @@
       "types": "./dist/reviews.d.ts",
       "default": "./dist/reviews.js"
     },
+    "./copy-button": {
+      "types": "./dist/copy-button.d.ts",
+      "default": "./dist/copy-button.js"
+    },
     "./dark-images": {
       "types": "./dist/dark-images.d.ts",
       "default": "./dist/dark-images.js"
