@@ -1,0 +1,476 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Button Shimmer Experiments - @marketdataapp/ui</title>
+    <!-- serve.json enforces trailingSlash:true, so /docs/button-shimmer.html
+         redirects to /docs/button-shimmer/. Without a base, relative URLs
+         then resolve from /docs/button-shimmer/ and 404. Pinning the base
+         one level up keeps everything anchored at /docs/. -->
+    <base href="../" />
+    <link rel="stylesheet" href="docs.css" />
+    <script data-cfasync="false">
+      (function () {
+        var match = document.cookie.match(/(?:^|;\s*)theme=(dark|light)/);
+        var saved = match ? match[1] : null;
+        var prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+        var dark = saved === 'dark' || (!saved && prefersDark);
+        document.documentElement.classList.add(dark ? 'dark' : 'light');
+        document.documentElement.setAttribute('data-theme', dark ? 'dark' : 'light');
+      })();
+    </script>
+    <style>
+      /* ============================================================
+         Button shimmer / loading-state experiments
+         Each .btn-shimmer-* class layers a loading effect on top of
+         the existing .btn-orange-to-blue primary button. They all
+         override :hover so the gradient doesn't switch to blue
+         mid-animation, and use cursor: wait to signal the working
+         state. Click any button to toggle the effect on/off.
+         ============================================================ */
+
+      @property --shimmer-angle {
+        syntax: '<angle>';
+        initial-value: 103deg;
+        inherits: false;
+      }
+
+      @property --shimmer-conic-from {
+        syntax: '<angle>';
+        initial-value: 0deg;
+        inherits: false;
+      }
+
+      /* 1. SHEEN SWEEP — a soft white highlight slides diagonally
+         across the button. Classic skeleton/loading idiom; the base
+         gradient is untouched. */
+      .btn-shimmer-sheen {
+        position: relative;
+        overflow: hidden;
+        isolation: isolate;
+        cursor: wait;
+      }
+      .btn-shimmer-sheen::after {
+        content: '';
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(
+          110deg,
+          transparent 30%,
+          rgba(255, 255, 255, 0.55) 50%,
+          transparent 70%
+        );
+        transform: translateX(-100%);
+        animation: shimmer-sheen 1.6s ease-in-out infinite;
+        pointer-events: none;
+        z-index: 1;
+      }
+      @keyframes shimmer-sheen {
+        to {
+          transform: translateX(100%);
+        }
+      }
+
+      /* 2. ANGLE ROTATION — the linear-gradient's angle rotates a
+         full 360° via an animated @property custom prop. The colors
+         stay the same; only the diagonal direction changes. */
+      .btn-shimmer-rotate {
+        background-image: linear-gradient(
+          var(--shimmer-angle),
+          #e83155 0%,
+          #ffdfb9 100%
+        ) !important;
+        animation: shimmer-rotate 2.5s linear infinite;
+        cursor: wait;
+      }
+      @keyframes shimmer-rotate {
+        to {
+          --shimmer-angle: 463deg;
+        }
+      }
+
+      /* 3. POSITION SLIDE — extends the gradient with repeated color
+         stops then slides background-position. Feels like the
+         gradient is flowing through the button. */
+      .btn-shimmer-slide {
+        background-image: linear-gradient(
+          103deg,
+          #e83155 0%,
+          #ffdfb9 25%,
+          #e83155 50%,
+          #ffdfb9 75%,
+          #e83155 100%
+        ) !important;
+        background-size: 250% 100% !important;
+        animation: shimmer-slide 2s linear infinite;
+        cursor: wait;
+      }
+      @keyframes shimmer-slide {
+        to {
+          background-position: 250% 0;
+        }
+      }
+
+      /* 4. PULSE — gentle opacity fade. Minimal motion, low contrast,
+         doesn't draw attention from page content. Good for "saving"
+         or "syncing in background" affordances. */
+      .btn-shimmer-pulse {
+        animation: shimmer-pulse 1.4s ease-in-out infinite;
+        cursor: wait;
+      }
+      @keyframes shimmer-pulse {
+        50% {
+          opacity: 0.6;
+        }
+      }
+
+      /* 5. CONIC SPIN — replaces the linear gradient with a conic
+         gradient rotating around the button center. Most "loading
+         spinner"-like of the bunch. */
+      .btn-shimmer-conic {
+        background: conic-gradient(
+          from var(--shimmer-conic-from) at 50% 50%,
+          #e83155,
+          #ffdfb9,
+          #e83155,
+          #ffdfb9,
+          #e83155
+        ) !important;
+        animation: shimmer-conic 2.5s linear infinite;
+        cursor: wait;
+      }
+      @keyframes shimmer-conic {
+        to {
+          --shimmer-conic-from: 360deg;
+        }
+      }
+
+      /* 6. SHEEN + PULSE COMBO — sheen sweep with a subtle brightness
+         pulse underneath. Both effects layer; together they read more
+         like "actively working" than either alone. */
+      .btn-shimmer-combo {
+        position: relative;
+        overflow: hidden;
+        isolation: isolate;
+        animation: shimmer-pulse 1.4s ease-in-out infinite;
+        cursor: wait;
+      }
+      .btn-shimmer-combo::after {
+        content: '';
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(
+          110deg,
+          transparent 30%,
+          rgba(255, 255, 255, 0.55) 50%,
+          transparent 70%
+        );
+        transform: translateX(-100%);
+        animation: shimmer-sheen 1.6s ease-in-out infinite;
+        pointer-events: none;
+        z-index: 1;
+      }
+
+      /* Disable hover-to-blue gradient swap on every variant so the
+         loading visual isn't interrupted when the cursor is over the
+         button. Has to be !important because btn-orange-to-blue's
+         own :hover already sets background-image. */
+      .btn-shimmer-sheen:hover,
+      .btn-shimmer-rotate:hover,
+      .btn-shimmer-slide:hover,
+      .btn-shimmer-pulse:hover,
+      .btn-shimmer-conic:hover,
+      .btn-shimmer-combo:hover {
+        background-image: var(--shimmer-hover-bg, none);
+      }
+      .btn-shimmer-sheen:hover {
+        background-image: linear-gradient(103deg, #e83155 0%, #ffdfb9 100%);
+      }
+      .btn-shimmer-pulse:hover,
+      .btn-shimmer-combo:hover {
+        background-image: linear-gradient(103deg, #e83155 0%, #ffdfb9 100%);
+      }
+
+      /* Live keyframe / @property snippet under each button. Color +
+         spacing handled via Tailwind classes on the <pre>; this rule
+         just controls line-height which doesn't have a clean utility. */
+      .shimmer-code {
+        line-height: 1.5;
+      }
+    </style>
+  </head>
+  <body class="default min-h-screen">
+    <header class="border-b border-gray-200 dark:border-gray-700 mb-12">
+      <div class="max-w-5xl mx-auto px-4 py-8 flex items-center justify-between">
+        <div>
+          <h1 class="text-3xl font-bold">Button Shimmer Experiments</h1>
+          <p class="mt-1 text-gray-500 dark:text-gray-400">
+            <a href="index.html" class="hover:text-gray-900 dark:hover:text-white"
+              >&larr; Back to components</a
+            >
+          </p>
+        </div>
+        <div id="theme-toggle"></div>
+      </div>
+    </header>
+
+    <main class="max-w-5xl mx-auto px-4 pb-16 space-y-12">
+      <section>
+        <p class="text-base text-body">
+          Six loading-state treatments layered on top of
+          <code class="text-xs font-mono">.btn-orange-to-blue</code>. Each card below shows the
+          effect running continuously — click a button to pause / resume so you can compare against
+          the idle state. After picking a favorite we'll promote it into
+          <code class="text-xs font-mono">css/components.src.css</code> as a real utility.
+        </p>
+        <div class="mt-4 flex gap-3 items-center text-sm">
+          <button id="reset-all" class="btn-outline-to-orange">Restart all</button>
+          <span class="text-body-subtle"
+            >— if you've paused some buttons and want to compare them all in sync.</span
+          >
+        </div>
+      </section>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <!-- 1. Sheen Sweep -->
+        <div class="card-surface">
+          <h3 class="text-lg font-semibold text-heading mb-1">1. Sheen sweep</h3>
+          <p class="text-sm text-body-subtle mb-4">
+            A soft white highlight slides diagonally across the button. Base gradient is untouched;
+            the effect is purely an overlay. Classic skeleton-loader idiom.
+          </p>
+          <div class="flex gap-3 items-center mb-4">
+            <button class="btn-orange-to-blue btn-shimmer-sheen" data-shimmer="btn-shimmer-sheen">
+              Get Started
+            </button>
+            <span class="text-xs text-body-subtle">click to toggle</span>
+          </div>
+          <pre
+            class="shimmer-code text-xs font-mono bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 rounded p-3 overflow-x-auto whitespace-pre"
+          >
+.btn-shimmer-sheen::after {
+  background: linear-gradient(110deg,
+    transparent 30%,
+    rgba(255,255,255,.55) 50%,
+    transparent 70%);
+  transform: translateX(-100%);
+  animation: sheen 1.6s ease-in-out infinite;
+}
+@keyframes sheen { to { transform: translateX(100%); } }</pre
+          >
+        </div>
+
+        <!-- 2. Angle Rotation -->
+        <div class="card-surface">
+          <h3 class="text-lg font-semibold text-heading mb-1">2. Angle rotation</h3>
+          <p class="text-sm text-body-subtle mb-4">
+            The gradient's angle rotates a full 360° via an animated
+            <code class="text-xs font-mono">@property</code> custom property. Same colors, the
+            diagonal sweeps around. (Your suggested approach.)
+          </p>
+          <div class="flex gap-3 items-center mb-4">
+            <button class="btn-orange-to-blue btn-shimmer-rotate" data-shimmer="btn-shimmer-rotate">
+              Get Started
+            </button>
+            <span class="text-xs text-body-subtle">click to toggle</span>
+          </div>
+          <pre
+            class="shimmer-code text-xs font-mono bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 rounded p-3 overflow-x-auto whitespace-pre"
+          >
+@property --angle { syntax: '&lt;angle&gt;';
+  initial-value: 103deg; inherits: false; }
+
+.btn-shimmer-rotate {
+  background-image:
+    linear-gradient(var(--angle), #e83155, #ffdfb9);
+  animation: rotate 2.5s linear infinite;
+}
+@keyframes rotate { to { --angle: 463deg; } }</pre
+          >
+        </div>
+
+        <!-- 3. Position Slide -->
+        <div class="card-surface">
+          <h3 class="text-lg font-semibold text-heading mb-1">3. Position slide</h3>
+          <p class="text-sm text-body-subtle mb-4">
+            Extends the gradient with repeated color stops, then slides
+            <code class="text-xs font-mono">background-position</code>. The colors flow through the
+            button.
+          </p>
+          <div class="flex gap-3 items-center mb-4">
+            <button class="btn-orange-to-blue btn-shimmer-slide" data-shimmer="btn-shimmer-slide">
+              Get Started
+            </button>
+            <span class="text-xs text-body-subtle">click to toggle</span>
+          </div>
+          <pre
+            class="shimmer-code text-xs font-mono bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 rounded p-3 overflow-x-auto whitespace-pre"
+          >
+.btn-shimmer-slide {
+  background-image: linear-gradient(103deg,
+    #e83155, #ffdfb9, #e83155, #ffdfb9, #e83155);
+  background-size: 250% 100%;
+  animation: slide 2s linear infinite;
+}
+@keyframes slide { to { background-position: 250% 0; } }</pre
+          >
+        </div>
+
+        <!-- 4. Pulse -->
+        <div class="card-surface">
+          <h3 class="text-lg font-semibold text-heading mb-1">4. Pulse</h3>
+          <p class="text-sm text-body-subtle mb-4">
+            Gentle opacity fade. Minimal motion, low contrast — good for background sync affordances
+            where the loading state shouldn't fight for attention.
+          </p>
+          <div class="flex gap-3 items-center mb-4">
+            <button class="btn-orange-to-blue btn-shimmer-pulse" data-shimmer="btn-shimmer-pulse">
+              Get Started
+            </button>
+            <span class="text-xs text-body-subtle">click to toggle</span>
+          </div>
+          <pre
+            class="shimmer-code text-xs font-mono bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 rounded p-3 overflow-x-auto whitespace-pre"
+          >
+.btn-shimmer-pulse {
+  animation: pulse 1.4s ease-in-out infinite;
+}
+@keyframes pulse {
+  50% { opacity: 0.6; }
+}</pre
+          >
+        </div>
+
+        <!-- 5. Conic Spin -->
+        <div class="card-surface">
+          <h3 class="text-lg font-semibold text-heading mb-1">5. Conic spin</h3>
+          <p class="text-sm text-body-subtle mb-4">
+            Swaps the linear gradient for a conic gradient that rotates around the button's center.
+            Most overtly "spinner"-flavored — pairs naturally with a loading metaphor.
+          </p>
+          <div class="flex gap-3 items-center mb-4">
+            <button class="btn-orange-to-blue btn-shimmer-conic" data-shimmer="btn-shimmer-conic">
+              Get Started
+            </button>
+            <span class="text-xs text-body-subtle">click to toggle</span>
+          </div>
+          <pre
+            class="shimmer-code text-xs font-mono bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 rounded p-3 overflow-x-auto whitespace-pre"
+          >
+@property --from { syntax: '&lt;angle&gt;';
+  initial-value: 0deg; inherits: false; }
+
+.btn-shimmer-conic {
+  background: conic-gradient(from var(--from),
+    #e83155, #ffdfb9, #e83155, #ffdfb9, #e83155);
+  animation: conic 2.5s linear infinite;
+}
+@keyframes conic { to { --from: 360deg; } }</pre
+          >
+        </div>
+
+        <!-- 6. Sheen + Pulse Combo -->
+        <div class="card-surface">
+          <h3 class="text-lg font-semibold text-heading mb-1">6. Sheen + pulse combo</h3>
+          <p class="text-sm text-body-subtle mb-4">
+            Layers the sheen sweep on top of the pulse — together they read more like "actively
+            working" than either alone. Slightly busier visually.
+          </p>
+          <div class="flex gap-3 items-center mb-4">
+            <button class="btn-orange-to-blue btn-shimmer-combo" data-shimmer="btn-shimmer-combo">
+              Get Started
+            </button>
+            <span class="text-xs text-body-subtle">click to toggle</span>
+          </div>
+          <pre
+            class="shimmer-code text-xs font-mono bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 rounded p-3 overflow-x-auto whitespace-pre"
+          >
+.btn-shimmer-combo {
+  animation: pulse 1.4s ease-in-out infinite;
+}
+.btn-shimmer-combo::after {
+  /* same sheen as variant 1 */
+}</pre
+          >
+        </div>
+      </div>
+
+      <!-- Side-by-side comparison -->
+      <section>
+        <h2 class="text-2xl font-bold mb-4 border-b border-gray-200 dark:border-gray-700 pb-2">
+          Side-by-side
+        </h2>
+        <p class="text-sm text-body-subtle mb-6">
+          All six variants running simultaneously, plus an idle reference. Useful for picking a
+          winner at a glance.
+        </p>
+        <div class="flex flex-wrap items-center gap-4">
+          <button class="btn-orange-to-blue btn-shimmer-sheen" data-shimmer="btn-shimmer-sheen">
+            Sheen
+          </button>
+          <button class="btn-orange-to-blue btn-shimmer-rotate" data-shimmer="btn-shimmer-rotate">
+            Rotate
+          </button>
+          <button class="btn-orange-to-blue btn-shimmer-slide" data-shimmer="btn-shimmer-slide">
+            Slide
+          </button>
+          <button class="btn-orange-to-blue btn-shimmer-pulse" data-shimmer="btn-shimmer-pulse">
+            Pulse
+          </button>
+          <button class="btn-orange-to-blue btn-shimmer-conic" data-shimmer="btn-shimmer-conic">
+            Conic
+          </button>
+          <button class="btn-orange-to-blue btn-shimmer-combo" data-shimmer="btn-shimmer-combo">
+            Combo
+          </button>
+          <button class="btn-orange-to-blue">Idle (reference)</button>
+        </div>
+      </section>
+    </main>
+
+    <footer class="border-t border-gray-200 dark:border-gray-700 mt-12">
+      <div
+        class="max-w-5xl mx-auto px-4 py-6 text-sm text-gray-500 dark:text-gray-400 flex justify-between"
+      >
+        <span>@marketdataapp/ui</span>
+        <a
+          href="https://github.com/MarketDataApp/ui"
+          class="hover:text-gray-900 dark:hover:text-white"
+          >GitHub</a
+        >
+      </div>
+    </footer>
+
+    <script data-cfasync="false" type="module">
+      import { initThemeToggle } from '../dist/theme-toggle.js';
+
+      initThemeToggle({ container: document.getElementById('theme-toggle') });
+    </script>
+
+    <script data-cfasync="false">
+      // Click a button to toggle its shimmer class on/off so you can
+      // see the underlying idle state for comparison.
+      document.querySelectorAll('[data-shimmer]').forEach((btn) => {
+        const cls = btn.dataset.shimmer;
+        btn.addEventListener('click', (e) => {
+          e.preventDefault();
+          btn.classList.toggle(cls);
+        });
+      });
+
+      // "Restart all" — re-add every shimmer class so the animations
+      // resync from frame 0.
+      document.getElementById('reset-all').addEventListener('click', () => {
+        document.querySelectorAll('[data-shimmer]').forEach((btn) => {
+          const cls = btn.dataset.shimmer;
+          btn.classList.remove(cls);
+          // Force reflow so the re-added class triggers a fresh
+          // animation cycle.
+          void btn.offsetWidth;
+          btn.classList.add(cls);
+        });
+      });
+    </script>
+  </body>
+</html>
