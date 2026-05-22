@@ -432,15 +432,22 @@
   @apply relative w-full;
 }
 
+/* Uses the same Flowbite semantic tokens as the copy button overlay
+   (bg-neutral-secondary-medium, border-default-medium, text-body)
+   instead of form-input's plain gray-* palette. Both light and dark
+   mappings come from flowbite-theme.css so the input and the button
+   feel like one widget instead of two design systems. */
 @utility copy-input {
-  @apply form-input pe-24;
+  @apply block w-full text-sm rounded-base shadow-xs;
+  @apply bg-neutral-secondary-medium border border-default-medium text-body placeholder:text-body;
+  @apply px-3 py-2.5 pe-24;
+  @apply focus:ring-1 focus:ring-brand focus:border-brand focus:outline-hidden;
   @apply read-only:cursor-default disabled:cursor-default;
 }
 
 /* Tighter right padding for the icon-only variant (copy-input-icon-button). */
 @utility copy-input-compact {
-  @apply form-input pe-10;
-  @apply read-only:cursor-default disabled:cursor-default;
+  @apply copy-input pe-10;
 }
 
 @utility copy-input-button {
@@ -552,10 +559,17 @@
 
 /* Lay out the icon + label inside a copy button's state span. Scoped to
    direct children of [data-copy-button] so the tooltip's own
-   [data-copy-default]/[data-copy-success] spans are unaffected. */
+   [data-copy-default]/[data-copy-success] spans are unaffected. The
+   explicit line-height resets text-xs back to its natural 16px (the
+   button's @apply leading-5 sets --tw-leading: 20px which would
+   otherwise propagate via text-xs's `line-height: var(--tw-leading, …)`
+   and make the content 4px taller than Flowbite's reference). 16px
+   also matches the .copy-icon's height, so the inline-flex container
+   doesn't get padded by mismatched child heights. */
 [data-copy-button] > [data-copy-default],
 [data-copy-button] > [data-copy-success] {
   @apply inline-flex items-center gap-1.5 font-semibold;
+  line-height: 1rem;
 }
 
 /* Brand-color the success state — cascades to both the icon (via the
