@@ -1,5 +1,11 @@
 # Changelog
 
+## 4.11.1
+
+### Fixes
+
+- **Button loading-state rules now propagate through scoped `@apply`.** The 4.11 loading-state additions (`.htmx-request` / `aria-busy` shimmer, `[data-btn-default]` / `[data-btn-loading]` visibility toggle, `:has(> [data-btn-loading])` `inline-flex → inline-grid` switch) were declared as separate top-level selectors. `@apply` only inlines what's inside an `@utility` body, so consumers re-emitting a button via scoped `@apply btn-orange-to-blue` (a common pattern when fighting higher-specificity environment resets like aMember's `.am-body-content button { … }` at 0,1,1) lost every state rule — most visibly the layout switch, which let the consumer's scoped `display: inline-flex` win at 0,3,0 over the kit's top-level `display: inline-grid` at 0,3,0, causing the button to grow horizontally and render both spans side-by-side during requests. Moved every loading-state rule **inside** the `@utility btn-orange-to-blue { … }` and `@utility btn-blue-to-orange { … }` bodies using `&` nesting (same pattern the kit already uses for `:hover`, `:focus`, and dark mode), so scoped `@apply` now propagates the full state set at the consumer's specificity. Direct-class usage is unchanged. Closes #19.
+
 ## 4.11.0
 
 ### New

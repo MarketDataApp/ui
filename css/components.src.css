@@ -81,101 +81,33 @@
        button.setAttribute('aria-busy', 'true');   // start
        button.removeAttribute('aria-busy');        // done
 
-   The buttons' base rules below declare a transition on
-   --btn-shimmer-angle, so when the loading class is removed the angle
-   smoothly returns to 463deg (visually 103deg) over the transition
-   duration rather than snapping. Pointer-events: none prevents
-   accidental double-submits; the hover override keeps the loading
-   gradient from being swapped to the hover-state gradient mid-
-   animation. */
-/* Loading state: swap the gradient colors to the button's hover-state
-   palette (orange-to-blue rotates blue, blue-to-orange rotates orange)
-   while the angle animation runs. The color swap is itself a
-   transition, so entry and exit smoothly morph between the resting
-   and loading palettes. */
-.btn-orange-to-blue.htmx-request,
-.btn-orange-to-blue[aria-busy='true'] {
-  --btn-shimmer-from: #003286;
-  --btn-shimmer-to: #0085f2;
-  --btn-focus-color: var(--color-brand-medium);
-  animation: btn-shimmer-rotate 2.5s linear infinite;
-  cursor: wait;
-  pointer-events: none;
-}
-.btn-blue-to-orange.htmx-request,
-.btn-blue-to-orange[aria-busy='true'] {
-  --btn-shimmer-from: #e83155;
-  --btn-shimmer-to: #ffdfb9;
-  --btn-focus-color: var(--color-pink-200);
-  animation: btn-shimmer-rotate 2.5s linear infinite;
-  cursor: wait;
-  pointer-events: none;
-}
+   The buttons' base rules declare a transition on --btn-shimmer-angle,
+   so when the loading class is removed the angle smoothly returns to
+   463deg (visually 103deg) over the transition duration rather than
+   snapping. Pointer-events: none prevents accidental double-submits;
+   the hover override keeps the loading gradient from being swapped to
+   the hover-state gradient mid-animation.
 
-/* Optional content swap. Wrap the default button content in
-   [data-btn-default] and provide a [data-btn-loading] sibling to be
-   revealed during the loading state:
+   Loading state rules are nested **inside** each button's @utility
+   block (via &) so they propagate through scoped @apply. Consumers
+   re-emitting the button via `.my-cta { @apply btn-orange-to-blue }`
+   need every state rule inlined at their selector's specificity,
+   otherwise scoped base properties (e.g. display: inline-flex) win
+   over top-level state rules (display: inline-grid) and the layout
+   breaks during requests. See issue #19.
+
+   Optional content swap. Wrap the default content in [data-btn-default]
+   and provide a [data-btn-loading] sibling revealed during loading:
        <button class="btn-orange-to-blue" hx-post="/save">
          <span data-btn-default>Save</span>
          <span data-btn-loading>Saving…</span>
        </button>
-   When the loading state activates, the button's display is switched
-   from inline-flex to inline-grid and both spans share the same grid
-   cell. The default span stays in the flow with visibility:hidden so
-   it continues to reserve its width — preventing the button from
-   shrinking when the loading label is shorter than the default. If
-   the loading content is *wider*, the grid cell grows to fit it.
-   Don't add a [hidden] attribute to either span — Tailwind preflight
-   applies display:none !important to it, which would override these
-   rules. */
-.btn-orange-to-blue > [data-btn-default],
-.btn-blue-to-orange > [data-btn-default] {
-  /* Match the button's own inline-flex layout so consumers can place
-     an icon + text directly inside [data-btn-default]. */
-  display: inline-flex;
-  align-items: center;
-  gap: 0.5rem;
-}
-.btn-orange-to-blue > [data-btn-loading],
-.btn-blue-to-orange > [data-btn-loading] {
-  display: none;
-}
-/* Only switch to grid when the swap markup is actually present —
-   buttons without [data-btn-loading] keep their normal inline-flex
-   layout so existing icon + text usage is unaffected. */
-.btn-orange-to-blue:has(> [data-btn-loading]).htmx-request,
-.btn-orange-to-blue:has(> [data-btn-loading])[aria-busy='true'],
-.btn-blue-to-orange:has(> [data-btn-loading]).htmx-request,
-.btn-blue-to-orange:has(> [data-btn-loading])[aria-busy='true'] {
-  display: inline-grid;
-}
-.btn-orange-to-blue.htmx-request > [data-btn-default],
-.btn-orange-to-blue[aria-busy='true'] > [data-btn-default],
-.btn-blue-to-orange.htmx-request > [data-btn-default],
-.btn-blue-to-orange[aria-busy='true'] > [data-btn-default] {
-  grid-area: 1 / 1;
-  visibility: hidden;
-}
-.btn-orange-to-blue.htmx-request > [data-btn-loading],
-.btn-orange-to-blue[aria-busy='true'] > [data-btn-loading],
-.btn-blue-to-orange.htmx-request > [data-btn-loading],
-.btn-blue-to-orange[aria-busy='true'] > [data-btn-loading] {
-  grid-area: 1 / 1;
-  display: inline-flex;
-  align-items: center;
-  justify-self: center;
-  gap: 0.375rem;
-}
-.btn-orange-to-blue.htmx-request:hover,
-.btn-orange-to-blue[aria-busy='true']:hover {
-  background-image: linear-gradient(var(--btn-shimmer-angle), #e83155 0%, #ffdfb9 100%);
-  box-shadow: var(--shadow-diffuse);
-}
-.btn-blue-to-orange.htmx-request:hover,
-.btn-blue-to-orange[aria-busy='true']:hover {
-  background-image: linear-gradient(var(--btn-shimmer-angle), #003286 0%, #0085f2 100%);
-  box-shadow: var(--shadow-line);
-}
+   When loading activates, display switches from inline-flex to
+   inline-grid so both spans share one cell. The default span stays in
+   flow with visibility:hidden, reserving its width so the button
+   doesn't shrink when the loading label is shorter. If the loading
+   content is *wider*, the cell grows to fit it. Don't add [hidden] —
+   Tailwind preflight's display:none !important would override. */
 
 @utility btn-orange-to-blue {
   @apply inline-flex items-center gap-2 whitespace-nowrap max-w-max no-underline text-center py-2.5 px-7 lg:px-10 lg:py-3.5 rounded-3xl;
@@ -219,6 +151,47 @@
   &:focus {
     --tw-ring-color: var(--btn-focus-color);
   }
+  /* Loading state — swap to the hover-state palette (blue) and rotate
+     the gradient while the request is in flight. */
+  &.htmx-request,
+  &[aria-busy='true'] {
+    --btn-shimmer-from: #003286;
+    --btn-shimmer-to: #0085f2;
+    --btn-focus-color: var(--color-brand-medium);
+    animation: btn-shimmer-rotate 2.5s linear infinite;
+    cursor: wait;
+    pointer-events: none;
+  }
+  & > [data-btn-default] {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+  & > [data-btn-loading] {
+    display: none;
+  }
+  &:has(> [data-btn-loading]).htmx-request,
+  &:has(> [data-btn-loading])[aria-busy='true'] {
+    display: inline-grid;
+  }
+  &.htmx-request > [data-btn-default],
+  &[aria-busy='true'] > [data-btn-default] {
+    grid-area: 1 / 1;
+    visibility: hidden;
+  }
+  &.htmx-request > [data-btn-loading],
+  &[aria-busy='true'] > [data-btn-loading] {
+    grid-area: 1 / 1;
+    display: inline-flex;
+    align-items: center;
+    justify-self: center;
+    gap: 0.375rem;
+  }
+  &.htmx-request:hover,
+  &[aria-busy='true']:hover {
+    background-image: linear-gradient(var(--btn-shimmer-angle), #e83155 0%, #ffdfb9 100%);
+    box-shadow: var(--shadow-diffuse);
+  }
   @apply shadow-diffuse;
   @apply hover:shadow-none;
   @apply focus:ring-4 focus:outline-hidden;
@@ -255,6 +228,47 @@
   }
   &:focus {
     --tw-ring-color: var(--btn-focus-color);
+  }
+  /* Loading state — swap to the hover-state palette (orange) and
+     rotate the gradient while the request is in flight. */
+  &.htmx-request,
+  &[aria-busy='true'] {
+    --btn-shimmer-from: #e83155;
+    --btn-shimmer-to: #ffdfb9;
+    --btn-focus-color: var(--color-pink-200);
+    animation: btn-shimmer-rotate 2.5s linear infinite;
+    cursor: wait;
+    pointer-events: none;
+  }
+  & > [data-btn-default] {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+  & > [data-btn-loading] {
+    display: none;
+  }
+  &:has(> [data-btn-loading]).htmx-request,
+  &:has(> [data-btn-loading])[aria-busy='true'] {
+    display: inline-grid;
+  }
+  &.htmx-request > [data-btn-default],
+  &[aria-busy='true'] > [data-btn-default] {
+    grid-area: 1 / 1;
+    visibility: hidden;
+  }
+  &.htmx-request > [data-btn-loading],
+  &[aria-busy='true'] > [data-btn-loading] {
+    grid-area: 1 / 1;
+    display: inline-flex;
+    align-items: center;
+    justify-self: center;
+    gap: 0.375rem;
+  }
+  &.htmx-request:hover,
+  &[aria-busy='true']:hover {
+    background-image: linear-gradient(var(--btn-shimmer-angle), #003286 0%, #0085f2 100%);
+    box-shadow: var(--shadow-line);
   }
   @apply shadow-line;
   @apply hover:shadow-diffuse;
