@@ -1,5 +1,27 @@
 # Changelog
 
+## 4.11.0
+
+### New
+
+- **Loading state for primary buttons** — `.btn-orange-to-blue` and `.btn-blue-to-orange` now render a shimmer effect whenever HTMX adds `.htmx-request` during an in-flight request, or whenever `aria-busy="true"` is set manually. The gradient's angle and color stops are registered as `@property <angle>` / `<color>` so they're individually transitionable: on entry the colors morph to the button's hover palette (blue or orange) and the angle starts rotating; on exit both transition back to the resting palette and the angle decelerates forward to its rest position (rotates forward rather than counter-rotating, courtesy of a 463deg base value that's visually equivalent to 103deg). `pointer-events: none` is baked into the loading state so consumers don't double-submit. Zero consumer JS required for HTMX; for manual use, the consumer just toggles `aria-busy`.
+
+- **Optional button content swap** — wrap default button content in `<span data-btn-default>` and a sibling `<span data-btn-loading>`. During the loading state the button switches from `inline-flex` to `inline-grid` (scoped via `:has(> [data-btn-loading])` so non-swap buttons are unaffected); both spans share the same grid cell with the default one held at `visibility: hidden`. The default's width is preserved as a floor, so the button can grow if the loading label is wider but never shrinks if it's shorter. See the new "Loading state" subsection in the Buttons section of [docs/index.html](docs/index.html).
+
+- **State-aware focus rings on all six gradient buttons** — the focus ring color now tracks the button's current visual state instead of being fixed for the lifetime of the element. Implemented via a registered `--btn-focus-color` custom property that overrides `--tw-ring-color` inside `:focus`. Pink while the orange palette is showing, brand-blue while blue is showing, transitioning smoothly between the two. Applies to `.btn-orange-to-blue`, `.btn-blue-to-orange`, `.btn-outline-to-orange`, `.btn-outline-to-blue`, `.btn-orange-to-outline`, `.btn-blue-to-outline`.
+
+### Fixes
+
+- **`.copy-input` colors now match the overlay button.** Switched the input from extending `form-input` (plain `bg-gray-*` palette) to using the same Flowbite semantic tokens as `.copy-input-button` (`bg-neutral-secondary-medium`, `border-default-medium`, `text-body`, `placeholder:text-body`, `shadow-xs`). Light and dark mappings come from `flowbite-theme.css`, so the field and the button read as one widget instead of two design systems.
+
+- **Inline-text copy button height matches Flowbite's reference (34px → 30px).** Added an explicit `line-height: 1rem` to the `[data-copy-button] > [data-copy-default]` / `[data-copy-success]` inner spans. Without it, the button's `leading-5` was propagating via `--tw-leading` through `text-xs`'s `line-height: var(--tw-leading, …)` fallback, expanding the inline content to 20px tall (4px more than the icon and 4px taller than the Flowbite reference). 16px matches the `.copy-icon` height so the inline-flex container collapses cleanly.
+
+### Internal
+
+- **Hover gradient swap is now smooth** on `.btn-orange-to-blue` and `.btn-blue-to-orange`. Hover sets the same `--btn-shimmer-from` / `--btn-shimmer-to` custom properties the loading rule sets, so the gradient colors transition over 0.5s instead of snapping — and clicking-while-hovered no longer triggers a brief "flash to resting palette" before the loading state takes over, because the value of the color vars matches what the loading rule sets.
+
+- **Experiment page** — [docs/button-shimmer.html](docs/button-shimmer.html) compares six candidate shimmer treatments (sheen sweep, angle rotation, position slide, pulse, conic spin, sheen+pulse). The angle-rotation variant won and shipped to the main button; the page is kept as reference. Uses `<base href="../">` so relative URLs survive `serve.json`'s trailing-slash redirect.
+
 ## 4.10.0
 
 ### New
