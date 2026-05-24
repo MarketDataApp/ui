@@ -1,5 +1,15 @@
 # Changelog
 
+## 4.12.1
+
+### Fixes
+
+- **No-reset CSS bundle now ships every `@utility`.** The no-reset build (`dist/css/components.no-reset.css`, used by Docusaurus / framework consumers) uses `@import 'tailwindcss/utilities' source(none)` to disable automatic content detection, then relies on `@source "./components.classes"` as an explicit allowlist of utilities to emit. The allowlist was maintained by hand and silently drifted: `.spinner` (added in 4.10.0), `.card-surface`, and most of the `.copy-input-*` / `.copy-icon-*` family (added in 4.10.0) were never written into the allowlist, so they were missing from the no-reset bundle — Docusaurus consumers couldn't use any of these classes. The classes shipped fine in the full reset bundle (`dist/css/components.css`) because that build uses automatic content detection and picked them up from `docs/index.html`, which is why the regression went unnoticed.
+
+### Internal
+
+- **New `build:classes` step regenerates the allowlist from the source.** `scripts/build-classes.js` parses every `@utility <name>` declaration from `css/components.src.css` and writes the names to `css/components.classes`. Wired into `npm run build` ahead of `build:css`. Drift between utility definitions and the no-reset allowlist is now impossible — every utility you define ships to every consumer automatically. Eliminates the dual source of truth that caused the regressions above.
+
 ## 4.12.0
 
 ### New
