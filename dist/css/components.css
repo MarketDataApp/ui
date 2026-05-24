@@ -147,6 +147,7 @@
     --color-body-subtle: var(--color-gray-500);
     --color-heading: var(--color-gray-900);
     --color-fg-brand: var(--color-blue-700);
+    --color-fg-success: var(--color-emerald-700);
     --color-fg-danger: var(--color-red-700);
     --color-fg-danger-strong: var(--color-red-900);
     --color-fg-disabled: var(--color-gray-400);
@@ -164,6 +165,7 @@
     --color-brand: var(--color-blue-700);
     --color-brand-medium: var(--color-blue-200);
     --color-brand-strong: var(--color-blue-800);
+    --color-success: var(--color-emerald-700);
     --color-danger-soft: var(--color-red-50);
     --color-danger: var(--color-red-700);
     --color-dark: var(--color-gray-800);
@@ -2522,6 +2524,28 @@
       background-color: var(--color-default-medium);
     }
   }
+  .progress-bar {
+    height: calc(var(--spacing) * 2);
+    width: 100%;
+    overflow: hidden;
+    border-radius: calc(infinity * 1px);
+    background-color: var(--color-neutral-quaternary);
+  }
+  .progress-bar-fill {
+    height: 100%;
+    border-radius: calc(infinity * 1px);
+    background-image: linear-gradient(103deg, #e83155 0%, #ffdfb9 100%);
+    transition: width 400ms ease;
+  }
+  .h-1\.5 {
+    height: calc(var(--spacing) * 1.5);
+  }
+  .h-2 {
+    height: calc(var(--spacing) * 2);
+  }
+  .h-2\.5 {
+    height: calc(var(--spacing) * 2.5);
+  }
   .h-4 {
     height: calc(var(--spacing) * 4);
   }
@@ -3146,6 +3170,9 @@
   .bg-blue-600 {
     background-color: var(--color-blue-600);
   }
+  .bg-danger {
+    background-color: var(--color-danger);
+  }
   .bg-danger-soft {
     background-color: var(--color-danger-soft);
   }
@@ -3206,6 +3233,9 @@
   .bg-neutral-primary-medium {
     background-color: var(--color-neutral-primary-medium);
   }
+  .bg-neutral-quaternary {
+    background-color: var(--color-neutral-quaternary);
+  }
   .bg-neutral-secondary-medium {
     background-color: var(--color-neutral-secondary-medium);
   }
@@ -3217,6 +3247,9 @@
   }
   .bg-purple-100 {
     background-color: var(--color-purple-100);
+  }
+  .bg-success {
+    background-color: var(--color-success);
   }
   .bg-transparent {
     background-color: transparent;
@@ -3407,6 +3440,9 @@
   }
   .text-fg-disabled {
     color: var(--color-fg-disabled);
+  }
+  .text-fg-success {
+    color: var(--color-fg-success);
   }
   .text-gray-400 {
     color: var(--color-gray-400);

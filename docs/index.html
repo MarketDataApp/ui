@@ -902,6 +902,131 @@ button.removeAttribute('aria-busy');        // done</code></pre>
         </div>
       </section>
 
+      <!-- Progress Bar -->
+      <section id="progress-bar">
+        <h2 class="text-2xl font-bold mb-6 border-b border-gray-200 dark:border-gray-700 pb-2">
+          Progress Bar
+        </h2>
+        <p class="text-gray-500 dark:text-gray-400 mb-6">
+          Thin horizontal bar for determinate progress. Two utilities: a
+          <code class="text-xs font-mono">.progress-bar</code> track and a
+          <code class="text-xs font-mono">.progress-bar-fill</code> child whose width is driven by
+          an inline <code class="text-xs font-mono">style="width: N%"</code> (or a CSS custom
+          property). Default height is <code class="text-xs font-mono">h-2</code>; override with
+          <code class="text-xs font-mono">h-1.5</code> or
+          <code class="text-xs font-mono">h-2.5</code> on the track for Flowbite small/large sizes.
+          The fill ships in the brand orange gradient; add any
+          <code class="text-xs font-mono">bg-*</code> utility on the fill element to override for
+          status colors (success, warning, danger). Width changes animate over 400ms so updates from
+          PHP/JS feel smooth.
+        </p>
+
+        <div class="space-y-4">
+          <div>
+            <div class="mb-1 text-sm font-medium text-heading">Default (45%)</div>
+            <div
+              class="progress-bar"
+              role="progressbar"
+              aria-valuenow="45"
+              aria-valuemin="0"
+              aria-valuemax="100"
+            >
+              <div class="progress-bar-fill" style="width: 45%"></div>
+            </div>
+          </div>
+
+          <div>
+            <div class="mb-1 text-sm font-medium text-heading">Complete (100%)</div>
+            <div
+              class="progress-bar"
+              role="progressbar"
+              aria-valuenow="100"
+              aria-valuemin="0"
+              aria-valuemax="100"
+            >
+              <div class="progress-bar-fill" style="width: 100%"></div>
+            </div>
+          </div>
+
+          <div>
+            <div class="mb-1 text-sm font-medium text-heading">
+              Small — <code class="text-xs font-mono">h-1.5</code> override (30%)
+            </div>
+            <div
+              class="progress-bar h-1.5"
+              role="progressbar"
+              aria-valuenow="30"
+              aria-valuemin="0"
+              aria-valuemax="100"
+            >
+              <div class="progress-bar-fill" style="width: 30%"></div>
+            </div>
+          </div>
+
+          <div>
+            <div class="mb-1 text-sm font-medium text-heading">
+              Large — <code class="text-xs font-mono">h-2.5</code> override (75%)
+            </div>
+            <div
+              class="progress-bar h-2.5"
+              role="progressbar"
+              aria-valuenow="75"
+              aria-valuemin="0"
+              aria-valuemax="100"
+            >
+              <div class="progress-bar-fill" style="width: 75%"></div>
+            </div>
+          </div>
+
+          <div>
+            <div class="mb-1 text-sm font-medium text-fg-success">
+              Status override — <code class="text-xs font-mono">bg-success</code> on the fill (90%)
+            </div>
+            <div
+              class="progress-bar"
+              role="progressbar"
+              aria-valuenow="90"
+              aria-valuemin="0"
+              aria-valuemax="100"
+            >
+              <div class="progress-bar-fill bg-success" style="width: 90%"></div>
+            </div>
+          </div>
+
+          <div>
+            <div class="mb-1 text-sm font-medium text-fg-danger">
+              Status override — <code class="text-xs font-mono">bg-danger</code> on the fill (15%)
+            </div>
+            <div
+              class="progress-bar"
+              role="progressbar"
+              aria-valuenow="15"
+              aria-valuemin="0"
+              aria-valuemax="100"
+            >
+              <div class="progress-bar-fill bg-danger" style="width: 15%"></div>
+            </div>
+          </div>
+        </div>
+
+        <h3 class="text-lg font-semibold mt-6 mb-3 text-heading">Markup Pattern</h3>
+        <pre
+          class="text-xs font-mono bg-gray-100 dark:bg-gray-800 p-4 rounded-lg overflow-x-auto"
+        ><code>&lt;div class="progress-bar" role="progressbar"
+     aria-valuenow="45" aria-valuemin="0" aria-valuemax="100"&gt;
+  &lt;div class="progress-bar-fill" style="width: 45%"&gt;&lt;/div&gt;
+&lt;/div&gt;</code></pre>
+
+        <div class="mt-6 flex flex-wrap gap-2">
+          <code class="text-xs font-mono bg-gray-100 dark:bg-gray-800 px-2 py-1 rounded"
+            >.progress-bar</code
+          >
+          <code class="text-xs font-mono bg-gray-100 dark:bg-gray-800 px-2 py-1 rounded"
+            >.progress-bar-fill</code
+          >
+        </div>
+      </section>
+
       <!-- Forms -->
       <section id="forms">
         <h2 class="text-2xl font-bold mb-6 border-b border-gray-200 dark:border-gray-700 pb-2">

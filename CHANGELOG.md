@@ -1,5 +1,11 @@
 # Changelog
 
+## 4.12.0
+
+### New
+
+- **`.progress-bar` / `.progress-bar-fill` utilities** — Flowbite-style thin determinate progress bar. The track uses the `bg-neutral-quaternary` semantic token (gray-200 / gray-700) so dark mode is automatic, and matches both Flowbite's canonical "progress" component and the existing hand-rolled `bg-gray-200 dark:bg-gray-700` track in [marketdata-amember `css/pages/employment-evaluation.css`](https://github.com/MarketDataApp/amember/blob/main/css/pages/employment-evaluation.css#L294-L296) — the consumer migration is a pure class rename with zero visual change. Default size is `h-2`; override the track with `h-1.5` (small) or `h-2.5` (large) to match Flowbite's size variants. The fill ships in the brand orange gradient (`bg-gradient-orange`); consumers add any `bg-*` utility on the fill element (e.g. `bg-success`, `bg-danger`) to override for status semantics. Width is driven by inline `style="width: N%"` (or a CSS custom property), and transitions over 400ms so JS/PHP updates feel smooth. New "Progress Bar" section in [docs/index.html](docs/index.html). Closes #21.
+
 ## 4.11.1
 
 ### Fixes

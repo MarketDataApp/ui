@@ -645,6 +645,16 @@
   }
 }
 
+/* ---- Progress Bar ---- */
+@utility progress-bar {
+  @apply w-full h-2 rounded-full overflow-hidden bg-neutral-quaternary;
+}
+
+@utility progress-bar-fill {
+  @apply h-full rounded-full bg-gradient-orange;
+  transition: width 400ms ease;
+}
+
 /* ---- Radio Group ---- */
 @utility radio-group-container {
   --radio-btn-bg: var(--color-gray-100);
