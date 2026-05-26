@@ -1,5 +1,11 @@
 # Changelog
 
+## 4.13.0
+
+### New
+
+- **`.next-link` / `.back-link` utilities** — directional companions to the existing `.external-link` decorator. `.next-link` appends a Heroicons `arrow-right` via `::after`; `.back-link` prepends a Heroicons `arrow-left` via `::before`. Both use the same drop-in mechanism as `.external-link`: sizing in `em` so the icon scales with the parent font-size, `mask-image` + `currentColor` so the arrow inherits color through `:hover`, dark mode, and any context override automatically. No companion classes, no inline SVG, no sizing or color props at the call site. New "Back & Next Links" subsection in the Links section of [docs/index.html](docs/index.html).
+
 ## 4.12.1
 
 ### Fixes

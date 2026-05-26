@@ -1846,9 +1846,48 @@ button.removeAttribute('aria-busy');        // done</code></pre>
   exchange entitlements
 &lt;/a&gt;</code></pre>
 
+        <h3 class="text-lg font-semibold mt-10 mb-3 text-heading">Back &amp; Next Links</h3>
+        <p class="text-sm text-body-subtle mb-4">
+          Same system as
+          <code class="text-xs font-mono">.external-link</code>, but with directional arrows.
+          <code class="text-xs font-mono">.next-link</code> adds an arrow-right via
+          <code class="text-xs font-mono">::after</code>;
+          <code class="text-xs font-mono">.back-link</code> adds an arrow-left via
+          <code class="text-xs font-mono">::before</code>. Icons inherit size and color the same
+          way.
+        </p>
+        <div class="flex flex-wrap gap-x-8 gap-y-3 mb-6">
+          <a class="back-link underline" href="#links">Previous page</a>
+          <a class="next-link underline" href="#links">Next page</a>
+        </div>
+        <div class="space-y-3 mb-6">
+          <p>
+            Inline in a sentence:
+            <a class="back-link underline" href="#links">return to setup</a>
+            or
+            <a class="next-link underline" href="#links">continue to configuration</a>.
+          </p>
+          <p class="p-4 rounded-lg bg-marketdata-darkblue text-white">
+            On a dark surface:
+            <a class="back-link underline text-white" href="#links">Back to top</a>
+            <span class="mx-3 opacity-50">·</span>
+            <a class="next-link underline text-white" href="#links">Continue</a>
+          </p>
+        </div>
+        <pre
+          class="text-xs font-mono bg-gray-100 dark:bg-gray-800 p-4 rounded-lg overflow-x-auto"
+        ><code>&lt;a class="back-link" href="/previous"&gt;Previous page&lt;/a&gt;
+&lt;a class="next-link" href="/next"&gt;Next page&lt;/a&gt;</code></pre>
+
         <div class="mt-6 flex flex-wrap gap-2">
           <code class="text-xs font-mono bg-gray-100 dark:bg-gray-800 px-2 py-1 rounded"
             >.external-link</code
+          >
+          <code class="text-xs font-mono bg-gray-100 dark:bg-gray-800 px-2 py-1 rounded"
+            >.back-link</code
+          >
+          <code class="text-xs font-mono bg-gray-100 dark:bg-gray-800 px-2 py-1 rounded"
+            >.next-link</code
           >
         </div>
       </section>
