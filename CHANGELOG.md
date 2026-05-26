@@ -1,5 +1,11 @@
 # Changelog
 
+## 4.13.1
+
+### Fixes
+
+- **`.form-input` now styles browser autofill correctly in both themes.** Chrome (and other Chromium browsers) paints `:-webkit-autofill` fields with its own pale yellow background and dark text, overriding the kit's `bg-gray-50` / `dark:bg-gray-700` + `text-heading` tokens — most visibly in dark mode, where an autofilled email/password field rendered as a pale-yellow strip with dark text against the dark form surface. Added nested `&:-webkit-autofill{,:hover,:focus}` rules inside the `@utility form-input` body that repaint the field with our tokens using the standard 1000px-inset-shadow trick (`-webkit-box-shadow: 0 0 0 1000px var(--color-gray-50) inset` in light, `var(--color-gray-700)` under `&:where(.dark, .dark *, [data-theme='dark'], [data-theme='dark'] *)`), pair it with `-webkit-text-fill-color` so the text matches `text-heading`, and add `transition: background-color 5000s` to defer Chrome's repaint past any realistic session. Nested inside `@utility` so scoped `@apply form-input` in consumer CSS propagates the autofill rules at the consumer's specificity — the per-page autofill workaround in marketdata-amember (e.g. `body#page-login input:-webkit-autofill { … }`) can be removed once upgraded. Closes #22.
+
 ## 4.13.0
 
 ### New

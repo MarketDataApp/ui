@@ -403,6 +403,22 @@
   @apply shadow-none bg-gray-50 dark:bg-gray-700 border border-solid border-gray-300 dark:border-gray-600 text-heading text-sm rounded-base focus:ring-1 focus:ring-brand focus:border-brand focus:outline-hidden block w-full p-2.5 dark:placeholder-gray-400
          disabled:bg-gray-100 dark:disabled:bg-gray-700 disabled:cursor-not-allowed disabled:text-gray-900 dark:disabled:text-gray-400
          read-only:bg-gray-100 dark:read-only:bg-gray-700 read-only:cursor-not-allowed read-only:text-gray-900 dark:read-only:text-gray-400;
+  /* Chrome forces its own background/text on :-webkit-autofill, overriding bg-gray-50/text-heading.
+     The 1000px inset shadow trick repaints the field with our token colors; the 5000s transition
+     defers Chrome's yellow-flash repaint past any realistic session. */
+  &:-webkit-autofill,
+  &:-webkit-autofill:hover,
+  &:-webkit-autofill:focus {
+    -webkit-box-shadow: 0 0 0 1000px var(--color-gray-50) inset;
+    -webkit-text-fill-color: var(--color-gray-900);
+    transition: background-color 5000s ease-in-out 0s;
+  }
+  &:where(.dark, .dark *, [data-theme='dark'], [data-theme='dark'] *):-webkit-autofill,
+  &:where(.dark, .dark *, [data-theme='dark'], [data-theme='dark'] *):-webkit-autofill:hover,
+  &:where(.dark, .dark *, [data-theme='dark'], [data-theme='dark'] *):-webkit-autofill:focus {
+    -webkit-box-shadow: 0 0 0 1000px var(--color-gray-700) inset;
+    -webkit-text-fill-color: var(--color-white);
+  }
 }
 
 @utility form-input-disabled {

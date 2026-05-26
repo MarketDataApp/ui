@@ -1498,6 +1498,15 @@
         color: var(--color-gray-400);
       }
     }
+    &:-webkit-autofill, &:-webkit-autofill:hover, &:-webkit-autofill:focus {
+      -webkit-box-shadow: 0 0 0 1000px var(--color-gray-50) inset;
+      -webkit-text-fill-color: var(--color-gray-900);
+      transition: background-color 5000s ease-in-out 0s;
+    }
+    &:where(.dark, .dark *, [data-theme='dark'], [data-theme='dark'] *):-webkit-autofill, &:where(.dark, .dark *, [data-theme='dark'], [data-theme='dark'] *):-webkit-autofill:hover, &:where(.dark, .dark *, [data-theme='dark'], [data-theme='dark'] *):-webkit-autofill:focus {
+      -webkit-box-shadow: 0 0 0 1000px var(--color-gray-700) inset;
+      -webkit-text-fill-color: var(--color-white);
+    }
   }
   .form-input-disabled {
     display: block;
