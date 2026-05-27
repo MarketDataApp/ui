@@ -405,19 +405,40 @@
          read-only:bg-gray-100 dark:read-only:bg-gray-700 read-only:cursor-not-allowed read-only:text-gray-900 dark:read-only:text-gray-400;
   /* Chrome forces its own background/text on :-webkit-autofill, overriding bg-gray-50/text-heading.
      The 1000px inset shadow trick repaints the field with our token colors; the 5000s transition
-     defers Chrome's yellow-flash repaint past any realistic session. */
+     defers Chrome's yellow-flash repaint past any realistic session.
+
+     -webkit-box-shadow is the only property that overrides Chrome's autofill paint, but it's also
+     an alias for box-shadow — so a naive declaration replaces the Tailwind shadow stack and wipes
+     out the :focus ring. Compose the inset repaint with --tw-{inset-,inset-ring-,ring-offset-,ring-,}
+     shadow so focus:ring-1 focus:ring-brand still renders over the autofilled background.
+     caret-color is set explicitly because Chromium keeps a black caret in autofilled fields even
+     when -webkit-text-fill-color is forced white. */
   &:-webkit-autofill,
   &:-webkit-autofill:hover,
   &:-webkit-autofill:focus {
-    -webkit-box-shadow: 0 0 0 1000px var(--color-gray-50) inset;
+    -webkit-box-shadow:
+      0 0 0 1000px var(--color-gray-50) inset,
+      var(--tw-inset-shadow, 0 0 #0000),
+      var(--tw-inset-ring-shadow, 0 0 #0000),
+      var(--tw-ring-offset-shadow, 0 0 #0000),
+      var(--tw-ring-shadow, 0 0 #0000),
+      var(--tw-shadow, 0 0 #0000);
     -webkit-text-fill-color: var(--color-gray-900);
+    caret-color: var(--color-gray-900);
     transition: background-color 5000s ease-in-out 0s;
   }
   &:where(.dark, .dark *, [data-theme='dark'], [data-theme='dark'] *):-webkit-autofill,
   &:where(.dark, .dark *, [data-theme='dark'], [data-theme='dark'] *):-webkit-autofill:hover,
   &:where(.dark, .dark *, [data-theme='dark'], [data-theme='dark'] *):-webkit-autofill:focus {
-    -webkit-box-shadow: 0 0 0 1000px var(--color-gray-700) inset;
+    -webkit-box-shadow:
+      0 0 0 1000px var(--color-gray-700) inset,
+      var(--tw-inset-shadow, 0 0 #0000),
+      var(--tw-inset-ring-shadow, 0 0 #0000),
+      var(--tw-ring-offset-shadow, 0 0 #0000),
+      var(--tw-ring-shadow, 0 0 #0000),
+      var(--tw-shadow, 0 0 #0000);
     -webkit-text-fill-color: var(--color-white);
+    caret-color: var(--color-white);
   }
 }
 

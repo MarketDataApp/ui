@@ -1,5 +1,11 @@
 # Changelog
 
+## 4.13.2
+
+### Fixes
+
+- **`.form-input :-webkit-autofill` now preserves the focus ring and paints a visible caret.** The 4.13.1 autofill rule set `-webkit-box-shadow: 0 0 0 1000px <bg> inset` as a single-layer shadow. In Chromium, `-webkit-box-shadow` is an alias for `box-shadow`, so on `:-webkit-autofill:focus` it replaced Tailwind's composed `box-shadow: var(--tw-inset-shadow), var(--tw-inset-ring-shadow), var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow)` — wiping out the `focus:ring-1 focus:ring-brand` ring layer and leaving an autofilled focused input with only a thin border. The rule also didn't set `caret-color`, so Chromium kept a black caret in autofilled dark-mode fields even when `-webkit-text-fill-color` was forced white. Composed the autofill repaint with the full Tailwind v4 shadow stack (`0 0 0 1000px <bg> inset, var(--tw-inset-shadow, 0 0 #0000), …, var(--tw-shadow, 0 0 #0000)`) so the brand focus ring paints over the autofilled background, and added explicit `caret-color: var(--color-gray-900)` (light) / `var(--color-white)` (dark) inside both autofill blocks. Closes #23.
+
 ## 4.13.1
 
 ### Fixes
