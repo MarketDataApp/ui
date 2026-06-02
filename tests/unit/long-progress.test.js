@@ -50,9 +50,26 @@ describe('LongProgress — defaults', () => {
     expect(bar.getAttribute('aria-valuemax')).toBe('100');
     expect(bar.getAttribute('aria-valuenow')).toBe('0');
 
-    // Default hint contains the load-bearing "do not refresh" emphasis.
+    // Default hint contains the load-bearing "don't refresh" emphasis.
     const hint = section.querySelector('.long-progress-hint');
-    expect(hint.querySelector('strong').textContent).toMatch(/do not refresh/i);
+    expect(hint.querySelector('strong').textContent).toMatch(/don.?t refresh/i);
+    // Hint is icon-prefixed so the warning reads as a structured affordance.
+    expect(hint.querySelector('svg')).not.toBeNull();
+  });
+
+  it('renders a percent readout that updates with the bar', async () => {
+    const section = makeSection();
+    new LongProgress(section, { phases: minimalPhases }).start();
+
+    const percentEl = section.querySelector('.long-progress-percent');
+    expect(percentEl).not.toBeNull();
+    expect(percentEl.textContent).toBe('0%');
+
+    await vi.advanceTimersByTimeAsync(0); // phase[0] → 10%
+    expect(percentEl.textContent).toBe('10%');
+
+    await vi.advanceTimersByTimeAsync(1000); // phase[1] → 50%
+    expect(percentEl.textContent).toBe('50%');
   });
 
   it('omits title when title: null is passed', () => {

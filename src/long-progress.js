@@ -30,8 +30,14 @@ const DEFAULT_PHASES = [
 ];
 
 const DEFAULT_TITLE = 'Working on it…';
-const DEFAULT_HINT =
-  '<strong>Do not refresh or leave this page.</strong> This usually takes 10–20 seconds.';
+const DEFAULT_HINT = "<strong>Don't refresh.</strong> This usually takes 10–20 seconds.";
+
+// Heroicons mini "exclamation-triangle" (20×20). Inline so we don't have to
+// ship a separate icon file or template; sized via .long-progress-hint-icon.
+const HINT_ICON_SVG =
+  '<svg class="long-progress-hint-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">' +
+  '<path fill-rule="evenodd" d="M8.485 2.495c.673-1.167 2.357-1.167 3.03 0l6.28 10.875c.673 1.167-.17 2.625-1.516 2.625H3.72c-1.347 0-2.189-1.458-1.515-2.625L8.485 2.495zM10 5a.75.75 0 01.75.75v3.5a.75.75 0 01-1.5 0v-3.5A.75.75 0 0110 5zm0 9a1 1 0 100-2 1 1 0 000 2z" clip-rule="evenodd" />' +
+  '</svg>';
 const DEFAULT_DONE_STEP = 'Done';
 const DEFAULT_BYTES_STEP = 'Uploading…';
 const BYTES_FILL_DURATION_MS = 200;
@@ -100,6 +106,7 @@ export class LongProgress {
   #barEl = null;
   #fillEl = null;
   #stepEl = null;
+  #percentEl = null;
   #bytesPct = 0;
   #phasesStarted = false;
   // 'idle' → 'running' → ('done' | 'restored')
@@ -139,6 +146,7 @@ export class LongProgress {
     this.#barEl = this.#section.querySelector('.long-progress-bar');
     this.#fillEl = this.#section.querySelector('.long-progress-bar-fill');
     this.#stepEl = this.#section.querySelector('.long-progress-step');
+    this.#percentEl = this.#section.querySelector('.long-progress-percent');
     if (!this.#opts.bytes) {
       this.#startPhases();
     }
@@ -213,7 +221,7 @@ export class LongProgress {
         window.htmx.process(this.#section);
       }
     }
-    this.#barEl = this.#fillEl = this.#stepEl = null;
+    this.#barEl = this.#fillEl = this.#stepEl = this.#percentEl = null;
     if (message) {
       const banner = this.#renderErrorBanner(message);
       const target = this.#opts.errorInsertBefore
@@ -275,9 +283,11 @@ export class LongProgress {
   #setFill(pct, durationMs) {
     if (!this.#fillEl || !this.#barEl) return;
     const clamped = Math.max(0, Math.min(100, pct));
+    const rounded = Math.round(clamped);
     this.#fillEl.style.setProperty('--long-progress-fill-duration', `${durationMs}ms`);
     this.#fillEl.style.width = `${clamped}%`;
-    this.#barEl.setAttribute('aria-valuenow', String(Math.round(clamped)));
+    this.#barEl.setAttribute('aria-valuenow', String(rounded));
+    if (this.#percentEl) this.#percentEl.textContent = `${rounded}%`;
   }
 
   #clearTimers() {
@@ -289,14 +299,19 @@ export class LongProgress {
     const initialStep = this.#opts.bytes
       ? this.#opts.bytes.step
       : (this.#opts.phases[0]?.step ?? '');
-    const titleHtml =
-      this.#opts.title !== null
-        ? `<h3 class="long-progress-title">${escapeHtml(this.#opts.title)}</h3>`
-        : '';
-    const hintHtml =
-      this.#opts.hint !== null ? `<p class="long-progress-hint">${this.#opts.hint}</p>` : '';
     const inlineCls = this.#opts.inline ? ' long-progress-inline' : '';
-    return `<div class="long-progress${inlineCls}" role="status" aria-live="polite">${titleHtml}<div class="long-progress-bar" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><div class="long-progress-bar-fill"></div></div><p class="long-progress-step">${escapeHtml(initialStep)}</p>${hintHtml}</div>`;
+    // Header row: title + percent. Render the row if either is present so
+    // the percent still appears in title-less inline layouts.
+    const hasTitle = this.#opts.title !== null;
+    const titleHtml = hasTitle
+      ? `<h3 class="long-progress-title">${escapeHtml(this.#opts.title)}</h3>`
+      : '';
+    const headerHtml = `<div class="long-progress-header">${titleHtml}<span class="long-progress-percent">0%</span></div>`;
+    const hintHtml =
+      this.#opts.hint !== null
+        ? `<p class="long-progress-hint">${HINT_ICON_SVG}<span>${this.#opts.hint}</span></p>`
+        : '';
+    return `<div class="long-progress${inlineCls}" role="status" aria-live="polite">${headerHtml}<div class="long-progress-bar" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><div class="long-progress-bar-fill"></div></div><p class="long-progress-step">${escapeHtml(initialStep)}</p>${hintHtml}</div>`;
   }
 
   #renderErrorBanner(message) {

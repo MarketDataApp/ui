@@ -909,49 +909,55 @@ label:has(:where(.checkbox-input, .radio-button-input):disabled)
    runtime, so they use plain selectors (not @utility) — consumers'
    Tailwind content scanners won't see them otherwise.
 
-   The fill transition duration is driven from JS via the
-   --long-progress-fill-duration custom property so each phase can
-   animate at its own pace without inline style juggling. */
+   Minimalist by design: no card chrome, since consumers typically
+   embed inside their own outer surface (form section, dashboard
+   panel, upload row). The fill transition duration is driven from
+   JS via the --long-progress-fill-duration custom property so each
+   phase can animate at its own pace without inline style juggling. */
 .long-progress {
-  @apply flex flex-col items-center text-center w-full max-w-xl mx-auto py-12 px-4;
+  @apply w-full max-w-xl mx-auto py-8;
 }
 
 .long-progress-inline {
-  @apply max-w-none py-0 px-0 items-stretch text-start;
+  @apply max-w-none py-0;
+}
+
+.long-progress-header {
+  @apply flex items-baseline justify-between gap-2 mb-2;
 }
 
 .long-progress-title {
-  @apply text-2xl font-bold text-heading m-0 mb-6;
+  @apply text-base font-semibold text-heading m-0;
 }
 
-.long-progress-inline .long-progress-title {
-  @apply text-base mb-2;
+.long-progress-percent {
+  @apply text-sm font-medium text-body tabular-nums;
 }
 
 .long-progress-bar {
-  @apply w-full h-1.5 my-1.5 rounded-full overflow-hidden bg-neutral-quaternary;
+  @apply w-full h-1.5 rounded-full overflow-hidden bg-neutral-quaternary;
 }
 
 .long-progress-bar-fill {
-  @apply h-full rounded-full bg-gradient-orange;
+  @apply h-full rounded-full bg-blue-600 dark:bg-blue-500;
   width: 0%;
   transition: width var(--long-progress-fill-duration, 300ms) ease-out;
 }
 
 .long-progress-step {
-  @apply text-sm text-fg-brand m-0 mt-4 mb-2;
-}
-
-.long-progress-inline .long-progress-step {
-  @apply mt-2;
+  @apply text-sm text-body m-0 mt-3 mb-1;
 }
 
 .long-progress-hint {
-  @apply text-xs text-fg-disabled m-0 mt-2 italic;
+  @apply flex items-center gap-1.5 text-xs text-fg-warning m-0 mt-2;
+}
+
+.long-progress-hint-icon {
+  @apply w-3.5 h-3.5 shrink-0;
 }
 
 .long-progress-hint strong {
-  @apply text-fg-danger not-italic;
+  @apply font-semibold;
 }
 
 /* ---- Links ----

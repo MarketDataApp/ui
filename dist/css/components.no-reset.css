@@ -89,8 +89,6 @@
   --text-base--line-height: calc(1.5 / 1);
   --text-xl: 1.25rem;
   --text-xl--line-height: calc(1.75 / 1.25);
-  --text-2xl: 1.5rem;
-  --text-2xl--line-height: calc(2 / 1.5);
   --text-3xl: 1.875rem;
   --text-3xl--line-height: calc(2.25 / 1.875);
   --text-4xl: 2.25rem;
@@ -119,6 +117,7 @@
   --color-fg-brand: var(--color-blue-700);
   --color-fg-danger: var(--color-red-700);
   --color-fg-danger-strong: var(--color-red-900);
+  --color-fg-warning: var(--color-orange-900);
   --color-fg-disabled: var(--color-gray-400);
   --color-neutral-primary-soft: var(--color-white);
   --color-neutral-primary-medium: var(--color-white);
@@ -2877,38 +2876,39 @@ label:has(:where(.checkbox-input, .radio-button-input):disabled) :where(.text-he
 }
 .long-progress {
   margin-inline: auto;
-  display: flex;
   width: 100%;
   max-width: var(--container-xl);
-  flex-direction: column;
-  align-items: center;
-  padding-inline: calc(var(--spacing) * 4);
-  padding-block: calc(var(--spacing) * 12);
-  text-align: center;
+  padding-block: calc(var(--spacing) * 8);
 }
 .long-progress-inline {
   max-width: none;
-  align-items: stretch;
-  padding-inline: calc(var(--spacing) * 0);
   padding-block: calc(var(--spacing) * 0);
-  text-align: start;
+}
+.long-progress-header {
+  margin-bottom: calc(var(--spacing) * 2);
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: calc(var(--spacing) * 2);
 }
 .long-progress-title {
   margin: calc(var(--spacing) * 0);
-  margin-bottom: calc(var(--spacing) * 6);
-  font-size: var(--text-2xl);
-  line-height: var(--tw-leading, var(--text-2xl--line-height));
-  --tw-font-weight: var(--font-weight-bold);
-  font-weight: var(--font-weight-bold);
-  color: var(--color-heading);
-}
-.long-progress-inline .long-progress-title {
-  margin-bottom: calc(var(--spacing) * 2);
   font-size: var(--text-base);
   line-height: var(--tw-leading, var(--text-base--line-height));
+  --tw-font-weight: var(--font-weight-semibold);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-heading);
+}
+.long-progress-percent {
+  font-size: var(--text-sm);
+  line-height: var(--tw-leading, var(--text-sm--line-height));
+  --tw-font-weight: var(--font-weight-medium);
+  font-weight: var(--font-weight-medium);
+  color: var(--color-body);
+  --tw-numeric-spacing: tabular-nums;
+  font-variant-numeric: var(--tw-ordinal,) var(--tw-slashed-zero,) var(--tw-numeric-figure,) var(--tw-numeric-spacing,) var(--tw-numeric-fraction,);
 }
 .long-progress-bar {
-  margin-block: calc(var(--spacing) * 1.5);
   height: calc(var(--spacing) * 1.5);
   width: 100%;
   overflow: hidden;
@@ -2918,32 +2918,39 @@ label:has(:where(.checkbox-input, .radio-button-input):disabled) :where(.text-he
 .long-progress-bar-fill {
   height: 100%;
   border-radius: calc(infinity * 1px);
-  background-image: linear-gradient(103deg, #e83155 0%, #ffdfb9 100%);
+  background-color: var(--color-blue-600);
+  &:where(.dark, .dark *, [data-theme="dark"], [data-theme="dark"] *) {
+    background-color: var(--color-blue-500);
+  }
   width: 0%;
   transition: width var(--long-progress-fill-duration, 300ms) ease-out;
 }
 .long-progress-step {
   margin: calc(var(--spacing) * 0);
-  margin-top: calc(var(--spacing) * 4);
-  margin-bottom: calc(var(--spacing) * 2);
+  margin-top: calc(var(--spacing) * 3);
+  margin-bottom: calc(var(--spacing) * 1);
   font-size: var(--text-sm);
   line-height: var(--tw-leading, var(--text-sm--line-height));
-  color: var(--color-fg-brand);
-}
-.long-progress-inline .long-progress-step {
-  margin-top: calc(var(--spacing) * 2);
+  color: var(--color-body);
 }
 .long-progress-hint {
   margin: calc(var(--spacing) * 0);
   margin-top: calc(var(--spacing) * 2);
+  display: flex;
+  align-items: center;
+  gap: calc(var(--spacing) * 1.5);
   font-size: var(--text-xs);
   line-height: var(--tw-leading, var(--text-xs--line-height));
-  color: var(--color-fg-disabled);
-  font-style: italic;
+  color: var(--color-fg-warning);
+}
+.long-progress-hint-icon {
+  height: calc(var(--spacing) * 3.5);
+  width: calc(var(--spacing) * 3.5);
+  flex-shrink: 0;
 }
 .long-progress-hint strong {
-  color: var(--color-fg-danger);
-  font-style: normal;
+  --tw-font-weight: var(--font-weight-semibold);
+  font-weight: var(--font-weight-semibold);
 }
 .user-profile-container {
   display: inline-flex;
@@ -3294,6 +3301,26 @@ label:has(:where(.checkbox-input, .radio-button-input):disabled) :where(.text-he
   inherits: false;
   initial-value: 0;
 }
+@property --tw-ordinal {
+  syntax: "*";
+  inherits: false;
+}
+@property --tw-slashed-zero {
+  syntax: "*";
+  inherits: false;
+}
+@property --tw-numeric-figure {
+  syntax: "*";
+  inherits: false;
+}
+@property --tw-numeric-spacing {
+  syntax: "*";
+  inherits: false;
+}
+@property --tw-numeric-fraction {
+  syntax: "*";
+  inherits: false;
+}
 @keyframes pulse {
   50% {
     opacity: 0.5;
@@ -3328,5 +3355,10 @@ label:has(:where(.checkbox-input, .radio-button-input):disabled) :where(.text-he
       --btn-shimmer-from: #e83155;
       --btn-shimmer-to: #ffdfb9;
       --btn-focus-color: rgba(0, 0, 0, 0);
+      --tw-ordinal: initial;
+      --tw-slashed-zero: initial;
+      --tw-numeric-figure: initial;
+      --tw-numeric-spacing: initial;
+      --tw-numeric-fraction: initial;
     }
   }
