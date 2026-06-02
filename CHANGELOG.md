@@ -1,5 +1,21 @@
 # Changelog
 
+## 4.14.0
+
+### New
+
+- **`LongProgress` reusable progress card** — lifts the long-running progress card pattern from [marketdata-amember](https://github.com/MarketDataApp/marketdata-amember), where it's currently duplicated across the verify-my-account takeover, the per-document upload card, and the clarify-answers re-eval flow. Imported from `@marketdataapp/ui/long-progress`; the API is class-based per the issue sketch: `new LongProgress(sectionEl, opts).start()` mounts the card and kicks off a phase timeline; `setBytesProgress(fraction)` drives the bar from a real `xhr.upload.progress` signal (capped at a configurable `bytes.capPct` so server-side processing phases can take the rest); `fastForward({ holdMs })` returns a promise so callers can `await` the bar reaching 100% before swapping content; `restore(message?)` puts the original `innerHTML` back, re-runs `window.htmx.process()` if HTMX is loaded, and inserts a danger admonition with `role="alert"` above an optional `errorInsertBefore` target. An optional `bindHtmx(formEl, { errorMessages })` wires the standard HTMX lifecycle events (`beforeRequest` → `start`, `beforeSwap` → `fastForward`, `responseError` / `sendError` / `timeout` → `restore`) and returns an unbind function. Sensible defaults make `new LongProgress(el).start()` "just work" with no config — a generic 4-phase ~22s timeline and the load-bearing "don't refresh" hint. New demo page at [docs/long-progress.html](docs/long-progress.html) walks through the four flow shapes (vanilla defaults, custom verify-account timeline, bytes + phases upload, pure upload bar). Closes #24.
+
+### Internal
+
+- **Bar fill and percent counter share a single `@property <integer>` custom prop.** `--long-progress-pct` is registered as a transitionable integer; the percent text is fully CSS-generated via `counter()` in `.long-progress-percent::after`, so the counter steps through 1, 2, 3, … to target on every phase. The bar's `width` is animated separately as a regular `width` transition on the fill element (sub-pixel smooth, not quantized to whole-percent steps) but shares `--long-progress-fill-duration` with the counter so the two stay in lockstep. Worked around Tailwind v4's universal `*, ::before, ::after { --long-progress-pct: 0 }` reset (emitted for every registered property) by forcing `--long-progress-pct: inherit` on the percent descendant. No `requestAnimationFrame` loop in JS — the animation is purely declarative.
+
+- **Layout is consistently left-anchored.** The header row puts the step text on the left and the percent on the right (`flex justify-between`); the step is the primary label (`text-base font-semibold text-heading`) and updates in place as phases fire. The bar follows full-width. The warning hint sits directly under the bar with a Heroicons exclamation-triangle prefix in `text-fg-warning`. No card surface chrome — the component embeds in whatever surface the consumer provides (form section, dashboard panel, upload row). The `inline` modifier scales the step down to `text-sm` for in-list upload rows.
+
+- **`Phase` shape is just `{ step, fillPct, durationMs }`** — phases run back-to-back starting at `t=0` (or at upload-complete when `setBytesProgress(1)` fires in bytes mode). Each phase's bar fills from the previous phase's `fillPct` to this one's `fillPct` over `durationMs`; the next phase fires when this one ends. The earlier draft separated `atMs` and `fillDurationMs` to allow "jump and rest" patterns; the smooth back-to-back model is cleaner and matches the actual UX the component is selling.
+
+- **Error banner reuses `admonition admonition-danger`.** Restore inserts the kit's existing Docusaurus-style admonition (light/dark variants already wired via `flowbite-theme.css`) instead of rolling a separate alert utility.
+
 ## 4.13.2
 
 ### Fixes
