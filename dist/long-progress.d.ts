@@ -88,15 +88,10 @@ export type BytesOptions = {
 };
 export type LongProgressOptions = {
     /**
-     * - Card heading.
-     * Pass null to omit (useful for inline rows).
-     */
-    title?: string | null;
-    /**
-     * - Subtext under the bar. Rendered via
-     * innerHTML so the default can include <strong> for emphasis on
-     * "Do not refresh." Caller must ensure this contains no untrusted
-     * input — never pass user-supplied text here.
+     * - Warning text directly under the bar.
+     * Rendered via innerHTML so the default can include <strong> for
+     * emphasis on "Do not refresh." Caller must ensure this contains no
+     * untrusted input — never pass user-supplied text here.
      */
     hint?: string | null;
     /**

@@ -59,9 +59,9 @@
         </h2>
         <p class="text-gray-700 dark:text-gray-300 mb-4">
           <code class="text-sm font-mono">new LongProgress(section).start()</code> &mdash; no
-          config, just sensible defaults: generic title, the load-bearing &ldquo;don&rsquo;t
-          refresh&rdquo; hint, and a 4-phase ~22s timeline. Buttons compress the timeline for the
-          demo so you don&rsquo;t have to wait the full duration.
+          config, just sensible defaults: a 4-phase ~22s timeline and the load-bearing
+          &ldquo;don&rsquo;t refresh&rdquo; hint. Buttons compress the timeline for the demo so you
+          don&rsquo;t have to wait the full duration.
         </p>
         <div class="flex flex-wrap gap-2 mb-6">
           <button class="btn-orange-to-blue" data-demo="defaults-success">
@@ -189,7 +189,6 @@ lp.restore('Sorry, that failed.'); // on error</code></pre>
           <pre
             class="text-sm font-mono text-gray-800 dark:text-gray-200 whitespace-pre"
           ><code>const lp = new LongProgress(sectionEl, {
-  title: 'Verifying your account',
   phases: [
     { step: 'Verifying your employer information…', fillPct: 30, durationMs: 4000 },
     { step: 'Cross-referencing your documents…',    fillPct: 65, durationMs: 8000 },
@@ -247,18 +246,12 @@ xhr.onerror           = ()  =&gt; lp.restore('Upload failed. Please try again.')
             </thead>
             <tbody class="divide-y divide-gray-100 dark:divide-gray-800">
               <tr>
-                <td class="py-2 px-3 font-mono text-xs">title</td>
-                <td class="py-2 px-3 font-mono text-xs">'Working on it…'</td>
-                <td class="py-2 px-3">
-                  Card heading. Pass <code class="font-mono text-xs">null</code> to omit.
-                </td>
-              </tr>
-              <tr>
                 <td class="py-2 px-3 font-mono text-xs">hint</td>
-                <td class="py-2 px-3 text-xs">&ldquo;Do not refresh&hellip;&rdquo;</td>
+                <td class="py-2 px-3 text-xs">&ldquo;Don&rsquo;t refresh&hellip;&rdquo;</td>
                 <td class="py-2 px-3">
-                  Subtext under the bar. Rendered via innerHTML so the default can include
-                  <code class="font-mono text-xs">&lt;strong&gt;</code>. Never pass untrusted input.
+                  Warning text directly under the bar. Rendered via innerHTML so the default can
+                  include <code class="font-mono text-xs">&lt;strong&gt;</code>. Never pass
+                  untrusted input.
                 </td>
               </tr>
               <tr>
@@ -453,7 +446,6 @@ xhr.onerror           = ()  =&gt; lp.restore('Upload failed. Please try again.')
           cancelPending(section);
           resetSection(section);
           const lp = new LongProgress(section, {
-            title: 'Verifying your account',
             phases: [
               { step: 'Verifying your employer information…', fillPct: 30, durationMs: 800 },
               { step: 'Cross-referencing your documents…', fillPct: 65, durationMs: 1600 },
@@ -480,7 +472,6 @@ xhr.onerror           = ()  =&gt; lp.restore('Upload failed. Please try again.')
           cancelPending(section);
           resetSection(section);
           const lp = new LongProgress(section, {
-            title: 'Verifying your account',
             errorInsertBefore: '.form-actions',
           });
           lp.start();
@@ -492,14 +483,13 @@ xhr.onerror           = ()  =&gt; lp.restore('Upload failed. Please try again.')
           resetSection(section);
           const lp = new LongProgress(section, {
             inline: true,
-            title: 'myresume.pdf',
             hint: null,
-            bytes: { capPct: 25, step: 'Uploading…' },
+            bytes: { capPct: 25, step: 'Uploading myresume.pdf…' },
             // Phases fire back-to-back after upload completes; each
             // durationMs sets how long that phase animates the fill.
             phases: [
-              { step: 'Classifying document type…', fillPct: 35, durationMs: 900 },
-              { step: 'Extracting evidence from document…', fillPct: 65, durationMs: 1500 },
+              { step: 'Classifying myresume.pdf…', fillPct: 35, durationMs: 900 },
+              { step: 'Extracting evidence from myresume.pdf…', fillPct: 65, durationMs: 1500 },
               { step: 'Almost done…', fillPct: 85, durationMs: 1500 },
             ],
           });
@@ -520,9 +510,8 @@ xhr.onerror           = ()  =&gt; lp.restore('Upload failed. Please try again.')
           resetSection(section);
           const lp = new LongProgress(section, {
             inline: true,
-            title: 'myresume.pdf',
             hint: null,
-            bytes: { capPct: 25 },
+            bytes: { capPct: 25, step: 'Uploading myresume.pdf…' },
           });
           lp.start();
           simulateUpload(section, lp, { perStep: 0.15, capFraction: 0.4 });
@@ -534,9 +523,8 @@ xhr.onerror           = ()  =&gt; lp.restore('Upload failed. Please try again.')
           resetSection(section);
           const lp = new LongProgress(section, {
             inline: true,
-            title: 'avatar.png',
             hint: null,
-            bytes: { capPct: 100, step: 'Uploading…' },
+            bytes: { capPct: 100, step: 'Uploading avatar.png…' },
             phases: [],
           });
           lp.start();

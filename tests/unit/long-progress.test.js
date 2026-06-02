@@ -42,7 +42,12 @@ describe('LongProgress — defaults', () => {
     expect(card.getAttribute('role')).toBe('status');
     expect(card.getAttribute('aria-live')).toBe('polite');
 
-    expect(section.querySelector('.long-progress-title').textContent).toBe('Working on it…');
+    // Step text lives in the header row (no title element anymore).
+    // Default phases[0].step provides the initial header text.
+    const stepEl = section.querySelector('.long-progress-step');
+    expect(stepEl).not.toBeNull();
+    expect(stepEl.textContent).toBe('Working…');
+    expect(section.querySelector('.long-progress-title')).toBeNull();
 
     const bar = section.querySelector('.long-progress-bar');
     expect(bar.getAttribute('role')).toBe('progressbar');
@@ -55,6 +60,28 @@ describe('LongProgress — defaults', () => {
     expect(hint.querySelector('strong').textContent).toMatch(/don.?t refresh/i);
     // Hint is icon-prefixed so the warning reads as a structured affordance.
     expect(hint.querySelector('svg')).not.toBeNull();
+  });
+
+  it('renders the step in the header row, before the bar', () => {
+    const section = makeSection();
+    new LongProgress(section).start();
+    const card = section.querySelector('.long-progress');
+    const header = card.querySelector('.long-progress-header');
+    const stepEl = section.querySelector('.long-progress-step');
+    // Step is inside the header (not below the bar).
+    expect(header.contains(stepEl)).toBe(true);
+    // Bar comes after the header in document order.
+    expect(header.compareDocumentPosition(section.querySelector('.long-progress-bar'))).toBe(
+      Node.DOCUMENT_POSITION_FOLLOWING,
+    );
+  });
+
+  it('renders the hint directly under the bar (and after it in document order)', () => {
+    const section = makeSection();
+    new LongProgress(section).start();
+    const bar = section.querySelector('.long-progress-bar');
+    const hint = section.querySelector('.long-progress-hint');
+    expect(bar.compareDocumentPosition(hint)).toBe(Node.DOCUMENT_POSITION_FOLLOWING);
   });
 
   it('drives bar fill + percent counter via --long-progress-pct on the container', async () => {
@@ -79,12 +106,6 @@ describe('LongProgress — defaults', () => {
     expect(card.style.getPropertyValue('--long-progress-fill-duration')).toBe('4000ms');
   });
 
-  it('omits title when title: null is passed', () => {
-    const section = makeSection();
-    new LongProgress(section, { title: null }).start();
-    expect(section.querySelector('.long-progress-title')).toBeNull();
-  });
-
   it('omits hint when hint: null is passed', () => {
     const section = makeSection();
     new LongProgress(section, { hint: null }).start();
@@ -99,13 +120,14 @@ describe('LongProgress — defaults', () => {
     );
   });
 
-  it('escapes the title to prevent XSS', () => {
+  it('escapes the initial step text to prevent XSS', () => {
     const section = makeSection();
-    new LongProgress(section, { title: '<img src=x onerror=alert(1)>' }).start();
-    const titleEl = section.querySelector('.long-progress-title');
-    // textContent should contain the literal tag; no <img> should be parsed
-    expect(titleEl.textContent).toBe('<img src=x onerror=alert(1)>');
-    expect(titleEl.querySelector('img')).toBeNull();
+    new LongProgress(section, {
+      phases: [{ step: '<img src=x onerror=alert(1)>', fillPct: 10, durationMs: 100 }],
+    }).start();
+    const stepEl = section.querySelector('.long-progress-step');
+    expect(stepEl.textContent).toBe('<img src=x onerror=alert(1)>');
+    expect(stepEl.querySelector('img')).toBeNull();
   });
 });
 

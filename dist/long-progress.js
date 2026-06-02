@@ -26,7 +26,6 @@ const DEFAULT_PHASES = [
   { step: 'Still working — this is taking longer than usual…', fillPct: 92, durationMs: 15000 },
 ];
 
-const DEFAULT_TITLE = 'Working on it…';
 const DEFAULT_HINT = "<strong>Don't refresh.</strong> This usually takes 10–20 seconds.";
 
 // Heroicons mini "exclamation-triangle" (20×20). Inline so we don't have to
@@ -60,12 +59,10 @@ const FAST_FORWARD_DEFAULT_MS = 200;
 
 /**
  * @typedef {Object} LongProgressOptions
- * @property {string | null} [title='Working on it…'] - Card heading.
- *   Pass null to omit (useful for inline rows).
- * @property {string | null} [hint] - Subtext under the bar. Rendered via
- *   innerHTML so the default can include <strong> for emphasis on
- *   "Do not refresh." Caller must ensure this contains no untrusted
- *   input — never pass user-supplied text here.
+ * @property {string | null} [hint] - Warning text directly under the bar.
+ *   Rendered via innerHTML so the default can include <strong> for
+ *   emphasis on "Do not refresh." Caller must ensure this contains no
+ *   untrusted input — never pass user-supplied text here.
  * @property {Phase[]} [phases] - Time-driven simulation. Defaults to a
  *   generic 4-phase ~22s timeline. Pass [] to disable (pure upload mode).
  * @property {BytesOptions | null} [bytes] - Enables bytes mode for upload
@@ -120,7 +117,6 @@ export class LongProgress {
     }
     /** @type {Required<LongProgressOptions>} */
     this.#opts = {
-      title: opts.title === null ? null : (opts.title ?? DEFAULT_TITLE),
       hint: opts.hint === null ? null : (opts.hint ?? DEFAULT_HINT),
       phases: opts.phases ?? DEFAULT_PHASES,
       bytes: opts.bytes ? normalizeBytes(opts.bytes) : null,
@@ -308,21 +304,17 @@ export class LongProgress {
       ? this.#opts.bytes.step
       : (this.#opts.phases[0]?.step ?? '');
     const inlineCls = this.#opts.inline ? ' long-progress-inline' : '';
-    // Header row: title + percent. Render the row if either is present so
-    // the percent still appears in title-less inline layouts.
-    const hasTitle = this.#opts.title !== null;
-    const titleHtml = hasTitle
-      ? `<h3 class="long-progress-title">${escapeHtml(this.#opts.title)}</h3>`
-      : '';
-    // The percent text content is fully CSS-generated via ::after +
-    // counter(--long-progress-pct). Leave the span empty so we don't
-    // get a duplicate "0%…" rendered alongside the counter.
-    const headerHtml = `<div class="long-progress-header">${titleHtml}<span class="long-progress-percent"></span></div>`;
+    // Layout: header row (step left + percent right) → bar → warning hint.
+    // The step text lives in the header and updates in place as phases
+    // fire — it's the most informative thing on the card, so it owns the
+    // prominent top-left position. Percent text is CSS-generated via
+    // counter() in .long-progress-percent::after; leave the span empty.
+    const headerHtml = `<div class="long-progress-header"><p class="long-progress-step">${escapeHtml(initialStep)}</p><span class="long-progress-percent"></span></div>`;
     const hintHtml =
       this.#opts.hint !== null
         ? `<p class="long-progress-hint">${HINT_ICON_SVG}<span>${this.#opts.hint}</span></p>`
         : '';
-    return `<div class="long-progress${inlineCls}" role="status" aria-live="polite">${headerHtml}<div class="long-progress-bar" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><div class="long-progress-bar-fill"></div></div><p class="long-progress-step">${escapeHtml(initialStep)}</p>${hintHtml}</div>`;
+    return `<div class="long-progress${inlineCls}" role="status" aria-live="polite">${headerHtml}<div class="long-progress-bar" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><div class="long-progress-bar-fill"></div></div>${hintHtml}</div>`;
   }
 
   #renderErrorBanner(message) {

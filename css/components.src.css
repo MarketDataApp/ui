@@ -943,12 +943,20 @@ label:has(:where(.checkbox-input, .radio-button-input):disabled)
   @apply flex items-baseline justify-between gap-2 mb-2;
 }
 
-.long-progress-title {
-  @apply text-base font-semibold text-heading m-0;
+/* The step text owns the prominent top-left position in the header
+   row — it's the most informative thing on the card, so it gets
+   primary-label styling. Updates in place as phases fire. */
+.long-progress-step {
+  @apply text-base font-semibold text-heading m-0 min-w-0;
+}
+
+/* Inline rows are scaled down (in-list uploads etc.). */
+.long-progress-inline .long-progress-step {
+  @apply text-sm;
 }
 
 .long-progress-percent {
-  @apply text-sm font-medium text-body tabular-nums;
+  @apply text-sm font-medium text-body tabular-nums shrink-0;
   /* Tailwind v4 emits a universal `* { --long-progress-pct: 0 }` reset
      for the registered property, which would defeat the inheritance
      from .long-progress. Force inherit on the descendant that needs
@@ -970,30 +978,18 @@ label:has(:where(.checkbox-input, .radio-button-input):disabled)
   transition: width var(--long-progress-fill-duration, 300ms) ease-out;
 }
 
-.long-progress-step {
-  @apply text-sm text-body m-0 mt-3 mb-1 text-center;
-}
-
-/* Inline rows live in a consumer-provided surface (upload row, etc.)
-   that handles its own alignment — don't impose centering there. */
-.long-progress-inline .long-progress-step {
-  @apply text-start;
-}
-
+/* Warning hint lives directly under the bar, left-aligned to match
+   the header row's anchor. */
 .long-progress-hint {
-  @apply flex items-center justify-center gap-1.5 text-xs text-fg-warning m-0 mt-2;
-}
-
-.long-progress-inline .long-progress-hint {
-  @apply justify-start;
-}
-
-.long-progress-hint-icon {
-  @apply w-3.5 h-3.5 shrink-0;
+  @apply flex items-center gap-1.5 text-xs text-fg-warning m-0 mt-2;
 }
 
 .long-progress-hint strong {
   @apply font-semibold;
+}
+
+.long-progress-hint-icon {
+  @apply w-3.5 h-3.5 shrink-0;
 }
 
 /* ---- Links ----

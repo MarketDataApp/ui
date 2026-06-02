@@ -2898,15 +2898,21 @@ label:has(:where(.checkbox-input, .radio-button-input):disabled) :where(.text-he
   justify-content: space-between;
   gap: calc(var(--spacing) * 2);
 }
-.long-progress-title {
+.long-progress-step {
   margin: calc(var(--spacing) * 0);
+  min-width: calc(var(--spacing) * 0);
   font-size: var(--text-base);
   line-height: var(--tw-leading, var(--text-base--line-height));
   --tw-font-weight: var(--font-weight-semibold);
   font-weight: var(--font-weight-semibold);
   color: var(--color-heading);
 }
+.long-progress-inline .long-progress-step {
+  font-size: var(--text-sm);
+  line-height: var(--tw-leading, var(--text-sm--line-height));
+}
 .long-progress-percent {
+  flex-shrink: 0;
   font-size: var(--text-sm);
   line-height: var(--tw-leading, var(--text-sm--line-height));
   --tw-font-weight: var(--font-weight-medium);
@@ -2937,40 +2943,24 @@ label:has(:where(.checkbox-input, .radio-button-input):disabled) :where(.text-he
   width: 0%;
   transition: width var(--long-progress-fill-duration, 300ms) ease-out;
 }
-.long-progress-step {
-  margin: calc(var(--spacing) * 0);
-  margin-top: calc(var(--spacing) * 3);
-  margin-bottom: calc(var(--spacing) * 1);
-  text-align: center;
-  font-size: var(--text-sm);
-  line-height: var(--tw-leading, var(--text-sm--line-height));
-  color: var(--color-body);
-}
-.long-progress-inline .long-progress-step {
-  text-align: start;
-}
 .long-progress-hint {
   margin: calc(var(--spacing) * 0);
   margin-top: calc(var(--spacing) * 2);
   display: flex;
   align-items: center;
-  justify-content: center;
   gap: calc(var(--spacing) * 1.5);
   font-size: var(--text-xs);
   line-height: var(--tw-leading, var(--text-xs--line-height));
   color: var(--color-fg-warning);
 }
-.long-progress-inline .long-progress-hint {
-  justify-content: flex-start;
+.long-progress-hint strong {
+  --tw-font-weight: var(--font-weight-semibold);
+  font-weight: var(--font-weight-semibold);
 }
 .long-progress-hint-icon {
   height: calc(var(--spacing) * 3.5);
   width: calc(var(--spacing) * 3.5);
   flex-shrink: 0;
-}
-.long-progress-hint strong {
-  --tw-font-weight: var(--font-weight-semibold);
-  font-weight: var(--font-weight-semibold);
 }
 .user-profile-container {
   display: inline-flex;
