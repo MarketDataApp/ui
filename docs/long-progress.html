@@ -216,10 +216,10 @@ const unbind = lp.bindHtmx(formEl, {
           ><code>const lp = new LongProgress(rowEl, {
   inline: true,
   bytes: { capPct: 25, step: 'Uploading…' },
-  phases: [ /* atMs is relative to upload-complete */
-    { atMs:     0, step: 'Classifying document type…',         fillPct: 35, fillDurationMs: 0 },
-    { atMs:  4500, step: 'Extracting evidence from document…', fillPct: 65, fillDurationMs: 0 },
-    { atMs: 12000, step: 'Almost done…',                        fillPct: 85, fillDurationMs: 0 },
+  phases: [ /* atMs is relative to upload-complete; fillDurationMs ≈ gap to next */
+    { atMs:     0, step: 'Classifying document type…',         fillPct: 35, fillDurationMs: 4500 },
+    { atMs:  4500, step: 'Extracting evidence from document…', fillPct: 65, fillDurationMs: 7500 },
+    { atMs: 12000, step: 'Almost done…',                        fillPct: 85, fillDurationMs: 8000 },
   ],
 });
 lp.start();
@@ -511,15 +511,18 @@ xhr.onerror           = ()  =&gt; lp.restore('Upload failed. Please try again.')
             title: 'myresume.pdf',
             hint: null,
             bytes: { capPct: 25, step: 'Uploading…' },
+            // Each phase fills smoothly until the next one starts —
+            // fillDurationMs ≈ the gap to the next phase so the bar
+            // glides instead of jumping between targets.
             phases: [
-              { atMs: 0, step: 'Classifying document type…', fillPct: 35, fillDurationMs: 0 },
+              { atMs: 0, step: 'Classifying document type…', fillPct: 35, fillDurationMs: 900 },
               {
                 atMs: 900,
                 step: 'Extracting evidence from document…',
                 fillPct: 65,
-                fillDurationMs: 0,
+                fillDurationMs: 1500,
               },
-              { atMs: 2400, step: 'Almost done…', fillPct: 85, fillDurationMs: 0 },
+              { atMs: 2400, step: 'Almost done…', fillPct: 85, fillDurationMs: 1500 },
             ],
           });
           lp.start();
