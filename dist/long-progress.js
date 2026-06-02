@@ -20,15 +20,10 @@
  */
 
 const DEFAULT_PHASES = [
-  { atMs: 0, step: 'Working…', fillPct: 30, fillDurationMs: 4000 },
-  { atMs: 4000, step: 'Almost there…', fillPct: 65, fillDurationMs: 8000 },
-  { atMs: 12000, step: 'Finishing up…', fillPct: 85, fillDurationMs: 10000 },
-  {
-    atMs: 22000,
-    step: 'Still working — this is taking longer than usual…',
-    fillPct: 92,
-    fillDurationMs: 15000,
-  },
+  { step: 'Working…', fillPct: 30, durationMs: 4000 },
+  { step: 'Almost there…', fillPct: 65, durationMs: 8000 },
+  { step: 'Finishing up…', fillPct: 85, durationMs: 10000 },
+  { step: 'Still working — this is taking longer than usual…', fillPct: 92, durationMs: 15000 },
 ];
 
 const DEFAULT_TITLE = 'Working on it…';
@@ -47,12 +42,13 @@ const FAST_FORWARD_DEFAULT_MS = 200;
 
 /**
  * @typedef {Object} Phase
- * @property {number} atMs - Delay (ms) before this phase fires. In time-only
- *   mode this is measured from start(); in bytes mode it is measured from
- *   upload-complete (the first setBytesProgress(1) call).
  * @property {string} step - Step text shown when this phase fires.
  * @property {number} fillPct - Bar fill percentage to animate to (0–100).
- * @property {number} fillDurationMs - Transition duration (ms) for the fill.
+ * @property {number} durationMs - How long this phase runs. The bar
+ *   fills from the previous phase's fillPct to this phase's fillPct
+ *   over this duration. The next phase fires when this one ends.
+ *   Phases run back-to-back starting at t=0 (or at upload-complete in
+ *   bytes mode).
  */
 
 /**
@@ -272,13 +268,18 @@ export class LongProgress {
   #startPhases() {
     if (this.#phasesStarted) return;
     this.#phasesStarted = true;
+    // Phases run back-to-back: each one fires when the previous ends,
+    // so its start offset is the cumulative sum of prior durationMs.
+    let startAt = 0;
     for (const phase of this.#opts.phases) {
+      const at = startAt;
       const id = setTimeout(() => {
         if (this.#state !== 'running') return;
         if (this.#stepEl && phase.step) this.#stepEl.textContent = phase.step;
-        this.#setFill(phase.fillPct, phase.fillDurationMs);
-      }, phase.atMs);
+        this.#setFill(phase.fillPct, phase.durationMs);
+      }, at);
       this.#timers.push(id);
+      startAt += phase.durationMs;
     }
   }
 

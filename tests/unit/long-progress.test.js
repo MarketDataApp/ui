@@ -13,9 +13,9 @@ function makeSection(originalHtml = '<form><button type="submit">Go</button></fo
 }
 
 const minimalPhases = [
-  { atMs: 0, step: 'starting', fillPct: 10, fillDurationMs: 100 },
-  { atMs: 1000, step: 'middle', fillPct: 50, fillDurationMs: 500 },
-  { atMs: 5000, step: 'late', fillPct: 90, fillDurationMs: 1000 },
+  { step: 'starting', fillPct: 10, durationMs: 1000 }, // fires at t=0, runs until t=1000
+  { step: 'middle', fillPct: 50, durationMs: 4000 }, // fires at t=1000, runs until t=5000
+  { step: 'late', fillPct: 90, durationMs: 1000 }, // fires at t=5000, runs until t=6000
 ];
 
 beforeEach(() => {
@@ -70,13 +70,13 @@ describe('LongProgress — defaults', () => {
     expect(percentEl).not.toBeNull();
     expect(card.style.getPropertyValue('--long-progress-pct')).toBe('');
 
-    await vi.advanceTimersByTimeAsync(0); // phase[0] → 10%
+    await vi.advanceTimersByTimeAsync(0); // phase[0] → 10% over 1000ms
     expect(card.style.getPropertyValue('--long-progress-pct')).toBe('10');
-    expect(card.style.getPropertyValue('--long-progress-fill-duration')).toBe('100ms');
+    expect(card.style.getPropertyValue('--long-progress-fill-duration')).toBe('1000ms');
 
-    await vi.advanceTimersByTimeAsync(1000); // phase[1] → 50%
+    await vi.advanceTimersByTimeAsync(1000); // phase[1] → 50% over 4000ms
     expect(card.style.getPropertyValue('--long-progress-pct')).toBe('50');
-    expect(card.style.getPropertyValue('--long-progress-fill-duration')).toBe('500ms');
+    expect(card.style.getPropertyValue('--long-progress-fill-duration')).toBe('4000ms');
   });
 
   it('omits title when title: null is passed', () => {
@@ -348,22 +348,22 @@ describe('LongProgress — bytes mode', () => {
     const lp = new LongProgress(section, {
       bytes: { capPct: 25 },
       phases: [
-        { atMs: 100, step: 'after-upload', fillPct: 50, fillDurationMs: 0 },
-        { atMs: 200, step: 'much-later', fillPct: 60, fillDurationMs: 0 },
+        { step: 'after-upload', fillPct: 50, durationMs: 300 }, // fires at t=0, runs until t=300
+        { step: 'much-later', fillPct: 60, durationMs: 100 }, // fires at t=300
       ],
     });
     lp.start();
 
     lp.setBytesProgress(1);
-    await vi.advanceTimersByTimeAsync(150); // fire phase[0] only
+    await vi.advanceTimersByTimeAsync(150); // mid phase[0]
     expect(section.querySelector('.long-progress-step').textContent).toBe('after-upload');
 
-    // Second 1.0 call — phases should NOT re-arm
+    // Second 1.0 call — phases should NOT re-arm at a new t=0
     lp.setBytesProgress(1);
-    await vi.advanceTimersByTimeAsync(50); // would fire phase[1] of a re-armed timeline
+    await vi.advanceTimersByTimeAsync(200); // total 350ms — past phase[1] start
     expect(section.querySelector('.long-progress-step').textContent).toBe('much-later');
 
-    // …and 100ms later, no re-fired phase[0] reverting us to 'after-upload'
+    // …and 100ms later, no spurious re-fire of phase[0] reverting us
     await vi.advanceTimersByTimeAsync(100);
     expect(section.querySelector('.long-progress-step').textContent).toBe('much-later');
   });

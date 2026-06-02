@@ -59,12 +59,6 @@ export class LongProgress {
 }
 export type Phase = {
     /**
-     * - Delay (ms) before this phase fires. In time-only
-     * mode this is measured from start(); in bytes mode it is measured from
-     * upload-complete (the first setBytesProgress(1) call).
-     */
-    atMs: number;
-    /**
      * - Step text shown when this phase fires.
      */
     step: string;
@@ -73,9 +67,13 @@ export type Phase = {
      */
     fillPct: number;
     /**
-     * - Transition duration (ms) for the fill.
+     * - How long this phase runs. The bar
+     * fills from the previous phase's fillPct to this phase's fillPct
+     * over this duration. The next phase fires when this one ends.
+     * Phases run back-to-back starting at t=0 (or at upload-complete in
+     * bytes mode).
      */
-    fillDurationMs: number;
+    durationMs: number;
 };
 export type BytesOptions = {
     /**
