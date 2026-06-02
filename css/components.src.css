@@ -971,11 +971,21 @@ label:has(:where(.checkbox-input, .radio-button-input):disabled)
 }
 
 .long-progress-step {
-  @apply text-sm text-body m-0 mt-3 mb-1;
+  @apply text-sm text-body m-0 mt-3 mb-1 text-center;
+}
+
+/* Inline rows live in a consumer-provided surface (upload row, etc.)
+   that handles its own alignment — don't impose centering there. */
+.long-progress-inline .long-progress-step {
+  @apply text-start;
 }
 
 .long-progress-hint {
-  @apply flex items-center gap-1.5 text-xs text-fg-warning m-0 mt-2;
+  @apply flex items-center justify-center gap-1.5 text-xs text-fg-warning m-0 mt-2;
+}
+
+.long-progress-inline .long-progress-hint {
+  @apply justify-start;
 }
 
 .long-progress-hint-icon {

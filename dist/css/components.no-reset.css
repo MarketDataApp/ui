@@ -2941,19 +2941,27 @@ label:has(:where(.checkbox-input, .radio-button-input):disabled) :where(.text-he
   margin: calc(var(--spacing) * 0);
   margin-top: calc(var(--spacing) * 3);
   margin-bottom: calc(var(--spacing) * 1);
+  text-align: center;
   font-size: var(--text-sm);
   line-height: var(--tw-leading, var(--text-sm--line-height));
   color: var(--color-body);
+}
+.long-progress-inline .long-progress-step {
+  text-align: start;
 }
 .long-progress-hint {
   margin: calc(var(--spacing) * 0);
   margin-top: calc(var(--spacing) * 2);
   display: flex;
   align-items: center;
+  justify-content: center;
   gap: calc(var(--spacing) * 1.5);
   font-size: var(--text-xs);
   line-height: var(--tw-leading, var(--text-xs--line-height));
   color: var(--color-fg-warning);
+}
+.long-progress-inline .long-progress-hint {
+  justify-content: flex-start;
 }
 .long-progress-hint-icon {
   height: calc(var(--spacing) * 3.5);
