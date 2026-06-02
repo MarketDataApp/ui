@@ -2934,8 +2934,8 @@ label:has(:where(.checkbox-input, .radio-button-input):disabled) :where(.text-he
   &:where(.dark, .dark *, [data-theme="dark"], [data-theme="dark"] *) {
     background-color: var(--color-blue-500);
   }
-  --long-progress-pct: inherit;
-  width: calc(var(--long-progress-pct) * 1%);
+  width: 0%;
+  transition: width var(--long-progress-fill-duration, 300ms) ease-out;
 }
 .long-progress-step {
   margin: calc(var(--spacing) * 0);

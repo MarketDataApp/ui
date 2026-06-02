@@ -913,13 +913,16 @@ label:has(:where(.checkbox-input, .radio-button-input):disabled)
    embed inside their own outer surface (form section, dashboard
    panel, upload row).
 
-   The bar fill and the percent readout are both driven by a single
-   registered integer custom property — --long-progress-pct — set
-   from JS via setProperty(). The @property registration with
-   <integer> syntax makes the property transitionable, so the bar
-   width (calc(... * 1%)) and the counter() in the percent ::after
-   both animate smoothly in lockstep over --long-progress-fill-duration.
-   No rAF loop needed; the count steps through 1, 2, 3, … to target. */
+   Bar fill and percent readout animate together but use different
+   mechanisms tuned to each rendering need:
+     - Bar width is a regular CSS transition on `width` (smooth at
+       sub-pixel resolution).
+     - The percent counter is driven by --long-progress-pct, a
+       registered @property <integer> that transitions in lockstep —
+       counter() needs an integer, so it steps 1, 2, 3, … to target
+       (which reads correctly as text, just quantized for the counter).
+     - Both transitions share --long-progress-fill-duration so they
+       start and end together. */
 @property --long-progress-pct {
   syntax: '<integer>';
   inherits: true;
@@ -948,7 +951,7 @@ label:has(:where(.checkbox-input, .radio-button-input):disabled)
   @apply text-sm font-medium text-body tabular-nums;
   /* Tailwind v4 emits a universal `* { --long-progress-pct: 0 }` reset
      for the registered property, which would defeat the inheritance
-     from .long-progress. Force inherit on the descendants that need
+     from .long-progress. Force inherit on the descendant that needs
      to read the in-flight integer value. */
   --long-progress-pct: inherit;
   counter-reset: long-progress-pct var(--long-progress-pct);
@@ -963,8 +966,8 @@ label:has(:where(.checkbox-input, .radio-button-input):disabled)
 
 .long-progress-bar-fill {
   @apply h-full rounded-full bg-blue-600 dark:bg-blue-500;
-  --long-progress-pct: inherit;
-  width: calc(var(--long-progress-pct) * 1%);
+  width: 0%;
+  transition: width var(--long-progress-fill-duration, 300ms) ease-out;
 }
 
 .long-progress-step {

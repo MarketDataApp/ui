@@ -107,6 +107,7 @@ export class LongProgress {
   #timers = [];
   #cardEl = null;
   #barEl = null;
+  #fillEl = null;
   #stepEl = null;
   #bytesPct = 0;
   #phasesStarted = false;
@@ -146,6 +147,7 @@ export class LongProgress {
     this.#section.innerHTML = this.#renderCard();
     this.#cardEl = this.#section.querySelector('.long-progress');
     this.#barEl = this.#section.querySelector('.long-progress-bar');
+    this.#fillEl = this.#section.querySelector('.long-progress-bar-fill');
     this.#stepEl = this.#section.querySelector('.long-progress-step');
     if (!this.#opts.bytes) {
       this.#startPhases();
@@ -221,7 +223,7 @@ export class LongProgress {
         window.htmx.process(this.#section);
       }
     }
-    this.#cardEl = this.#barEl = this.#stepEl = null;
+    this.#cardEl = this.#barEl = this.#fillEl = this.#stepEl = null;
     if (message) {
       const banner = this.#renderErrorBanner(message);
       const target = this.#opts.errorInsertBefore
@@ -281,14 +283,16 @@ export class LongProgress {
   }
 
   #setFill(pct, durationMs) {
-    if (!this.#cardEl || !this.#barEl) return;
-    const rounded = Math.round(Math.max(0, Math.min(100, pct)));
-    // Set both the duration and the target on the container element.
-    // The @property <integer> registration in CSS makes
-    // --long-progress-pct transitionable, so the bar width
-    // (calc(... * 1%)) and the counter() in .long-progress-percent::after
-    // both animate smoothly over fill-duration — counter steps 1,2,3…
+    if (!this.#cardEl || !this.#barEl || !this.#fillEl) return;
+    const clamped = Math.max(0, Math.min(100, pct));
+    const rounded = Math.round(clamped);
     this.#cardEl.style.setProperty('--long-progress-fill-duration', `${durationMs}ms`);
+    // Bar width: smooth sub-pixel transition via standard width animation.
+    this.#fillEl.style.width = `${clamped}%`;
+    // Counter: integer custom property (registered as @property <integer>),
+    // transitions in lockstep with the bar over the same duration. The
+    // counter() in .long-progress-percent::after reads this and steps
+    // through 1, 2, 3, … to target.
     this.#cardEl.style.setProperty('--long-progress-pct', String(rounded));
     this.#barEl.setAttribute('aria-valuenow', String(rounded));
   }
