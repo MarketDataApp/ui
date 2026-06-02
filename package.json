@@ -49,6 +49,10 @@
     "./dark-images": {
       "types": "./dist/dark-images.d.ts",
       "default": "./dist/dark-images.js"
+    },
+    "./long-progress": {
+      "types": "./dist/long-progress.d.ts",
+      "default": "./dist/long-progress.js"
     }
   },
   "scripts": {

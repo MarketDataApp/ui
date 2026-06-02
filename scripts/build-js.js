@@ -34,6 +34,7 @@ const FILES_WITHOUT_LOCAL_IMPORTS = [
   'reviews.platform.js',
   'dark-images.js',
   'copy-button.js',
+  'long-progress.js',
 ];
 
 // ---------------------------------------------------------------------------

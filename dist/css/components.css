@@ -102,6 +102,7 @@
     --container-xs: 20rem;
     --container-md: 28rem;
     --container-lg: 32rem;
+    --container-xl: 36rem;
     --container-2xl: 42rem;
     --container-5xl: 64rem;
     --text-xs: 0.75rem;
@@ -2637,6 +2638,12 @@
   .min-h-\[80px\] {
     min-height: 80px;
   }
+  .min-h-\[120px\] {
+    min-height: 120px;
+  }
+  .min-h-\[280px\] {
+    min-height: 280px;
+  }
   .min-h-screen {
     min-height: 100vh;
   }
@@ -2857,6 +2864,20 @@
     &:where(.dark, .dark *, [data-theme='dark'], [data-theme='dark'] *) {
       background-color: var(--radio-group-bg, var(--color-gray-800));
       --radio-btn-bg: var(--form-radio-btn-bg, var(--color-gray-900));
+    }
+  }
+  .divide-y {
+    :where(& > :not(:last-child)) {
+      --tw-divide-y-reverse: 0;
+      border-bottom-style: var(--tw-border-style);
+      border-top-style: var(--tw-border-style);
+      border-top-width: calc(1px * var(--tw-divide-y-reverse));
+      border-bottom-width: calc(1px * calc(1 - var(--tw-divide-y-reverse)));
+    }
+  }
+  .divide-gray-100 {
+    :where(& > :not(:last-child)) {
+      border-color: var(--color-gray-100);
     }
   }
   .truncate {
@@ -3411,6 +3432,9 @@
   .text-left {
     text-align: left;
   }
+  .text-start {
+    text-align: start;
+  }
   .font-mono {
     font-family: var(--font-mono);
   }
@@ -3907,6 +3931,13 @@
   .xl\:p-8 {
     @media (width >= 80rem) {
       padding: calc(var(--spacing) * 8);
+    }
+  }
+  .dark\:divide-gray-800 {
+    &:where(.dark, .dark *, [data-theme="dark"], [data-theme="dark"] *) {
+      :where(& > :not(:last-child)) {
+        border-color: var(--color-gray-800);
+      }
     }
   }
   .dark\:border-blue-500 {
@@ -4467,6 +4498,76 @@ label:has(:where(.checkbox-input, .radio-button-input):disabled) {
 }
 label:has(:where(.checkbox-input, .radio-button-input):disabled) :where(.text-heading, .radio-button-helper) {
   color: var(--color-fg-disabled);
+}
+.long-progress {
+  margin-inline: auto;
+  display: flex;
+  width: 100%;
+  max-width: var(--container-xl);
+  flex-direction: column;
+  align-items: center;
+  padding-inline: calc(var(--spacing) * 4);
+  padding-block: calc(var(--spacing) * 12);
+  text-align: center;
+}
+.long-progress-inline {
+  max-width: none;
+  align-items: stretch;
+  padding-inline: calc(var(--spacing) * 0);
+  padding-block: calc(var(--spacing) * 0);
+  text-align: start;
+}
+.long-progress-title {
+  margin: calc(var(--spacing) * 0);
+  margin-bottom: calc(var(--spacing) * 6);
+  font-size: var(--text-2xl);
+  line-height: var(--tw-leading, var(--text-2xl--line-height));
+  --tw-font-weight: var(--font-weight-bold);
+  font-weight: var(--font-weight-bold);
+  color: var(--color-heading);
+}
+.long-progress-inline .long-progress-title {
+  margin-bottom: calc(var(--spacing) * 2);
+  font-size: var(--text-base);
+  line-height: var(--tw-leading, var(--text-base--line-height));
+}
+.long-progress-bar {
+  margin-block: calc(var(--spacing) * 1.5);
+  height: calc(var(--spacing) * 1.5);
+  width: 100%;
+  overflow: hidden;
+  border-radius: calc(infinity * 1px);
+  background-color: var(--color-neutral-quaternary);
+}
+.long-progress-bar-fill {
+  height: 100%;
+  border-radius: calc(infinity * 1px);
+  background-image: linear-gradient(103deg, #e83155 0%, #ffdfb9 100%);
+  width: 0%;
+  transition: width var(--long-progress-fill-duration, 300ms) ease-out;
+}
+.long-progress-step {
+  margin: calc(var(--spacing) * 0);
+  margin-top: calc(var(--spacing) * 4);
+  margin-bottom: calc(var(--spacing) * 2);
+  font-size: var(--text-sm);
+  line-height: var(--tw-leading, var(--text-sm--line-height));
+  color: var(--color-fg-brand);
+}
+.long-progress-inline .long-progress-step {
+  margin-top: calc(var(--spacing) * 2);
+}
+.long-progress-hint {
+  margin: calc(var(--spacing) * 0);
+  margin-top: calc(var(--spacing) * 2);
+  font-size: var(--text-xs);
+  line-height: var(--tw-leading, var(--text-xs--line-height));
+  color: var(--color-fg-disabled);
+  font-style: italic;
+}
+.long-progress-hint strong {
+  color: var(--color-fg-danger);
+  font-style: normal;
 }
 .user-profile-container {
   display: inline-flex;

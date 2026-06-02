@@ -1,0 +1,589 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Long Progress - @marketdataapp/ui</title>
+    <link rel="stylesheet" href="docs.css" />
+    <script data-cfasync="false">
+      (function () {
+        var match = document.cookie.match(/(?:^|;\s*)theme=(dark|light)/);
+        var saved = match ? match[1] : null;
+        var prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+        var dark = saved === 'dark' || (!saved && prefersDark);
+        document.documentElement.classList.add(dark ? 'dark' : 'light');
+        document.documentElement.setAttribute('data-theme', dark ? 'dark' : 'light');
+      })();
+    </script>
+  </head>
+  <body class="default min-h-screen">
+    <header class="border-b border-gray-200 dark:border-gray-700 mb-12">
+      <div class="max-w-5xl mx-auto px-4 py-8 flex items-center justify-between">
+        <div>
+          <h1 class="text-3xl font-bold">Long Progress</h1>
+          <p class="mt-1 text-gray-500 dark:text-gray-400">
+            <a href="index.html" class="hover:text-gray-900 dark:hover:text-white"
+              >&larr; Back to components</a
+            >
+          </p>
+        </div>
+        <div id="theme-toggle"></div>
+      </div>
+    </header>
+
+    <main class="max-w-5xl mx-auto px-4 pb-16 space-y-16">
+      <!-- Overview -->
+      <section id="overview">
+        <h2 class="text-2xl font-bold mb-6 border-b border-gray-200 dark:border-gray-700 pb-2">
+          Overview
+        </h2>
+        <div class="text-gray-700 dark:text-gray-300 space-y-4">
+          <p>
+            Reusable progress card that takes over a section while a long (10&ndash;30s) POST is in
+            flight. Animates a fake-but-realistic timeline of step text and progress-bar fill so
+            users don&rsquo;t reload the page and kill the request. Fast-forwards to 100% on success
+            and restores the original markup with an error banner on failure.
+          </p>
+          <p>
+            Designed for HTMX form takeovers, file uploads with server-side processing, and any
+            other long-running POST that would otherwise leave the user staring at an unresponsive
+            page.
+          </p>
+        </div>
+      </section>
+
+      <!-- Demo: defaults -->
+      <section id="demo-defaults">
+        <h2 class="text-2xl font-bold mb-6 border-b border-gray-200 dark:border-gray-700 pb-2">
+          Demo: vanilla defaults
+        </h2>
+        <p class="text-gray-700 dark:text-gray-300 mb-4">
+          <code class="text-sm font-mono">new LongProgress(section).start()</code> &mdash; no
+          config, just sensible defaults: generic title, the load-bearing &ldquo;don&rsquo;t
+          refresh&rdquo; hint, and a 4-phase ~22s timeline. Buttons compress the timeline for the
+          demo so you don&rsquo;t have to wait the full duration.
+        </p>
+        <div class="flex flex-wrap gap-2 mb-6">
+          <button class="btn-orange-to-blue" data-demo="defaults-success">
+            Run success flow (5s)
+          </button>
+          <button class="btn-orange-to-blue" data-demo="defaults-failure">
+            Run failure flow (3s)
+          </button>
+        </div>
+        <section
+          id="demo-defaults-section"
+          class="border border-dashed border-gray-300 dark:border-gray-600 rounded-lg min-h-[280px]"
+        >
+          <form class="p-6 space-y-4">
+            <label class="block">
+              <span class="text-sm font-medium">Your form goes here</span>
+              <input
+                type="text"
+                class="form-input mt-1"
+                placeholder="Imagine a real field"
+                value="hello"
+              />
+            </label>
+            <div class="form-actions">
+              <button type="button" class="btn-orange-to-blue">Submit</button>
+            </div>
+          </form>
+        </section>
+      </section>
+
+      <!-- Demo: custom phases -->
+      <section id="demo-custom">
+        <h2 class="text-2xl font-bold mb-6 border-b border-gray-200 dark:border-gray-700 pb-2">
+          Demo: custom phases (verify-account takeover)
+        </h2>
+        <p class="text-gray-700 dark:text-gray-300 mb-4">
+          Surface-specific copy and per-phase fill targets. Same shape as the existing
+          verify-my-account flow, compressed to ~5s for the demo.
+        </p>
+        <div class="flex flex-wrap gap-2 mb-6">
+          <button class="btn-orange-to-blue" data-demo="custom-success">Run success</button>
+          <button class="btn-orange-to-blue" data-demo="custom-failure">Run failure</button>
+        </div>
+        <section
+          id="demo-custom-section"
+          class="border border-dashed border-gray-300 dark:border-gray-600 rounded-lg min-h-[280px]"
+        >
+          <form class="p-6 space-y-4">
+            <p class="text-sm">Verify your employment information.</p>
+            <div class="form-actions">
+              <button type="button" class="btn-orange-to-blue">Verify</button>
+            </div>
+          </form>
+        </section>
+      </section>
+
+      <!-- Demo: bytes + phases (upload) -->
+      <section id="demo-upload">
+        <h2 class="text-2xl font-bold mb-6 border-b border-gray-200 dark:border-gray-700 pb-2">
+          Demo: bytes + phases (upload card)
+        </h2>
+        <p class="text-gray-700 dark:text-gray-300 mb-4">
+          Bytes own the first 25% of the bar (driven by simulated
+          <code class="text-sm font-mono">xhr.upload.progress</code>). When the upload completes,
+          time-driven phases take over for the ~75% server-side processing window. The
+          <code class="text-sm font-mono">inline</code> option uses the row layout instead of the
+          centered card chrome.
+        </p>
+        <div class="flex flex-wrap gap-2 mb-6">
+          <button class="btn-orange-to-blue" data-demo="upload-success">
+            Run upload (success)
+          </button>
+          <button class="btn-orange-to-blue" data-demo="upload-failure">
+            Run upload (failure)
+          </button>
+        </div>
+        <section
+          id="demo-upload-section"
+          class="border border-dashed border-gray-300 dark:border-gray-600 rounded-lg p-6 min-h-[120px]"
+        >
+          <p class="text-sm">myresume.pdf &mdash; ready to upload</p>
+        </section>
+      </section>
+
+      <!-- Demo: pure upload -->
+      <section id="demo-pure-upload">
+        <h2 class="text-2xl font-bold mb-6 border-b border-gray-200 dark:border-gray-700 pb-2">
+          Demo: pure upload (no server-side wait)
+        </h2>
+        <p class="text-gray-700 dark:text-gray-300 mb-4">
+          <code class="text-sm font-mono">bytes: { capPct: 100 }</code> + no phases &mdash; the
+          component degrades to a vanilla upload progress bar.
+        </p>
+        <div class="flex flex-wrap gap-2 mb-6">
+          <button class="btn-orange-to-blue" data-demo="pure-upload">Run pure upload</button>
+        </div>
+        <section
+          id="demo-pure-upload-section"
+          class="border border-dashed border-gray-300 dark:border-gray-600 rounded-lg p-6 min-h-[120px]"
+        >
+          <p class="text-sm">avatar.png &mdash; ready to upload</p>
+        </section>
+      </section>
+
+      <!-- Usage -->
+      <section id="usage">
+        <h2 class="text-2xl font-bold mb-6 border-b border-gray-200 dark:border-gray-700 pb-2">
+          Usage
+        </h2>
+
+        <h3 class="text-lg font-semibold mb-2">Minimal &mdash; just works</h3>
+        <div class="bg-gray-100 dark:bg-gray-800 rounded-lg p-4 overflow-x-auto mb-6">
+          <pre
+            class="text-sm font-mono text-gray-800 dark:text-gray-200 whitespace-pre"
+          ><code>import { LongProgress } from '@marketdataapp/ui/long-progress';
+
+const lp = new LongProgress(sectionEl);
+lp.start();                       // mount the card, kick off timeline
+await lp.fastForward();           // on success
+lp.restore('Sorry, that failed.'); // on error</code></pre>
+        </div>
+
+        <h3 class="text-lg font-semibold mb-2">Custom phases (HTMX form takeover)</h3>
+        <div class="bg-gray-100 dark:bg-gray-800 rounded-lg p-4 overflow-x-auto mb-6">
+          <pre
+            class="text-sm font-mono text-gray-800 dark:text-gray-200 whitespace-pre"
+          ><code>const lp = new LongProgress(sectionEl, {
+  title: 'Verifying your account',
+  phases: [
+    { atMs:     0, step: 'Verifying your employer information…', fillPct: 30, fillDurationMs: 4000 },
+    { atMs:  4000, step: 'Cross-referencing your documents…',    fillPct: 65, fillDurationMs: 8000 },
+    { atMs: 12000, step: 'Finalizing your classification…',       fillPct: 85, fillDurationMs: 10000 },
+    { atMs: 22000, step: 'Still working — this is taking longer than usual…',
+                                                                  fillPct: 92, fillDurationMs: 15000 },
+  ],
+  errorInsertBefore: '.form-actions',
+});
+
+const unbind = lp.bindHtmx(formEl, {
+  errorMessages: {
+    responseError: (e) =&gt; `Sorry, the request failed (HTTP ${e.detail.xhr.status}).`,
+    sendError:     "Sorry, couldn't reach the server. Please try again.",
+    timeout:       'The request took too long. Please try again.',
+  },
+});</code></pre>
+        </div>
+
+        <h3 class="text-lg font-semibold mb-2">Upload (bytes + server-side processing)</h3>
+        <div class="bg-gray-100 dark:bg-gray-800 rounded-lg p-4 overflow-x-auto mb-6">
+          <pre
+            class="text-sm font-mono text-gray-800 dark:text-gray-200 whitespace-pre"
+          ><code>const lp = new LongProgress(rowEl, {
+  inline: true,
+  bytes: { capPct: 25, step: 'Uploading…' },
+  phases: [ /* atMs is relative to upload-complete */
+    { atMs:     0, step: 'Classifying document type…',         fillPct: 35, fillDurationMs: 0 },
+    { atMs:  4500, step: 'Extracting evidence from document…', fillPct: 65, fillDurationMs: 0 },
+    { atMs: 12000, step: 'Almost done…',                        fillPct: 85, fillDurationMs: 0 },
+  ],
+});
+lp.start();
+xhr.upload.onprogress = (e) =&gt; lp.setBytesProgress(e.loaded / e.total);
+xhr.upload.onload     = ()  =&gt; lp.setBytesProgress(1); // triggers phases
+xhr.onload            = ()  =&gt; lp.fastForward();
+xhr.onerror           = ()  =&gt; lp.restore('Upload failed. Please try again.');</code></pre>
+        </div>
+      </section>
+
+      <!-- API -->
+      <section id="api">
+        <h2 class="text-2xl font-bold mb-6 border-b border-gray-200 dark:border-gray-700 pb-2">
+          API
+        </h2>
+
+        <h3 class="text-lg font-semibold mb-3">Constructor options</h3>
+        <div class="overflow-x-auto mb-8">
+          <table class="w-full text-sm">
+            <thead>
+              <tr class="border-b border-gray-200 dark:border-gray-700">
+                <th class="text-start py-2 px-3">Option</th>
+                <th class="text-start py-2 px-3">Default</th>
+                <th class="text-start py-2 px-3">Purpose</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-gray-100 dark:divide-gray-800">
+              <tr>
+                <td class="py-2 px-3 font-mono text-xs">title</td>
+                <td class="py-2 px-3 font-mono text-xs">'Working on it…'</td>
+                <td class="py-2 px-3">
+                  Card heading. Pass <code class="font-mono text-xs">null</code> to omit.
+                </td>
+              </tr>
+              <tr>
+                <td class="py-2 px-3 font-mono text-xs">hint</td>
+                <td class="py-2 px-3 text-xs">&ldquo;Do not refresh&hellip;&rdquo;</td>
+                <td class="py-2 px-3">
+                  Subtext under the bar. Rendered via innerHTML so the default can include
+                  <code class="font-mono text-xs">&lt;strong&gt;</code>. Never pass untrusted input.
+                </td>
+              </tr>
+              <tr>
+                <td class="py-2 px-3 font-mono text-xs">phases</td>
+                <td class="py-2 px-3 text-xs">Generic 4-phase ~22s timeline</td>
+                <td class="py-2 px-3">
+                  Each phase:
+                  <code class="font-mono text-xs">{ atMs, step, fillPct, fillDurationMs }</code>.
+                  <code class="font-mono text-xs">atMs</code> is relative to
+                  <code class="font-mono text-xs">start()</code> in time-only mode, or relative to
+                  upload-complete in bytes mode. Pass <code class="font-mono text-xs">[]</code> to
+                  disable.
+                </td>
+              </tr>
+              <tr>
+                <td class="py-2 px-3 font-mono text-xs">bytes</td>
+                <td class="py-2 px-3 font-mono text-xs">null</td>
+                <td class="py-2 px-3">
+                  <code class="font-mono text-xs">{ capPct, step? }</code>. Enables bytes mode for
+                  upload surfaces.
+                </td>
+              </tr>
+              <tr>
+                <td class="py-2 px-3 font-mono text-xs">inline</td>
+                <td class="py-2 px-3 font-mono text-xs">false</td>
+                <td class="py-2 px-3">
+                  <code class="font-mono text-xs">true</code> swaps the centered card layout for the
+                  inline-row variant.
+                </td>
+              </tr>
+              <tr>
+                <td class="py-2 px-3 font-mono text-xs">errorInsertBefore</td>
+                <td class="py-2 px-3 font-mono text-xs">null</td>
+                <td class="py-2 px-3">
+                  CSS selector in the restored DOM to insert the error banner before. Falls back to
+                  appending to the section.
+                </td>
+              </tr>
+              <tr>
+                <td class="py-2 px-3 font-mono text-xs">doneStep</td>
+                <td class="py-2 px-3 font-mono text-xs">'Done'</td>
+                <td class="py-2 px-3">
+                  Step text shown briefly during
+                  <code class="font-mono text-xs">fastForward()</code>.
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h3 class="text-lg font-semibold mb-3">Methods</h3>
+        <div class="overflow-x-auto">
+          <table class="w-full text-sm">
+            <thead>
+              <tr class="border-b border-gray-200 dark:border-gray-700">
+                <th class="text-start py-2 px-3">Method</th>
+                <th class="text-start py-2 px-3">Description</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-gray-100 dark:divide-gray-800">
+              <tr>
+                <td class="py-2 px-3 font-mono text-xs">start()</td>
+                <td class="py-2 px-3">
+                  Saves <code class="font-mono text-xs">section.innerHTML</code>, mounts the card,
+                  starts the phase timer (immediately if not in bytes mode).
+                </td>
+              </tr>
+              <tr>
+                <td class="py-2 px-3 font-mono text-xs">setBytesProgress(fraction)</td>
+                <td class="py-2 px-3">
+                  Update bar to <code class="font-mono text-xs">fraction * capPct</code>. Monotonic.
+                  When <code class="font-mono text-xs">fraction === 1</code>, fires the phase timer.
+                </td>
+              </tr>
+              <tr>
+                <td class="py-2 px-3 font-mono text-xs">startPhases()</td>
+                <td class="py-2 px-3">
+                  Manual phase-timer trigger. Use when you prefer
+                  <code class="font-mono text-xs">xhr.upload.onloadstart</code> over the byte
+                  signal.
+                </td>
+              </tr>
+              <tr>
+                <td class="py-2 px-3 font-mono text-xs">fastForward(&#123; holdMs &#125;)</td>
+                <td class="py-2 px-3">
+                  Cancels pending phases, fills to 100% over
+                  <code class="font-mono text-xs">holdMs</code> (default 200), sets step to done.
+                  Returns a promise that resolves after the transition.
+                </td>
+              </tr>
+              <tr>
+                <td class="py-2 px-3 font-mono text-xs">restore(message?)</td>
+                <td class="py-2 px-3">
+                  Restores original innerHTML, re-runs
+                  <code class="font-mono text-xs">htmx.process()</code> if HTMX is loaded, inserts
+                  an <code class="font-mono text-xs">admonition admonition-danger</code> banner with
+                  <code class="font-mono text-xs">role="alert"</code>.
+                </td>
+              </tr>
+              <tr>
+                <td class="py-2 px-3 font-mono text-xs">bindHtmx(formEl, opts)</td>
+                <td class="py-2 px-3">
+                  Wires HTMX lifecycle events (<code class="font-mono text-xs">beforeRequest</code>,
+                  <code class="font-mono text-xs">beforeSwap</code>, error events). Returns an
+                  unbind function.
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+    </main>
+
+    <script data-cfasync="false" type="module">
+      import { LongProgress } from '../dist/long-progress.js';
+      import { initThemeToggle } from '../dist/theme-toggle.js';
+      initThemeToggle({ container: document.getElementById('theme-toggle') });
+
+      const ORIG_HTML = new Map();
+      const PENDING = new Map(); // section → list of pending timer ids
+
+      function getOriginal(section) {
+        if (!ORIG_HTML.has(section)) ORIG_HTML.set(section, section.innerHTML);
+        return ORIG_HTML.get(section);
+      }
+
+      function resetSection(section) {
+        section.innerHTML = getOriginal(section);
+      }
+
+      // Cancel any pending callbacks from a previous run so they don't
+      // wipe the card that the new click just mounted.
+      function cancelPending(section) {
+        const list = PENDING.get(section);
+        if (list) for (const id of list) clearTimeout(id);
+        PENDING.set(section, []);
+      }
+
+      function later(section, fn, ms) {
+        const id = setTimeout(fn, ms);
+        const list = PENDING.get(section) ?? [];
+        list.push(id);
+        PENDING.set(section, list);
+        return id;
+      }
+
+      // Drive a simulated upload — returns a cancel handle so re-clicks
+      // can interrupt it (otherwise stray setBytesProgress calls from the
+      // previous run would keep advancing the new run's bar).
+      function simulateUpload(section, lp, { stepMs = 200, perStep = 0.1, capFraction = 1 } = {}) {
+        let uploaded = 0;
+        const id = setInterval(() => {
+          uploaded += perStep;
+          const next = Math.min(uploaded, capFraction);
+          lp.setBytesProgress(next);
+          if (uploaded >= capFraction) clearInterval(id);
+        }, stepMs);
+        // Track on PENDING so cancelPending(section) clears it too
+        const list = PENDING.get(section) ?? [];
+        list.push(id);
+        PENDING.set(section, list);
+        return id;
+      }
+
+      const demos = {
+        'defaults-success': () => {
+          const section = document.getElementById('demo-defaults-section');
+          cancelPending(section);
+          resetSection(section);
+          const lp = new LongProgress(section);
+          lp.start();
+          later(
+            section,
+            async () => {
+              await lp.fastForward();
+              resetSection(section);
+            },
+            5000,
+          );
+        },
+        'defaults-failure': () => {
+          const section = document.getElementById('demo-defaults-section');
+          cancelPending(section);
+          resetSection(section);
+          const lp = new LongProgress(section, { errorInsertBefore: '.form-actions' });
+          lp.start();
+          later(section, () => lp.restore('Something went wrong. Please try again.'), 3000);
+        },
+        'custom-success': () => {
+          const section = document.getElementById('demo-custom-section');
+          cancelPending(section);
+          resetSection(section);
+          const lp = new LongProgress(section, {
+            title: 'Verifying your account',
+            phases: [
+              {
+                atMs: 0,
+                step: 'Verifying your employer information…',
+                fillPct: 30,
+                fillDurationMs: 800,
+              },
+              {
+                atMs: 800,
+                step: 'Cross-referencing your documents…',
+                fillPct: 65,
+                fillDurationMs: 1600,
+              },
+              {
+                atMs: 2400,
+                step: 'Finalizing your classification…',
+                fillPct: 85,
+                fillDurationMs: 1500,
+              },
+              {
+                atMs: 4500,
+                step: 'Still working — this is taking longer than usual…',
+                fillPct: 92,
+                fillDurationMs: 3000,
+              },
+            ],
+          });
+          lp.start();
+          later(
+            section,
+            async () => {
+              await lp.fastForward();
+              resetSection(section);
+            },
+            5000,
+          );
+        },
+        'custom-failure': () => {
+          const section = document.getElementById('demo-custom-section');
+          cancelPending(section);
+          resetSection(section);
+          const lp = new LongProgress(section, {
+            title: 'Verifying your account',
+            errorInsertBefore: '.form-actions',
+          });
+          lp.start();
+          later(section, () => lp.restore('Sorry, the verification failed (HTTP 500).'), 3000);
+        },
+        'upload-success': () => {
+          const section = document.getElementById('demo-upload-section');
+          cancelPending(section);
+          resetSection(section);
+          const lp = new LongProgress(section, {
+            inline: true,
+            title: 'myresume.pdf',
+            hint: null,
+            bytes: { capPct: 25, step: 'Uploading…' },
+            phases: [
+              { atMs: 0, step: 'Classifying document type…', fillPct: 35, fillDurationMs: 0 },
+              {
+                atMs: 900,
+                step: 'Extracting evidence from document…',
+                fillPct: 65,
+                fillDurationMs: 0,
+              },
+              { atMs: 2400, step: 'Almost done…', fillPct: 85, fillDurationMs: 0 },
+            ],
+          });
+          lp.start();
+          simulateUpload(section, lp);
+          later(
+            section,
+            async () => {
+              await lp.fastForward();
+              resetSection(section);
+            },
+            6000,
+          );
+        },
+        'upload-failure': () => {
+          const section = document.getElementById('demo-upload-section');
+          cancelPending(section);
+          resetSection(section);
+          const lp = new LongProgress(section, {
+            inline: true,
+            title: 'myresume.pdf',
+            hint: null,
+            bytes: { capPct: 25 },
+          });
+          lp.start();
+          simulateUpload(section, lp, { perStep: 0.15, capFraction: 0.4 });
+          later(section, () => lp.restore('Upload failed. Please try again.'), 1500);
+        },
+        'pure-upload': () => {
+          const section = document.getElementById('demo-pure-upload-section');
+          cancelPending(section);
+          resetSection(section);
+          const lp = new LongProgress(section, {
+            inline: true,
+            title: 'avatar.png',
+            hint: null,
+            bytes: { capPct: 100, step: 'Uploading…' },
+            phases: [],
+          });
+          lp.start();
+          let uploaded = 0;
+          const id = setInterval(() => {
+            uploaded += 0.1;
+            lp.setBytesProgress(Math.min(uploaded, 1));
+            if (uploaded >= 1) {
+              clearInterval(id);
+              later(
+                section,
+                async () => {
+                  await lp.fastForward();
+                  resetSection(section);
+                },
+                200,
+              );
+            }
+          }, 200);
+          const list = PENDING.get(section) ?? [];
+          list.push(id);
+          PENDING.set(section, list);
+        },
+      };
+
+      for (const btn of document.querySelectorAll('[data-demo]')) {
+        btn.addEventListener('click', () => demos[btn.dataset.demo]());
+      }
+    </script>
+  </body>
+</html>

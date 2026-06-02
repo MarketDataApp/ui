@@ -903,6 +903,57 @@ label:has(:where(.checkbox-input, .radio-button-input):disabled)
   }
 }
 
+/* ---- Long Progress ----
+   Reusable progress card that takes over a section during a long
+   (10-30s) POST. Classes are rendered by src/long-progress.js at
+   runtime, so they use plain selectors (not @utility) — consumers'
+   Tailwind content scanners won't see them otherwise.
+
+   The fill transition duration is driven from JS via the
+   --long-progress-fill-duration custom property so each phase can
+   animate at its own pace without inline style juggling. */
+.long-progress {
+  @apply flex flex-col items-center text-center w-full max-w-xl mx-auto py-12 px-4;
+}
+
+.long-progress-inline {
+  @apply max-w-none py-0 px-0 items-stretch text-start;
+}
+
+.long-progress-title {
+  @apply text-2xl font-bold text-heading m-0 mb-6;
+}
+
+.long-progress-inline .long-progress-title {
+  @apply text-base mb-2;
+}
+
+.long-progress-bar {
+  @apply w-full h-1.5 my-1.5 rounded-full overflow-hidden bg-neutral-quaternary;
+}
+
+.long-progress-bar-fill {
+  @apply h-full rounded-full bg-gradient-orange;
+  width: 0%;
+  transition: width var(--long-progress-fill-duration, 300ms) ease-out;
+}
+
+.long-progress-step {
+  @apply text-sm text-fg-brand m-0 mt-4 mb-2;
+}
+
+.long-progress-inline .long-progress-step {
+  @apply mt-2;
+}
+
+.long-progress-hint {
+  @apply text-xs text-fg-disabled m-0 mt-2 italic;
+}
+
+.long-progress-hint strong {
+  @apply text-fg-danger not-italic;
+}
+
 /* ---- Links ----
    external-link, next-link, and back-link all decorate an <a> with a Heroicons
    pseudo-element. Sizing uses em so the icon scales with the parent font-size;
