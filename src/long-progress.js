@@ -103,10 +103,9 @@ export class LongProgress {
   #opts;
   #savedHtml = null;
   #timers = [];
+  #cardEl = null;
   #barEl = null;
-  #fillEl = null;
   #stepEl = null;
-  #percentEl = null;
   #bytesPct = 0;
   #phasesStarted = false;
   // 'idle' → 'running' → ('done' | 'restored')
@@ -143,10 +142,9 @@ export class LongProgress {
     this.#state = 'running';
     this.#savedHtml = this.#section.innerHTML;
     this.#section.innerHTML = this.#renderCard();
+    this.#cardEl = this.#section.querySelector('.long-progress');
     this.#barEl = this.#section.querySelector('.long-progress-bar');
-    this.#fillEl = this.#section.querySelector('.long-progress-bar-fill');
     this.#stepEl = this.#section.querySelector('.long-progress-step');
-    this.#percentEl = this.#section.querySelector('.long-progress-percent');
     if (!this.#opts.bytes) {
       this.#startPhases();
     }
@@ -221,7 +219,7 @@ export class LongProgress {
         window.htmx.process(this.#section);
       }
     }
-    this.#barEl = this.#fillEl = this.#stepEl = this.#percentEl = null;
+    this.#cardEl = this.#barEl = this.#stepEl = null;
     if (message) {
       const banner = this.#renderErrorBanner(message);
       const target = this.#opts.errorInsertBefore
@@ -281,13 +279,16 @@ export class LongProgress {
   }
 
   #setFill(pct, durationMs) {
-    if (!this.#fillEl || !this.#barEl) return;
-    const clamped = Math.max(0, Math.min(100, pct));
-    const rounded = Math.round(clamped);
-    this.#fillEl.style.setProperty('--long-progress-fill-duration', `${durationMs}ms`);
-    this.#fillEl.style.width = `${clamped}%`;
+    if (!this.#cardEl || !this.#barEl) return;
+    const rounded = Math.round(Math.max(0, Math.min(100, pct)));
+    // Set both the duration and the target on the container element.
+    // The @property <integer> registration in CSS makes
+    // --long-progress-pct transitionable, so the bar width
+    // (calc(... * 1%)) and the counter() in .long-progress-percent::after
+    // both animate smoothly over fill-duration — counter steps 1,2,3…
+    this.#cardEl.style.setProperty('--long-progress-fill-duration', `${durationMs}ms`);
+    this.#cardEl.style.setProperty('--long-progress-pct', String(rounded));
     this.#barEl.setAttribute('aria-valuenow', String(rounded));
-    if (this.#percentEl) this.#percentEl.textContent = `${rounded}%`;
   }
 
   #clearTimers() {
@@ -306,7 +307,10 @@ export class LongProgress {
     const titleHtml = hasTitle
       ? `<h3 class="long-progress-title">${escapeHtml(this.#opts.title)}</h3>`
       : '';
-    const headerHtml = `<div class="long-progress-header">${titleHtml}<span class="long-progress-percent">0%</span></div>`;
+    // The percent text content is fully CSS-generated via ::after +
+    // counter(--long-progress-pct). Leave the span empty so we don't
+    // get a duplicate "0%…" rendered alongside the counter.
+    const headerHtml = `<div class="long-progress-header">${titleHtml}<span class="long-progress-percent"></span></div>`;
     const hintHtml =
       this.#opts.hint !== null
         ? `<p class="long-progress-hint">${HINT_ICON_SVG}<span>${this.#opts.hint}</span></p>`

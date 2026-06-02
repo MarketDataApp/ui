@@ -2874,11 +2874,18 @@ label:has(:where(.checkbox-input, .radio-button-input):disabled) {
 label:has(:where(.checkbox-input, .radio-button-input):disabled) :where(.text-heading, .radio-button-helper) {
   color: var(--color-fg-disabled);
 }
+@property --long-progress-pct {
+  syntax: '<integer>';
+  inherits: true;
+  initial-value: 0;
+}
 .long-progress {
   margin-inline: auto;
   width: 100%;
   max-width: var(--container-xl);
   padding-block: calc(var(--spacing) * 8);
+  --long-progress-pct: 0;
+  transition: --long-progress-pct var(--long-progress-fill-duration, 300ms) ease-out;
 }
 .long-progress-inline {
   max-width: none;
@@ -2907,6 +2914,11 @@ label:has(:where(.checkbox-input, .radio-button-input):disabled) :where(.text-he
   color: var(--color-body);
   --tw-numeric-spacing: tabular-nums;
   font-variant-numeric: var(--tw-ordinal,) var(--tw-slashed-zero,) var(--tw-numeric-figure,) var(--tw-numeric-spacing,) var(--tw-numeric-fraction,);
+  --long-progress-pct: inherit;
+  counter-reset: long-progress-pct var(--long-progress-pct);
+}
+.long-progress-percent::after {
+  content: counter(long-progress-pct) '%';
 }
 .long-progress-bar {
   height: calc(var(--spacing) * 1.5);
@@ -2922,8 +2934,8 @@ label:has(:where(.checkbox-input, .radio-button-input):disabled) :where(.text-he
   &:where(.dark, .dark *, [data-theme="dark"], [data-theme="dark"] *) {
     background-color: var(--color-blue-500);
   }
-  width: 0%;
-  transition: width var(--long-progress-fill-duration, 300ms) ease-out;
+  --long-progress-pct: inherit;
+  width: calc(var(--long-progress-pct) * 1%);
 }
 .long-progress-step {
   margin: calc(var(--spacing) * 0);
@@ -3328,6 +3340,9 @@ label:has(:where(.checkbox-input, .radio-button-input):disabled) :where(.text-he
 }
 
   @supports ((-webkit-hyphens: none) and (not (margin-trim: inline))) or ((-moz-orient: inline) and (not (color:rgb(from red r g b)))) {
+    :root, :host {
+      --long-progress-pct: 0;
+    }
     *, ::before, ::after, ::backdrop {
       --tw-translate-x: 0;
       --tw-translate-y: 0;

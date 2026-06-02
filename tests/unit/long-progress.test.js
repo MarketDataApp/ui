@@ -57,19 +57,26 @@ describe('LongProgress — defaults', () => {
     expect(hint.querySelector('svg')).not.toBeNull();
   });
 
-  it('renders a percent readout that updates with the bar', async () => {
+  it('drives bar fill + percent counter via --long-progress-pct on the container', async () => {
+    // The percent text is CSS-generated (counter() in .long-progress-percent::after),
+    // driven by the integer custom property — so it counts smoothly through 1,2,3…
+    // to the target rather than jumping. JS only writes the target value; the
+    // @property <integer> registration makes the CSS transition do the counting.
     const section = makeSection();
     new LongProgress(section, { phases: minimalPhases }).start();
 
+    const card = section.querySelector('.long-progress');
     const percentEl = section.querySelector('.long-progress-percent');
     expect(percentEl).not.toBeNull();
-    expect(percentEl.textContent).toBe('0%');
+    expect(card.style.getPropertyValue('--long-progress-pct')).toBe('');
 
     await vi.advanceTimersByTimeAsync(0); // phase[0] → 10%
-    expect(percentEl.textContent).toBe('10%');
+    expect(card.style.getPropertyValue('--long-progress-pct')).toBe('10');
+    expect(card.style.getPropertyValue('--long-progress-fill-duration')).toBe('100ms');
 
     await vi.advanceTimersByTimeAsync(1000); // phase[1] → 50%
-    expect(percentEl.textContent).toBe('50%');
+    expect(card.style.getPropertyValue('--long-progress-pct')).toBe('50');
+    expect(card.style.getPropertyValue('--long-progress-fill-duration')).toBe('500ms');
   });
 
   it('omits title when title: null is passed', () => {
@@ -125,18 +132,6 @@ describe('LongProgress — time-driven phases', () => {
     await vi.advanceTimersByTimeAsync(4000);
     expect(step.textContent).toBe('late');
     expect(bar.getAttribute('aria-valuenow')).toBe('90');
-  });
-
-  it('writes the per-phase fillDurationMs to the CSS custom property', async () => {
-    const section = makeSection();
-    new LongProgress(section, { phases: minimalPhases }).start();
-    const fill = section.querySelector('.long-progress-bar-fill');
-
-    await vi.advanceTimersByTimeAsync(0);
-    expect(fill.style.getPropertyValue('--long-progress-fill-duration')).toBe('100ms');
-
-    await vi.advanceTimersByTimeAsync(1000);
-    expect(fill.style.getPropertyValue('--long-progress-fill-duration')).toBe('500ms');
   });
 });
 

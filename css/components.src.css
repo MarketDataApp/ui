@@ -911,11 +911,25 @@ label:has(:where(.checkbox-input, .radio-button-input):disabled)
 
    Minimalist by design: no card chrome, since consumers typically
    embed inside their own outer surface (form section, dashboard
-   panel, upload row). The fill transition duration is driven from
-   JS via the --long-progress-fill-duration custom property so each
-   phase can animate at its own pace without inline style juggling. */
+   panel, upload row).
+
+   The bar fill and the percent readout are both driven by a single
+   registered integer custom property — --long-progress-pct — set
+   from JS via setProperty(). The @property registration with
+   <integer> syntax makes the property transitionable, so the bar
+   width (calc(... * 1%)) and the counter() in the percent ::after
+   both animate smoothly in lockstep over --long-progress-fill-duration.
+   No rAF loop needed; the count steps through 1, 2, 3, … to target. */
+@property --long-progress-pct {
+  syntax: '<integer>';
+  inherits: true;
+  initial-value: 0;
+}
+
 .long-progress {
   @apply w-full max-w-xl mx-auto py-8;
+  --long-progress-pct: 0;
+  transition: --long-progress-pct var(--long-progress-fill-duration, 300ms) ease-out;
 }
 
 .long-progress-inline {
@@ -932,6 +946,15 @@ label:has(:where(.checkbox-input, .radio-button-input):disabled)
 
 .long-progress-percent {
   @apply text-sm font-medium text-body tabular-nums;
+  /* Tailwind v4 emits a universal `* { --long-progress-pct: 0 }` reset
+     for the registered property, which would defeat the inheritance
+     from .long-progress. Force inherit on the descendants that need
+     to read the in-flight integer value. */
+  --long-progress-pct: inherit;
+  counter-reset: long-progress-pct var(--long-progress-pct);
+}
+.long-progress-percent::after {
+  content: counter(long-progress-pct) '%';
 }
 
 .long-progress-bar {
@@ -940,8 +963,8 @@ label:has(:where(.checkbox-input, .radio-button-input):disabled)
 
 .long-progress-bar-fill {
   @apply h-full rounded-full bg-blue-600 dark:bg-blue-500;
-  width: 0%;
-  transition: width var(--long-progress-fill-duration, 300ms) ease-out;
+  --long-progress-pct: inherit;
+  width: calc(var(--long-progress-pct) * 1%);
 }
 
 .long-progress-step {
