@@ -751,6 +751,7 @@
     background-color: var(--radio-btn-bg, var(--color-gray-50));
     height: calc(var(--spacing) * 4);
     width: calc(var(--spacing) * 4);
+    cursor: pointer;
     appearance: none;
     border-radius: calc(infinity * 1px);
     border-style: var(--tw-border-style);
@@ -1336,6 +1337,7 @@
   .form-dropdown-input {
     display: block;
     width: 100%;
+    cursor: pointer;
     border-radius: var(--radius-base);
     border-style: var(--tw-border-style);
     border-width: 1px;
@@ -2540,6 +2542,7 @@
   .checkbox-input {
     height: calc(var(--spacing) * 4);
     width: calc(var(--spacing) * 4);
+    cursor: pointer;
     appearance: none;
     border-radius: var(--radius-xs);
     border-style: var(--tw-border-style);
@@ -3529,6 +3532,9 @@
   }
   .text-fg-success {
     color: var(--color-fg-success);
+  }
+  .text-fg-warning {
+    color: var(--color-fg-warning);
   }
   .text-gray-400 {
     color: var(--color-gray-400);

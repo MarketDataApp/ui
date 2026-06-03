@@ -1,5 +1,12 @@
 # Changelog
 
+## 4.14.1
+
+### Fixes
+
+- **`.checkbox-input` and `.radio-button-input` now show `cursor: pointer` in the enabled state.** Both utilities declared `disabled:cursor-not-allowed` but left the enabled state at the browser default (arrow), so a hover over an interactive checkbox/radio gave no affordance and downstream consumers had to patch around it per call site (e.g. `@apply checkbox-input cursor-pointer` on the marketdata-amember employer-website attestation row). The existing `&:disabled { cursor: not-allowed }` correctly overrides the new base rule. Closes #25.
+- **`.form-dropdown-input` now shows `cursor: pointer` in the enabled state.** Same omission shape as the checkbox/radio fix — native `<select>` doesn't get a pointer cursor by default, and the utility already set `disabled:cursor-not-allowed`, so the enabled state was inheriting the default arrow.
+
 ## 4.14.0
 
 ### New
