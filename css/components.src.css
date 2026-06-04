@@ -401,7 +401,10 @@
    label`, they land at higher specificity than the bare `label[state]`
    rules and silently strip the kit's state styling. Inlining the blocks
    lands them at the consumer's `@apply` specificity so the state
-   survives. Same shape as `form-checkbox-label` below. */
+   survives. Same shape as `form-checkbox-label` below. The nested
+   `&[focused]` inside `&[error]` mirrors `form-input-error`'s
+   focus-conditional text color so the label drops the red while the
+   user is actively correcting. */
 @utility form-label {
   @apply block mb-2 text-sm font-medium text-heading;
   &[disabled] {
@@ -410,6 +413,9 @@
   }
   &[error] {
     color: var(--color-fg-danger-strong);
+    &[focused] {
+      color: var(--color-heading);
+    }
   }
 }
 
@@ -427,6 +433,9 @@
   }
   &[error] {
     color: var(--color-fg-danger-strong);
+    &[focused] {
+      color: var(--color-heading);
+    }
   }
 }
 
@@ -857,6 +866,17 @@ label[error] {
 }
 label[error] :where(.text-heading, .radio-button-helper) {
   color: var(--color-fg-danger-strong);
+}
+/* Mirror `form-input-error`'s focus-conditional text color (#29) onto
+   the label too — drops the red while the user is actively correcting,
+   then returns to red when focus leaves (and the field is still
+   invalid). The `[focused]` attribute is set by `label-state-sync`'s
+   focusin/focusout listeners. */
+label[error][focused] {
+  color: var(--color-heading);
+}
+label[error][focused] :where(.text-heading, .radio-button-helper) {
+  color: var(--color-heading);
 }
 
 /* ---- Checkboxes ---- */

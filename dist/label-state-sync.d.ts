@@ -8,12 +8,15 @@
  * Watches for:
  * - Source attribute changes on any element under `root`
  *   (`disabled`, `aria-invalid`)
+ * - Focus changes inside `root` (`focusin` / `focusout`) for any
+ *   focus-driven bindings
  * - `for` attribute changes on label elements
  * - `id` attribute changes on input/control elements
  * - New nodes added (labels or inputs) anywhere in the subtree
  *
  * @param {LabelStateSyncOptions} [options]
- * @returns {() => void} Cleanup function that disconnects the observer.
+ * @returns {() => void} Cleanup function that disconnects the observer
+ *   and any focus listeners.
  */
 export function initLabelStateSync({ root }?: LabelStateSyncOptions): () => void;
 export type LabelStateSyncOptions = {
@@ -30,10 +33,19 @@ export type StateBinding = {
      */
     labelAttr: string;
     /**
-     * - Attribute observed on the target control.
-     * Listed in the MutationObserver's `attributeFilter`.
+     * - Attribute observed on the target
+     * control. Listed in the MutationObserver's `attributeFilter`. Omit for
+     * states that aren't reflected as attributes (e.g. `:focus`) — see
+     * `usesFocusEvents`.
      */
-    sourceAttr: string;
+    sourceAttr?: string;
+    /**
+     * - When true, the binding is
+     * re-evaluated on `focusin` / `focusout` rather than via the
+     * MutationObserver. Required for states like `:focus` that aren't
+     * exposed as attributes.
+     */
+    usesFocusEvents?: boolean;
     /**
      * - Reads the state from the
      * target control. The label attribute is set when this returns true and

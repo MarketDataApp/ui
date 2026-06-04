@@ -376,6 +376,89 @@ describe('label-state-sync', () => {
   });
 
   // -------------------------------------------------------------------------
+  // Focus state
+  // -------------------------------------------------------------------------
+  describe('focus state', () => {
+    it('sets focused on the label when its target gains focus', async () => {
+      const label = makeLabel('field-f');
+      const input = makeInput('field-f');
+      document.body.append(label, input);
+      init();
+      expect(label.hasAttribute('focused')).toBe(false);
+
+      input.focus();
+      await flush();
+
+      expect(label.hasAttribute('focused')).toBe(true);
+    });
+
+    it('clears focused on the label when its target loses focus', async () => {
+      const label = makeLabel('field-f');
+      const input = makeInput('field-f');
+      document.body.append(label, input);
+      init();
+
+      input.focus();
+      await flush();
+      expect(label.hasAttribute('focused')).toBe(true);
+
+      input.blur();
+      await flush();
+
+      expect(label.hasAttribute('focused')).toBe(false);
+    });
+
+    it('reflects focused at init time when an input is already focused', () => {
+      const label = makeLabel('field-f');
+      const input = makeInput('field-f');
+      document.body.append(label, input);
+      input.focus();
+
+      init();
+
+      expect(label.hasAttribute('focused')).toBe(true);
+    });
+
+    it('moves focused between labels as focus moves between inputs', async () => {
+      const labelA = makeLabel('focus-a');
+      const labelB = makeLabel('focus-b');
+      const inputA = makeInput('focus-a');
+      const inputB = makeInput('focus-b');
+      document.body.append(labelA, labelB, inputA, inputB);
+      init();
+
+      inputA.focus();
+      await flush();
+      expect(labelA.hasAttribute('focused')).toBe(true);
+      expect(labelB.hasAttribute('focused')).toBe(false);
+
+      inputB.focus();
+      await flush();
+      expect(labelA.hasAttribute('focused')).toBe(false);
+      expect(labelB.hasAttribute('focused')).toBe(true);
+    });
+
+    it('co-exists with error: error stays set while focused toggles', async () => {
+      const label = makeLabel('field-f');
+      const input = makeInput('field-f', { invalid: true });
+      document.body.append(label, input);
+      init();
+      expect(label.hasAttribute('error')).toBe(true);
+      expect(label.hasAttribute('focused')).toBe(false);
+
+      input.focus();
+      await flush();
+      expect(label.hasAttribute('error')).toBe(true);
+      expect(label.hasAttribute('focused')).toBe(true);
+
+      input.blur();
+      await flush();
+      expect(label.hasAttribute('error')).toBe(true);
+      expect(label.hasAttribute('focused')).toBe(false);
+    });
+  });
+
+  // -------------------------------------------------------------------------
   // Scoped root
   // -------------------------------------------------------------------------
   describe('scoped root', () => {
@@ -410,10 +493,12 @@ describe('label-state-sync', () => {
       cleanup();
       input.disabled = true;
       input.setAttribute('aria-invalid', 'true');
+      input.focus();
       await flush();
 
       expect(label.hasAttribute('disabled')).toBe(false);
       expect(label.hasAttribute('error')).toBe(false);
+      expect(label.hasAttribute('focused')).toBe(false);
     });
   });
 

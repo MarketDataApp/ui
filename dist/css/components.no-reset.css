@@ -939,6 +939,9 @@
   }
   &[error] {
     color: var(--color-fg-danger-strong);
+    &[focused] {
+      color: var(--color-heading);
+    }
   }
 }
 .admonition-heading {
@@ -2244,6 +2247,9 @@
   }
   &[error] {
     color: var(--color-fg-danger-strong);
+    &[focused] {
+      color: var(--color-heading);
+    }
   }
 }
 .radio-group-container {
@@ -2901,6 +2907,12 @@ label[error] {
 }
 label[error] :where(.text-heading, .radio-button-helper) {
   color: var(--color-fg-danger-strong);
+}
+label[error][focused] {
+  color: var(--color-heading);
+}
+label[error][focused] :where(.text-heading, .radio-button-helper) {
+  color: var(--color-heading);
 }
 @property --long-progress-pct {
   syntax: '<integer>';

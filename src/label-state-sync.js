@@ -1,11 +1,12 @@
 /**
  * @module label-state-sync
  * Mirrors form-control states onto associated `<label for="">` elements by
- * toggling matching attributes on the label. Currently two states are
+ * toggling matching attributes on the label. Currently three states are
  * mirrored:
  *
  * - `:disabled` on the control → `disabled` attribute on the label
  * - `aria-invalid="true"` on the control → `error` attribute on the label
+ * - `:focus` on the control → `focused` attribute on the label
  *
  * The kit's existing CSS handles the *adjacent-sibling* case
  * (`input:disabled ~ label`) and the *wrapping-label* case
@@ -13,25 +14,35 @@
  * parent — they don't help when a `<label for="X">` lives in a different
  * container from `#X`, or when a single legend-style label sits next to
  * a radio group where only some inputs are in the state. The same gap
- * exists for the error state: no CSS selector can target a label in a
- * different parent based on its target's `aria-invalid`.
+ * exists for the error and focus states: no CSS selector can target a
+ * label in a different parent based on its target's `aria-invalid` or
+ * `:focus`.
  *
  * CSS can't express "label with for=X, where #X is :disabled" — there's no
  * way to compare an attribute value against another element's id in a
  * selector. So this helper resolves the link in JS: walk every
  * `label[for]` under `root`, look up its target via `getElementById`, and
- * toggle each state attribute on the label. A MutationObserver keeps the
- * state in sync as inputs flip and as nodes are added/removed.
+ * toggle each state attribute on the label. A MutationObserver keeps
+ * attribute-driven state in sync; `focusin`/`focusout` listeners on `root`
+ * cover the focus state since `:focus` isn't an attribute the observer
+ * can see.
  *
- * The CSS for the disabled-label and error-label appearance lives in
- * `components.src.css` (`label[disabled]`, `label[error]`).
+ * The CSS for the disabled-label, error-label, and focused-label
+ * appearance lives in `components.src.css` (`label[disabled]`,
+ * `label[error]`, `label[focused]`).
  */
 
 /**
  * @typedef {Object} StateBinding
  * @property {string} labelAttr - Attribute toggled on the label.
- * @property {string} sourceAttr - Attribute observed on the target control.
- *   Listed in the MutationObserver's `attributeFilter`.
+ * @property {string} [sourceAttr] - Attribute observed on the target
+ *   control. Listed in the MutationObserver's `attributeFilter`. Omit for
+ *   states that aren't reflected as attributes (e.g. `:focus`) — see
+ *   `usesFocusEvents`.
+ * @property {boolean} [usesFocusEvents] - When true, the binding is
+ *   re-evaluated on `focusin` / `focusout` rather than via the
+ *   MutationObserver. Required for states like `:focus` that aren't
+ *   exposed as attributes.
  * @property {(el: HTMLElement) => boolean} read - Reads the state from the
  *   target control. The label attribute is set when this returns true and
  *   cleared otherwise.
@@ -40,8 +51,9 @@
 /**
  * Single formula: each label[for] is resolved once, then each binding is
  * evaluated against the target. Adding a new state to mirror is a matter
- * of pushing one entry here — the scan, observer wiring, and add-node
- * handling all flow from this table.
+ * of pushing one entry here — the scan and add-node handling flow from
+ * this table; the observer / focus-listener wiring picks the right signal
+ * source based on `sourceAttr` / `usesFocusEvents`.
  *
  * @type {StateBinding[]}
  */
@@ -56,10 +68,16 @@ const STATE_BINDINGS = [
     sourceAttr: 'aria-invalid',
     read: (el) => el.getAttribute('aria-invalid') === 'true',
   },
+  {
+    labelAttr: 'focused',
+    usesFocusEvents: true,
+    read: (el) => el === el.ownerDocument.activeElement,
+  },
 ];
 
-const SOURCE_ATTRS = new Set(STATE_BINDINGS.map((b) => b.sourceAttr));
-const OBSERVED_ATTRS = [...new Set([...STATE_BINDINGS.map((b) => b.sourceAttr), 'for', 'id'])];
+const SOURCE_ATTRS = new Set(STATE_BINDINGS.filter((b) => b.sourceAttr).map((b) => b.sourceAttr));
+const OBSERVED_ATTRS = [...new Set([...SOURCE_ATTRS, 'for', 'id'])];
+const USES_FOCUS_EVENTS = STATE_BINDINGS.some((b) => b.usesFocusEvents);
 
 /**
  * @typedef {Object} LabelStateSyncOptions
@@ -123,12 +141,15 @@ function syncLabelsFor(input) {
  * Watches for:
  * - Source attribute changes on any element under `root`
  *   (`disabled`, `aria-invalid`)
+ * - Focus changes inside `root` (`focusin` / `focusout`) for any
+ *   focus-driven bindings
  * - `for` attribute changes on label elements
  * - `id` attribute changes on input/control elements
  * - New nodes added (labels or inputs) anywhere in the subtree
  *
  * @param {LabelStateSyncOptions} [options]
- * @returns {() => void} Cleanup function that disconnects the observer.
+ * @returns {() => void} Cleanup function that disconnects the observer
+ *   and any focus listeners.
  */
 export function initLabelStateSync({ root = document.body } = {}) {
   if (!root) return () => {};
@@ -182,5 +203,25 @@ export function initLabelStateSync({ root = document.body } = {}) {
     attributeFilter: OBSERVED_ATTRS,
   });
 
-  return () => observer.disconnect();
+  // Focus state isn't an attribute, so the MutationObserver can't see it.
+  // `focusin` / `focusout` bubble (unlike `focus` / `blur`), so a single
+  // pair of listeners on `root` covers every input in the subtree. We
+  // re-sync every label pointing at the focus target — the read() for
+  // unaffected bindings just returns the same value as before, so the
+  // attribute toggles are no-ops for them.
+  const onFocusChange = (event) => {
+    syncLabelsFor(/** @type {HTMLElement} */ (event.target));
+  };
+  if (USES_FOCUS_EVENTS) {
+    root.addEventListener('focusin', onFocusChange);
+    root.addEventListener('focusout', onFocusChange);
+  }
+
+  return () => {
+    observer.disconnect();
+    if (USES_FOCUS_EVENTS) {
+      root.removeEventListener('focusin', onFocusChange);
+      root.removeEventListener('focusout', onFocusChange);
+    }
+  };
 }
