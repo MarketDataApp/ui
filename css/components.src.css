@@ -466,7 +466,10 @@
 }
 
 @utility form-input-error {
-  @apply shadow-none border-danger text-fg-danger-strong placeholder-fg-danger-strong focus:ring-1 focus:ring-danger focus:border-danger focus:outline-hidden;
+  @apply shadow-none border-danger placeholder-fg-danger-strong focus:ring-1 focus:ring-danger focus:border-danger focus:outline-hidden;
+  &:not(:focus) {
+    @apply text-fg-danger-strong;
+  }
 }
 
 @utility form-dropdown-input {

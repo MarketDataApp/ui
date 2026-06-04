@@ -2996,7 +2996,6 @@
   }
   .form-input-error {
     border-color: var(--color-danger);
-    color: var(--color-fg-danger-strong);
     &::placeholder {
       color: var(--color-fg-danger-strong);
     }
@@ -3019,6 +3018,9 @@
         outline: 2px solid transparent;
         outline-offset: 2px;
       }
+    }
+    &:not(:focus) {
+      color: var(--color-fg-danger-strong);
     }
   }
   .border-blue-200 {
