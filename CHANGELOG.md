@@ -1,5 +1,21 @@
 # Changelog
 
+## 4.16.0
+
+### New
+
+- **`.progress-bar-fill` now ships four color variants.** The base utility keeps the brand orange gradient as the default. New modifier classes: `.progress-bar-fill-blue` (brand blue gradient — same as the resting state of `btn-blue-to-orange`), `.progress-bar-fill-info` (solid Flowbite blue, `bg-brand` token), `.progress-bar-fill-success` (solid Flowbite green), `.progress-bar-fill-danger` (solid Flowbite red). The solid variants explicitly set `background-image: none` so they actually override the default gradient — adding `bg-success` directly to `.progress-bar-fill` didn't work because `background-image` paints over `background-color` (the demo at `docs/index.html` was visually broken before this release). All semantic-color variants use Flowbite tokens that auto-swap for dark mode.
+
+- **`LongProgress` accepts a `barVariant` option** mapping to the new progress-bar variants: `'orange' | 'blue' | 'info' | 'success' | 'danger'`. Default `'info'` preserves the prior solid-blue look. The constructor now rejects unknown values with `RangeError`.
+
+### Internal
+
+- **`.long-progress-bar` and `.long-progress-bar-fill` now reuse the kit's `.progress-bar` / `.progress-bar-fill` utilities** instead of duplicating their track + fill rules. The rendered template applies both class pairs (e.g. `class="progress-bar long-progress-bar"`); the `long-progress-*` classes only carry the per-instance overrides (slimmer `h-1.5`, starting `width: 0%`, and the variable-duration `transition` driven by `--long-progress-fill-duration`). The color now comes from the `progress-bar-fill-*` modifier the JS picks via `barVariant`. Net: one set of color tokens used everywhere progress is shown.
+
+- **Docs/index.html progress-bar demos rewritten.** The two `bg-success` / `bg-danger` rows (which had been silently rendering orange because the gradient overrode the bg-color) are replaced with `.progress-bar-fill-success` and `.progress-bar-fill-danger`. New demo rows for the blue gradient and info solid. Chip list extended.
+
+- **`docs/long-progress.html`** gets a `barVariant` row in the API table and a new "Demo: bar color variants" section with one button per variant so each color is clickable.
+
 ## 4.15.0
 
 ### New

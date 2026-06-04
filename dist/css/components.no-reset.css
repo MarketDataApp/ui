@@ -132,6 +132,7 @@
   --color-brand-soft: var(--color-blue-100);
   --color-brand: var(--color-blue-700);
   --color-brand-medium: var(--color-blue-200);
+  --color-success: var(--color-emerald-700);
   --color-danger-soft: var(--color-red-50);
   --color-danger: var(--color-red-700);
   --color-dark: var(--color-gray-800);
@@ -2371,6 +2372,18 @@
     }
   }
 }
+.progress-bar-fill-danger {
+  background-image: none;
+  background-color: var(--color-danger);
+}
+.progress-bar-fill-info {
+  background-image: none;
+  background-color: var(--color-brand);
+}
+.progress-bar-fill-success {
+  background-image: none;
+  background-color: var(--color-success);
+}
 .default {
   font-family: var(--font-sans);
   font-size: var(--text-base);
@@ -2469,6 +2482,9 @@
 }
 .bg-gradient-orange {
   background-image: linear-gradient(103deg, #e83155 0%, #ffdfb9 100%);
+}
+.progress-bar-fill-blue {
+  background-image: linear-gradient(103deg, #003286 0%, #0085f2 100%);
 }
 .admonition-danger {
   --admonition-bg: var(--color-danger-bg);
@@ -2938,18 +2954,8 @@ label[disabled] :where(.text-heading, .radio-button-helper) {
 }
 .long-progress-bar {
   height: calc(var(--spacing) * 1.5);
-  width: 100%;
-  overflow: hidden;
-  border-radius: calc(infinity * 1px);
-  background-color: var(--color-neutral-quaternary);
 }
 .long-progress-bar-fill {
-  height: 100%;
-  border-radius: calc(infinity * 1px);
-  background-color: var(--color-blue-600);
-  &:where(.dark, .dark *, [data-theme="dark"], [data-theme="dark"] *) {
-    background-color: var(--color-blue-500);
-  }
   width: 0%;
   transition: width var(--long-progress-fill-duration, 300ms) ease-out;
 }

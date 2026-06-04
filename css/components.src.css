@@ -682,7 +682,14 @@
   }
 }
 
-/* ---- Progress Bar ---- */
+/* ---- Progress Bar ----
+   Default fill uses the brand orange gradient. Modifier classes override
+   the fill: `-blue` swaps to the brand blue gradient (same as the resting
+   state of btn-blue-to-orange); `-info` / `-success` / `-danger` swap to
+   solid Flowbite semantic colors with auto dark-mode handling. The solid
+   modifiers must clear `background-image` explicitly because Tailwind's
+   `bg-<color>` utilities only set `background-color`, which would otherwise
+   render under the still-painted default gradient. */
 @utility progress-bar {
   @apply w-full h-2 rounded-full overflow-hidden bg-neutral-quaternary;
 }
@@ -690,6 +697,25 @@
 @utility progress-bar-fill {
   @apply h-full rounded-full bg-gradient-orange;
   transition: width 400ms ease;
+}
+
+@utility progress-bar-fill-blue {
+  @apply bg-gradient-blue;
+}
+
+@utility progress-bar-fill-info {
+  background-image: none;
+  @apply bg-brand;
+}
+
+@utility progress-bar-fill-success {
+  background-image: none;
+  @apply bg-success;
+}
+
+@utility progress-bar-fill-danger {
+  background-image: none;
+  @apply bg-danger;
 }
 
 /* ---- Radio Group ---- */
@@ -982,12 +1008,18 @@ label[disabled] :where(.text-heading, .radio-button-helper) {
   content: counter(long-progress-pct) '%';
 }
 
+/* Track + fill reuse the kit's `.progress-bar` / `.progress-bar-fill`
+   utilities (applied alongside via the rendered template). These classes
+   only carry the per-instance long-progress overrides: a slimmer bar
+   (h-1.5 vs h-2), a starting width of 0%, and the variable-duration
+   transition that the JS drives via --long-progress-fill-duration. The
+   color/gradient comes from the `progress-bar-fill-*` variant the JS
+   chooses; default = `-info` to preserve the prior solid-blue look. */
 .long-progress-bar {
-  @apply w-full h-1.5 rounded-full overflow-hidden bg-neutral-quaternary;
+  @apply h-1.5;
 }
 
 .long-progress-bar-fill {
-  @apply h-full rounded-full bg-blue-600 dark:bg-blue-500;
   width: 0%;
   transition: width var(--long-progress-fill-duration, 300ms) ease-out;
 }

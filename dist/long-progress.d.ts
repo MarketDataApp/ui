@@ -86,6 +86,7 @@ export type BytesOptions = {
      */
     step?: string;
 };
+export type BarVariant = "orange" | "blue" | "info" | "success" | "danger";
 export type LongProgressOptions = {
     /**
      * - Warning text directly under the bar.
@@ -120,6 +121,14 @@ export type LongProgressOptions = {
      * fastForward().
      */
     doneStep?: string;
+    /**
+     * - Fill color. `'orange'` and
+     * `'blue'` are the kit's brand gradients (same as `btn-orange-to-blue` /
+     * `btn-blue-to-orange` resting states). `'info'`, `'success'`, `'danger'`
+     * are solid Flowbite semantic colors with auto dark-mode handling.
+     * Default `'info'` matches the prior solid-blue look.
+     */
+    barVariant?: BarVariant;
 };
 export type HtmxBindOptions = {
     errorMessages?: {

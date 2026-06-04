@@ -120,6 +120,48 @@ describe('LongProgress — defaults', () => {
     );
   });
 
+  it('renders track and fill with .progress-bar / .progress-bar-fill utilities', () => {
+    const section = makeSection();
+    new LongProgress(section).start();
+    const bar = section.querySelector('.long-progress-bar');
+    const fill = section.querySelector('.long-progress-bar-fill');
+    expect(bar.classList.contains('progress-bar')).toBe(true);
+    expect(fill.classList.contains('progress-bar-fill')).toBe(true);
+  });
+
+  it('defaults to barVariant: "info" → adds .progress-bar-fill-info modifier', () => {
+    const section = makeSection();
+    new LongProgress(section).start();
+    const fill = section.querySelector('.long-progress-bar-fill');
+    expect(fill.classList.contains('progress-bar-fill-info')).toBe(true);
+  });
+
+  it('barVariant: "orange" uses bare .progress-bar-fill (no modifier — brand orange gradient)', () => {
+    const section = makeSection();
+    new LongProgress(section, { barVariant: 'orange' }).start();
+    const fill = section.querySelector('.long-progress-bar-fill');
+    expect(fill.classList.contains('progress-bar-fill')).toBe(true);
+    expect(fill.classList.contains('progress-bar-fill-info')).toBe(false);
+    expect(fill.classList.contains('progress-bar-fill-blue')).toBe(false);
+  });
+
+  it.each([
+    ['blue', 'progress-bar-fill-blue'],
+    ['success', 'progress-bar-fill-success'],
+    ['danger', 'progress-bar-fill-danger'],
+  ])('barVariant: "%s" adds .%s modifier', (variant, expectedCls) => {
+    const section = makeSection();
+    new LongProgress(section, { barVariant: variant }).start();
+    expect(section.querySelector('.long-progress-bar-fill').classList.contains(expectedCls)).toBe(
+      true,
+    );
+  });
+
+  it('throws RangeError for an unknown barVariant', () => {
+    const section = makeSection();
+    expect(() => new LongProgress(section, { barVariant: 'purple' })).toThrow(RangeError);
+  });
+
   it('escapes the initial step text to prevent XSS', () => {
     const section = makeSection();
     new LongProgress(section, {

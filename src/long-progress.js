@@ -37,6 +37,19 @@ const DEFAULT_BYTES_STEP = 'Uploading…';
 const BYTES_FILL_DURATION_MS = 200;
 const FAST_FORWARD_DEFAULT_MS = 200;
 
+// Map barVariant option → modifier class applied alongside .progress-bar-fill.
+// 'orange' is the bare .progress-bar-fill default (brand orange gradient) and
+// gets no modifier; the others select a -blue gradient or solid Flowbite
+// semantic color. Default is 'info' to preserve the prior solid-blue look.
+const BAR_VARIANT_CLASSES = {
+  orange: '',
+  blue: 'progress-bar-fill-blue',
+  info: 'progress-bar-fill-info',
+  success: 'progress-bar-fill-success',
+  danger: 'progress-bar-fill-danger',
+};
+const DEFAULT_BAR_VARIANT = 'info';
+
 /**
  * @typedef {Object} Phase
  * @property {string} step - Step text shown when this phase fires.
@@ -56,6 +69,10 @@ const FAST_FORWARD_DEFAULT_MS = 200;
  */
 
 /**
+ * @typedef {'orange' | 'blue' | 'info' | 'success' | 'danger'} BarVariant
+ */
+
+/**
  * @typedef {Object} LongProgressOptions
  * @property {string | null} [hint] - Warning text directly under the bar.
  *   Rendered via innerHTML so the default can include <strong> for
@@ -72,6 +89,11 @@ const FAST_FORWARD_DEFAULT_MS = 200;
  *   appending to the section.
  * @property {string} [doneStep='Done'] - Step text shown briefly during
  *   fastForward().
+ * @property {BarVariant} [barVariant='info'] - Fill color. `'orange'` and
+ *   `'blue'` are the kit's brand gradients (same as `btn-orange-to-blue` /
+ *   `btn-blue-to-orange` resting states). `'info'`, `'success'`, `'danger'`
+ *   are solid Flowbite semantic colors with auto dark-mode handling.
+ *   Default `'info'` matches the prior solid-blue look.
  */
 
 /**
@@ -121,6 +143,7 @@ export class LongProgress {
       inline: !!opts.inline,
       errorInsertBefore: opts.errorInsertBefore ?? null,
       doneStep: opts.doneStep ?? DEFAULT_DONE_STEP,
+      barVariant: normalizeBarVariant(opts.barVariant),
     };
     this.#section = section;
   }
@@ -312,7 +335,9 @@ export class LongProgress {
       this.#opts.hint !== null
         ? `<p class="long-progress-hint">${HINT_ICON_SVG}<span>${this.#opts.hint}</span></p>`
         : '';
-    return `<div class="long-progress${inlineCls}" role="status" aria-live="polite">${headerHtml}<div class="long-progress-bar" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><div class="long-progress-bar-fill"></div></div>${hintHtml}</div>`;
+    const variantCls = BAR_VARIANT_CLASSES[this.#opts.barVariant];
+    const fillCls = `progress-bar-fill${variantCls ? ' ' + variantCls : ''} long-progress-bar-fill`;
+    return `<div class="long-progress${inlineCls}" role="status" aria-live="polite">${headerHtml}<div class="progress-bar long-progress-bar" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><div class="${fillCls}"></div></div>${hintHtml}</div>`;
   }
 
   #renderErrorBanner(message) {
@@ -330,4 +355,13 @@ function normalizeBytes(bytes) {
     throw new RangeError('LongProgress: bytes.capPct must be > 0 and <= 100');
   }
   return { capPct: cap, step: bytes.step ?? DEFAULT_BYTES_STEP };
+}
+
+function normalizeBarVariant(variant) {
+  if (variant === undefined) return DEFAULT_BAR_VARIANT;
+  if (!(variant in BAR_VARIANT_CLASSES)) {
+    const allowed = Object.keys(BAR_VARIANT_CLASSES).join(', ');
+    throw new RangeError(`LongProgress: barVariant must be one of ${allowed}`);
+  }
+  return variant;
 }

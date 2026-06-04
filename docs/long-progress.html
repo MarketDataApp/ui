@@ -166,6 +166,38 @@
         </section>
       </section>
 
+      <!-- Demo: bar variants -->
+      <section id="demo-variants">
+        <h2 class="text-2xl font-bold mb-6 border-b border-gray-200 dark:border-gray-700 pb-2">
+          Demo: bar color variants
+        </h2>
+        <p class="text-gray-700 dark:text-gray-300 mb-4">
+          <code class="text-sm font-mono">barVariant</code> selects the fill color.
+          <code class="text-sm font-mono">'info'</code> is the default (solid Flowbite blue);
+          <code class="text-sm font-mono">'orange'</code> and
+          <code class="text-sm font-mono">'blue'</code>
+          are the kit's brand gradients;
+          <code class="text-sm font-mono">'success'</code> and
+          <code class="text-sm font-mono">'danger'</code> are solid Flowbite semantic colors that
+          auto-swap for dark mode.
+        </p>
+        <div class="flex flex-wrap gap-2 mb-6">
+          <button class="btn-orange-to-blue" data-demo="variant-info">info (default)</button>
+          <button class="btn-orange-to-blue" data-demo="variant-orange">orange gradient</button>
+          <button class="btn-orange-to-blue" data-demo="variant-blue">blue gradient</button>
+          <button class="btn-orange-to-blue" data-demo="variant-success">success</button>
+          <button class="btn-orange-to-blue" data-demo="variant-danger">danger</button>
+        </div>
+        <section
+          id="demo-variants-section"
+          class="border border-dashed border-gray-300 dark:border-gray-600 rounded-lg p-6 min-h-[180px]"
+        >
+          <p class="text-sm text-gray-600 dark:text-gray-400">
+            Click a variant above to see the bar in that color.
+          </p>
+        </section>
+      </section>
+
       <!-- Usage -->
       <section id="usage">
         <h2 class="text-2xl font-bold mb-6 border-b border-gray-200 dark:border-gray-700 pb-2">
@@ -297,6 +329,20 @@ xhr.onerror           = ()  =&gt; lp.restore('Upload failed. Please try again.')
                 <td class="py-2 px-3">
                   Step text shown briefly during
                   <code class="font-mono text-xs">fastForward()</code>.
+                </td>
+              </tr>
+              <tr>
+                <td class="py-2 px-3 font-mono text-xs">barVariant</td>
+                <td class="py-2 px-3 font-mono text-xs">'info'</td>
+                <td class="py-2 px-3">
+                  Fill color. <code class="font-mono text-xs">'orange'</code> and
+                  <code class="font-mono text-xs">'blue'</code> use the kit's brand gradients (same
+                  as <code class="font-mono text-xs">btn-orange-to-blue</code> /
+                  <code class="font-mono text-xs">btn-blue-to-orange</code> resting states).
+                  <code class="font-mono text-xs">'info'</code>,
+                  <code class="font-mono text-xs">'success'</code>,
+                  <code class="font-mono text-xs">'danger'</code> use solid Flowbite semantic colors
+                  (auto dark mode).
                 </td>
               </tr>
             </tbody>
@@ -549,6 +595,36 @@ xhr.onerror           = ()  =&gt; lp.restore('Upload failed. Please try again.')
           PENDING.set(section, list);
         },
       };
+
+      // Bar-variant demos — short timeline so the color is the main thing
+      // the viewer is comparing, not the pacing.
+      function runVariantDemo(variant) {
+        const section = document.getElementById('demo-variants-section');
+        cancelPending(section);
+        resetSection(section);
+        const lp = new LongProgress(section, {
+          barVariant: variant,
+          phases: [
+            { step: 'Working…', fillPct: 40, durationMs: 1200 },
+            { step: 'Finishing up…', fillPct: 90, durationMs: 1500 },
+          ],
+          hint: null,
+        });
+        lp.start();
+        later(
+          section,
+          async () => {
+            await lp.fastForward();
+            later(section, () => resetSection(section), 1000);
+          },
+          2800,
+        );
+      }
+      demos['variant-info'] = () => runVariantDemo('info');
+      demos['variant-orange'] = () => runVariantDemo('orange');
+      demos['variant-blue'] = () => runVariantDemo('blue');
+      demos['variant-success'] = () => runVariantDemo('success');
+      demos['variant-danger'] = () => runVariantDemo('danger');
 
       for (const btn of document.querySelectorAll('[data-demo]')) {
         btn.addEventListener('click', () => demos[btn.dataset.demo]());

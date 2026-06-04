@@ -2648,6 +2648,9 @@
   .min-h-\[120px\] {
     min-height: 120px;
   }
+  .min-h-\[180px\] {
+    min-height: 180px;
+  }
   .min-h-\[280px\] {
     min-height: 280px;
   }
@@ -3070,6 +3073,18 @@
   .border-neutral-quaternary {
     border-color: var(--color-neutral-quaternary);
   }
+  .progress-bar-fill-danger {
+    background-image: none;
+    background-color: var(--color-danger);
+  }
+  .progress-bar-fill-info {
+    background-image: none;
+    background-color: var(--color-brand);
+  }
+  .progress-bar-fill-success {
+    background-image: none;
+    background-color: var(--color-success);
+  }
   .default {
     font-family: var(--font-sans);
     font-size: var(--text-base);
@@ -3363,6 +3378,9 @@
   }
   .bg-gradient-orange {
     background-image: linear-gradient(103deg, #e83155 0%, #ffdfb9 100%);
+  }
+  .progress-bar-fill-blue {
+    background-image: linear-gradient(103deg, #003286 0%, #0085f2 100%);
   }
   .p-2 {
     padding: calc(var(--spacing) * 2);
@@ -4573,18 +4591,8 @@ label[disabled] :where(.text-heading, .radio-button-helper) {
 }
 .long-progress-bar {
   height: calc(var(--spacing) * 1.5);
-  width: 100%;
-  overflow: hidden;
-  border-radius: calc(infinity * 1px);
-  background-color: var(--color-neutral-quaternary);
 }
 .long-progress-bar-fill {
-  height: 100%;
-  border-radius: calc(infinity * 1px);
-  background-color: var(--color-blue-600);
-  &:where(.dark, .dark *, [data-theme="dark"], [data-theme="dark"] *) {
-    background-color: var(--color-blue-500);
-  }
   width: 0%;
   transition: width var(--long-progress-fill-duration, 300ms) ease-out;
 }
