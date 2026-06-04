@@ -395,8 +395,22 @@
   @apply mb-4 text-xl font-bold text-heading;
 }
 
+/* The `&[disabled]` and `&[error]` blocks duplicate the global
+   `label[disabled]` / `label[error]` rules on purpose — when consumers
+   blanket-`@apply` `form-label` to wrappers like `.am-element-title >
+   label`, they land at higher specificity than the bare `label[state]`
+   rules and silently strip the kit's state styling. Inlining the blocks
+   lands them at the consumer's `@apply` specificity so the state
+   survives. Same shape as `form-checkbox-label` below. */
 @utility form-label {
   @apply block mb-2 text-sm font-medium text-heading;
+  &[disabled] {
+    color: var(--color-fg-disabled);
+    cursor: not-allowed;
+  }
+  &[error] {
+    color: var(--color-fg-danger-strong);
+  }
 }
 
 /* Companion label for a checkbox/radio that lives in a separate parent

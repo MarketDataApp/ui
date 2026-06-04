@@ -925,6 +925,22 @@
   line-height: var(--tw-leading, var(--text-sm--line-height));
   color: var(--color-fg-danger);
 }
+.form-label {
+  margin-bottom: calc(var(--spacing) * 2);
+  display: block;
+  font-size: var(--text-sm);
+  line-height: var(--tw-leading, var(--text-sm--line-height));
+  --tw-font-weight: var(--font-weight-medium);
+  font-weight: var(--font-weight-medium);
+  color: var(--color-heading);
+  &[disabled] {
+    color: var(--color-fg-disabled);
+    cursor: not-allowed;
+  }
+  &[error] {
+    color: var(--color-fg-danger-strong);
+  }
+}
 .admonition-heading {
   margin-bottom: calc(var(--spacing) * 2);
   display: flex;
@@ -937,15 +953,6 @@
   --tw-tracking: var(--tracking-wider);
   letter-spacing: var(--tracking-wider);
   text-transform: uppercase;
-}
-.form-label {
-  margin-bottom: calc(var(--spacing) * 2);
-  display: block;
-  font-size: var(--text-sm);
-  line-height: var(--tw-leading, var(--text-sm--line-height));
-  --tw-font-weight: var(--font-weight-medium);
-  font-weight: var(--font-weight-medium);
-  color: var(--color-heading);
 }
 .cta-banner-heading {
   margin-bottom: calc(var(--spacing) * 4);
