@@ -47,7 +47,14 @@
  *   exposed as attributes.
  * @property {(el: HTMLElement) => boolean} read - Reads the state from the
  *   target control. The label attribute is set when this returns true and
- *   cleared otherwise.
+ *   cleared otherwise. Used by `syncOne()` for the initial pass and any
+ *   attribute-driven re-sync.
+ * @property {(event: Event) => boolean} [readFromEvent] - Reads the state
+ *   from a focus event. Required when `usesFocusEvents` is true. Used in
+ *   place of `read` inside the focus-event handler because the
+ *   synchronous DOM state (e.g. `document.activeElement`) is unreliable
+ *   during `focusout` — the spec lets browsers fire `focusout` while
+ *   activeElement still points at the element losing focus.
  */
 
 /**
@@ -73,13 +80,19 @@ const STATE_BINDINGS = [
   {
     labelAttr: 'focused',
     usesFocusEvents: true,
+    // Initial-pass read: at boot time there's no focus event in hand, so
+    // we have to ask the DOM what's currently focused.
     read: (el) => el === el.ownerDocument.activeElement,
+    // Focus-event read: derive directly from the event type. Don't
+    // re-check activeElement here — at the moment `focusout` dispatches,
+    // some browsers still report the blurring element as
+    // activeElement, so the state appears stuck-on. The event type
+    // itself is unambiguous.
+    readFromEvent: (event) => event.type === 'focusin',
   },
 ];
 
-const SOURCE_ATTRS = new Set(
-  STATE_BINDINGS.filter((b) => b.sourceAttr).map((b) => b.sourceAttr),
-);
+const SOURCE_ATTRS = new Set(STATE_BINDINGS.filter((b) => b.sourceAttr).map((b) => b.sourceAttr));
 const OBSERVED_ATTRS = [...new Set([...SOURCE_ATTRS, 'for', 'id'])];
 const USES_FOCUS_EVENTS = STATE_BINDINGS.some((b) => b.usesFocusEvents);
 
@@ -210,11 +223,23 @@ export function initLabelStateSync({ root = document.body } = {}) {
   // Focus state isn't an attribute, so the MutationObserver can't see it.
   // `focusin` / `focusout` bubble (unlike `focus` / `blur`), so a single
   // pair of listeners on `root` covers every input in the subtree. We
-  // re-sync every label pointing at the focus target — the read() for
-  // unaffected bindings just returns the same value as before, so the
-  // attribute toggles are no-ops for them.
+  // can't just call `syncLabelsFor(target)` and re-run every binding's
+  // `read()` — at `focusout` time, `document.activeElement` may still
+  // report the blurring element as focused, which leaves `[focused]`
+  // stuck on. Instead, route focus events through each binding's
+  // dedicated `readFromEvent` and only touch the bindings that opted in
+  // via `usesFocusEvents`.
   const onFocusChange = (event) => {
-    syncLabelsFor(/** @type {HTMLElement} */ (event.target));
+    const target = /** @type {HTMLElement} */ (event.target);
+    if (!target.id) return;
+    const labels = target.ownerDocument.querySelectorAll('label[for]');
+    for (const label of labels) {
+      if (label.htmlFor !== target.id) continue;
+      for (const binding of STATE_BINDINGS) {
+        if (!binding.usesFocusEvents) continue;
+        label.toggleAttribute(binding.labelAttr, binding.readFromEvent(event));
+      }
+    }
   };
   if (USES_FOCUS_EVENTS) {
     root.addEventListener('focusin', onFocusChange);

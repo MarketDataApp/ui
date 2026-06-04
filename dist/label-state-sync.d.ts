@@ -49,7 +49,17 @@ export type StateBinding = {
     /**
      * - Reads the state from the
      * target control. The label attribute is set when this returns true and
-     * cleared otherwise.
+     * cleared otherwise. Used by `syncOne()` for the initial pass and any
+     * attribute-driven re-sync.
      */
     read: (el: HTMLElement) => boolean;
+    /**
+     * - Reads the state
+     * from a focus event. Required when `usesFocusEvents` is true. Used in
+     * place of `read` inside the focus-event handler because the
+     * synchronous DOM state (e.g. `document.activeElement`) is unreliable
+     * during `focusout` — the spec lets browsers fire `focusout` while
+     * activeElement still points at the element losing focus.
+     */
+    readFromEvent?: (event: Event) => boolean;
 };

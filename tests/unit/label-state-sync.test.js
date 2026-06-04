@@ -438,6 +438,30 @@ describe('label-state-sync', () => {
       expect(labelB.hasAttribute('focused')).toBe(true);
     });
 
+    it('clears [focused] on focusout even when activeElement still points at the blurring target', async () => {
+      // Regression test for #33: some browsers fire `focusout` while
+      // `document.activeElement` still references the element losing
+      // focus, which would leave `[focused]` stuck-on if the handler
+      // relied on the synchronous activeElement read. The handler now
+      // derives the focus state from `event.type` instead.
+      const label = makeLabel('field-f');
+      const input = makeInput('field-f');
+      document.body.append(label, input);
+      init();
+
+      input.focus();
+      await flush();
+      expect(label.hasAttribute('focused')).toBe(true);
+
+      // Manually dispatch focusout without calling .blur(), so jsdom
+      // does NOT move activeElement off the input. This is the
+      // worst-case timing the issue describes.
+      input.dispatchEvent(new Event('focusout', { bubbles: true }));
+      expect(document.activeElement).toBe(input);
+
+      expect(label.hasAttribute('focused')).toBe(false);
+    });
+
     it('co-exists with error: error stays set while focused toggles', async () => {
       const label = makeLabel('field-f');
       const input = makeInput('field-f', { invalid: true });
