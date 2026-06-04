@@ -1,5 +1,11 @@
 # Changelog
 
+## 4.17.2
+
+### Fixes
+
+- **`.form-input-error` no longer dyes actively-typed text red.** The base declarations applied `text-fg-danger-strong` unconditionally, so once a field entered the error state every keystroke during the user's correction rendered in red until jQuery Validate's keyup handler flipped the class off — the kit was fighting the user mid-edit. The red text is now gated to `&:not(:focus)`, so the "this saved value is bad" rest-state signal is preserved (red border + red text on a blurred-but-still-invalid field) while the actively-editing color stays normal. Border, ring, and placeholder still go red on focus, which already communicate "this value is bad" without the typed text needing to do so too. Closes #29.
+
 ## 4.17.1
 
 ### Fixes
