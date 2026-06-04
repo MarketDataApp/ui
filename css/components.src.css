@@ -764,6 +764,20 @@ label:has(:where(.checkbox-input, .radio-button-input):disabled)
   color: var(--color-fg-disabled);
 }
 
+/* Cross-container case (label for="X" in one parent, #X in another):
+   CSS can't compare a label's for="" against another element's id, so the
+   `disabled-labels` JS helper resolves the link and sets `disabled` on the
+   label. The attribute is non-standard on <label> but harmless — pure
+   style hook. Mirrors the sibling/wrapping rules above so all three
+   patterns render identically. */
+label[disabled] {
+  color: var(--color-fg-disabled);
+  cursor: not-allowed;
+}
+label[disabled] :where(.text-heading, .radio-button-helper) {
+  color: var(--color-fg-disabled);
+}
+
 /* ---- Checkboxes ---- */
 @utility checkbox-input {
   @apply w-4 h-4 text-brand border border-default-medium rounded-xs bg-neutral-secondary-medium appearance-none cursor-pointer;

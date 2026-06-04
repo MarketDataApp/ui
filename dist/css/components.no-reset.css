@@ -2877,6 +2877,13 @@ label:has(:where(.checkbox-input, .radio-button-input):disabled) {
 label:has(:where(.checkbox-input, .radio-button-input):disabled) :where(.text-heading, .radio-button-helper) {
   color: var(--color-fg-disabled);
 }
+label[disabled] {
+  color: var(--color-fg-disabled);
+  cursor: not-allowed;
+}
+label[disabled] :where(.text-heading, .radio-button-helper) {
+  color: var(--color-fg-disabled);
+}
 @property --long-progress-pct {
   syntax: '<integer>';
   inherits: true;

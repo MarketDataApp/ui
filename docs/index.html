@@ -1060,8 +1060,9 @@ button.removeAttribute('aria-busy');        // done</code></pre>
           </div>
 
           <div class="mb-4">
-            <label class="form-label">API Key</label>
+            <label class="form-label" for="form-api-key">API Key</label>
             <input
+              id="form-api-key"
               type="text"
               class="form-input"
               placeholder="sk-..."
@@ -1087,14 +1088,44 @@ button.removeAttribute('aria-busy');        // done</code></pre>
           </div>
 
           <div class="mb-4">
-            <label class="form-label">Billing Region</label>
-            <select class="form-dropdown-input" disabled>
+            <label class="form-label" for="form-billing-region">Billing Region</label>
+            <select id="form-billing-region" class="form-dropdown-input" disabled>
               <option selected>United States</option>
             </select>
             <p class="form-helper-text">contact support to change billing region</p>
           </div>
 
           <button class="btn-orange-to-blue mt-2">Save Changes</button>
+        </div>
+
+        <h3 class="text-lg font-semibold mt-8 mb-2">Cross-container disabled labels</h3>
+        <p class="text-gray-500 dark:text-gray-400 mb-4">
+          When a <code class="text-xs font-mono">&lt;label for="X"&gt;</code> sits in a different
+          parent from <code class="text-xs font-mono">#X</code> (e.g. a two-column form grid where
+          labels and inputs live in separate cells), CSS alone can't gray the label when the input
+          is <code class="text-xs font-mono">disabled</code> — there's no selector that compares a
+          label's <code class="text-xs font-mono">for</code> against another element's
+          <code class="text-xs font-mono">id</code>. Importing
+          <code class="text-xs font-mono">@marketdataapp/ui/disabled-labels</code> and calling
+          <code class="text-xs font-mono">initDisabledLabels()</code> reflects each disabled
+          control's state onto its label via a <code class="text-xs font-mono">disabled</code>
+          attribute, which the CSS picks up. Re-syncs automatically as inputs flip or DOM mutates.
+        </p>
+
+        <div class="form-container max-w-2xl">
+          <div class="grid grid-cols-[10rem_1fr] gap-x-4 gap-y-3 items-center">
+            <label class="form-label !mb-0" for="cross-account-id">Account ID</label>
+            <input id="cross-account-id" type="text" class="form-input" value="acct_42a7c1" />
+
+            <label class="form-label !mb-0" for="cross-tier">Subscription Tier</label>
+            <input id="cross-tier" type="text" class="form-input" value="Trader" disabled />
+
+            <label class="form-label !mb-0" for="cross-renewal">Auto-renew</label>
+            <select id="cross-renewal" class="form-dropdown-input" disabled>
+              <option selected>On</option>
+              <option>Off</option>
+            </select>
+          </div>
         </div>
 
         <div class="mt-6">
@@ -1126,6 +1157,12 @@ button.removeAttribute('aria-busy');        // done</code></pre>
             >
             <code class="text-xs font-mono bg-gray-100 dark:bg-gray-800 px-2 py-1 rounded"
               >.form-helper-text-error</code
+            >
+            <code class="text-xs font-mono bg-gray-100 dark:bg-gray-800 px-2 py-1 rounded"
+              >label[disabled]</code
+            >
+            <code class="text-xs font-mono bg-gray-100 dark:bg-gray-800 px-2 py-1 rounded"
+              >@marketdataapp/ui/disabled-labels</code
             >
           </div>
         </div>
@@ -2322,6 +2359,12 @@ button.removeAttribute('aria-busy');        // done</code></pre>
       import { initCopyButton } from '../dist/copy-button.js';
 
       initCopyButton();
+    </script>
+
+    <script data-cfasync="false" type="module">
+      import { initDisabledLabels } from '../dist/disabled-labels.js';
+
+      initDisabledLabels();
     </script>
 
     <script data-cfasync="false">

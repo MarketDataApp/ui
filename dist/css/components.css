@@ -1274,6 +1274,9 @@
     font-weight: var(--font-weight-bold);
     color: var(--color-heading);
   }
+  .\!mb-0 {
+    margin-bottom: calc(var(--spacing) * 0) !important;
+  }
   .mb-1 {
     margin-bottom: calc(var(--spacing) * 1);
   }
@@ -2725,6 +2728,9 @@
   }
   .grid-cols-2 {
     grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .grid-cols-\[10rem_1fr\] {
+    grid-template-columns: 10rem 1fr;
   }
   .grid-cols-\[repeat\(3\,minmax\(0\,1fr\)\)_0\.5rem_repeat\(3\,minmax\(0\,1fr\)\)\] {
     grid-template-columns: repeat(3,minmax(0,1fr)) 0.5rem repeat(3,minmax(0,1fr));
@@ -4504,6 +4510,13 @@ label:has(:where(.checkbox-input, .radio-button-input):disabled) {
   cursor: not-allowed;
 }
 label:has(:where(.checkbox-input, .radio-button-input):disabled) :where(.text-heading, .radio-button-helper) {
+  color: var(--color-fg-disabled);
+}
+label[disabled] {
+  color: var(--color-fg-disabled);
+  cursor: not-allowed;
+}
+label[disabled] :where(.text-heading, .radio-button-helper) {
   color: var(--color-fg-disabled);
 }
 @property --long-progress-pct {

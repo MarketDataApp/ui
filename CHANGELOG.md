@@ -1,5 +1,13 @@
 # Changelog
 
+## 4.15.0
+
+### New
+
+- **`@marketdataapp/ui/disabled-labels` — sync `<label for="">` with disabled-input state across container boundaries.** The kit's existing CSS dims labels via `:where(.checkbox-input, .radio-button-input):disabled ~ label` (adjacent-sibling) and `label:has(input:disabled)` (wrapping label), but both require label and input to share a parent. When a `<label for="X">` lives in a different container from `#X` — common in two-column form grids, or the aMember `.am-element-title` / `.am-element` cell pattern — the input grays but the label stays at full strength, so the row reads as half-disabled. CSS can't fix this: there's no selector that compares a label's `for` attribute against another element's `id`. The new helper resolves the link in JS (`label.htmlFor` → `getElementById`) and toggles a `disabled` attribute on the label that the kit's CSS picks up. A `MutationObserver` keeps state in sync as inputs flip, labels change `for=""`, ids change, and nodes are added/removed. Opt-in per scope: `initDisabledLabels({ root = document.body })` returns a cleanup function. Existing sibling/wrapping rules stay in place as the no-JS fallback for the basic cases. Closes #26.
+
+- **`label[disabled]` is now a styled selector in `components.src.css`** — dims the label to `var(--color-fg-disabled)` with `cursor: not-allowed`, plus the inner `:where(.text-heading, .radio-button-helper)` override so spans inside disabled wrapping labels follow the dim color. The `disabled` attribute is non-standard on `<label>` but harmless — pure style hook driven by the `disabled-labels` helper. Consumers who want declarative-only styling can set the attribute themselves without using the JS module.
+
 ## 4.14.1
 
 ### Fixes
