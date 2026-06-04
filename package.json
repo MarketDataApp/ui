@@ -1,6 +1,6 @@
 {
   "name": "@marketdataapp/ui",
-  "version": "4.17.2",
+  "version": "5.0.0",
   "description": "Shared UI theme and component styles for MarketData properties",
   "license": "UNLICENSED",
   "type": "module",
@@ -54,9 +54,9 @@
       "types": "./dist/long-progress.d.ts",
       "default": "./dist/long-progress.js"
     },
-    "./disabled-labels": {
-      "types": "./dist/disabled-labels.d.ts",
-      "default": "./dist/disabled-labels.js"
+    "./label-state-sync": {
+      "types": "./dist/label-state-sync.d.ts",
+      "default": "./dist/label-state-sync.js"
     }
   },
   "scripts": {

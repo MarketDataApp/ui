@@ -1,5 +1,29 @@
 # Changelog
 
+## 5.0.0
+
+### Breaking Changes
+
+- **`@marketdataapp/ui/disabled-labels` is now `@marketdataapp/ui/label-state-sync`, and `initDisabledLabels()` is now `initLabelStateSync()`.** The 4.15.0 helper only mirrored `:disabled`, but the cross-container gap exists for the error state too — when an input picks up `aria-invalid="true"`, no CSS selector can target a `<label for="X">` in a different parent. The renamed module mirrors both states under one observer, one DOM scan, and one binding table — adding a state in the future is one entry in `STATE_BINDINGS`, not a second module + second observer. Closes #30.
+
+### New
+
+- **`label[error]` style hook + automatic `aria-invalid` mirroring.** `initLabelStateSync()` toggles an `error` attribute on every `<label for="X">` whose `#X` has `aria-invalid="true"`, and the new `label[error]` rule in `components.src.css` colors the label `text-fg-danger-strong` so the cross-container case renders the same as `.form-input-error`'s border/ring/placeholder treatment. Cursor stays default — error state doesn't change interactivity, unlike disabled. `.form-checkbox-label` gets a parallel `&[error]` block to defeat consumer overrides at higher specificity, matching the existing `&[disabled]` block.
+
+### Migration
+
+```js
+// Before
+import { initDisabledLabels } from '@marketdataapp/ui/disabled-labels';
+initDisabledLabels();
+
+// After
+import { initLabelStateSync } from '@marketdataapp/ui/label-state-sync';
+initLabelStateSync();
+```
+
+Behavior of the disabled mirror is unchanged. Consumers that don't surface `aria-invalid` on their inputs see no behavioral change — the error attribute simply never gets set. Consumers using jQuery Validate (which sets `aria-invalid` natively) or any framework that surfaces it pick up cross-container error styling automatically once `label[error]` rules are present in their built CSS.
+
 ## 4.17.2
 
 ### Fixes
