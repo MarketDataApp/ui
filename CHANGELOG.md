@@ -1,5 +1,11 @@
 # Changelog
 
+## 4.17.1
+
+### Fixes
+
+- **Suppress placeholder text on disabled `.form-input` / `.form-dropdown-input`.** Browsers continue painting `<input placeholder="…">` text on a disabled field per spec, and at our 4.16.1 disabled text color (`text-gray-400`) the placeholder reads at near-identical contrast to a real value — so in any "review your submission" / locked-form state, empty fields look filled with their placeholder hints. Both utilities now apply `&:disabled::placeholder { color: transparent }` so empty disabled fields read as empty. Hidden rather than dimmed because in a locked/view-only state the placeholder is noise: it tells you what _would_ go there, but the user can't act on it. Demo grows an empty disabled "Webhook URL" row so the fix is visible (the existing disabled "API Key" row had a value, so its placeholder never showed). Closes #28.
+
 ## 4.17.0
 
 ### New
