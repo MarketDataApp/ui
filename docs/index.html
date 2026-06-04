@@ -1117,6 +1117,21 @@ button.removeAttribute('aria-busy');        // done</code></pre>
           </div>
 
           <div class="mb-4">
+            <label class="form-label" for="form-webhook-url">Webhook URL</label>
+            <input
+              id="form-webhook-url"
+              type="url"
+              class="form-input"
+              placeholder="https://example.com/webhook"
+              disabled
+            />
+            <p class="form-helper-text">
+              empty + disabled — placeholder is suppressed so the field reads as empty rather than
+              filled
+            </p>
+          </div>
+
+          <div class="mb-4">
             <label class="form-label">Account ID</label>
             <input type="text" class="form-input" value="acct_42a7c1" readonly />
             <p class="form-helper-text">assigned at signup, included in form submissions</p>

@@ -1394,6 +1394,9 @@
         color: var(--color-gray-400);
       }
     }
+    &:disabled::placeholder {
+      color: transparent;
+    }
     appearance: none;
     background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24'%3e%3cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='m19 9-7 7-7-7'/%3e%3c/svg%3e");
     background-position: right 0.75rem center;
@@ -1471,6 +1474,9 @@
       &::placeholder {
         color: var(--color-gray-400);
       }
+    }
+    &:disabled::placeholder {
+      color: transparent;
     }
     &:-webkit-autofill, &:-webkit-autofill:hover, &:-webkit-autofill:focus {
       -webkit-box-shadow: 0 0 0 1000px var(--color-gray-50) inset, var(--tw-inset-shadow, 0 0 #0000), var(--tw-inset-ring-shadow, 0 0 #0000), var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow, 0 0 #0000);
@@ -3502,6 +3508,10 @@
   .font-medium {
     --tw-font-weight: var(--font-weight-medium);
     font-weight: var(--font-weight-medium);
+  }
+  .font-normal {
+    --tw-font-weight: var(--font-weight-normal);
+    font-weight: var(--font-weight-normal);
   }
   .font-semibold {
     --tw-font-weight: var(--font-weight-semibold);
