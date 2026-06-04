@@ -401,14 +401,18 @@
 
 /* Companion label for a checkbox/radio that lives in a separate parent
    from its input (so the adjacent-sibling/wrapping disabled-label rules
-   don't apply). The `&[disabled]` block duplicates the global
-   `label[disabled]` rule on purpose — consumer overrides at higher
-   selector specificity can otherwise wipe the disabled styling. */
+   don't apply). The `&[disabled]` and `&[error]` blocks duplicate the
+   global `label[disabled]` / `label[error]` rules on purpose — consumer
+   overrides at higher selector specificity can otherwise wipe the state
+   styling. */
 @utility form-checkbox-label {
   @apply font-normal text-sm text-heading cursor-pointer leading-none;
   &[disabled] {
     color: var(--color-fg-disabled);
     cursor: not-allowed;
+  }
+  &[error] {
+    color: var(--color-fg-danger-strong);
   }
 }
 
@@ -819,16 +823,26 @@ label:has(:where(.checkbox-input, .radio-button-input):disabled)
 
 /* Cross-container case (label for="X" in one parent, #X in another):
    CSS can't compare a label's for="" against another element's id, so the
-   `disabled-labels` JS helper resolves the link and sets `disabled` on the
-   label. The attribute is non-standard on <label> but harmless — pure
-   style hook. Mirrors the sibling/wrapping rules above so all three
-   patterns render identically. */
+   `label-state-sync` JS helper resolves the link and sets `disabled` /
+   `error` on the label. Those attributes are non-standard on <label> but
+   harmless — pure style hooks. The `disabled` rule mirrors the
+   sibling/wrapping rules above so all three patterns render identically;
+   the `error` rule has no sibling/wrapping equivalent because the kit
+   only signals errors via `aria-invalid` (an attribute) rather than a
+   sibling-targetable class. Cursor stays default on `error` — the field
+   is still interactive, unlike disabled. */
 label[disabled] {
   color: var(--color-fg-disabled);
   cursor: not-allowed;
 }
 label[disabled] :where(.text-heading, .radio-button-helper) {
   color: var(--color-fg-disabled);
+}
+label[error] {
+  color: var(--color-fg-danger-strong);
+}
+label[error] :where(.text-heading, .radio-button-helper) {
+  color: var(--color-fg-danger-strong);
 }
 
 /* ---- Checkboxes ---- */

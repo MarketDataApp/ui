@@ -35,7 +35,7 @@ const FILES_WITHOUT_LOCAL_IMPORTS = [
   'dark-images.js',
   'copy-button.js',
   'long-progress.js',
-  'disabled-labels.js',
+  'label-state-sync.js',
 ];
 
 // ---------------------------------------------------------------------------

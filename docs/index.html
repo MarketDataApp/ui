@@ -1157,18 +1157,20 @@ button.removeAttribute('aria-busy');        // done</code></pre>
           <button class="btn-orange-to-blue mt-2">Save Changes</button>
         </div>
 
-        <h3 class="text-lg font-semibold mt-8 mb-2">Cross-container disabled labels</h3>
+        <h3 class="text-lg font-semibold mt-8 mb-2">Cross-container label state sync</h3>
         <p class="text-gray-500 dark:text-gray-400 mb-4">
           When a <code class="text-xs font-mono">&lt;label for="X"&gt;</code> sits in a different
           parent from <code class="text-xs font-mono">#X</code> (e.g. a two-column form grid where
           labels and inputs live in separate cells), CSS alone can't gray the label when the input
-          is <code class="text-xs font-mono">disabled</code> — there's no selector that compares a
-          label's <code class="text-xs font-mono">for</code> against another element's
+          is <code class="text-xs font-mono">disabled</code> or color it red when the input is
+          <code class="text-xs font-mono">aria-invalid="true"</code> — there's no selector that
+          compares a label's <code class="text-xs font-mono">for</code> against another element's
           <code class="text-xs font-mono">id</code>. Importing
-          <code class="text-xs font-mono">@marketdataapp/ui/disabled-labels</code> and calling
-          <code class="text-xs font-mono">initDisabledLabels()</code> reflects each disabled
-          control's state onto its label via a <code class="text-xs font-mono">disabled</code>
-          attribute, which the CSS picks up. Re-syncs automatically as inputs flip or DOM mutates.
+          <code class="text-xs font-mono">@marketdataapp/ui/label-state-sync</code> and calling
+          <code class="text-xs font-mono">initLabelStateSync()</code> reflects each control's state
+          onto its label via <code class="text-xs font-mono">disabled</code> and
+          <code class="text-xs font-mono">error</code> attributes, which the CSS picks up. Re-syncs
+          automatically as inputs flip or DOM mutates.
         </p>
 
         <div class="form-container max-w-2xl">
@@ -1185,11 +1187,23 @@ button.removeAttribute('aria-busy');        // done</code></pre>
               <option>Off</option>
             </select>
 
+            <label class="form-label !mb-0" for="cross-website">Employer Website</label>
+            <input
+              id="cross-website"
+              type="url"
+              class="form-input form-input-error"
+              value="not-a-url"
+              aria-invalid="true"
+            />
+
             <label class="form-checkbox-label" for="cross-marketing">Marketing emails</label>
             <input id="cross-marketing" type="checkbox" class="checkbox-input" checked />
 
             <label class="form-checkbox-label" for="cross-employer">Employer website</label>
             <input id="cross-employer" type="checkbox" class="checkbox-input" disabled />
+
+            <label class="form-checkbox-label" for="cross-terms">Accept terms</label>
+            <input id="cross-terms" type="checkbox" class="checkbox-input" aria-invalid="true" />
           </div>
         </div>
 
@@ -1243,7 +1257,10 @@ button.removeAttribute('aria-busy');        // done</code></pre>
               >label[disabled]</code
             >
             <code class="text-xs font-mono bg-gray-100 dark:bg-gray-800 px-2 py-1 rounded"
-              >@marketdataapp/ui/disabled-labels</code
+              >label[error]</code
+            >
+            <code class="text-xs font-mono bg-gray-100 dark:bg-gray-800 px-2 py-1 rounded"
+              >@marketdataapp/ui/label-state-sync</code
             >
           </div>
         </div>
@@ -2443,9 +2460,9 @@ button.removeAttribute('aria-busy');        // done</code></pre>
     </script>
 
     <script data-cfasync="false" type="module">
-      import { initDisabledLabels } from '../dist/disabled-labels.js';
+      import { initLabelStateSync } from '../dist/label-state-sync.js';
 
-      initDisabledLabels();
+      initLabelStateSync();
     </script>
 
     <script data-cfasync="false">

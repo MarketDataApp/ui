@@ -2697,6 +2697,9 @@
       color: var(--color-fg-disabled);
       cursor: not-allowed;
     }
+    &[error] {
+      color: var(--color-fg-danger-strong);
+    }
   }
   .cursor-not-allowed {
     cursor: not-allowed;
@@ -3546,6 +3549,9 @@
   }
   .text-fg-danger {
     color: var(--color-fg-danger);
+  }
+  .text-fg-danger-strong {
+    color: var(--color-fg-danger-strong);
   }
   .text-fg-disabled {
     color: var(--color-fg-disabled);
@@ -4554,6 +4560,12 @@ label[disabled] {
 }
 label[disabled] :where(.text-heading, .radio-button-helper) {
   color: var(--color-fg-disabled);
+}
+label[error] {
+  color: var(--color-fg-danger-strong);
+}
+label[error] :where(.text-heading, .radio-button-helper) {
+  color: var(--color-fg-danger-strong);
 }
 @property --long-progress-pct {
   syntax: '<integer>';

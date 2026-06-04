@@ -1,4 +1,4 @@
-import { initDisabledLabels } from '../../dist/disabled-labels.js';
+import { initLabelStateSync } from '../../dist/label-state-sync.js';
 
 /** Flush MutationObserver callbacks (microtask-based in jsdom). */
 async function flush() {
@@ -13,19 +13,20 @@ function makeLabel(forId, text = 'Label') {
   return label;
 }
 
-function makeInput(id, { disabled = false, type = 'text' } = {}) {
+function makeInput(id, { disabled = false, invalid = false, type = 'text' } = {}) {
   const input = document.createElement('input');
   input.type = type;
   input.id = id;
   if (disabled) input.disabled = true;
+  if (invalid) input.setAttribute('aria-invalid', 'true');
   return input;
 }
 
-describe('disabled-labels', () => {
+describe('label-state-sync', () => {
   let cleanups;
 
   function init(options) {
-    const cleanup = initDisabledLabels(options);
+    const cleanup = initLabelStateSync(options);
     cleanups.push(cleanup);
     return cleanup;
   }
@@ -40,9 +41,9 @@ describe('disabled-labels', () => {
   });
 
   // -------------------------------------------------------------------------
-  // Initial pass
+  // Initial pass — disabled
   // -------------------------------------------------------------------------
-  describe('initial pass', () => {
+  describe('initial pass: disabled', () => {
     it('sets disabled on labels whose for-target is disabled at init time', () => {
       const label = makeLabel('field-a');
       const input = makeInput('field-a', { disabled: true });
@@ -93,6 +94,65 @@ describe('disabled-labels', () => {
       init();
 
       expect(label.hasAttribute('disabled')).toBe(false);
+    });
+  });
+
+  // -------------------------------------------------------------------------
+  // Initial pass — error (aria-invalid)
+  // -------------------------------------------------------------------------
+  describe('initial pass: error', () => {
+    it('sets error on labels whose for-target has aria-invalid="true" at init time', () => {
+      const label = makeLabel('field-a');
+      const input = makeInput('field-a', { invalid: true });
+      document.body.append(label, input);
+
+      init();
+
+      expect(label.hasAttribute('error')).toBe(true);
+    });
+
+    it('leaves valid labels alone', () => {
+      const label = makeLabel('field-a');
+      const input = makeInput('field-a');
+      document.body.append(label, input);
+
+      init();
+
+      expect(label.hasAttribute('error')).toBe(false);
+    });
+
+    it('treats aria-invalid="false" as not-errored', () => {
+      const label = makeLabel('field-a');
+      const input = makeInput('field-a');
+      input.setAttribute('aria-invalid', 'false');
+      document.body.append(label, input);
+
+      init();
+
+      expect(label.hasAttribute('error')).toBe(false);
+    });
+
+    it('handles label and input in different containers', () => {
+      const leftCol = document.createElement('div');
+      const rightCol = document.createElement('div');
+      leftCol.append(makeLabel('cross-1'));
+      rightCol.append(makeInput('cross-1', { invalid: true }));
+      document.body.append(leftCol, rightCol);
+
+      init();
+
+      expect(leftCol.querySelector('label').hasAttribute('error')).toBe(true);
+    });
+
+    it('mirrors both disabled and error on the same label when both states hold', () => {
+      const label = makeLabel('field-a');
+      const input = makeInput('field-a', { disabled: true, invalid: true });
+      document.body.append(label, input);
+
+      init();
+
+      expect(label.hasAttribute('disabled')).toBe(true);
+      expect(label.hasAttribute('error')).toBe(true);
     });
   });
 
@@ -156,10 +216,88 @@ describe('disabled-labels', () => {
   });
 
   // -------------------------------------------------------------------------
+  // aria-invalid attribute changes
+  // -------------------------------------------------------------------------
+  describe('aria-invalid attribute changes', () => {
+    it('reflects error when aria-invalid is set after init', async () => {
+      const label = makeLabel('field-b');
+      const input = makeInput('field-b');
+      document.body.append(label, input);
+      init();
+
+      input.setAttribute('aria-invalid', 'true');
+      await flush();
+
+      expect(label.hasAttribute('error')).toBe(true);
+    });
+
+    it('clears error when aria-invalid is removed', async () => {
+      const label = makeLabel('field-c');
+      const input = makeInput('field-c', { invalid: true });
+      document.body.append(label, input);
+      init();
+      expect(label.hasAttribute('error')).toBe(true);
+
+      input.removeAttribute('aria-invalid');
+      await flush();
+
+      expect(label.hasAttribute('error')).toBe(false);
+    });
+
+    it('clears error when aria-invalid flips to "false"', async () => {
+      const label = makeLabel('field-c');
+      const input = makeInput('field-c', { invalid: true });
+      document.body.append(label, input);
+      init();
+      expect(label.hasAttribute('error')).toBe(true);
+
+      input.setAttribute('aria-invalid', 'false');
+      await flush();
+
+      expect(label.hasAttribute('error')).toBe(false);
+    });
+
+    it('does not cross-pollute the disabled attribute when only aria-invalid flips', async () => {
+      const label = makeLabel('field-b');
+      const input = makeInput('field-b');
+      document.body.append(label, input);
+      init();
+
+      input.setAttribute('aria-invalid', 'true');
+      await flush();
+
+      expect(label.hasAttribute('error')).toBe(true);
+      expect(label.hasAttribute('disabled')).toBe(false);
+    });
+
+    it('handles disabled and error transitioning independently on the same input', async () => {
+      const label = makeLabel('field-b');
+      const input = makeInput('field-b');
+      document.body.append(label, input);
+      init();
+
+      input.setAttribute('aria-invalid', 'true');
+      await flush();
+      expect(label.hasAttribute('disabled')).toBe(false);
+      expect(label.hasAttribute('error')).toBe(true);
+
+      input.disabled = true;
+      await flush();
+      expect(label.hasAttribute('disabled')).toBe(true);
+      expect(label.hasAttribute('error')).toBe(true);
+
+      input.removeAttribute('aria-invalid');
+      await flush();
+      expect(label.hasAttribute('disabled')).toBe(true);
+      expect(label.hasAttribute('error')).toBe(false);
+    });
+  });
+
+  // -------------------------------------------------------------------------
   // DOM mutations
   // -------------------------------------------------------------------------
   describe('DOM mutations', () => {
-    it('syncs a label added after init', async () => {
+    it('syncs a label added after init (disabled)', async () => {
       const input = makeInput('field-d', { disabled: true });
       document.body.append(input);
       init();
@@ -171,8 +309,20 @@ describe('disabled-labels', () => {
       expect(label.hasAttribute('disabled')).toBe(true);
     });
 
+    it('syncs a label added after init (error)', async () => {
+      const input = makeInput('field-d', { invalid: true });
+      document.body.append(input);
+      init();
+
+      const label = makeLabel('field-d');
+      document.body.append(label);
+      await flush();
+
+      expect(label.hasAttribute('error')).toBe(true);
+    });
+
     it('syncs labels added inside a wrapper after init', async () => {
-      const input = makeInput('field-e', { disabled: true });
+      const input = makeInput('field-e', { disabled: true, invalid: true });
       document.body.append(input);
       init();
 
@@ -181,7 +331,9 @@ describe('disabled-labels', () => {
       document.body.append(wrapper);
       await flush();
 
-      expect(wrapper.querySelector('label').hasAttribute('disabled')).toBe(true);
+      const label = wrapper.querySelector('label');
+      expect(label.hasAttribute('disabled')).toBe(true);
+      expect(label.hasAttribute('error')).toBe(true);
     });
 
     it('syncs labels when their target input is added after init', async () => {
@@ -189,10 +341,11 @@ describe('disabled-labels', () => {
       document.body.append(label);
       init();
 
-      document.body.append(makeInput('field-f', { disabled: true }));
+      document.body.append(makeInput('field-f', { disabled: true, invalid: true }));
       await flush();
 
       expect(label.hasAttribute('disabled')).toBe(true);
+      expect(label.hasAttribute('error')).toBe(true);
     });
 
     it('re-syncs when a label’s for attribute changes to a disabled input', async () => {
@@ -206,6 +359,19 @@ describe('disabled-labels', () => {
       await flush();
 
       expect(label.hasAttribute('disabled')).toBe(true);
+    });
+
+    it('re-syncs when a label’s for attribute changes to an invalid input', async () => {
+      const label = makeLabel('off');
+      document.body.append(label, makeInput('off'));
+      document.body.append(makeInput('on', { invalid: true }));
+      init();
+      expect(label.hasAttribute('error')).toBe(false);
+
+      label.setAttribute('for', 'on');
+      await flush();
+
+      expect(label.hasAttribute('error')).toBe(true);
     });
   });
 
@@ -243,9 +409,11 @@ describe('disabled-labels', () => {
 
       cleanup();
       input.disabled = true;
+      input.setAttribute('aria-invalid', 'true');
       await flush();
 
       expect(label.hasAttribute('disabled')).toBe(false);
+      expect(label.hasAttribute('error')).toBe(false);
     });
   });
 
@@ -264,7 +432,7 @@ describe('disabled-labels', () => {
     });
 
     it('returns a no-op cleanup when root is null', () => {
-      const cleanup = initDisabledLabels({ root: null });
+      const cleanup = initLabelStateSync({ root: null });
       expect(() => cleanup()).not.toThrow();
     });
   });
