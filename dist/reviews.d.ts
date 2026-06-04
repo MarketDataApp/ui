@@ -18,5 +18,5 @@ export function initResenaWidget(options: {
  * build-time data from the review platform's public page.
  */
 export const reviewRating: "4.3";
-export const reviewCount: "100";
+export const reviewCount: "101";
 export const reviewLabel: "Great";
