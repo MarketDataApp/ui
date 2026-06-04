@@ -1,5 +1,11 @@
 # Changelog
 
+## 5.0.1
+
+### Fixes
+
+- **`.form-label` now carries nested `&[disabled]` and `&[error]` blocks**, mirroring the pattern `form-checkbox-label` already used. Consumers who blanket-`@apply` `form-label` to a host-form wrapper (e.g. `.am-element-title > label`) landed at higher selector specificity than the bare global `label[disabled]` / `label[error]` rules and silently stripped the kit's state styling, forcing each consumer to re-implement the state colors per call site. The duplication is intentional: when `@apply`'d, the nested blocks land at the consumer's specificity so the state survives whatever selector bound `form-label`. Consumers that don't surface `[disabled]` / `[error]` on their labels see no change. Closes #31.
+
 ## 5.0.0
 
 ### Breaking Changes
