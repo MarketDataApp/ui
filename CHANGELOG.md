@@ -1,5 +1,11 @@
 # Changelog
 
+## 4.17.0
+
+### New
+
+- **`.form-checkbox-label` — companion label utility for cross-container checkbox/radio rows.** The kit already handles labels that sit next to their input via `:where(.checkbox-input, .radio-button-input):disabled ~ label` (adjacent sibling) and `label:has(input:disabled)` (wrapping label), and 4.15.0 added cross-container coverage via the `disabled-labels` JS helper which toggles `label[disabled]`. But for the visual styling of those cross-container labels, consumers had no utility shape: `.form-label` adds `mb-2` + `font-medium` (stacked-field affordances that are wrong for an inline checkbox companion), and a bare `<label>` only inherits sibling rules when it shares a parent with the input. Consumers ended up writing per-call-site overrides on top of `.form-label` that then, at higher selector specificity (e.g. `.am-element-title > label[for="X"]`, specificity 0,2,1), strip the global `label[disabled]` rule (0,1,1) — forcing each override to re-implement the disabled color and cursor. The new `@utility form-checkbox-label` is `font-normal text-sm text-heading cursor-pointer leading-none` with an `&[disabled]` block that mirrors the global `label[disabled]` rule. The duplication of the disabled block is intentional: when `@apply`'d, the rule lands at the same selector specificity as the consumer's override, so the disabled styling survives. Docs/index.html grows two demo rows in the existing Cross-container disabled labels grid plus an explainer paragraph; the Form Classes chip list is extended. Closes #27.
+
 ## 4.16.1
 
 ### Fixes
