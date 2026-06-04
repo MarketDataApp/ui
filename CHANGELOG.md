@@ -1,5 +1,11 @@
 # Changelog
 
+## 5.0.2
+
+### Fixes
+
+- **`label[error]` is now focus-conditional, matching `.form-input-error`'s typed-text behavior from 4.17.2.** When an errored input gained focus the input text dropped back to `text-heading` (so the user could read what they were correcting) but the associated cross-container label stayed red — the two signals fell out of sync, and the label only flipped back once the consumer cleared `aria-invalid`. `initLabelStateSync()` now also mirrors `:focus` onto the label as a `[focused]` attribute via `focusin` / `focusout` listeners on `root` (since `:focus` isn't an attribute the MutationObserver can see), and the kit's `label[error]` / `form-label` / `form-checkbox-label` rules gain a nested `&[focused]` block that drops the color back to `text-heading` while focused. Rest-state error signal preserved; actively-editing pain disappears in both places. Closes #32.
+
 ## 5.0.1
 
 ### Fixes
