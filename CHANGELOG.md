@@ -1,5 +1,11 @@
 # Changelog
 
+## 5.0.3
+
+### Fixes
+
+- **`[focused]` attribute now clears on `focusout` in real browsers.** The 5.0.2 focused-state binding read `el === el.ownerDocument.activeElement` from the focus-event handler, but the spec lets browsers fire `focusout` while `activeElement` still references the element losing focus — so the read returned true inside the focusout handler, the `[focused]` attribute never flipped off, and the cross-container label stayed at `text-heading` even after the user tabbed away (visibly desynced from `.form-input-error`, which uses a native `&:not(:focus)` selector that updates correctly). jsdom updates `activeElement` synchronously before firing focusout, so the original test suite passed without catching this. The `focused` binding now declares a separate `readFromEvent(event) => event.type === 'focusin'` which the focus handler uses in place of the synchronous DOM read; the existing `read(el)` is kept for the initial pass (where there's no event in hand). The `StateBinding` type gains an optional `readFromEvent`, required when `usesFocusEvents` is true. New regression test dispatches `focusout` manually so `activeElement` stays stale, asserting `[focused]` still clears. Closes #33.
+
 ## 5.0.2
 
 ### Fixes
