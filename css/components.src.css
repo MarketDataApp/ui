@@ -399,6 +399,19 @@
   @apply block mb-2 text-sm font-medium text-heading;
 }
 
+/* Companion label for a checkbox/radio that lives in a separate parent
+   from its input (so the adjacent-sibling/wrapping disabled-label rules
+   don't apply). The `&[disabled]` block duplicates the global
+   `label[disabled]` rule on purpose — consumer overrides at higher
+   selector specificity can otherwise wipe the disabled styling. */
+@utility form-checkbox-label {
+  @apply font-normal text-sm text-heading cursor-pointer leading-none;
+  &[disabled] {
+    color: var(--color-fg-disabled);
+    cursor: not-allowed;
+  }
+}
+
 @utility form-input {
   @apply shadow-none bg-gray-50 dark:bg-gray-700 border border-solid border-gray-300 dark:border-gray-600 text-heading text-sm rounded-base focus:ring-1 focus:ring-brand focus:border-brand focus:outline-hidden block w-full p-2.5 dark:placeholder-gray-400
          disabled:bg-gray-100 disabled:cursor-not-allowed disabled:text-gray-400

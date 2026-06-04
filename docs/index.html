@@ -1169,8 +1169,27 @@ button.removeAttribute('aria-busy');        // done</code></pre>
               <option selected>On</option>
               <option>Off</option>
             </select>
+
+            <label class="form-checkbox-label" for="cross-marketing">Marketing emails</label>
+            <input id="cross-marketing" type="checkbox" class="checkbox-input" checked />
+
+            <label class="form-checkbox-label" for="cross-employer">Employer website</label>
+            <input id="cross-employer" type="checkbox" class="checkbox-input" disabled />
           </div>
         </div>
+
+        <p class="text-sm text-body-subtle mt-4">
+          The checkbox rows use
+          <code class="text-xs font-mono bg-gray-100 dark:bg-gray-800 px-1 py-0.5 rounded"
+            >.form-checkbox-label</code
+          >
+          — a companion-label utility for checkboxes/radios whose input lives in a sibling parent.
+          Unlike <code class="text-xs font-mono">.form-label</code> it drops the
+          <code class="text-xs font-mono">mb-2</code> and
+          <code class="text-xs font-mono">font-medium</code> stacked-field affordances, and bakes in
+          its own <code class="text-xs font-mono">&amp;[disabled]</code> rule so consumer overrides
+          at higher selector specificity can't strip the disabled styling.
+        </p>
 
         <div class="mt-6">
           <h3 class="text-lg font-semibold mb-3">Form Classes</h3>
@@ -1183,6 +1202,9 @@ button.removeAttribute('aria-busy');        // done</code></pre>
             >
             <code class="text-xs font-mono bg-gray-100 dark:bg-gray-800 px-2 py-1 rounded"
               >.form-label</code
+            >
+            <code class="text-xs font-mono bg-gray-100 dark:bg-gray-800 px-2 py-1 rounded"
+              >.form-checkbox-label</code
             >
             <code class="text-xs font-mono bg-gray-100 dark:bg-gray-800 px-2 py-1 rounded"
               >.form-input</code

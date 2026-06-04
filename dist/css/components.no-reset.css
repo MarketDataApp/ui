@@ -2216,6 +2216,20 @@
   background-image: linear-gradient(103deg, #e83155 0%, #ffdfb9 100%);
   transition: width 400ms ease;
 }
+.form-checkbox-label {
+  cursor: pointer;
+  font-size: var(--text-sm);
+  line-height: var(--tw-leading, var(--text-sm--line-height));
+  --tw-leading: var(--leading-none);
+  line-height: var(--leading-none);
+  --tw-font-weight: var(--font-weight-normal);
+  font-weight: var(--font-weight-normal);
+  color: var(--color-heading);
+  &[disabled] {
+    color: var(--color-fg-disabled);
+    cursor: not-allowed;
+  }
+}
 .radio-group-container {
   --radio-btn-bg: var(--color-gray-100);
   :where(& > :not(:last-child)) {

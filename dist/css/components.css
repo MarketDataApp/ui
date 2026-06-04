@@ -2678,6 +2678,20 @@
   .transform {
     transform: var(--tw-rotate-x,) var(--tw-rotate-y,) var(--tw-rotate-z,) var(--tw-skew-x,) var(--tw-skew-y,);
   }
+  .form-checkbox-label {
+    cursor: pointer;
+    font-size: var(--text-sm);
+    line-height: var(--tw-leading, var(--text-sm--line-height));
+    --tw-leading: var(--leading-none);
+    line-height: var(--leading-none);
+    --tw-font-weight: var(--font-weight-normal);
+    font-weight: var(--font-weight-normal);
+    color: var(--color-heading);
+    &[disabled] {
+      color: var(--color-fg-disabled);
+      cursor: not-allowed;
+    }
+  }
   .cursor-not-allowed {
     cursor: not-allowed;
   }
@@ -3745,6 +3759,11 @@
       background-color: var(--color-gray-100);
     }
   }
+  .read-only\:text-gray-900 {
+    &:read-only {
+      color: var(--color-gray-900);
+    }
+  }
   .hover\:bg-gray-100 {
     &:hover {
       @media (hover: hover) {
@@ -3856,6 +3875,16 @@
   .disabled\:bg-gray-100 {
     &:disabled {
       background-color: var(--color-gray-100);
+    }
+  }
+  .disabled\:text-gray-400 {
+    &:disabled {
+      color: var(--color-gray-400);
+    }
+  }
+  .disabled\:text-gray-900 {
+    &:disabled {
+      color: var(--color-gray-900);
     }
   }
   .disabled\:opacity-50 {
@@ -4151,6 +4180,13 @@
     &:where(.dark, .dark *, [data-theme="dark"], [data-theme="dark"] *) {
       &:disabled {
         background-color: var(--color-gray-700);
+      }
+    }
+  }
+  .dark\:disabled\:text-gray-400 {
+    &:where(.dark, .dark *, [data-theme="dark"], [data-theme="dark"] *) {
+      &:disabled {
+        color: var(--color-gray-400);
       }
     }
   }
