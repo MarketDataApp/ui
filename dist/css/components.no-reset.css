@@ -1054,7 +1054,7 @@
     background-color: var(--color-gray-100);
   }
   &:disabled {
-    color: var(--color-gray-900);
+    color: var(--color-gray-400);
   }
   &:where(.dark, .dark *, [data-theme="dark"], [data-theme="dark"] *) {
     border-color: var(--color-gray-600);
@@ -1064,16 +1064,6 @@
   }
   &:where(.dark, .dark *, [data-theme="dark"], [data-theme="dark"] *) {
     &::placeholder {
-      color: var(--color-gray-400);
-    }
-  }
-  &:where(.dark, .dark *, [data-theme="dark"], [data-theme="dark"] *) {
-    &:disabled {
-      background-color: var(--color-gray-700);
-    }
-  }
-  &:where(.dark, .dark *, [data-theme="dark"], [data-theme="dark"] *) {
-    &:disabled {
       color: var(--color-gray-400);
     }
   }
@@ -1117,9 +1107,6 @@
   &:read-only {
     background-color: var(--color-gray-100);
   }
-  &:read-only {
-    color: var(--color-gray-900);
-  }
   &:focus {
     border-color: var(--color-brand);
   }
@@ -1145,7 +1132,7 @@
     background-color: var(--color-gray-100);
   }
   &:disabled {
-    color: var(--color-gray-900);
+    color: var(--color-gray-400);
   }
   &:where(.dark, .dark *, [data-theme="dark"], [data-theme="dark"] *) {
     border-color: var(--color-gray-600);
@@ -1155,26 +1142,6 @@
   }
   &:where(.dark, .dark *, [data-theme="dark"], [data-theme="dark"] *) {
     &::placeholder {
-      color: var(--color-gray-400);
-    }
-  }
-  &:where(.dark, .dark *, [data-theme="dark"], [data-theme="dark"] *) {
-    &:read-only {
-      background-color: var(--color-gray-700);
-    }
-  }
-  &:where(.dark, .dark *, [data-theme="dark"], [data-theme="dark"] *) {
-    &:read-only {
-      color: var(--color-gray-400);
-    }
-  }
-  &:where(.dark, .dark *, [data-theme="dark"], [data-theme="dark"] *) {
-    &:disabled {
-      background-color: var(--color-gray-700);
-    }
-  }
-  &:where(.dark, .dark *, [data-theme="dark"], [data-theme="dark"] *) {
-    &:disabled {
       color: var(--color-gray-400);
     }
   }
@@ -1202,7 +1169,7 @@
   padding: calc(var(--spacing) * 2.5);
   font-size: var(--text-sm);
   line-height: var(--tw-leading, var(--text-sm--line-height));
-  color: var(--color-gray-900);
+  color: var(--color-gray-400);
   &:focus {
     border-color: var(--color-brand);
   }
@@ -1226,9 +1193,6 @@
   }
   &:where(.dark, .dark *, [data-theme="dark"], [data-theme="dark"] *) {
     background-color: var(--color-gray-700);
-  }
-  &:where(.dark, .dark *, [data-theme="dark"], [data-theme="dark"] *) {
-    color: var(--color-gray-400);
   }
   &:where(.dark, .dark *, [data-theme="dark"], [data-theme="dark"] *) {
     &::placeholder {

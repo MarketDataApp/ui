@@ -1,5 +1,14 @@
 # Changelog
 
+## 4.16.1
+
+### Fixes
+
+- **`.form-input` and `.form-dropdown-input` disabled state now visibly dims the text in light mode.** Prior rule was `disabled:text-gray-900 dark:disabled:text-gray-400`, but `text-gray-900` is the same color as `text-heading`'s default in light mode — so a disabled field looked identical to an enabled one apart from a barely-perceptible `gray-50 → gray-100` bg shift. Adopting Flowbite's "dim the text" disabled philosophy (without adopting Flowbite's tokens — staying on hardcoded grays) collapses both modes to `disabled:text-gray-400`, which reads as muted on both `gray-50` and `gray-700` backgrounds.
+- **`.form-input-disabled` standalone utility now uses `text-gray-400` in both modes** for the same reason. Previously `text-gray-900` in light mode rendered at full heading contrast.
+- **`.form-input` read-only state now keeps `text-heading`** (full contrast) instead of dimming the text. The prior `read-only:text-gray-900` was a no-op in light mode anyway, but the intent — "value is visible but not editable" rather than "muted" — matches Flowbite's read-only pattern and is now explicit.
+- **Dropped redundant `dark:disabled:bg-gray-700` and `dark:read-only:bg-gray-700` overrides** from `.form-input` and `.form-dropdown-input`. They equalled the normal dark-mode bg (`dark:bg-gray-700`), so removing them changes nothing visually but makes the rules less misleading.
+
 ## 4.16.0
 
 ### New
