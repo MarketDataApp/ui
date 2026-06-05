@@ -1,5 +1,11 @@
 # Changelog
 
+## 5.0.4
+
+### Fixes
+
+- **Dark-mode disabled and read-only fields no longer render against a light-gray background.** `.form-input`, `.form-dropdown-input`, and `.form-input-disabled` declared `disabled:bg-gray-100` / `read-only:bg-gray-100` with no `dark:` variant, so in dark mode a locked-form review (e.g. an amember Account Information page where every field is disabled to display existing data) painted those fields against a bright light-gray background that read as broken theming. 4.16.1 deliberately dropped `dark:disabled:bg-gray-700` as redundant — it equalled the normal dark input bg — but never added a darker dark-mode tier, so the rule fell back to the bare light-mode color. Add `dark:disabled:bg-gray-800` and `dark:read-only:bg-gray-800` (one tier darker than the normal dark input bg of `gray-700`, mirroring the light-mode `gray-50 → gray-100` "disabled is one tier darker" pattern) plus `dark:disabled:text-gray-500` so the dim-text disabled treatment holds against the darker bg. The standalone `.form-input-disabled` utility shifts the same way (`dark:bg-gray-800`, adds `dark:text-gray-500`).
+
 ## 5.0.3
 
 ### Fixes
