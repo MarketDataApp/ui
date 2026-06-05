@@ -1,5 +1,11 @@
 # Changelog
 
+## 5.0.5
+
+### Fixes
+
+- **Dark-mode disabled and read-only form-input backgrounds shift from `gray-800` to `gray-700` so they stop blending with the form container.** 5.0.4 set `dark:disabled:bg-gray-800` to mirror the light-mode "disabled is one tier darker than normal" pattern, but `.form-container`'s dark bg is `bg-neutral-primary-medium` which resolves to `gray-800` — so disabled fields blended into the container, just a different flavor of the bug 5.0.4 was meant to fix. Adopt Flowbite's design intent ([forms/disabled-inputs](https://flowbite.com/docs/components/forms/#disabled-inputs) uses `bg-neutral-secondary-medium`, the same bg as the default-form input): in dark mode, disabled and read-only share the same bg as a normal input (`gray-700`), and the dimmed `dark:disabled:text-gray-500` is the only signal that the field is locked. Read-only also drops to `gray-700` for parity — text stays `text-heading` so values read at full contrast, per the 4.16.1 read-only philosophy. Light-mode disabled/read-only stay at `bg-gray-100`, which contrasts fine against the white container. `.form-input-disabled` and `.form-dropdown-input` shift the same way.
+
 ## 5.0.4
 
 ### Fixes
