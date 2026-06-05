@@ -527,6 +527,195 @@ describe('label-state-sync', () => {
   });
 
   // -------------------------------------------------------------------------
+  // data-state-for override
+  // -------------------------------------------------------------------------
+  describe('data-state-for override', () => {
+    it('uses data-state-for as the source when for points at a non-existent id', () => {
+      // Real amember markup pattern: <label for="grp-state"> with no #grp-state,
+      // and the actual <select> / fallback <input> living under different ids.
+      const label = makeLabel('grp-state');
+      label.setAttribute('data-state-for', 'f_state');
+      const select = makeInput('f_state', { disabled: true });
+      document.body.append(label, select);
+
+      init();
+
+      expect(label.hasAttribute('disabled')).toBe(true);
+    });
+
+    it('prefers data-state-for over for when both resolve to elements', () => {
+      // for points at an enabled input, data-state-for points at a disabled
+      // one. The override wins — `for` keeps its native click-to-focus role
+      // but stops driving the state mirror.
+      const label = makeLabel('real-id');
+      label.setAttribute('data-state-for', 'override-id');
+      const realInput = makeInput('real-id');
+      const overrideInput = makeInput('override-id', { disabled: true });
+      document.body.append(label, realInput, overrideInput);
+
+      init();
+
+      expect(label.hasAttribute('disabled')).toBe(true);
+    });
+
+    it('combines multiple ids with ANY semantics (disabled)', () => {
+      // Two listed targets, only one is disabled. Label should dim.
+      const label = makeLabel('grp-state');
+      label.setAttribute('data-state-for', 'f_state t_state');
+      const select = makeInput('f_state', { disabled: true });
+      const fallback = makeInput('t_state'); // enabled
+      document.body.append(label, select, fallback);
+
+      init();
+
+      expect(label.hasAttribute('disabled')).toBe(true);
+    });
+
+    it('clears disabled only when every listed target is enabled', async () => {
+      const label = makeLabel('grp-state');
+      label.setAttribute('data-state-for', 'f_state t_state');
+      const select = makeInput('f_state', { disabled: true });
+      const fallback = makeInput('t_state', { disabled: true });
+      document.body.append(label, select, fallback);
+      init();
+      expect(label.hasAttribute('disabled')).toBe(true);
+
+      select.disabled = false;
+      await flush();
+      expect(label.hasAttribute('disabled')).toBe(true); // still ANY-disabled
+
+      fallback.disabled = false;
+      await flush();
+      expect(label.hasAttribute('disabled')).toBe(false);
+    });
+
+    it('combines multiple ids with ANY semantics (error)', () => {
+      const label = makeLabel('grp');
+      label.setAttribute('data-state-for', 'a b');
+      const a = makeInput('a');
+      const b = makeInput('b', { invalid: true });
+      document.body.append(label, a, b);
+
+      init();
+
+      expect(label.hasAttribute('error')).toBe(true);
+    });
+
+    it('combines multiple ids with ANY semantics (focused)', async () => {
+      const label = makeLabel('grp');
+      label.setAttribute('data-state-for', 'a b');
+      const a = makeInput('a');
+      const b = makeInput('b');
+      document.body.append(label, a, b);
+      init();
+      expect(label.hasAttribute('focused')).toBe(false);
+
+      b.focus();
+      await flush();
+
+      expect(label.hasAttribute('focused')).toBe(true);
+    });
+
+    it('ignores missing ids in the list and uses the ones that resolve', () => {
+      const label = makeLabel('grp');
+      label.setAttribute('data-state-for', 'nope_1 real_id nope_2');
+      const real = makeInput('real_id', { disabled: true });
+      document.body.append(label, real);
+
+      init();
+
+      expect(label.hasAttribute('disabled')).toBe(true);
+    });
+
+    it('tolerates extra whitespace between ids', () => {
+      const label = makeLabel('grp');
+      label.setAttribute('data-state-for', '  a   b  ');
+      const a = makeInput('a', { disabled: true });
+      const b = makeInput('b');
+      document.body.append(label, a, b);
+
+      init();
+
+      expect(label.hasAttribute('disabled')).toBe(true);
+    });
+
+    it('re-syncs when data-state-for changes after init', async () => {
+      const label = makeLabel('grp');
+      label.setAttribute('data-state-for', 'a');
+      const a = makeInput('a');
+      const b = makeInput('b', { disabled: true });
+      document.body.append(label, a, b);
+      init();
+      expect(label.hasAttribute('disabled')).toBe(false);
+
+      label.setAttribute('data-state-for', 'b');
+      await flush();
+
+      expect(label.hasAttribute('disabled')).toBe(true);
+    });
+
+    it('re-syncs when a listed target flips state after init', async () => {
+      const label = makeLabel('grp');
+      label.setAttribute('data-state-for', 'a b');
+      const a = makeInput('a');
+      const b = makeInput('b');
+      document.body.append(label, a, b);
+      init();
+      expect(label.hasAttribute('disabled')).toBe(false);
+
+      b.disabled = true;
+      await flush();
+
+      expect(label.hasAttribute('disabled')).toBe(true);
+    });
+
+    it('picks up a label added after init that uses data-state-for', async () => {
+      const input = makeInput('f_state', { disabled: true });
+      document.body.append(input);
+      init();
+
+      const label = makeLabel('grp-state');
+      label.setAttribute('data-state-for', 'f_state');
+      document.body.append(label);
+      await flush();
+
+      expect(label.hasAttribute('disabled')).toBe(true);
+    });
+
+    it('works on a label that has data-state-for but no for attribute', () => {
+      const label = document.createElement('label');
+      label.setAttribute('data-state-for', 'standalone');
+      const input = makeInput('standalone', { disabled: true });
+      document.body.append(label, input);
+
+      init();
+
+      expect(label.hasAttribute('disabled')).toBe(true);
+    });
+
+    it('does not leak focused state across labels when focus moves within a multi-target group', async () => {
+      // Regression for the multi-target focus-handling reasoning in
+      // onFocusChange: focusout(A) → focusin(B) for two targets of the
+      // same label must end with focused=true (B is now focused).
+      const label = makeLabel('grp');
+      label.setAttribute('data-state-for', 'a b');
+      const a = makeInput('a');
+      const b = makeInput('b');
+      document.body.append(label, a, b);
+      init();
+
+      a.focus();
+      await flush();
+      expect(label.hasAttribute('focused')).toBe(true);
+
+      b.focus(); // jsdom moves activeElement to b and fires focusout(a) + focusin(b)
+      await flush();
+
+      expect(label.hasAttribute('focused')).toBe(true);
+    });
+  });
+
+  // -------------------------------------------------------------------------
   // Edge cases
   // -------------------------------------------------------------------------
   describe('edge cases', () => {

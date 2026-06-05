@@ -27,6 +27,24 @@
  * cover the focus state since `:focus` isn't an attribute the observer
  * can see.
  *
+ * ### `data-state-for` override
+ *
+ * When the markup is broken — a `<label for="X">` whose `#X` doesn't
+ * exist, or whose `#X` is a wrapper around the real controls — add
+ * `data-state-for="<id> [<id> …]"` to the label. The override replaces
+ * `for` as the source-of-truth for state mirroring (the native `for`
+ * attribute keeps its click-to-focus / accessibility role, even if the id
+ * is wrong). Multiple ids combine with ANY semantics: if *any* listed
+ * target is disabled / invalid / focused, the label gets the matching
+ * attribute. Same logic across all three bindings.
+ *
+ * Example (amember swap-input pattern, where one of two controls is
+ * shown and the other is `display: none`):
+ *
+ *     <label for="grp-state" data-state-for="f_state t_state">State</label>
+ *     <select id="f_state" disabled>…</select>
+ *     <input id="t_state" disabled style="display: none">
+ *
  * The CSS for the disabled-label, error-label, and focused-label
  * appearance lives in `components.src.css` (`label[disabled]`,
  * `label[error]`, `label[focused]`).
@@ -91,8 +109,12 @@ const STATE_BINDINGS = [
 ];
 
 const SOURCE_ATTRS = new Set(STATE_BINDINGS.filter((b) => b.sourceAttr).map((b) => b.sourceAttr));
-const OBSERVED_ATTRS = [...new Set([...SOURCE_ATTRS, 'for', 'id'])];
+const OBSERVED_ATTRS = [...new Set([...SOURCE_ATTRS, 'for', 'id', 'data-state-for'])];
 const USES_FOCUS_EVENTS = STATE_BINDINGS.some((b) => b.usesFocusEvents);
+
+/** Selector for every label this module manages — either via the native
+ *  `for` attribute or the `data-state-for` override. */
+const LABEL_SELECTOR = 'label[for], label[data-state-for]';
 
 /**
  * @typedef {Object} LabelStateSyncOptions
@@ -102,47 +124,92 @@ const USES_FOCUS_EVENTS = STATE_BINDINGS.some((b) => b.usesFocusEvents);
  */
 
 /**
- * Sync every `label[for]` inside `root` once.
+ * Resolve a label's state-mirroring target(s). When `data-state-for` is
+ * set, it wins — `for` is treated as broken markup (still useful for the
+ * browser's click-to-focus, but not for state). Otherwise fall back to
+ * `for`. Either source may list multiple ids (space-separated); missing
+ * ids are silently dropped so partial markup degrades gracefully.
+ *
+ * @param {HTMLLabelElement} label
+ * @returns {HTMLElement[]}
+ */
+function resolveTargets(label) {
+  const idSource = label.getAttribute('data-state-for') ?? label.getAttribute('for');
+  if (!idSource) return [];
+  const doc = label.ownerDocument;
+  const targets = [];
+  for (const id of idSource.split(/\s+/)) {
+    if (!id) continue;
+    const el = doc.getElementById(id);
+    if (el) targets.push(el);
+  }
+  return targets;
+}
+
+/**
+ * Does this label mirror state from the input with the given id? Used by
+ * the per-input re-sync path so we don't have to build escaped CSS
+ * selectors against arbitrary id values (HTML5 ids can legally contain
+ * `.`, `:`, `#`, etc.).
+ *
+ * @param {HTMLLabelElement} label
+ * @param {string} id
+ */
+function labelTargetsId(label, id) {
+  const override = label.getAttribute('data-state-for');
+  if (override !== null) {
+    return override.split(/\s+/).includes(id);
+  }
+  return label.htmlFor === id;
+}
+
+/**
+ * Sync every managed label inside `root` once.
  *
  * @param {ParentNode} root
  */
 function syncAll(root) {
-  const labels = root.querySelectorAll('label[for]');
+  const labels = root.querySelectorAll(LABEL_SELECTOR);
   for (const label of labels) {
     syncOne(label);
   }
 }
 
 /**
- * Sync a single label against its `for=""` target across every binding.
- * Resolution uses `getElementById` on the document so the input can live
- * anywhere — the cross-container case is the whole reason this helper exists.
+ * Sync a single label against its resolved target(s) across every
+ * binding. Multi-target labels (via `data-state-for="a b c"`) use ANY
+ * semantics — the label gets the state attribute if any listed target is
+ * in that state. For the single-target case this collapses to the same
+ * behavior as a direct read.
  *
  * @param {HTMLLabelElement} label
  */
 function syncOne(label) {
-  const id = label.getAttribute('for');
-  if (!id) return;
-  const target = label.ownerDocument.getElementById(id);
-  if (!target) return;
+  const targets = resolveTargets(label);
+  if (targets.length === 0) return;
   for (const binding of STATE_BINDINGS) {
-    label.toggleAttribute(binding.labelAttr, binding.read(target));
+    label.toggleAttribute(
+      binding.labelAttr,
+      targets.some((t) => binding.read(t)),
+    );
   }
 }
 
 /**
- * For every label[for] that points at the given input, re-sync it. Walks
- * `label[for]` and compares `htmlFor` directly instead of building a
- * selector — avoids needing to CSS-escape arbitrary id values (which can
- * legally contain `.`, `:`, `#`, etc. in HTML5).
+ * For every label that targets the given input (via `for` or
+ * `data-state-for`), re-sync it. Walks all managed labels and asks
+ * `labelTargetsId` per label instead of building a selector — avoids
+ * needing to CSS-escape arbitrary id values.
  *
  * @param {HTMLElement} input
  */
 function syncLabelsFor(input) {
   if (!input.id) return;
-  const labels = input.ownerDocument.querySelectorAll('label[for]');
+  const labels = input.ownerDocument.querySelectorAll(LABEL_SELECTOR);
   for (const label of labels) {
-    if (label.htmlFor === input.id) syncOne(label);
+    if (labelTargetsId(/** @type {HTMLLabelElement} */ (label), input.id)) {
+      syncOne(/** @type {HTMLLabelElement} */ (label));
+    }
   }
 }
 
@@ -175,7 +242,10 @@ export function initLabelStateSync({ root = document.body } = {}) {
     for (const mutation of mutations) {
       if (mutation.type === 'attributes') {
         const target = /** @type {HTMLElement} */ (mutation.target);
-        if (mutation.attributeName === 'for' && target.tagName === 'LABEL') {
+        if (
+          (mutation.attributeName === 'for' || mutation.attributeName === 'data-state-for') &&
+          target.tagName === 'LABEL'
+        ) {
           syncOne(/** @type {HTMLLabelElement} */ (target));
         } else if (mutation.attributeName === 'id') {
           // An input's id changed — labels that pointed at the *old* id are
@@ -194,14 +264,17 @@ export function initLabelStateSync({ root = document.body } = {}) {
       for (const node of mutation.addedNodes) {
         if (node.nodeType !== Node.ELEMENT_NODE) continue;
         const el = /** @type {HTMLElement} */ (node);
-        if (el.tagName === 'LABEL' && el.hasAttribute('for')) {
+        if (
+          el.tagName === 'LABEL' &&
+          (el.hasAttribute('for') || el.hasAttribute('data-state-for'))
+        ) {
           syncOne(/** @type {HTMLLabelElement} */ (el));
         }
         if (el.id) {
           syncLabelsFor(el);
         }
         // Added subtree may contain labels and inputs.
-        for (const label of el.querySelectorAll?.('label[for]') ?? []) {
+        for (const label of el.querySelectorAll?.(LABEL_SELECTOR) ?? []) {
           syncOne(/** @type {HTMLLabelElement} */ (label));
         }
         for (const input of el.querySelectorAll?.('[id]') ?? []) {
@@ -230,9 +303,16 @@ export function initLabelStateSync({ root = document.body } = {}) {
   const onFocusChange = (event) => {
     const target = /** @type {HTMLElement} */ (event.target);
     if (!target.id) return;
-    const labels = target.ownerDocument.querySelectorAll('label[for]');
+    const labels = target.ownerDocument.querySelectorAll(LABEL_SELECTOR);
     for (const label of labels) {
-      if (label.htmlFor !== target.id) continue;
+      if (!labelTargetsId(/** @type {HTMLLabelElement} */ (label), target.id)) continue;
+      // Multi-target labels (via `data-state-for="a b c"`): when focus
+      // moves between sibling targets, the sequence is focusout(A) →
+      // focusin(B). The intermediate `focused=false` set on focusout
+      // happens inside a single synchronous task and is never painted
+      // before focusin re-asserts true, so event-type read stays
+      // correct without bringing back the jsdom/spec timing bug that
+      // `readFromEvent` was written to defeat.
       for (const binding of STATE_BINDINGS) {
         if (!binding.usesFocusEvents) continue;
         label.toggleAttribute(binding.labelAttr, binding.readFromEvent(event));

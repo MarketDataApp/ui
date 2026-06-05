@@ -1220,6 +1220,50 @@ button.removeAttribute('aria-busy');        // done</code></pre>
           at higher selector specificity can't strip the disabled styling.
         </p>
 
+        <h4 class="text-base font-semibold mt-6 mb-2">
+          <code class="text-sm font-mono">data-state-for</code> override for broken
+          <code class="text-sm font-mono">for</code> markup
+        </h4>
+        <p class="text-gray-500 dark:text-gray-400 mb-4">
+          When a <code class="text-xs font-mono">&lt;label for="X"&gt;</code> points at an
+          <code class="text-xs font-mono">id</code> that doesn't exist — or points at a wrapper
+          around the real controls — add
+          <code class="text-xs font-mono">data-state-for="&lt;id&gt; [&lt;id&gt; …]"</code> to the
+          label. The override replaces <code class="text-xs font-mono">for</code> as the source for
+          state mirroring (the native <code class="text-xs font-mono">for</code> keeps its
+          click-to-focus role even if the id is wrong). Multiple ids combine with ANY semantics: if
+          any listed target is disabled / invalid / focused, the label gets the matching attribute.
+          Common case: amember's swap-input pattern where a
+          <code class="text-xs font-mono">&lt;select&gt;</code> and fallback
+          <code class="text-xs font-mono">&lt;input&gt;</code> share a single label and toggle
+          visibility with <code class="text-xs font-mono">display: none</code>.
+        </p>
+
+        <div class="form-container max-w-2xl">
+          <div class="grid grid-cols-[10rem_1fr] gap-x-4 gap-y-3 items-center">
+            <label class="form-label !mb-0" for="grp-state" data-state-for="f_state t_state">
+              State
+            </label>
+            <div>
+              <select id="f_state" name="state" class="form-dropdown-input" disabled>
+                <option selected>Buenos Aires Province</option>
+                <option>Catamarca</option>
+                <option>Chaco</option>
+              </select>
+              <input
+                id="t_state"
+                type="text"
+                name="state"
+                class="form-input"
+                value="AR-B"
+                placeholder="State"
+                disabled
+                hidden
+              />
+            </div>
+          </div>
+        </div>
+
         <div class="mt-6">
           <h3 class="text-lg font-semibold mb-3">Form Classes</h3>
           <div class="flex flex-wrap gap-2">
@@ -1258,6 +1302,9 @@ button.removeAttribute('aria-busy');        // done</code></pre>
             >
             <code class="text-xs font-mono bg-gray-100 dark:bg-gray-800 px-2 py-1 rounded"
               >label[error]</code
+            >
+            <code class="text-xs font-mono bg-gray-100 dark:bg-gray-800 px-2 py-1 rounded"
+              >data-state-for</code
             >
             <code class="text-xs font-mono bg-gray-100 dark:bg-gray-800 px-2 py-1 rounded"
               >@marketdataapp/ui/label-state-sync</code
