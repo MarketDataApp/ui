@@ -441,8 +441,8 @@
 
 @utility form-input {
   @apply shadow-none bg-gray-50 dark:bg-gray-700 border border-solid border-gray-300 dark:border-gray-600 text-heading text-sm rounded-base focus:ring-1 focus:ring-brand focus:border-brand focus:outline-hidden block w-full p-2.5 dark:placeholder-gray-400
-         disabled:bg-gray-100 dark:disabled:bg-gray-800 disabled:cursor-not-allowed disabled:text-gray-400 dark:disabled:text-gray-500
-         read-only:bg-gray-100 dark:read-only:bg-gray-800 read-only:cursor-not-allowed;
+         disabled:bg-gray-100 dark:disabled:bg-gray-700 disabled:cursor-not-allowed disabled:text-gray-400 dark:disabled:text-gray-500
+         read-only:bg-gray-100 dark:read-only:bg-gray-700 read-only:cursor-not-allowed;
   /* Hide placeholders on disabled inputs. Browsers keep painting the placeholder
      on a disabled field, and at our disabled text color (gray-400) it's too easy
      to mistake a placeholder for a real value when reviewing a locked form. */
@@ -489,7 +489,7 @@
 }
 
 @utility form-input-disabled {
-  @apply bg-gray-100 dark:bg-gray-800 border border-gray-300 dark:border-gray-600 text-gray-400 dark:text-gray-500 text-sm rounded-base focus:ring-1 focus:ring-brand focus:border-brand focus:outline-hidden block w-full p-2.5 cursor-not-allowed dark:placeholder-gray-400;
+  @apply bg-gray-100 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 text-gray-400 dark:text-gray-500 text-sm rounded-base focus:ring-1 focus:ring-brand focus:border-brand focus:outline-hidden block w-full p-2.5 cursor-not-allowed dark:placeholder-gray-400;
 }
 
 @utility form-input-error {
@@ -501,7 +501,7 @@
 
 @utility form-dropdown-input {
   @apply shadow-xs bg-gray-50 dark:bg-gray-700 border border-solid border-gray-300 dark:border-gray-600 text-heading text-sm rounded-base focus:ring-1 focus:ring-brand focus:border-brand focus:outline-hidden block w-full ps-3 pe-10 py-2.5 cursor-pointer dark:placeholder-gray-400
-         disabled:bg-gray-100 dark:disabled:bg-gray-800 disabled:cursor-not-allowed disabled:text-gray-400 dark:disabled:text-gray-500;
+         disabled:bg-gray-100 dark:disabled:bg-gray-700 disabled:cursor-not-allowed disabled:text-gray-400 dark:disabled:text-gray-500;
   /* See .form-input — disabled placeholders are visually indistinguishable
      from filled values, so suppress them in disabled state. */
   &:disabled::placeholder {

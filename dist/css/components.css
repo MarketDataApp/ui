@@ -1406,7 +1406,7 @@
     }
     &:where(.dark, .dark *, [data-theme="dark"], [data-theme="dark"] *) {
       &:disabled {
-        background-color: var(--color-gray-800);
+        background-color: var(--color-gray-700);
       }
     }
     &:where(.dark, .dark *, [data-theme="dark"], [data-theme="dark"] *) {
@@ -1497,12 +1497,12 @@
     }
     &:where(.dark, .dark *, [data-theme="dark"], [data-theme="dark"] *) {
       &:read-only {
-        background-color: var(--color-gray-800);
+        background-color: var(--color-gray-700);
       }
     }
     &:where(.dark, .dark *, [data-theme="dark"], [data-theme="dark"] *) {
       &:disabled {
-        background-color: var(--color-gray-800);
+        background-color: var(--color-gray-700);
       }
     }
     &:where(.dark, .dark *, [data-theme="dark"], [data-theme="dark"] *) {
@@ -1560,7 +1560,7 @@
       border-color: var(--color-gray-600);
     }
     &:where(.dark, .dark *, [data-theme="dark"], [data-theme="dark"] *) {
-      background-color: var(--color-gray-800);
+      background-color: var(--color-gray-700);
     }
     &:where(.dark, .dark *, [data-theme="dark"], [data-theme="dark"] *) {
       color: var(--color-gray-500);
@@ -4199,6 +4199,13 @@
       }
     }
   }
+  .dark\:read-only\:bg-gray-800 {
+    &:where(.dark, .dark *, [data-theme="dark"], [data-theme="dark"] *) {
+      &:read-only {
+        background-color: var(--color-gray-800);
+      }
+    }
+  }
   .dark\:hover\:bg-gray-600 {
     &:where(.dark, .dark *, [data-theme="dark"], [data-theme="dark"] *) {
       &:hover {
@@ -4242,10 +4249,24 @@
       }
     }
   }
+  .dark\:disabled\:bg-gray-800 {
+    &:where(.dark, .dark *, [data-theme="dark"], [data-theme="dark"] *) {
+      &:disabled {
+        background-color: var(--color-gray-800);
+      }
+    }
+  }
   .dark\:disabled\:text-gray-400 {
     &:where(.dark, .dark *, [data-theme="dark"], [data-theme="dark"] *) {
       &:disabled {
         color: var(--color-gray-400);
+      }
+    }
+  }
+  .dark\:disabled\:text-gray-500 {
+    &:where(.dark, .dark *, [data-theme="dark"], [data-theme="dark"] *) {
+      &:disabled {
+        color: var(--color-gray-500);
       }
     }
   }
