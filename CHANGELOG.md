@@ -1,5 +1,11 @@
 # Changelog
 
+## 5.1.0
+
+### New
+
+- **`data-state-for` escape hatch on `<label>` for broken or mismatched `for` markup.** `initLabelStateSync()` mirrors state by looking up `#X` from `label[for="X"]`, but host platforms sometimes ship labels whose `for` points at an id that doesn't exist (amember's State row is `<label for="grp-state">` with the real controls living at `#f_state` and `#t_state`, swapped via `display: none`). The label can now declare its own state-mirror source(s) via `data-state-for="<id> [<id> …]"`, which the resolver consults before falling back to `for` — the native `for` keeps its click-to-focus / accessibility role even when the id is broken. Multiple ids combine with ANY semantics across all three bindings (`disabled`, `error`, `focused`): if any listed target is in the state, the label gets the matching attribute. The MutationObserver watches `data-state-for` so runtime changes re-sync, and the label-discovery selector widens to `label[for], label[data-state-for]` so labels with only the override (no `for`) still participate. Multi-target focus handling keeps the event-type read introduced in 5.0.3 — focusout-then-focusin between sibling targets resolves inside a single synchronous task and is never painted as a false-`false`, while the jsdom/spec stale-`activeElement` bug stays defeated. Docs grow an amember-style swap-input demo under "Cross-container label state sync"; the Form Classes chip list gains `data-state-for`.
+
 ## 5.0.5
 
 ### Fixes
