@@ -1,5 +1,11 @@
 # Changelog
 
+## 5.1.2
+
+### Fixes
+
+- **`initLabelStateSync()` now skips hidden controls when computing ANY-semantics across a `data-state-for` list.** The motivating swap-input pattern (amember's country/state row, where a `<select>` and a fallback `<input>` share one label and toggle visibility with `display: none`) intentionally keeps the hidden half `disabled` so its `name` stays out of form submission. ANY-semantics over both halves therefore mirrored the hidden half's stale `:disabled` onto the label even when the visible half was enabled — the row painted gray-on-light-gray and looked broken on the profile page. `resolveTargets()` now filters out any listed target with the HTML5 `hidden` attribute or inline `display: none` before the binding loop runs, so only the visible half contributes state. Live swaps where amember flips `display` and `disabled` together on the two halves Just Work — the `disabled` mutation wakes the existing MutationObserver, the re-sync calls `resolveTargets` fresh, and the now-visible half is picked up. The filter doesn't reach for `getComputedStyle`, so parent-collapse via stylesheets isn't detected; the amember swap toggles inline styles directly, which is the only case observed in the wild. Closes #34.
+
 ## 5.1.1
 
 ### Fixes
