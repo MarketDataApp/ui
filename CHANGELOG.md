@@ -1,5 +1,11 @@
 # Changelog
 
+## 5.1.1
+
+### Fixes
+
+- **`form-label[disabled]` drops `cursor: not-allowed` and takes the browser default.** A disabled text input already paints `cursor: not-allowed` on the field itself; mirroring it onto the label added visual noise without communicating anything new, since the label isn't a click target for text inputs the way it is for checkboxes/radios. The fix is scoped: `form-label[disabled]` declares `cursor: auto` explicitly to defeat the global `label[disabled] { cursor: not-allowed }` rule (which the `label-state-sync` cross-container case still relies on). `form-checkbox-label[disabled]`, the `:where(.checkbox-input, .radio-button-input):disabled ~ label` sibling rule, the `label:has(…:disabled)` wrapping rule, and the global `label[disabled]` rule all keep `cursor: not-allowed` unchanged — checkbox/radio labels remain interactive surfaces where the not-allowed cue still earns its keep.
+
 ## 5.1.0
 
 ### New
