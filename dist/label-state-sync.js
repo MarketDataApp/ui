@@ -47,6 +47,13 @@
  *     <select id="f_state" disabled>…</select>
  *     <input id="t_state" disabled style="display: none">
  *
+ * Hidden listed targets are filtered out before ANY-semantics is
+ * applied — see `resolveTargets`. This matters for the live swap case
+ * where only one of two controls is visible at any time and the other
+ * is intentionally `display: none` + `disabled`: without the filter,
+ * the hidden half's stale `:disabled` would mirror onto the label even
+ * when the visible half is enabled.
+ *
  * The CSS for the disabled-label, error-label, and focused-label
  * appearance lives in `components.src.css` (`label[disabled]`,
  * `label[error]`, `label[focused]`).
@@ -126,11 +133,31 @@ const LABEL_SELECTOR = 'label[for], label[data-state-for]';
  */
 
 /**
+ * Is this control currently rendered? Used to drop hidden halves of a
+ * swap-input pair before ANY-semantics combines them — the hidden half
+ * is intentionally disabled to keep its name out of form submission,
+ * and we don't want that stale `:disabled` mirroring onto the label
+ * when the visible half is enabled. Checks the two signals reachable
+ * without a layout engine: the HTML5 `hidden` attribute and inline
+ * `display: none`. Parent-collapse via stylesheets isn't detectable
+ * here without `getComputedStyle`, which the amember swap doesn't use,
+ * so we accept that gap rather than per-call layout work.
+ *
+ * @param {HTMLElement} el
+ */
+function isRendered(el) {
+  if (el.hidden) return false;
+  if (el.style && el.style.display === 'none') return false;
+  return true;
+}
+
+/**
  * Resolve a label's state-mirroring target(s). When `data-state-for` is
  * set, it wins — `for` is treated as broken markup (still useful for the
  * browser's click-to-focus, but not for state). Otherwise fall back to
  * `for`. Either source may list multiple ids (space-separated); missing
- * ids are silently dropped so partial markup degrades gracefully.
+ * or hidden ids are silently dropped so partial markup degrades
+ * gracefully and swap-input pairs only contribute their visible half.
  *
  * @param {HTMLLabelElement} label
  * @returns {HTMLElement[]}
@@ -143,7 +170,9 @@ function resolveTargets(label) {
   for (const id of idSource.split(/\s+/)) {
     if (!id) continue;
     const el = doc.getElementById(id);
-    if (el) targets.push(el);
+    if (!el) continue;
+    if (!isRendered(el)) continue;
+    targets.push(el);
   }
   return targets;
 }

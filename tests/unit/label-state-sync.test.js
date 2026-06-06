@@ -693,6 +693,96 @@ describe('label-state-sync', () => {
       expect(label.hasAttribute('disabled')).toBe(true);
     });
 
+    // -----------------------------------------------------------------
+    // Hidden listed targets (amember swap-input pattern)
+    // -----------------------------------------------------------------
+
+    it('skips a listed target with hidden attribute when combining state (disabled)', () => {
+      // Swap pattern: visible-enabled select + hidden-disabled fallback
+      // input share one label. ANY-semantics over both would mirror the
+      // hidden half's :disabled and paint the label disabled-on-enabled.
+      const label = makeLabel('grp-state');
+      label.setAttribute('data-state-for', 'f_state t_state');
+      const visible = makeInput('f_state'); // enabled, visible
+      const hidden = makeInput('t_state', { disabled: true });
+      hidden.hidden = true;
+      document.body.append(label, visible, hidden);
+
+      init();
+
+      expect(label.hasAttribute('disabled')).toBe(false);
+    });
+
+    it('skips a listed target with inline display: none', () => {
+      const label = makeLabel('grp-state');
+      label.setAttribute('data-state-for', 'f_state t_state');
+      const visible = makeInput('f_state');
+      const hidden = makeInput('t_state', { disabled: true });
+      hidden.style.display = 'none';
+      document.body.append(label, visible, hidden);
+
+      init();
+
+      expect(label.hasAttribute('disabled')).toBe(false);
+    });
+
+    it('still paints disabled when the only visible listed target is disabled', () => {
+      // Opposite half of the swap: the visible control is the disabled
+      // one. Label must still pick it up — the visibility filter is
+      // about skipping stale state on hidden halves, not suppressing
+      // legitimate disabled state on visible ones.
+      const label = makeLabel('grp-state');
+      label.setAttribute('data-state-for', 'f_state t_state');
+      const visibleDisabled = makeInput('f_state', { disabled: true });
+      const hiddenEnabled = makeInput('t_state');
+      hiddenEnabled.style.display = 'none';
+      document.body.append(label, visibleDisabled, hiddenEnabled);
+
+      init();
+
+      expect(label.hasAttribute('disabled')).toBe(true);
+    });
+
+    it('re-syncs after a swap when the disabled flip rides alongside the visibility flip', async () => {
+      // amember toggles `display` and `disabled` together on both
+      // halves. The disabled mutation wakes the observer; the
+      // re-sync re-reads visibility fresh and picks the now-visible
+      // (and now-enabled) half — label flips off.
+      const label = makeLabel('grp-state');
+      label.setAttribute('data-state-for', 'f_state t_state');
+      const a = makeInput('f_state', { disabled: true });
+      const b = makeInput('t_state');
+      a.style.display = 'none';
+      document.body.append(label, a, b);
+      init();
+      expect(label.hasAttribute('disabled')).toBe(false); // a hidden, b visible+enabled
+
+      // Swap: a becomes visible+disabled, b becomes hidden+enabled remains.
+      // Mutate disabled on a to wake the observer (mirrors amember).
+      a.style.display = '';
+      b.style.display = 'none';
+      a.disabled = true; // already true, but re-set to force a mutation record
+      // Force a real attribute mutation so the observer fires:
+      a.removeAttribute('disabled');
+      a.setAttribute('disabled', '');
+      await flush();
+
+      expect(label.hasAttribute('disabled')).toBe(true);
+    });
+
+    it('skips hidden targets across ANY-semantics for error state too', () => {
+      const label = makeLabel('grp');
+      label.setAttribute('data-state-for', 'a b');
+      const visible = makeInput('a');
+      const hidden = makeInput('b', { invalid: true });
+      hidden.style.display = 'none';
+      document.body.append(label, visible, hidden);
+
+      init();
+
+      expect(label.hasAttribute('error')).toBe(false);
+    });
+
     it('does not leak focused state across labels when focus moves within a multi-target group', async () => {
       // Regression for the multi-target focus-handling reasoning in
       // onFocusChange: focusout(A) → focusin(B) for two targets of the
