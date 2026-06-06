@@ -266,7 +266,10 @@ export function initLabelStateSync({ root = document.body } = {}) {
       for (const node of mutation.addedNodes) {
         if (node.nodeType !== Node.ELEMENT_NODE) continue;
         const el = /** @type {HTMLElement} */ (node);
-        if (el.tagName === 'LABEL' && (el.hasAttribute('for') || el.hasAttribute('data-state-for'))) {
+        if (
+          el.tagName === 'LABEL' &&
+          (el.hasAttribute('for') || el.hasAttribute('data-state-for'))
+        ) {
           syncOne(/** @type {HTMLLabelElement} */ (el));
         }
         if (el.id) {

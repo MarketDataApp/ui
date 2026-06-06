@@ -409,7 +409,10 @@
   @apply block mb-2 text-sm font-medium text-heading;
   &[disabled] {
     color: var(--color-fg-disabled);
-    cursor: not-allowed;
+    /* Override the global `label[disabled]` cursor: not-allowed — form
+       input labels keep the browser default. Checkbox/radio labels still
+       get not-allowed via their own rules. */
+    cursor: auto;
   }
   &[error] {
     color: var(--color-fg-danger-strong);
