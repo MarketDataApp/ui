@@ -1,5 +1,19 @@
 # Changelog
 
+## 5.2.0
+
+### New
+
+- **`.indicator` / `.indicator-pulse` status-dot utility.** Em-sized coloured dot for system / user / item status with optional animated halo, intended for the aMember API Status widget but reusable anywhere a coloured status dot is needed. The dot inherits its size from the parent font-size — drop one into a heading, a paragraph, or a `.badge-pill` and it adopts the right size. `.indicator-{success|warning|danger|neutral}` set a single `--indicator-color` custom property; `.indicator-pulse` reads that same property on a `::after` halo so the pulse colour stays in sync without per-variant duplication, and the halo is a pseudo-element so screen readers ignore it. The dot itself carries the meaning, so consumers must supply an `aria-label`. `.indicator-sm` / `.indicator-lg` nudge the dot relative to the inherited baseline. For reliable vertical alignment with surrounding text, wrap the dot and its label in `inline-flex items-center gap-2` — the bare-inline fallback uses `vertical-align: middle`, which aligns to x-height rather than cap-line and drifts noticeably at larger font sizes. Closes #35.
+
+### Fixes
+
+- **`.badge-pill` and its colour variants now center inline children.** The pill utilities were `inline-block` with no vertical centering, so a `.indicator` dot composed inside fell back to its own `vertical-align: middle` (which aligns to x-height, not cap-line) and landed visibly below where the eye expects. Switching the four pill utilities to `inline-flex items-center gap-1.5` makes the pills self-aligning: dots, icons, and text now center on the cap-line without consumers needing to wrap each child in their own flex container. Text-only consumers (`<span class="badge-pill-green">Active</span>`) render identically — a single text node in a flex container is unchanged.
+
+### Internal
+
+- **`.cta-banner-inner` swaps the deprecated `max-w-screen-xl` for canonical `max-w-7xl`.** Both resolve to `80rem` / `1280px` so the compiled output is unchanged; this just satisfies the Tailwind v4 canonical-class lint and removes the compat-shim dependency for a v3 utility name.
+
 ## 5.1.2
 
 ### Fixes
