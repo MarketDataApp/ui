@@ -1870,6 +1870,116 @@ button.removeAttribute('aria-busy');        // done</code></pre>
         </div>
       </section>
 
+      <!-- Status Indicators -->
+      <section id="indicators">
+        <h2 class="text-2xl font-bold mb-2 border-b border-gray-200 dark:border-gray-700 pb-2">
+          Status Indicators
+        </h2>
+        <p class="text-gray-500 dark:text-gray-400 mb-6">
+          A coloured dot for system / user / item status. Sized in
+          <code class="text-xs font-mono">em</code> so it scales with the parent font-size — drop
+          one into a heading, a paragraph, or a
+          <code class="text-xs font-mono">.badge-pill</code> and it adopts the right size. Add
+          <code class="text-xs font-mono">.indicator-pulse</code> for an animated halo. The colour
+          carries the meaning, so always pair with an
+          <code class="text-xs font-mono">aria-label</code>.
+        </p>
+
+        <h3 class="text-lg font-semibold mb-3 text-heading">Colours</h3>
+        <div class="flex flex-wrap items-center gap-6 mb-6 text-base">
+          <span class="inline-flex items-center gap-2">
+            <span class="indicator indicator-success" aria-label="Operational"></span>
+            Operational
+          </span>
+          <span class="inline-flex items-center gap-2">
+            <span class="indicator indicator-warning" aria-label="Degraded"></span>
+            Degraded
+          </span>
+          <span class="inline-flex items-center gap-2">
+            <span class="indicator indicator-danger" aria-label="Outage"></span>
+            Outage
+          </span>
+          <span class="inline-flex items-center gap-2">
+            <span class="indicator indicator-neutral" aria-label="Unknown"></span>
+            Unknown
+          </span>
+        </div>
+
+        <h3 class="text-lg font-semibold mb-3 text-heading">Pulse</h3>
+        <p class="text-sm text-body-subtle mb-4">
+          Use the pulse halo when the status is actively changing or warrants extra attention. The
+          halo is a pseudo-element, so screen readers ignore it.
+        </p>
+        <div class="flex flex-wrap items-center gap-6 mb-6 text-base">
+          <span class="inline-flex items-center gap-2">
+            <span class="indicator indicator-warning indicator-pulse" aria-label="Degraded"></span>
+            Degraded
+          </span>
+          <span class="inline-flex items-center gap-2">
+            <span class="indicator indicator-danger indicator-pulse" aria-label="Outage"></span>
+            Outage
+          </span>
+        </div>
+
+        <h3 class="text-lg font-semibold mb-3 text-heading">Sizes via inheritance</h3>
+        <p class="text-sm text-body-subtle mb-4">
+          The dot inherits its size from the parent's font-size.
+          <code class="text-xs font-mono">.indicator-sm</code> and
+          <code class="text-xs font-mono">.indicator-lg</code> nudge it relative to that baseline.
+        </p>
+        <div class="space-y-3 mb-6">
+          <p class="text-sm">
+            <span class="indicator indicator-success" aria-label="Operational"></span>
+            Small text — small dot
+          </p>
+          <p class="text-base">
+            <span class="indicator indicator-success" aria-label="Operational"></span>
+            Body text — default dot
+          </p>
+          <p class="text-xl">
+            <span class="indicator indicator-success" aria-label="Operational"></span>
+            Larger text — larger dot
+          </p>
+          <p class="text-base">
+            <span class="indicator indicator-sm indicator-success" aria-label="Operational"></span>
+            <code class="text-xs font-mono">.indicator-sm</code> at body size
+            <span class="mx-3"></span>
+            <span class="indicator indicator-lg indicator-success" aria-label="Operational"></span>
+            <code class="text-xs font-mono">.indicator-lg</code> at body size
+          </p>
+        </div>
+
+        <h3 class="text-lg font-semibold mb-3 text-heading">Inside a pill</h3>
+        <p class="text-sm text-body-subtle mb-4">
+          Composes cleanly with <code class="text-xs font-mono">.badge-pill</code>.
+        </p>
+        <div class="flex flex-wrap gap-2 mb-6">
+          <span class="badge-pill-green">
+            <span class="indicator indicator-success" aria-hidden="true"></span> Operational
+          </span>
+          <span class="badge-pill-blue">
+            <span class="indicator indicator-warning indicator-pulse" aria-hidden="true"></span>
+            Degraded
+          </span>
+          <span class="badge-pill-red">
+            <span class="indicator indicator-danger indicator-pulse" aria-hidden="true"></span>
+            Outage
+          </span>
+        </div>
+
+        <div class="flex flex-wrap gap-2">
+          <code class="text-xs font-mono bg-gray-100 dark:bg-gray-800 px-2 py-1 rounded"
+            >.indicator .indicator-{success|warning|danger|neutral}</code
+          >
+          <code class="text-xs font-mono bg-gray-100 dark:bg-gray-800 px-2 py-1 rounded"
+            >.indicator-pulse</code
+          >
+          <code class="text-xs font-mono bg-gray-100 dark:bg-gray-800 px-2 py-1 rounded"
+            >.indicator-{sm|lg}</code
+          >
+        </div>
+      </section>
+
       <!-- Badges -->
       <section id="badges">
         <h2 class="text-2xl font-bold mb-6 border-b border-gray-200 dark:border-gray-700 pb-2">

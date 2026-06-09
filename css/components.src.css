@@ -1184,6 +1184,72 @@ label[error][focused] :where(.text-heading, .radio-button-helper) {
   }
 }
 
+/* ---- Status Indicator ----
+   Coloured status dot sized in em so it scales with the parent font-size
+   (e.g. inside a badge-pill, inside a heading). Pair `.indicator` with a
+   colour modifier; add `.indicator-pulse` for an animated halo that
+   conveys "live / changing" without needing text. The halo is a
+   pseudo-element so screen readers ignore it; consumers still need an
+   `aria-label` on the dot itself because the colour carries the meaning. */
+@keyframes indicator-pulse {
+  75%,
+  100% {
+    transform: scale(2);
+    opacity: 0;
+  }
+}
+
+@utility indicator {
+  display: inline-block;
+  position: relative;
+  width: 0.625em;
+  height: 0.625em;
+  border-radius: 9999px;
+  vertical-align: middle;
+  background-color: var(--indicator-color, currentColor);
+}
+
+@utility indicator-sm {
+  width: 0.5em;
+  height: 0.5em;
+}
+
+@utility indicator-lg {
+  width: 0.75em;
+  height: 0.75em;
+}
+
+@utility indicator-success {
+  --indicator-color: var(--color-success);
+}
+
+@utility indicator-warning {
+  --indicator-color: var(--color-warning);
+}
+
+@utility indicator-danger {
+  --indicator-color: var(--color-danger);
+}
+
+@utility indicator-neutral {
+  --indicator-color: var(--color-gray-400);
+  &:where(.dark, .dark *, [data-theme='dark'], [data-theme='dark'] *) {
+    --indicator-color: var(--color-gray-500);
+  }
+}
+
+@utility indicator-pulse {
+  &::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    background-color: var(--indicator-color, currentColor);
+    opacity: 0.75;
+    animation: indicator-pulse 1s cubic-bezier(0, 0, 0.2, 1) infinite;
+  }
+}
+
 /* ---- Badges ---- */
 @utility badge {
   @apply text-xs font-medium px-2.5 py-0.5 rounded-xs;
