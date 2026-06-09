@@ -1884,6 +1884,12 @@ button.removeAttribute('aria-busy');        // done</code></pre>
           carries the meaning, so always pair with an
           <code class="text-xs font-mono">aria-label</code>.
         </p>
+        <p class="text-gray-500 dark:text-gray-400 mb-6">
+          For reliable vertical alignment with its label, wrap the dot and its text in
+          <code class="text-xs font-mono">inline-flex items-center gap-2</code>. The bare-inline
+          fallback (<code class="text-xs font-mono">vertical-align: middle</code>) aligns to
+          x-height rather than cap-line and drifts noticeably at larger font sizes.
+        </p>
 
         <h3 class="text-lg font-semibold mb-3 text-heading">Colours</h3>
         <div class="flex flex-wrap items-center gap-6 mb-6 text-base">
@@ -1928,24 +1934,33 @@ button.removeAttribute('aria-busy');        // done</code></pre>
           <code class="text-xs font-mono">.indicator-lg</code> nudge it relative to that baseline.
         </p>
         <div class="space-y-3 mb-6">
-          <p class="text-sm">
+          <p class="text-sm flex items-center gap-2">
             <span class="indicator indicator-success" aria-label="Operational"></span>
             Small text — small dot
           </p>
-          <p class="text-base">
+          <p class="text-base flex items-center gap-2">
             <span class="indicator indicator-success" aria-label="Operational"></span>
             Body text — default dot
           </p>
-          <p class="text-xl">
+          <p class="text-xl flex items-center gap-2">
             <span class="indicator indicator-success" aria-label="Operational"></span>
             Larger text — larger dot
           </p>
-          <p class="text-base">
-            <span class="indicator indicator-sm indicator-success" aria-label="Operational"></span>
-            <code class="text-xs font-mono">.indicator-sm</code> at body size
-            <span class="mx-3"></span>
-            <span class="indicator indicator-lg indicator-success" aria-label="Operational"></span>
-            <code class="text-xs font-mono">.indicator-lg</code> at body size
+          <p class="text-base flex flex-wrap items-center gap-x-6 gap-y-2">
+            <span class="inline-flex items-center gap-2">
+              <span
+                class="indicator indicator-sm indicator-success"
+                aria-label="Operational"
+              ></span>
+              <code class="text-xs font-mono">.indicator-sm</code> at body size
+            </span>
+            <span class="inline-flex items-center gap-2">
+              <span
+                class="indicator indicator-lg indicator-success"
+                aria-label="Operational"
+              ></span>
+              <code class="text-xs font-mono">.indicator-lg</code> at body size
+            </span>
           </p>
         </div>
 

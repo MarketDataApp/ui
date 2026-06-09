@@ -808,6 +808,9 @@
 }
 .badge-pill-blue {
   margin-inline-end: calc(var(--spacing) * 2);
+  display: inline-flex;
+  align-items: center;
+  gap: calc(var(--spacing) * 1.5);
   border-radius: calc(infinity * 1px);
   border-style: var(--tw-border-style);
   border-width: 1px;
@@ -831,6 +834,9 @@
 }
 .badge-pill-red {
   margin-inline-end: calc(var(--spacing) * 2);
+  display: inline-flex;
+  align-items: center;
+  gap: calc(var(--spacing) * 1.5);
   border-radius: calc(infinity * 1px);
   border-style: var(--tw-border-style);
   border-width: 1px;
@@ -854,6 +860,9 @@
 }
 .badge-pill-green {
   margin-inline-end: calc(var(--spacing) * 2);
+  display: inline-flex;
+  align-items: center;
+  gap: calc(var(--spacing) * 1.5);
   border-radius: calc(infinity * 1px);
   border-style: var(--tw-border-style);
   border-width: 1px;
@@ -876,6 +885,9 @@
 }
 .badge-pill {
   margin-inline-end: calc(var(--spacing) * 2);
+  display: inline-flex;
+  align-items: center;
+  gap: calc(var(--spacing) * 1.5);
   border-radius: calc(infinity * 1px);
   padding-inline: calc(var(--spacing) * 2.5);
   padding-block: calc(var(--spacing) * 0.5);
