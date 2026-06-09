@@ -1309,7 +1309,7 @@ label[error][focused] :where(.text-heading, .radio-button-helper) {
 }
 
 @utility cta-banner-inner {
-  @apply py-8 px-4 mx-auto max-w-screen-xl lg:py-16 lg:px-6;
+  @apply py-8 px-4 mx-auto max-w-7xl lg:py-16 lg:px-6;
 }
 
 @utility cta-banner-card {
