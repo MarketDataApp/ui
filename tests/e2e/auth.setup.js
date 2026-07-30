@@ -1,3 +1,19 @@
+/**
+ * Playwright auth setup — logs the e2e suite in once and saves the session as
+ * storageState for the authenticated specs (user-profile.spec.js).
+ *
+ * Test user: `playwright-free` — a dedicated test-harness member on production
+ * dashboard.marketdata.app with NO paid subscription. The authenticated specs
+ * only assert that a user is logged in and that the profile dropdown shows a
+ * name + email; no plan or product is required, so this free account is
+ * sufficient. If the profile UI ever grows subscription-gated elements, add a
+ * separate paid harness user rather than upgrading this one.
+ *
+ * Auth is driven by AMEMBER_AUTOLOGIN_URL — that account's amember autologin
+ * link. It is a login credential, so it is NOT committed: set it in `.env`
+ * (gitignored) locally and in CI as the AMEMBER_AUTOLOGIN_URL secret. See
+ * `.env.example` for the template.
+ */
 import { test as setup, expect } from '@playwright/test';
 
 const authFile = 'tests/e2e/.auth/user.json';
