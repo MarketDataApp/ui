@@ -321,6 +321,12 @@ The `/api/user/` endpoint returns pre-computed fields — no client-side mapping
 - **Status backgrounds**: `--color-success-*`, `--color-danger-*`, `--color-warning-*` (danger uses red, not Flowbite's default rose)
 - **Brand aliases**: `--color-brand-*`, `--color-fg-brand-*` (semantic aliases to blue palette, with dark mode overrides)
 
+## Development
+
+After cloning, run `npm install`, then `npm run setup` once. `npm run setup` installs the local git hooks (husky → `pre-commit` formatting via lint-staged).
+
+This package ships a prebuilt `dist/` and deliberately has **no** `prepare`/`postinstall` lifecycle script. Consumers install it as a git dependency (`github:MarketDataApp/ui#vX.Y.Z`), and pnpm 10/11 refuse to install a git-hosted package that declares a `prepare` script unless it's allowlisted under `allowBuilds` — even when the script does no building. Keeping the manifest free of install-time lifecycle scripts is what lets `pnpm install` work on pnpm 9/10/11 with no allowlist. **Do not add a `prepare` script back** — set up dev-only tooling through `npm run setup` instead. See CHANGELOG 5.2.1 / issue #36.
+
 ## How to Add New Components
 
 When adding a component to this package, follow this pattern:

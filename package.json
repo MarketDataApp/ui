@@ -9,6 +9,10 @@
     "type": "git",
     "url": "https://github.com/MarketDataApp/ui.git"
   },
+  "files": [
+    "dist/",
+    "css/"
+  ],
   "exports": {
     "./theme": {
       "types": "./dist/theme.d.ts",
@@ -75,7 +79,7 @@
     "serve:site": "serve _site -p 3000",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
-    "prepare": "husky || true",
+    "setup": "husky",
     "test": "vitest run",
     "test:e2e": "set -a && source .env && set +a && npx playwright test"
   },
