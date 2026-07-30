@@ -1,5 +1,15 @@
 # Changelog
 
+## 5.2.2
+
+### Fixes
+
+- **Review-widget data refreshed (rating 4.4, count 105), and the updater fixed so it can no longer silently go stale.** The numbers baked into `dist/reviews.js` had been frozen since 5.2.0 (rating 4.3, count 101): the scrape ran inside `npm run build`, but the CI deploy workflow never installs a Playwright browser, so `chromium.launch()` failed on every run and the script silently fell back to the committed snapshot (a warning, never a build failure). The fetch is now a deliberate, **local** `npm run reviews:update` step (fetch → prettier-normalize → rebuild `dist/reviews.js`) whose output is committed, and it exits non-zero on a failed scrape instead of shipping stale data. `npm run build` no longer scrapes — it bakes in the committed `src/reviews.data.js`, so builds are deterministic and browser-free. Running the refresh locally (real browser, residential IP) also sidesteps the review platform's anti-bot rate-limiting of datacenter IPs.
+
+### Internal
+
+- **e2e auth documents its test account.** `tests/e2e/auth.setup.js` now records that the authenticated specs log in as the `playwright-free` harness member (a dedicated test account with no paid subscription — sufficient because the specs only assert a logged-in user with a name + email), and a new `.env.example` documents the required `AMEMBER_AUTOLOGIN_URL` secret. The URL is a credential and stays out of git (local `.env` + CI secret).
+
 ## 5.2.1
 
 ### Fixes
