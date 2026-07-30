@@ -1,5 +1,15 @@
 # Changelog
 
+## 5.2.1
+
+### Fixes
+
+- **`pnpm install` of `github:MarketDataApp/ui#<tag>` no longer fails on pnpm 10/11.** The package already shipped a prebuilt `dist/`, but it also declared a `prepare` lifecycle script (`husky`, for local git hooks). pnpm 10/11's supply-chain guard blocks any git-hosted dependency that declares a `prepare` script from running it unless the consumer allowlists it under `allowBuilds`, so a plain `pnpm install` failed with `ERR_PNPM_GIT_DEP_PREPARE_NOT_ALLOWED` — even though nothing actually needed building (the failure is triggered by the mere _presence_ of the script, not by any build). The `prepare` script is removed from the manifest; local git-hook setup now lives in a `setup` script that contributors run once via `npm run setup`. Consumers now install with no `allowBuilds`/`onlyBuiltDependencies` allowlist and no build-script execution on pnpm 9/10/11, and installs remain anonymous over the git tag. Closes #36.
+
+### Internal
+
+- **`package.json` gains a `files` allowlist (`dist/`, `css/`).** Consumers previously received the entire repository (`src/`, `tests/`, `scripts/`, `docs/`, config) in their `node_modules`; the published package now ships only the built `dist/` and the source `css/` that the `exports` map resolves into (`css/theme.css`, `css/components.src.css`, and the `flowbite-theme.css` the former `@import`s).
+
 ## 5.2.0
 
 ### New
