@@ -207,7 +207,7 @@ The first argument is the light variant, the second is the dark variant. Match t
 
 ### Review Widget
 
-The `reviews` module renders a star-rating widget using data fetched at build time. Available in two sizes:
+The `reviews` module renders a star-rating widget using data baked in from `src/reviews.data.js`. Available in two sizes:
 
 ```js
 import { initResenaWidget } from '@marketdataapp/ui/reviews';
@@ -227,7 +227,13 @@ The module also re-exports the raw data for consumers who need just the numbers:
 import { reviewRating, reviewCount, reviewLabel } from '@marketdataapp/ui/reviews';
 ```
 
-Build-time data is refreshed by `npm run build:fetch-reviews`, which runs as part of `npm run build`.
+**Refreshing the data.** The rating/count live in the committed `src/reviews.data.js`, and `npm run build` bakes that snapshot into `dist/reviews.js` — it does **not** scrape the platform. Fetching is a deliberate, local maintenance step:
+
+```sh
+npm run reviews:update   # scrape the platform, rebuild dist/reviews.js, then commit the diff
+```
+
+This is intentionally **not** wired into `npm run build` / CI: GitHub Actions has no Playwright browser installed for the build, and the platform's anti-bot can rate-limit datacenter IPs — so a CI-side scrape silently fell back to stale data. Running it locally (residential IP, real browser) and committing `src/reviews.data.js` keeps both the docs site and the published package fresh, and keeps CI builds deterministic. `reviews:update` exits non-zero if the scrape fails, so stale data is never shipped silently. If the platform ever fingerprint-blocks headless Chromium, swap in a stealth browser (e.g. camoufox) for the scrape.
 
 ### User State Visibility
 

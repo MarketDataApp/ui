@@ -64,14 +64,15 @@
     }
   },
   "scripts": {
-    "build": "npm run build:fetch-reviews && npm run build:templates && npm run build:js && npm run build:types && npm run build:classes && npm run build:css",
-    "build:fetch-reviews": "node scripts/fetch-reviews.js",
+    "build": "npm run build:templates && npm run build:js && npm run build:types && npm run build:classes && npm run build:css",
     "build:templates": "node scripts/build-templates.js",
     "build:js": "node scripts/build-js.js",
     "build:types": "rm -f dist/*.d.ts && tsc -p tsconfig.json",
     "build:classes": "node scripts/build-classes.js",
     "build:css": "tailwindcss -i css/components.input.css -o dist/css/components.css && tailwindcss -i css/components.no-reset.input.css -o dist/css/components.no-reset.css && node scripts/unlayer.js && tailwindcss -i docs/docs.input.css -o docs/docs.css",
     "build:site": "node scripts/build-site.js",
+    "reviews:fetch": "node scripts/fetch-reviews.js",
+    "reviews:update": "npm run reviews:fetch && prettier --write src/reviews.data.js && npm run build:templates && npm run build:js",
     "dev": "concurrently -n css,docs,serve -c blue,yellow,green \"npm:dev:css\" \"npm:dev:docs-css\" \"npm:dev:serve\"",
     "dev:css": "tailwindcss -i css/components.input.css -o dist/css/components.css --watch",
     "dev:docs-css": "tailwindcss -i docs/docs.input.css -o docs/docs.css --watch",

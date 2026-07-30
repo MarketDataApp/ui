@@ -5,7 +5,12 @@
  * Uses Playwright (already a devDependency) to render the JS-heavy page,
  * then extracts rating data from JSON-LD.
  *
- * On failure, warns and preserves the existing file (cache/fallback).
+ * This is a deliberate, LOCAL maintenance step (`npm run reviews:update`),
+ * NOT part of `npm run build` — CI has no browser and can be rate-limited by
+ * the platform's anti-bot from datacenter IPs, so builds consume the committed
+ * src/reviews.data.js instead of scraping. Because it's deliberate, a failed
+ * scrape exits non-zero (preserving the existing file) so the maintainer
+ * notices rather than silently shipping stale data.
  */
 
 import { writeFileSync, existsSync } from 'fs';
@@ -88,10 +93,11 @@ async function main() {
     }
 
     if (!rating || !count) {
-      console.warn('  WARNING: Could not parse rating data from page.');
+      console.error('  ERROR: Could not parse rating data from page.');
       if (existsSync(OUTPUT)) {
-        console.warn('  Using existing cached data.');
+        console.error('  Preserved existing src/reviews.data.js (not overwritten).');
       }
+      process.exitCode = 1;
       return;
     }
 
@@ -110,12 +116,13 @@ async function main() {
     writeFileSync(OUTPUT, content);
     console.log(`  Updated src/reviews.data.js: rating=${rating}, count=${count}, label=${label}`);
   } catch (err) {
-    console.warn(`  WARNING: Could not fetch review data: ${err.message}`);
+    console.error(`  ERROR: Could not fetch review data: ${err.message}`);
     if (existsSync(OUTPUT)) {
-      console.warn('  Using existing cached data.');
+      console.error('  Preserved existing src/reviews.data.js (not overwritten).');
     } else {
-      console.warn('  No cached data available — build will use seed values.');
+      console.error('  No existing src/reviews.data.js — the build will fail to resolve it.');
     }
+    process.exitCode = 1;
   } finally {
     if (browser) await browser.close();
   }
