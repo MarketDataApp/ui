@@ -1,5 +1,15 @@
 # Changelog
 
+## 5.2.3
+
+### Fixes
+
+- **Review-widget styles (`.resena-widget`) now ship in `css/components.src.css`, so a Tailwind v4 source consumer gets them from the same `@marketdataapp/ui/css/components.src` import as every other shared component.** The rules previously lived only in a standalone `css/reviews.css` that was neither folded into `components.src.css` nor listed in `package.json#exports` (there was no `./css/reviews`). A consumer following the documented path — `@import "@marketdataapp/ui/css/components.src"` + `import { initResenaWidget } from "@marketdataapp/ui/reviews"` — therefore rendered the widget **completely unstyled**, and the only workaround reached past the package's public API via a relative `node_modules/@marketdataapp/ui/css/reviews.css` import that is fragile across installs/hoisting. The widget markup is emitted at runtime by `initResenaWidget`, so its rules join the other JS-rendered components (theme-toggle, user-profile, long-progress) already defined with plain selectors in `components.src.css` — the single source of truth. The now-redundant `@import './reviews.css'` is dropped from both CSS build inputs and the emptied `css/reviews.css` removed; the prebuilt `dist/css/components.{css,no-reset.css}` bundles keep the exact same reviews rule set (the rules just move within the file). Closes #37.
+
+### Internal
+
+- **Refreshed committed build artifacts that had drifted stale in earlier releases.** `dist/reviews.d.ts` now declares the data actually baked into `dist/reviews.js` (`reviewRating` `"4.4"`, `reviewCount` `"105"`) instead of the pre-5.2.2 `"4.3"`/`"101"`, and the standalone `dist/css/components.css` bundle now includes the `max-w-7xl` / `max-w-screen-xl` / `gap-1.5` utilities used by scanned demo/template content — both were regenerated as part of the `#37` rebuild.
+
 ## 5.2.2
 
 ### Fixes
