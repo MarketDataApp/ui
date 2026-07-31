@@ -13,5 +13,4 @@
 
 @source "../src/reviews.js";
 
-@import './reviews.css';
 @import './components.src.css';

@@ -17,6 +17,6 @@ export function initResenaWidget(options: {
  * Zero production dependencies. Renders a review rating widget with
  * build-time data from the review platform's public page.
  */
-export const reviewRating: "4.3";
-export const reviewCount: "101";
+export const reviewRating: "4.4";
+export const reviewCount: "105";
 export const reviewLabel: "Great";

@@ -7,5 +7,4 @@
 
 @source "../src/templates";
 
-@import './reviews.css';
 @import './components.src.css';
