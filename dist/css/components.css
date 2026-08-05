@@ -407,7 +407,7 @@
     white-space: nowrap;
     text-decoration-line: none;
     @media (width >= 64rem) {
-      padding-inline: calc(var(--spacing) * 10);
+      padding-inline: calc(var(--spacing) * 7.5);
     }
     @media (width >= 64rem) {
       padding-block: calc(var(--spacing) * 3.5);
@@ -537,7 +537,7 @@
     white-space: nowrap;
     text-decoration-line: none;
     @media (width >= 64rem) {
-      padding-inline: calc(var(--spacing) * 10);
+      padding-inline: calc(var(--spacing) * 7.5);
     }
     @media (width >= 64rem) {
       padding-block: calc(var(--spacing) * 3.5);
@@ -1706,7 +1706,7 @@
     white-space: nowrap;
     text-decoration-line: none;
     @media (width >= 64rem) {
-      padding-inline: calc(var(--spacing) * 10);
+      padding-inline: calc(var(--spacing) * 7.5);
     }
     @media (width >= 64rem) {
       padding-block: calc(var(--spacing) * 3.5);
@@ -1835,7 +1835,7 @@
     white-space: nowrap;
     text-decoration-line: none;
     @media (width >= 64rem) {
-      padding-inline: calc(var(--spacing) * 10);
+      padding-inline: calc(var(--spacing) * 7.5);
     }
     @media (width >= 64rem) {
       padding-block: calc(var(--spacing) * 3.5);
@@ -1957,7 +1957,7 @@
     white-space: nowrap;
     text-decoration-line: none;
     @media (width >= 64rem) {
-      padding-inline: calc(var(--spacing) * 10);
+      padding-inline: calc(var(--spacing) * 7.5);
     }
     @media (width >= 64rem) {
       padding-block: calc(var(--spacing) * 3.5);
@@ -2102,7 +2102,7 @@
     white-space: nowrap;
     text-decoration-line: none;
     @media (width >= 64rem) {
-      padding-inline: calc(var(--spacing) * 10);
+      padding-inline: calc(var(--spacing) * 7.5);
     }
     @media (width >= 64rem) {
       padding-block: calc(var(--spacing) * 3.5);
@@ -2247,7 +2247,7 @@
     white-space: nowrap;
     text-decoration-line: none;
     @media (width >= 64rem) {
-      padding-inline: calc(var(--spacing) * 10);
+      padding-inline: calc(var(--spacing) * 7.5);
     }
     @media (width >= 64rem) {
       padding-block: calc(var(--spacing) * 3.5);
@@ -2385,7 +2385,7 @@
     white-space: nowrap;
     text-decoration-line: none;
     @media (width >= 64rem) {
-      padding-inline: calc(var(--spacing) * 10);
+      padding-inline: calc(var(--spacing) * 7.5);
     }
     @media (width >= 64rem) {
       padding-block: calc(var(--spacing) * 3.5);
