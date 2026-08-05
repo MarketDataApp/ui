@@ -1,5 +1,11 @@
 # Changelog
 
+## 5.2.4
+
+### Fixes
+
+- **Button horizontal padding on desktop narrowed from `px-10` (40px) to `px-7.5` (30px).** Every `btn-*` utility (`btn-orange-to-blue`, `btn-blue-to-orange`, `btn-orange-to-outline`, `btn-outline-to-orange`, `btn-outline-to-blue`, `btn-blue-to-outline`) was spec'd `px-7 lg:px-10`, which rendered buttons 20px wider each at the `lg` breakpoint than the design they replace (30px side padding) — a like-for-like measurement of matched labels showed every desktop button ~20px too wide, driven entirely by this padding. Only the desktop side padding changes: vertical padding (`lg:py-3.5` = 14px), height (44px), font, letter-spacing, gap, and radius are all unchanged, and the mobile value (`px-7` = 28px) is untouched. The prebuilt `dist/css/components.{css,no-reset.css}` bundles are regenerated to match; no class names change.
+
 ## 5.2.3
 
 ### Fixes
