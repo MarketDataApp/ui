@@ -308,6 +308,7 @@ function setupDropdown(trigger, menu, { hover = false } = {}) {
  * @param {string} [options.planUrl='https://dashboard.marketdata.app/marketdata/signup'] - Plan link
  * @param {Array<{label: string, url: string}>} [options.menuItems=[]] - Extra menu items
  * @param {string} [options.apiUrl] - Override API endpoint
+ * @param {boolean} [options.skipCorsSafetyCheck=false] - Request even off the API's domain
  * @param {string} [options.loginText='Log in'] - Log-in button text
  * @param {string} [options.signupUrl='https://dashboard.marketdata.app/marketdata/signup'] - Signup/trial href
  * @param {string} [options.signupText='Start Free Trial'] - Signup menu item text
@@ -324,6 +325,7 @@ export async function initUserProfile(options) {
     planUrl = 'https://dashboard.marketdata.app/marketdata/signup',
     menuItems = [],
     apiUrl,
+    skipCorsSafetyCheck = false,
     loginText = 'Log in',
     signupUrl = 'https://dashboard.marketdata.app/marketdata/signup',
     signupText = 'Start Free Trial',
@@ -386,7 +388,10 @@ export async function initUserProfile(options) {
     if (!updatedUser) renderLoggedOut();
   });
 
-  const user = await fetchUser(apiUrl ? { apiUrl } : {});
+  const user = await fetchUser({
+    ...(apiUrl ? { apiUrl } : {}),
+    ...(skipCorsSafetyCheck ? { skipCorsSafetyCheck } : {}),
+  });
 
   // Remove skeleton before rendering real state
   clearContainer();

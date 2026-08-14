@@ -39,6 +39,10 @@ beforeEach(() => {
   vi.restoreAllMocks();
 });
 
+afterEach(() => {
+  vi.unstubAllGlobals();
+});
+
 // ---------------------------------------------------------------------------
 // fetchUser — basic
 // ---------------------------------------------------------------------------
@@ -141,6 +145,116 @@ describe('fetchUser', () => {
 
     const cached = await fetchUser();
     expect(cached).toEqual(mockUser);
+  });
+});
+
+// ---------------------------------------------------------------------------
+// CORS safety check
+// ---------------------------------------------------------------------------
+describe('fetchUser — CORS safety check', () => {
+  function stubHostname(hostname) {
+    vi.stubGlobal('location', { hostname });
+  }
+
+  function stubFetchOk() {
+    globalThis.fetch = vi.fn().mockResolvedValue({
+      ok: true,
+      json: () => Promise.resolve(mockUser),
+    });
+  }
+
+  it('resolves to null without a request on localhost', async () => {
+    stubHostname('localhost');
+    stubFetchOk();
+
+    const user = await fetchUser();
+    expect(user).toBeNull();
+    expect(fetch).not.toHaveBeenCalled();
+  });
+
+  it('resolves to null without a request on a 127.0.0.1 host', async () => {
+    stubHostname('127.0.0.1');
+    stubFetchOk();
+
+    expect(await fetchUser()).toBeNull();
+    expect(fetch).not.toHaveBeenCalled();
+  });
+
+  it('rejects a look-alike host that only ends with the base domain', async () => {
+    stubHostname('marketdata.app.evil.com');
+    stubFetchOk();
+
+    expect(await fetchUser()).toBeNull();
+    expect(fetch).not.toHaveBeenCalled();
+  });
+
+  it('rejects a host that ends with the base domain without a dot separator', async () => {
+    stubHostname('notmarketdata.app');
+    stubFetchOk();
+
+    expect(await fetchUser()).toBeNull();
+    expect(fetch).not.toHaveBeenCalled();
+  });
+
+  it('allows the bare base domain', async () => {
+    stubHostname('marketdata.app');
+    stubFetchOk();
+
+    expect(await fetchUser()).toEqual(mockUser);
+    expect(fetch).toHaveBeenCalledTimes(1);
+  });
+
+  it.each(['www.marketdata.app', 'dev.marketdata.app', 'dashboard.marketdata.app'])(
+    'allows the subdomain %s',
+    async (hostname) => {
+      stubHostname(hostname);
+      stubFetchOk();
+
+      expect(await fetchUser()).toEqual(mockUser);
+      expect(fetch).toHaveBeenCalledTimes(1);
+    },
+  );
+
+  it('writes no cache entry when the check blocks the request', async () => {
+    stubHostname('localhost');
+    stubFetchOk();
+
+    await fetchUser();
+    expect(sessionStorage.getItem('marketdata_user')).toBeNull();
+    expect(_getLastFetchTime()).toBe(0);
+  });
+
+  it('notifies no subscriber when the check blocks the request', async () => {
+    stubHostname('localhost');
+    stubFetchOk();
+    const spy = vi.fn();
+    const unsubscribe = onUserChange(spy);
+
+    await fetchUser();
+    expect(spy).not.toHaveBeenCalled();
+    unsubscribe();
+  });
+
+  it('skipCorsSafetyCheck overrides the check on a blocked host', async () => {
+    stubHostname('localhost');
+    stubFetchOk();
+
+    const user = await fetchUser({ skipCorsSafetyCheck: true });
+    expect(user).toEqual(mockUser);
+    expect(fetch).toHaveBeenCalledWith('https://dashboard.marketdata.app/api/user/', {
+      credentials: 'include',
+    });
+  });
+
+  it('leaves the explicit apiUrl path alone on a blocked host', async () => {
+    stubHostname('localhost');
+    stubFetchOk();
+
+    const user = await fetchUser({ apiUrl: 'data:application/json,null' });
+    expect(user).toEqual(mockUser);
+    expect(fetch).toHaveBeenCalledWith('data:application/json,null', {
+      credentials: 'include',
+    });
   });
 });
 

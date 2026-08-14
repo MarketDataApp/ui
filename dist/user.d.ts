@@ -18,12 +18,19 @@ export function onUserChange(callback: (user: User | null) => void): () => void;
  * Concurrent calls are deduplicated (only one in-flight request at a time).
  * Subscribers registered via onUserChange() are notified when user data changes.
  *
+ * On a page that is not served from the API's own domain, the request is
+ * cross-site and CORS rejects it. Rather than pay three failed attempts and
+ * ~3s of retry backoff to arrive at null, this resolves to null immediately.
+ * Pass skipCorsSafetyCheck to force the request anyway.
+ *
  * @param {Object} [options]
  * @param {string} [options.apiUrl] - Override the API endpoint
+ * @param {boolean} [options.skipCorsSafetyCheck=false] - Request even off the API's domain
  * @returns {Promise<User | null>} User object or null on any error
  */
 export function fetchUser(options?: {
     apiUrl?: string;
+    skipCorsSafetyCheck?: boolean;
 }): Promise<User | null>;
 /** Clear all caches and state. Useful for testing. */
 export function _clearCache(): void;

@@ -376,7 +376,7 @@
                   <code class="font-mono text-xs">{ label, url }</code>.
                 </td>
               </tr>
-              <tr>
+              <tr class="border-b border-gray-100 dark:border-gray-800">
                 <td class="py-3 pr-4">
                   <code class="font-mono text-xs">apiUrl</code>
                 </td>
@@ -384,6 +384,19 @@
                   <code class="font-mono text-xs">.../api/user/</code>
                 </td>
                 <td class="py-3">Override the user API endpoint (useful for testing/mocking).</td>
+              </tr>
+              <tr>
+                <td class="py-3 pr-4">
+                  <code class="font-mono text-xs">skipCorsSafetyCheck</code>
+                </td>
+                <td class="py-3 pr-4"><code class="font-mono text-xs">false</code></td>
+                <td class="py-3">
+                  Request the default endpoint even when the page is not served from
+                  <code class="font-mono text-xs">marketdata.app</code> or a subdomain of it. The
+                  check is on by default, so an off-domain page such as
+                  <code class="font-mono text-xs">localhost</code> renders logged out immediately
+                  instead of waiting on a request that CORS rejects.
+                </td>
               </tr>
             </tbody>
           </table>

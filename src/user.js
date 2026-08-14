@@ -25,6 +25,28 @@ const DEFAULT_API_URL = 'https://dashboard.marketdata.app/api/user/';
 const CACHE_KEY = 'marketdata_user';
 const CACHE_TTL = 60_000; // 1 minute
 
+// Registrable domain of the default endpoint: 'dashboard.marketdata.app' -> 'marketdata.app'.
+// Derived so DEFAULT_API_URL stays the only place the domain is written.
+const API_BASE_DOMAIN = new URL(DEFAULT_API_URL).hostname.split('.').slice(-2).join('.');
+
+// ---------------------------------------------------------------------------
+// CORS safety check
+// ---------------------------------------------------------------------------
+
+/**
+ * True when the current page can send a credentialed request to the default
+ * endpoint without tripping CORS — that is, when it is served from the API's
+ * own registrable domain.
+ *
+ * The '.' prefix on the suffix test is load-bearing: a bare
+ * endsWith(API_BASE_DOMAIN) would accept 'marketdata.app.evil.com' and
+ * 'notmarketdata.app'.
+ */
+function _isSameSite() {
+  const hostname = globalThis.location?.hostname ?? '';
+  return hostname === API_BASE_DOMAIN || hostname.endsWith('.' + API_BASE_DOMAIN);
+}
+
 // ---------------------------------------------------------------------------
 // Module-level state
 // ---------------------------------------------------------------------------
@@ -76,8 +98,14 @@ function _notifySubscribers(user) {
  * Concurrent calls are deduplicated (only one in-flight request at a time).
  * Subscribers registered via onUserChange() are notified when user data changes.
  *
+ * On a page that is not served from the API's own domain, the request is
+ * cross-site and CORS rejects it. Rather than pay three failed attempts and
+ * ~3s of retry backoff to arrive at null, this resolves to null immediately.
+ * Pass skipCorsSafetyCheck to force the request anyway.
+ *
  * @param {Object} [options]
  * @param {string} [options.apiUrl] - Override the API endpoint
+ * @param {boolean} [options.skipCorsSafetyCheck=false] - Request even off the API's domain
  * @returns {Promise<User | null>} User object or null on any error
  */
 export async function fetchUser(options = {}) {
@@ -93,6 +121,10 @@ export async function fetchUser(options = {}) {
       return null;
     }
   }
+
+  // Off the API's own domain the request cannot succeed. Resolve to logged out
+  // now, touching neither the cache nor the subscribers.
+  if (!options.skipCorsSafetyCheck && !_isSameSite()) return null;
 
   // Try memory cache first, then sessionStorage
   let cached = _memoryCache;

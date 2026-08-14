@@ -25,10 +25,12 @@ export function resolveElements(user: User | null, root: HTMLElement | Document)
  * @param {Object} [options]
  * @param {HTMLElement|Document} [options.root=document] - Scope for DOM queries
  * @param {string} [options.apiUrl] - Override API endpoint (for testing/demos)
+ * @param {boolean} [options.skipCorsSafetyCheck=false] - Request even off the API's domain
  * @returns {Promise<() => void>} Cleanup function that unsubscribes and re-hides elements
  */
 export function initUserState(options?: {
     root?: HTMLElement | Document;
     apiUrl?: string;
+    skipCorsSafetyCheck?: boolean;
 }): Promise<() => void>;
 export type User = import("./user.js").User;

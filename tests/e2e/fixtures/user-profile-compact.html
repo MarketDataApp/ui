@@ -34,8 +34,9 @@
     </div>
 
     <script type="module">
-      // Force the logged-out branch without touching the network, so the real
-      // component renders the real markup against the real built CSS.
+      // The fixture is served from localhost, so fetchUser()'s CORS safety
+      // check already resolves to logged out without a request. The stub keeps
+      // the fixture hermetic if it is ever served from a marketdata.app host.
       window.fetch = () => Promise.resolve({ ok: false, status: 401 });
 
       const { initUserProfile } = await import('/dist/user-profile.js');

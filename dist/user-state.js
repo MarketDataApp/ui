@@ -89,12 +89,16 @@ export function resolveElements(user, root) {
  * @param {Object} [options]
  * @param {HTMLElement|Document} [options.root=document] - Scope for DOM queries
  * @param {string} [options.apiUrl] - Override API endpoint (for testing/demos)
+ * @param {boolean} [options.skipCorsSafetyCheck=false] - Request even off the API's domain
  * @returns {Promise<() => void>} Cleanup function that unsubscribes and re-hides elements
  */
 export async function initUserState(options = {}) {
-  const { root = document, apiUrl } = options;
+  const { root = document, apiUrl, skipCorsSafetyCheck = false } = options;
 
-  const user = await fetchUser(apiUrl ? { apiUrl } : {});
+  const user = await fetchUser({
+    ...(apiUrl ? { apiUrl } : {}),
+    ...(skipCorsSafetyCheck ? { skipCorsSafetyCheck } : {}),
+  });
   resolveElements(user, root);
 
   const unsubscribe = onUserChange((updatedUser) => {

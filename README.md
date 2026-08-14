@@ -284,8 +284,25 @@ All comparisons are **case-insensitive**. Product slugs are lowercase with hyphe
 initUserState({
   root: document.getElementById('my-section'), // scope DOM queries (default: document)
   apiUrl: 'https://...', // override API endpoint (for testing/demos)
+  skipCorsSafetyCheck: false, // request even off a marketdata.app host (default: false)
 });
 ```
+
+#### CORS safety check
+
+`fetchUser()` reads `location.hostname` before it requests the default endpoint. It sends the request only from `marketdata.app` or a `*.marketdata.app` subdomain. On any other host — `localhost`, `127.0.0.1`, a preview URL — it resolves to `null` at once and makes no request.
+
+The endpoint is `https://dashboard.marketdata.app/api/user/` and the request carries `credentials: 'include'`. From any other site that request is cross-site, so CORS rejects it. The rejection surfaces as a network error, which used to trigger two retries at 1s and 2s. Every such page paid about 3 seconds to arrive at the `null` it now gets on the first frame.
+
+The allowed domain is derived from the endpoint constant, so it follows the endpoint if that ever moves.
+
+To force the request anyway, pass `skipCorsSafetyCheck: true`. It works on `fetchUser()`, `initUserState()`, and `initUserProfile()`:
+
+```js
+initUserProfile({ container, skipCorsSafetyCheck: true });
+```
+
+An explicit `apiUrl` is never gated. Demos and tests point it at a mock — see `docs/simulator.js`, which serves `data:application/json,…` URLs — and a mock has no CORS problem to avoid.
 
 #### How it stays in sync
 
