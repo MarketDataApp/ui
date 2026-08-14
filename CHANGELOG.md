@@ -1,5 +1,21 @@
 # Changelog
 
+## 5.4.0
+
+### Changed
+
+- **`fetchUser()` no longer requests the default endpoint from a page that is not served by `marketdata.app` or one of its subdomains. It resolves to `null` — logged out — on the first frame instead.** The endpoint is `https://dashboard.marketdata.app/api/user/` and the request carries `credentials: 'include'`, so from any other origin it is a cross-site credentialed request that the API's CORS policy rejects. The browser surfaces that rejection as a network error, which is indistinguishable from a real one, so `_fetchAndCache()` treated it as transient and retried twice with 1s and 2s backoff. Every off-domain page therefore paid about **3 seconds** and three doomed requests to reach exactly the `null` it now gets synchronously, and the login pill held its skeleton for that whole window. This affected local development (`localhost`, `127.0.0.1`) and any preview or staging host outside the domain; it never affected production, where the check passes and behaviour is unchanged. The allowed domain is derived from the endpoint constant (`new URL(DEFAULT_API_URL).hostname.split('.').slice(-2).join('.')`) rather than written a second time, so it follows the endpoint if that ever moves. The suffix test is `hostname === base || hostname.endsWith('.' + base)`; the leading dot is deliberate, because a bare `endsWith(base)` would admit `marketdata.app.evil.com` and `notmarketdata.app`, and both are covered by tests. A blocked call touches nothing else — it writes no cache entry, advances no TTL timestamp, and notifies no `onUserChange()` subscriber — so it cannot poison a later call that does run.
+
+### New
+
+- **`skipCorsSafetyCheck` forces the request on any host.** It defaults to `false` and is accepted by `fetchUser()`, `initUserState()`, and `initUserProfile()`. Use it to point a local page at the real production API when you are willing to arrange CORS for it yourself.
+
+### Internal
+
+- **An explicit `apiUrl` is deliberately exempt from the check.** That option exists for demos and tests, which point it at a mock rather than at a cross-site endpoint — `docs/simulator.js` serves `data:application/json,…` URLs, and a `data:` URL has no domain to compare against. Gating that path would have broken the documentation simulator and seven `initUserState()` unit tests while preventing no real CORS failure.
+- **`tests/unit/user.test.js` gains 11 tests** covering the blocked hosts, the allowed bare domain and subdomains, the two look-alike hosts, the untouched cache and subscribers, the override, and the exempt `apiUrl` path. The existing 26 `fetchUser()` tests needed no change, because `vitest.config.js` already sets the jsdom URL to `https://www.marketdata.app/`.
+- **The `tests/e2e/fixtures/user-profile-compact.html` `fetch` stub is now a fallback rather than the mechanism.** The fixture is served from `localhost`, so the safety check produces the logged-out branch before the stub is consulted. The stub stays, so the fixture remains hermetic if it is ever served from a `marketdata.app` host, and its comment now says so.
+
 ## 5.3.0
 
 ### New
