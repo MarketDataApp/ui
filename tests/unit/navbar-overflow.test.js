@@ -405,3 +405,104 @@ describe('initNavbarOverflow', () => {
     cleanup();
   });
 });
+
+// ---------------------------------------------------------------------------
+// Issue #39
+// ---------------------------------------------------------------------------
+describe('first pass timing (#39)', () => {
+  // The debounce exists to coalesce observer bursts. The first pass fires once
+  // and has nothing to coalesce, so it used to cost every consumer 50ms plus a
+  // frame of unmeasured navbar — and far longer than that in practice, because
+  // the consumer has no correct markup to paint until the module arrives.
+  it('measures before initNavbarOverflow returns', () => {
+    const { container, rightGroup } = createMockContainer({ compressed: true });
+
+    const el1 = addItem(rightGroup, 'sync-item');
+
+    const cleanup = initNavbarOverflow({
+      container,
+      items: [{ selector: '.sync-item', priority: 1 }],
+    });
+
+    // No triggerAndFlush() — nothing advances the clock. If the first pass is
+    // still debounced, the item is untouched here.
+    expect(el1.getAttribute('data-navbar-hidden')).toBe('');
+    cleanup();
+  });
+
+  it('leaves items alone when the synchronous first pass finds no overflow', () => {
+    const { container, rightGroup } = createMockContainer({ compressed: false });
+
+    const el1 = addItem(rightGroup, 'roomy-item');
+
+    const cleanup = initNavbarOverflow({
+      container,
+      items: [{ selector: '.roomy-item', priority: 1 }],
+    });
+
+    expect(el1.hasAttribute('data-navbar-hidden')).toBe(false);
+    cleanup();
+  });
+});
+
+describe('webfont reflow (#39)', () => {
+  let resolveFonts;
+
+  beforeEach(() => {
+    // jsdom ships no FontFaceSet. Stand in for the one property we read.
+    Object.defineProperty(document, 'fonts', {
+      value: { ready: new Promise((resolve) => (resolveFonts = resolve)) },
+      configurable: true,
+      writable: true,
+    });
+  });
+
+  // A webfont swap changes text width without changing the container's
+  // border-box and without adding or removing nodes, so neither the
+  // ResizeObserver nor the MutationObserver sees it. Verified in Chromium: a
+  // span grew 181.7px -> 289.7px and both observers fired zero times.
+  it('measures again once the fonts settle', async () => {
+    const { container, rightGroup, setCompressed } = createMockContainer({
+      compressed: false,
+    });
+
+    const el1 = addItem(rightGroup, 'font-item');
+
+    const cleanup = initNavbarOverflow({
+      container,
+      items: [{ selector: '.font-item', priority: 1 }],
+    });
+
+    // Fallback metrics fit. The real face is wider and does not.
+    expect(el1.hasAttribute('data-navbar-hidden')).toBe(false);
+
+    setCompressed(true);
+    resolveFonts();
+    await vi.advanceTimersByTimeAsync(0);
+
+    expect(el1.getAttribute('data-navbar-hidden')).toBe('');
+    cleanup();
+  });
+
+  it('does not measure after cleanup', async () => {
+    const { container, rightGroup, setCompressed } = createMockContainer({
+      compressed: false,
+    });
+
+    const el1 = addItem(rightGroup, 'late-item');
+
+    const cleanup = initNavbarOverflow({
+      container,
+      items: [{ selector: '.late-item', priority: 1 }],
+    });
+
+    cleanup();
+
+    // Fonts land after the consumer tore the navbar down.
+    setCompressed(true);
+    resolveFonts();
+    await vi.advanceTimersByTimeAsync(0);
+
+    expect(el1.hasAttribute('data-navbar-hidden')).toBe(false);
+  });
+});

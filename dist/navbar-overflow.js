@@ -35,6 +35,7 @@ export function initNavbarOverflow({ container, items }) {
   const hiddenSet = new Set();
   let rafId = null;
   let debounceTimer = null;
+  let disposed = false;
 
   function resolveElements() {
     return sorted
@@ -144,16 +145,33 @@ export function initNavbarOverflow({ container, items }) {
     }, 50);
   }
 
+  // Measure now, not in 50ms. The debounce coalesces observer bursts, and the
+  // first pass fires exactly once, so it has nothing to coalesce. Deferring it
+  // left every consumer painting an unmeasured navbar until the module landed
+  // — 4.3s on a throttled connection, not the 50ms the debounce suggests.
+  // See: https://github.com/MarketDataApp/ui/issues/39
+  reflow();
+
+  // No explicit initial scheduleReflow() below: observe() delivers a callback
+  // of its own the moment observation starts, which schedules one anyway.
   const observer = new ResizeObserver(scheduleReflow);
   observer.observe(container);
 
   const mutationObserver = new MutationObserver(scheduleReflow);
   mutationObserver.observe(container, { childList: true, subtree: true });
 
-  // Initial check
-  scheduleReflow();
+  // Webfonts change text width without resizing the container's border-box and
+  // without mutating the DOM, so neither observer above sees the swap. The
+  // synchronous pass measures fallback metrics, so it needs this correction —
+  // otherwise a font-swapping navbar keeps whatever state it guessed at init.
+  document.fonts?.ready
+    .then(() => {
+      if (!disposed) reflow();
+    })
+    .catch(() => {});
 
   return function cleanup() {
+    disposed = true;
     observer.disconnect();
     mutationObserver.disconnect();
     clearTimeout(debounceTimer);

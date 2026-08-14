@@ -466,7 +466,7 @@ Usage not yet verified.
 - **`dist/theme-toggle.js`** — Sun/moon toggle button with cookie persistence
 - **`dist/dark-images.js`** — Automatic dark/light image swapping (convention + explicit pairs)
 - **`dist/reviews.js`** — Review rating widget (large/small variants, build-time data, zero deps)
-- **`dist/navbar-overflow.js`** — Priority-based auto-hide for navbar items
+- **`dist/navbar-overflow.js`** — Priority-based auto-hide for navbar items. Measures synchronously before `initNavbarOverflow()` returns, so there is no unmeasured window to paint around and no pre-measurement CSS default to invent. Re-measures once `document.fonts.ready` settles, because a webfont swap changes text width without resizing the container or mutating the DOM — neither observer sees it. Later passes stay debounced at 50ms.
 - **`dist/user.js`** — Shared user state management (fetch, cache, subscribe)
 - **`dist/user-profile.js`** — Gravatar avatar + dropdown menu (zero deps, templates inlined)
 - **`dist/user-state.js`** — Declarative show/hide based on user auth and subscription state
