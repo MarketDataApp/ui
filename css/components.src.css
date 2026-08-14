@@ -1431,15 +1431,27 @@ label[error][focused] :where(.text-heading, .radio-button-helper) {
     color 0.15s;
 }
 
+/*
+  `whitespace-nowrap` and `shrink-0` are load-bearing, not cosmetic. Without
+  them the pill's min-content width is the width of "Log", so a crowded navbar
+  flex row compresses the pill and the label breaks onto a second line, which
+  doubles the header height. See: https://github.com/MarketDataApp/ui/issues/38
+
+  `min-h-11` is 44px. The content box measures 42px (py-2.5 + leading-5 +
+  border), so the floor centres it and lifts the pill to the WCAG 2.5.8 target
+  without changing the padding. 44px is a ceiling for this control — with the
+  label unable to wrap, nothing can push it past the floor.
+*/
 .user-profile-wrapper .user-profile-login-pill {
   @apply inline-flex items-center gap-1.5 font-sans text-body bg-neutral-secondary-medium border border-default-medium font-medium leading-5 rounded-full text-sm px-4 py-2.5 cursor-pointer;
+  @apply whitespace-nowrap shrink-0 min-h-11;
   @apply hover:bg-neutral-tertiary-medium hover:text-heading;
   @apply focus:ring-4 focus:ring-neutral-tertiary focus:outline-none;
   @apply shadow-xs;
 }
 
 .user-profile-wrapper .user-profile-login-pill svg {
-  @apply w-4 h-4;
+  @apply w-4 h-4 shrink-0;
 }
 
 .user-profile-wrapper .user-profile-login-pill.user-profile-skeleton {
@@ -1457,6 +1469,51 @@ label[error][focused] :where(.text-heading, .radio-button-helper) {
 .user-profile-wrapper .user-profile-avatar--placeholder svg {
   @apply absolute w-12 h-12 text-body-subtle;
   left: -0.25rem;
+}
+
+/* ---- Compact (icon-only) login pill ---- */
+/*
+  Opt-in modifier for narrow navbars. The consumer adds .user-profile-compact
+  to the same element it passes as `container`, at whatever width its own
+  navbar collapses — we ship no media query, because each property switches to
+  a hamburger at a different width (Docusaurus 996px, marketdata.app 640px).
+
+  The full pill needs roughly 444px of navbar row, so it overflows every common
+  phone width even though it no longer wraps. Dropping the label is what makes
+  it fit. See: https://github.com/MarketDataApp/ui/issues/38
+
+  Descendant selectors are safe here, unlike the @utility components covered by
+  the "Nested Component Contrast" rule in CLAUDE.md. Those break because
+  consumers @apply them, so the parent class never reaches the DOM. These
+  classes are plain selectors that our JS writes into the DOM literally, and
+  the consumer sets .user-profile-compact on real markup.
+*/
+.user-profile-container.user-profile-compact {
+  @apply min-w-11;
+}
+
+.user-profile-compact .user-profile-wrapper .user-profile-login-pill {
+  /* px-2.5 keeps the box at exactly 44px: 20px padding + a 16px icon is 36px,
+     so the min-width floor decides. px-4 would render 48px and overshoot. */
+  @apply min-w-11 justify-center gap-0 px-2.5;
+}
+
+/*
+  Visually hidden, but still the button's accessible name — screen readers
+  announce "Log in" with no visible label to read.
+
+  This deliberately avoids the usual sr-only recipe: `overflow: hidden` on a
+  1x1 box makes scrollHeight exceed clientHeight, which automated mobile audits
+  flag as clipped text. `clip-path: inset(50%)` hides the same content and
+  leaves overflow visible, so the probes stay quiet.
+*/
+.user-profile-compact .user-profile-wrapper .user-profile-login-label {
+  @apply absolute w-px h-px whitespace-nowrap;
+  clip-path: inset(50%);
+}
+
+.user-profile-compact .user-profile-wrapper .user-profile-login-chevron {
+  @apply hidden;
 }
 
 /* ---- Theme Toggle ---- */

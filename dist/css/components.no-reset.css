@@ -3041,6 +3041,9 @@ label[error][focused] :where(.text-heading, .radio-button-helper) {
   --tw-font-weight: var(--font-weight-medium);
   font-weight: var(--font-weight-medium);
   color: var(--color-body);
+  min-height: calc(var(--spacing) * 11);
+  flex-shrink: 0;
+  white-space: nowrap;
   &:hover {
     @media (hover: hover) {
       background-color: var(--color-neutral-tertiary-medium);
@@ -3068,6 +3071,7 @@ label[error][focused] :where(.text-heading, .radio-button-helper) {
 .user-profile-wrapper .user-profile-login-pill svg {
   height: calc(var(--spacing) * 4);
   width: calc(var(--spacing) * 4);
+  flex-shrink: 0;
 }
 .user-profile-wrapper .user-profile-login-pill.user-profile-skeleton {
   pointer-events: none;
@@ -3088,6 +3092,25 @@ label[error][focused] :where(.text-heading, .radio-button-helper) {
   width: calc(var(--spacing) * 12);
   color: var(--color-body-subtle);
   left: -0.25rem;
+}
+.user-profile-container.user-profile-compact {
+  min-width: calc(var(--spacing) * 11);
+}
+.user-profile-compact .user-profile-wrapper .user-profile-login-pill {
+  min-width: calc(var(--spacing) * 11);
+  justify-content: center;
+  gap: calc(var(--spacing) * 0);
+  padding-inline: calc(var(--spacing) * 2.5);
+}
+.user-profile-compact .user-profile-wrapper .user-profile-login-label {
+  position: absolute;
+  height: 1px;
+  width: 1px;
+  white-space: nowrap;
+  clip-path: inset(50%);
+}
+.user-profile-compact .user-profile-wrapper .user-profile-login-chevron {
+  display: none;
 }
 .theme-toggle-wrapper {
   display: inline-flex;

@@ -47,10 +47,26 @@ export default defineConfig({
       testMatch: ['theme-toggle.spec.js'],
       use: { browserName: 'chromium', baseURL: 'http://localhost:3000' },
     },
+    {
+      // No auth dependency — the fixture stubs fetch and serves from the repo.
+      name: 'user-profile-compact',
+      testMatch: ['user-profile-compact.spec.js'],
+      use: { browserName: 'chromium', baseURL: 'http://localhost:3101' },
+    },
   ],
-  webServer: {
-    command: 'npx serve . -p 3000',
-    port: 3000,
-    reuseExistingServer: true,
-  },
+  webServer: [
+    {
+      command: 'npx serve . -p 3000',
+      port: 3000,
+      reuseExistingServer: true,
+    },
+    {
+      // Own port, and reuseExistingServer is off: these tests assert pixel
+      // dimensions against the repo's own dist/, so they must not silently
+      // bind to whatever else happens to hold the port.
+      command: 'npx serve . -p 3101',
+      port: 3101,
+      reuseExistingServer: false,
+    },
+  ],
 });

@@ -313,6 +313,47 @@ The `/api/user/` endpoint returns pre-computed fields — no client-side mapping
 }
 ```
 
+### Compact Login Pill
+
+The logged-out login pill measures about 120px wide. Add the width of a logo,
+a hamburger, and a theme toggle, and the navbar row needs roughly 444px — more
+than any common phone gives it. The logged-in avatar is 40px and always fits;
+only the logged-out states overflow.
+
+Add `.user-profile-compact` to the same element you pass as `container`. The
+pill then renders the person icon alone in a 44×44 box, and the container's
+118px reservation drops to 44px to match:
+
+```html
+<div id="user-profile" class="user-profile-container user-profile-compact"></div>
+```
+
+The package ships no media query for this, because each property collapses its
+navbar at a different width — Docusaurus at 996px, marketdata.app at 640px.
+Toggle the class at whatever width your own navbar uses:
+
+```css
+@media (max-width: 639px) {
+  /* your navbar's breakpoint, not ours */
+}
+```
+
+Behavior that does not change:
+
+- The dropdown still opens and still positions correctly. The menu is where the
+  wording lives at this width.
+- The button still announces "Log in". The label becomes the accessible name
+  rather than being removed, hidden with `clip-path: inset(50%)` instead of the
+  usual `overflow: hidden` recipe — the latter makes `scrollHeight` exceed
+  `clientHeight`, which automated mobile audits flag as clipped text.
+- Style the label and the chevron through `.user-profile-login-label` and
+  `.user-profile-login-chevron`. Do not target them by child order; the
+  template can change.
+
+The full pill never wraps at any width. It carries `whitespace-nowrap` and
+`shrink-0`, so a crowded navbar row cannot compress it into two lines. Both
+variants hold a 44px minimum height for the WCAG 2.5.8 target.
+
 ### Theme Tokens
 
 `css/theme.css` defines all shared design tokens inside `@theme {}`:
@@ -415,7 +456,7 @@ Usage not yet verified.
 - **Radio Buttons**: `.radio-button-input`, `.radio-button-helper`
 - **Card Surface**: `.card-surface` (shared visual base: background, border, padding, shadow, rounded corners)
 - **Grid Layout**: `.grid-layout-12`, `.grid-content-container`, `.grid-content-position`
-- **User Profile**: `.user-profile-container`, `.user-profile-wrapper`, `.user-profile-avatar`, `.user-profile-avatar--img`, `.user-profile-avatar--placeholder`, `.user-profile-login-pill`, `.user-profile-dropdown`, `.user-profile-dropdown-header`, `.user-profile-dropdown-name`, `.user-profile-dropdown-email`, `.user-profile-dropdown-menu`, `.user-profile-dropdown-link`, `.user-profile-dropdown-signout`, `.user-profile-dropdown-subtext`, `.user-profile-dropdown-divider-above`, `.user-profile-dropdown-divider-below`
+- **User Profile**: `.user-profile-container`, `.user-profile-compact`, `.user-profile-wrapper`, `.user-profile-avatar`, `.user-profile-avatar--img`, `.user-profile-avatar--placeholder`, `.user-profile-login-pill`, `.user-profile-login-label`, `.user-profile-login-chevron`, `.user-profile-dropdown`, `.user-profile-dropdown-header`, `.user-profile-dropdown-name`, `.user-profile-dropdown-email`, `.user-profile-dropdown-menu`, `.user-profile-dropdown-link`, `.user-profile-dropdown-signout`, `.user-profile-dropdown-subtext`, `.user-profile-dropdown-divider-above`, `.user-profile-dropdown-divider-below`
 - **Theme Toggle**: `.theme-toggle-button`, `.theme-toggle-icon-light`, `.theme-toggle-icon-dark`
 - **Defaults**: `.default` (base text + background with dark mode)
 

@@ -242,6 +242,21 @@ describe('initUserProfile — logged out', () => {
     expect(link.textContent.trim()).toBe('Sign in');
   });
 
+  // Issue #38: the compact styles hide the label and the chevron. Consumers
+  // previously reached them through child order (`> span`, `> svg:last-child`),
+  // which breaks silently whenever the template changes. These class hooks are
+  // the supported handle.
+  it('labels the login text span with .user-profile-login-label', async () => {
+    const container = document.createElement('div');
+    document.body.appendChild(container);
+
+    await initUserProfile({ container });
+
+    const label = container.querySelector('.user-profile-login-pill .user-profile-login-label');
+    expect(label).not.toBeNull();
+    expect(label.textContent).toBe('Log in');
+  });
+
   it('cleanup clears the container', async () => {
     const container = document.createElement('div');
     document.body.appendChild(container);
@@ -564,6 +579,23 @@ describe('initUserProfile — logged out, with dropdown (guest dropdown)', () =>
 
     const textSpan = pill.querySelector('span');
     expect(textSpan.textContent).toBe('Log in');
+  });
+
+  // Issue #38: see the .user-profile-login-label note above.
+  it('labels the dropdown pill label and chevron with class hooks', async () => {
+    const container = document.createElement('div');
+    document.body.appendChild(container);
+
+    await initUserProfile({ container, dropdown: true });
+
+    const pill = container.querySelector('.user-profile-login-pill');
+
+    const label = pill.querySelector('.user-profile-login-label');
+    expect(label).not.toBeNull();
+    expect(label.textContent).toBe('Log in');
+
+    const chevron = pill.querySelector('svg.user-profile-login-chevron');
+    expect(chevron).not.toBeNull();
   });
 
   it('clicking pill opens dropdown with "Log in" and "Start Free Trial" items', async () => {

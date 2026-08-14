@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>user-profile layout fixture (#38)</title>
+    <link rel="stylesheet" href="/dist/css/components.css" />
+    <style>
+      /*
+        Stands in for a consumer navbar: a flex row deliberately too narrow for
+        its contents, which is the condition that used to squeeze the pill.
+      */
+      .navbar {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        width: 240px;
+        border: 1px solid #ccc;
+      }
+      .navbar-filler {
+        flex: 1 1 auto;
+        min-width: 0;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="navbar">
+      <span class="navbar-filler">Data Products Learn Pricing Company</span>
+      <div id="pill-full" class="user-profile-container"></div>
+    </div>
+
+    <div class="navbar">
+      <span class="navbar-filler">Data Products Learn Pricing Company</span>
+      <div id="pill-compact" class="user-profile-container user-profile-compact"></div>
+    </div>
+
+    <script type="module">
+      // Force the logged-out branch without touching the network, so the real
+      // component renders the real markup against the real built CSS.
+      window.fetch = () => Promise.resolve({ ok: false, status: 401 });
+
+      const { initUserProfile } = await import('/dist/user-profile.js');
+
+      await Promise.all([
+        initUserProfile({ container: document.getElementById('pill-full'), dropdown: true }),
+        initUserProfile({ container: document.getElementById('pill-compact'), dropdown: true }),
+      ]);
+
+      document.body.dataset.ready = 'true';
+    </script>
+  </body>
+</html>
