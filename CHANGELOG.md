@@ -1,5 +1,15 @@
 # Changelog
 
+## 5.4.1
+
+### Fixes
+
+- **`.user-profile-container` now reserves 44px of height rather than 40px, so the navbar no longer grows when the login pill lands.** The container reserves space on both axes to hold the bar still while the user fetch is in flight. On the width axis it reserves the login pill (118px, the CLS guard added in #9); on the height axis it reserved the **avatar** instead, and the avatar is 40px while the pill renders 44px — the pill has carried a 44px floor since 5.3.0, when it grew 2px to meet the WCAG 2.5.8 AAA touch target. The reservation was therefore 4px short of the state it is meant to reserve for, and short in exactly the case that needs it: the pill is what an anonymous visitor always lands, and an anonymous visitor is who waits out the pre-hydration window. A navbar that sizes itself from its content grew 4px on hydration; where the consumer holds a `position: fixed` bar against a spacer of a set height — the usual way to lay that out — the bar and its spacer disagreed for the whole window and a band opened underneath, which in dark mode exposed the page background as a black line that healed on hydration. Reproduced on marketdata.app at 57px parsed against a 60px spacer, then 61px once the pill arrived. **No markup, class name, or JS change** — one declaration in one rule, and both prebuilt bundles are regenerated to match. `.user-profile-compact` needs no separate fix: it narrows the pill through horizontal padding only, so the 44px floor already holds there, and its own `min-width` override is untouched. The height axis needs no release step either, unlike the width axis — `initUserProfile()` clears the width floor once real content is in, because a `min-width` can cap a wider child, while a `min-height` never caps a taller one. Closes #40.
+
+### Internal
+
+- **Coverage for the reservation, at both levels.** `tests/unit/user-profile-css.test.js` asserts the container's floors in both built bundles, next to the existing pill assertions, so the two numbers are now checked against each other in the artifact consumers actually link. The `user-profile-compact.html` fixture gains a third container that is deliberately never initialised: it renders the reservation alone, so `tests/e2e/user-profile-compact.spec.js` can measure reserved height against the hydrated pill's height in a real browser and fail on any gap between them. Both new e2e assertions were confirmed to fail against the 40px value before the fix.
+
 ## 5.4.0
 
 ### Changed
