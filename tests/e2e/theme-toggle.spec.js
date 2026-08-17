@@ -24,6 +24,41 @@ async function waitForDark(page, expected) {
   );
 }
 
+/**
+ * Change the emulated OS scheme and wait until the page has PROCESSED the
+ * resulting prefers-color-scheme change event.
+ *
+ * Needed because emulateMedia() resolves when the override is sent, not when
+ * the page has reacted to it. Two calls in a row can therefore collapse: the
+ * renderer goes straight to the newest value and never dispatches an event for
+ * the one in between. The toggle only ever applies a theme from that event, so
+ * a swallowed event means the theme is never applied.
+ *
+ * Normally waitForDark() covers this, because a followed OS change moves the
+ * DOM. It does not cover a change that leaves the DOM where it already was —
+ * there it resolves on the old state and blocks nothing. This helper is the
+ * barrier for that case: it waits on the event rather than on the DOM.
+ *
+ * Listeners run in registration order and the toggle registers on page load,
+ * so by the time the listener below fires, the toggle's has already run.
+ *
+ * Only for a scheme that differs from the current one. A call that matches the
+ * current scheme dispatches no event and would wait until it times out.
+ */
+async function emulateScheme(page, scheme) {
+  await page.evaluate(() => {
+    if (window.__schemeSeen) return;
+    window.__schemeSeen = [];
+    window
+      .matchMedia('(prefers-color-scheme: dark)')
+      .addEventListener('change', (e) => window.__schemeSeen.push(e.matches));
+  });
+  const seen = await page.evaluate(() => window.__schemeSeen.length);
+
+  await page.emulateMedia({ colorScheme: scheme });
+  await page.waitForFunction((n) => window.__schemeSeen.length > n, seen, { timeout: 5000 });
+}
+
 // ---------------------------------------------------------------------------
 // Tests
 // ---------------------------------------------------------------------------
@@ -124,11 +159,15 @@ test.describe('resetToSystem', () => {
       document.cookie = 'theme=; domain=.marketdata.app; path=/; max-age=0';
     });
 
-    // OS changes to light — should now be followed
-    await page.emulateMedia({ colorScheme: 'light' });
+    // OS changes to light — should now be followed. The page is already light,
+    // so this one leaves the DOM alone and waitForDark() below cannot block on
+    // it. emulateScheme() waits for the event instead, which stops this change
+    // from being swallowed by the next one.
+    await emulateScheme(page, 'light');
     await waitForDark(page, false);
 
-    // OS changes to dark — should also be followed
+    // OS changes to dark — should also be followed. This one moves the DOM, so
+    // waitForDark() is a real barrier and needs no help.
     await page.emulateMedia({ colorScheme: 'dark' });
     await waitForDark(page, true);
   });
