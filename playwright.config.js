@@ -12,6 +12,12 @@ try {
   // .env file is optional
 }
 
+// Deliberately not 3000. That port is the default for so many dev servers that
+// something else usually holds it, and a static file server is indistinguishable
+// from any other server until a page 404s deep inside a test.
+const LOCAL_PORT = 3101;
+const LOCAL_SERVER = `http://localhost:${LOCAL_PORT}`;
+
 export default defineConfig({
   testDir: './tests/e2e',
   outputDir: './tests/results',
@@ -45,27 +51,31 @@ export default defineConfig({
     {
       name: 'theme-toggle',
       testMatch: ['theme-toggle.spec.js'],
-      use: { browserName: 'chromium', baseURL: 'http://localhost:3000' },
+      use: { browserName: 'chromium', baseURL: LOCAL_SERVER },
     },
     {
       // No auth dependency — the fixture stubs fetch and serves from the repo.
       name: 'user-profile-compact',
       testMatch: ['user-profile-compact.spec.js'],
-      use: { browserName: 'chromium', baseURL: 'http://localhost:3101' },
+      use: { browserName: 'chromium', baseURL: LOCAL_SERVER },
     },
   ],
   webServer: [
     {
-      command: 'npx serve . -p 3000',
-      port: 3000,
-      reuseExistingServer: true,
-    },
-    {
-      // Own port, and reuseExistingServer is off: these tests assert pixel
-      // dimensions against the repo's own dist/, so they must not silently
-      // bind to whatever else happens to hold the port.
-      command: 'npx serve . -p 3101',
-      port: 3101,
+      // One repo-owned static server for every spec that loads a local page,
+      // on a port of our own, with reuseExistingServer off.
+      //
+      // Both of those are load-bearing. These specs measure pixel dimensions
+      // and read theme classes off the repo's own dist/, so they must serve
+      // the repo and nothing else. theme-toggle used to run on :3000 with
+      // reuse on, which meant Playwright skipped starting the server whenever
+      // anything already held that very common port and ran the suite against
+      // a stranger's app instead. That failed as five 30s click timeouts,
+      // because the page 404ed and #theme-toggle never appeared — the port
+      // collision was nowhere in the error. With reuse off, a busy port fails
+      // immediately and says so.
+      command: `npx serve . -p ${LOCAL_PORT}`,
+      port: LOCAL_PORT,
       reuseExistingServer: false,
     },
   ],
