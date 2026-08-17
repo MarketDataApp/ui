@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>keyboard focus ring fixture (#41)</title>
+    <link rel="stylesheet" href="/dist/css/components.css" />
+    <script>
+      /*
+        Theme comes from `?theme=dark`, applied here in <head> before anything
+        paints. A test cannot set it afterwards: --btn-focus-color transitions
+        over 0.5s by design, so a live theme flip would be measured mid-animation.
+      */
+      const theme = new URL(location.href).searchParams.get('theme') === 'dark' ? 'dark' : 'light';
+      document.documentElement.classList.add(theme);
+      document.documentElement.setAttribute('data-theme', theme);
+    </script>
+    <style>
+      /*
+        Stands in for a consumer navbar. The body colour is the surface the
+        theme toggle rings against — the toggle's own background is
+        transparent, so its indicator has only the page behind it.
+
+        These two values are the neutral page surfaces the properties actually
+        use: white in light mode, gray-900 in dark.
+      */
+      body {
+        margin: 0;
+        padding: 24px;
+        background: #ffffff;
+      }
+      html.dark body {
+        background: #111827;
+      }
+      .navbar {
+        display: flex;
+        align-items: center;
+        gap: 16px;
+      }
+    </style>
+  </head>
+  <body>
+    <!--
+      A focus target ahead of the controls, so a test can Tab into the navbar
+      from a known starting point instead of guessing the document's first
+      focusable element.
+    -->
+    <a href="#" id="before">start here</a>
+
+    <div class="navbar">
+      <div id="toggle"></div>
+      <div id="pill" class="user-profile-container"></div>
+      <a href="#" id="cta" class="btn-orange-to-blue">Get started</a>
+    </div>
+
+    <script type="module">
+      // The fixture is served from localhost, so fetchUser()'s CORS safety
+      // check already resolves to logged out without a request. The stub keeps
+      // the fixture hermetic if it is ever served from a marketdata.app host.
+      window.fetch = () => Promise.resolve({ ok: false, status: 401 });
+
+      const [{ initUserProfile }, { initThemeToggle }] = await Promise.all([
+        import('/dist/user-profile.js'),
+        import('/dist/theme-toggle.js'),
+      ]);
+
+      initThemeToggle({ container: document.getElementById('toggle') });
+      await initUserProfile({ container: document.getElementById('pill'), dropdown: true });
+
+      document.body.dataset.ready = 'true';
+    </script>
+  </body>
+</html>

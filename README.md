@@ -384,6 +384,17 @@ variants hold a 44px minimum height for the WCAG 2.5.8 target.
 - **Borders**: `--color-buffer-*`, `--color-muted`, `--color-light-*`, `--color-default-*`, `--color-dark-*`
 - **Status backgrounds**: `--color-success-*`, `--color-danger-*`, `--color-warning-*` (danger uses red, not Flowbite's default rose)
 - **Brand aliases**: `--color-brand-*`, `--color-fg-brand-*` (semantic aliases to blue palette, with dark mode overrides)
+- **Focus ring**: `--color-focus-ring` (see below)
+
+#### Focus Ring
+
+`--color-focus-ring` is the one colour for every keyboard focus indicator the kit draws on a neutral surface — currently the login pill and the theme toggle. Use it as `focus-visible:ring-4 focus-visible:ring-focus-ring`.
+
+It is the brand blue (`#0085f2`) in light mode and `--color-blue-400` in dark. One value cannot serve both: against the dark login pill the brand blue measures 2.97:1, under the 3:1 that WCAG 1.4.11 asks of a focus indicator. The dark override lives in a plain `.dark, [data-theme='dark']` rule at the end of `theme.css` rather than in a `dark:` variant, because a token override has to reach every element and `theme.css` is imported before a consumer declares the variant.
+
+Gradient buttons do **not** use this token. They keep `--btn-focus-color`, which transitions from pink to brand alongside the gradient itself.
+
+Buttons and button-like controls ring on `:focus-visible`, not `:focus`, so a mouse click leaves no ring behind. Form controls are the deliberate exception and keep `:focus` — text inputs, selects, radios, and checkboxes stay the active control after a click, and the ring says which one has the caret.
 
 ## Development
 

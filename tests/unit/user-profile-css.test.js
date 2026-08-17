@@ -1,5 +1,6 @@
 import { readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
+import { BUILDS, ruleBody } from './helpers/css.js';
 
 // Issue #38: the login pill wrapped to two lines whenever the navbar flex row
 // ran short of space. Nothing stopped it — the pill was the one button in this
@@ -9,21 +10,6 @@ import { resolve } from 'node:path';
 // These assertions read the BUILT artifacts, not the `@apply` source, because
 // dist/css is what consumers link. A rule that never emitted would pass a
 // source-string check and still ship a wrapping pill.
-const BUILDS = ['dist/css/components.css', 'dist/css/components.no-reset.css'];
-
-/** Extract one rule's declaration block by brace matching. */
-function ruleBody(css, selector) {
-  const start = css.indexOf(`\n${selector} {`);
-  if (start === -1) return null;
-  let depth = 0;
-  for (let i = css.indexOf('{', start); i < css.length; i++) {
-    if (css[i] === '{') depth++;
-    else if (css[i] === '}' && --depth === 0) {
-      return css.slice(css.indexOf('{', start) + 1, i);
-    }
-  }
-  return null;
-}
 
 describe.each(BUILDS)('login pill layout in %s (#38)', (buildPath) => {
   const css = readFileSync(resolve(process.cwd(), buildPath), 'utf8');

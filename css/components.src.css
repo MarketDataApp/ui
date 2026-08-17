@@ -148,7 +148,13 @@
     --btn-shimmer-to: #0085f2;
     --btn-focus-color: var(--color-brand-medium);
   }
-  &:focus {
+  /* `:focus-visible`, not `:focus`. `:focus` also fires on a mouse click, so a
+     clicked CTA kept its ring until the user clicked elsewhere. A consuming
+     site that uses `:focus-visible` everywhere then showed two different focus
+     behaviours on one page. The ring width moves with the colour — see the
+     `focus-visible:ring-4` below. Every btn-* variant repeats this pair.
+     The colours are unchanged. See: https://github.com/MarketDataApp/ui/issues/41 */
+  &:focus-visible {
     --tw-ring-color: var(--btn-focus-color);
   }
   /* Loading state — swap to the hover-state palette (blue) and rotate
@@ -194,7 +200,7 @@
   }
   @apply shadow-diffuse;
   @apply hover:shadow-none;
-  @apply focus:ring-4 focus:outline-hidden;
+  @apply focus:outline-hidden focus-visible:ring-4;
   @apply cursor-pointer disabled:cursor-not-allowed disabled:opacity-50 disabled:hover:shadow-diffuse;
   @apply hover:!no-underline;
 }
@@ -226,7 +232,7 @@
     --btn-shimmer-to: #ffdfb9;
     --btn-focus-color: var(--color-pink-200);
   }
-  &:focus {
+  &:focus-visible {
     --tw-ring-color: var(--btn-focus-color);
   }
   /* Loading state — swap to the hover-state palette (orange) and
@@ -272,7 +278,7 @@
   }
   @apply shadow-line;
   @apply hover:shadow-diffuse;
-  @apply focus:ring-4 focus:outline-hidden;
+  @apply focus:outline-hidden focus-visible:ring-4;
   @apply cursor-pointer disabled:cursor-not-allowed disabled:opacity-50 disabled:hover:shadow-line;
   @apply hover:!no-underline;
 }
@@ -283,7 +289,7 @@
   @apply bg-transparent text-marketdata-darkblue;
   @apply shadow-line dark:shadow-darkline dark:text-white;
   @apply hover:bg-gradient-orange hover:text-white hover:shadow-diffuse;
-  @apply focus:ring-4 focus:outline-hidden;
+  @apply focus:outline-hidden focus-visible:ring-4;
   /* Outline state pairs with the blue-ish brand ring; hover swaps to
      the orange gradient and the ring follows to pink. */
   --btn-focus-color: var(--color-brand-medium);
@@ -294,7 +300,7 @@
   &:where(.dark, .dark *, [data-theme='dark'], [data-theme='dark'] *):hover:not(:disabled) {
     --btn-focus-color: var(--color-pink-800);
   }
-  &:focus {
+  &:focus-visible {
     --tw-ring-color: var(--btn-focus-color);
   }
   @apply cursor-pointer disabled:cursor-not-allowed disabled:opacity-50;
@@ -308,12 +314,12 @@
   @apply bg-transparent text-marketdata-darkblue;
   @apply shadow-line dark:shadow-darkline dark:text-white;
   @apply hover:bg-gradient-blue hover:text-white hover:shadow-none;
-  @apply focus:ring-4 focus:outline-hidden;
+  @apply focus:outline-hidden focus-visible:ring-4;
   /* Outline and blue both pair with the brand-medium ring — same
      ring color in both states, but routed through the var for
      pattern consistency with the rest of the button family. */
   --btn-focus-color: var(--color-brand-medium);
-  &:focus {
+  &:focus-visible {
     --tw-ring-color: var(--btn-focus-color);
   }
   @apply cursor-pointer disabled:cursor-not-allowed disabled:opacity-50;
@@ -340,7 +346,7 @@
   @apply shadow-diffuse;
   @apply hover:bg-none hover:text-marketdata-darkblue dark:hover:text-white;
   @apply hover:shadow-line dark:hover:shadow-darkline;
-  @apply focus:ring-4 focus:outline-hidden;
+  @apply focus:outline-hidden focus-visible:ring-4;
   /* Orange gradient at rest → pink ring; hover transitions to outline
      state → brand-medium ring. */
   --btn-focus-color: var(--color-pink-200);
@@ -351,7 +357,7 @@
   &:hover:not(:disabled) {
     --btn-focus-color: var(--color-brand-medium);
   }
-  &:focus {
+  &:focus-visible {
     --tw-ring-color: var(--btn-focus-color);
   }
   @apply cursor-pointer disabled:cursor-not-allowed disabled:opacity-50;
@@ -366,11 +372,11 @@
   @apply shadow-line;
   @apply hover:bg-none hover:text-marketdata-darkblue dark:hover:text-white;
   @apply hover:shadow-line dark:hover:shadow-darkline;
-  @apply focus:ring-4 focus:outline-hidden;
+  @apply focus:outline-hidden focus-visible:ring-4;
   /* Blue and outline both pair with the brand-medium ring — same
      ring color in both states. */
   --btn-focus-color: var(--color-brand-medium);
-  &:focus {
+  &:focus-visible {
     --tw-ring-color: var(--btn-focus-color);
   }
   @apply cursor-pointer disabled:cursor-not-allowed disabled:opacity-50;
@@ -1454,7 +1460,17 @@ label[error][focused] :where(.text-heading, .radio-button-helper) {
   @apply inline-flex items-center gap-1.5 font-sans text-body bg-neutral-secondary-medium border border-default-medium font-medium leading-5 rounded-full text-sm px-4 py-2.5 cursor-pointer;
   @apply whitespace-nowrap shrink-0 min-h-11;
   @apply hover:bg-neutral-tertiary-medium hover:text-heading;
-  @apply focus:ring-4 focus:ring-neutral-tertiary focus:outline-none;
+  /*
+    The ring must contrast with the pill's own background, not match it.
+    `ring-neutral-tertiary` was the same token family as the pill, so the ring
+    was invisible — an exact match in dark mode. `focus-ring` is the shared
+    token from theme.css and clears 3:1 on both themes.
+
+    `:focus-visible`, not `:focus`, so a mouse click does not leave the ring
+    behind. See: https://github.com/MarketDataApp/ui/issues/41
+  */
+  @apply focus:outline-hidden;
+  @apply focus-visible:ring-4 focus-visible:ring-focus-ring;
   @apply shadow-xs;
 }
 
@@ -1539,7 +1555,17 @@ label[error][focused] :where(.text-heading, .radio-button-helper) {
   @apply bg-transparent text-body border-none p-0;
   @apply hover:bg-neutral-tertiary-medium hover:text-body;
   @apply active:bg-transparent active:text-body;
+  /*
+    `focus:bg-transparent focus:text-body` are resets that hold off host
+    framework button rules (amember), so they stay on every focus. The
+    indicator itself is keyboard-only.
+
+    `focus:outline-hidden` used to stand alone, which left the button with no
+    focus indicator at all — the UA ring removed and nothing drawn in its
+    place. See: https://github.com/MarketDataApp/ui/issues/41
+  */
   @apply focus:outline-hidden focus:bg-transparent focus:text-body;
+  @apply focus-visible:ring-4 focus-visible:ring-focus-ring;
   -webkit-tap-highlight-color: transparent;
   transition: background 0.15s;
 }

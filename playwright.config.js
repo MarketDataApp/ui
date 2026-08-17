@@ -59,6 +59,14 @@ export default defineConfig({
       testMatch: ['user-profile-compact.spec.js'],
       use: { browserName: 'chromium', baseURL: LOCAL_SERVER },
     },
+    {
+      // Same hermetic fixture pattern. Chromium only and on purpose: the specs
+      // rest on Chrome's `:focus-visible` heuristic and on relative colour
+      // syntax, and #41 was measured there.
+      name: 'focus-ring',
+      testMatch: ['focus-ring.spec.js'],
+      use: { browserName: 'chromium', baseURL: LOCAL_SERVER },
+    },
   ],
   webServer: [
     {
