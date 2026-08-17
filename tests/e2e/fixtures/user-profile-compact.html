@@ -33,6 +33,16 @@
       <div id="pill-compact" class="user-profile-container user-profile-compact"></div>
     </div>
 
+    <!--
+      Deliberately never initialised (#40). It holds the reservation the
+      container makes before the user fetch resolves, so a test can compare
+      the space reserved against the space the pill above actually takes.
+    -->
+    <div class="navbar">
+      <span class="navbar-filler">Data Products Learn Pricing Company</span>
+      <div id="pill-reserved" class="user-profile-container"></div>
+    </div>
+
     <script type="module">
       // The fixture is served from localhost, so fetchUser()'s CORS safety
       // check already resolves to logged out without a request. The stub keeps

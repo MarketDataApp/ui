@@ -76,3 +76,26 @@ test.describe('compact login pill', () => {
     expect(box.width).toBe(TARGET);
   });
 });
+
+/**
+ * Issue #40. The reservation exists to hold the navbar still across hydration.
+ * On the height axis it reserved the avatar's 40px while an anonymous visitor
+ * always lands the 44px pill, so a content-sized bar grew by 4px when the fetch
+ * resolved. #pill-reserved is never initialised, so it renders the reservation
+ * alone and can be measured against the pill that did hydrate.
+ */
+test.describe('pre-hydration height reservation', () => {
+  test('reserves the height the pill renders into', async ({ page }) => {
+    const box = await page.locator('#pill-reserved').boundingBox();
+
+    expect(box.height).toBe(TARGET);
+  });
+
+  test('does not change height when the pill lands', async ({ page }) => {
+    const reserved = await page.locator('#pill-reserved').boundingBox();
+    const hydrated = await page.locator('#pill-full').boundingBox();
+
+    // Any gap here is the 4px band that opened under a fixed header.
+    expect(reserved.height).toBe(hydrated.height);
+  });
+});

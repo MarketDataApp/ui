@@ -2904,7 +2904,7 @@ label[error][focused] :where(.text-heading, .radio-button-helper) {
 }
 .user-profile-container {
   display: inline-flex;
-  min-height: calc(var(--spacing) * 10);
+  min-height: calc(var(--spacing) * 11);
   align-items: center;
   min-width: 7.375rem;
 }

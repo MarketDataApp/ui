@@ -55,6 +55,31 @@ describe.each(BUILDS)('login pill layout in %s (#38)', (buildPath) => {
   });
 });
 
+// Issue #40: the container reserves space so the navbar holds still while the
+// user fetch is in flight. It reserved the avatar's 40px on the height axis,
+// but an anonymous visitor always lands the 44px pill, so the bar grew by 4px
+// on hydration and opened a band under any fixed header with a set spacer.
+describe.each(BUILDS)('container height reservation in %s (#40)', (buildPath) => {
+  const css = readFileSync(resolve(process.cwd(), buildPath), 'utf8');
+  const container = ruleBody(css, '.user-profile-container');
+
+  it('emits the container rule', () => {
+    expect(container).not.toBeNull();
+  });
+
+  // The pill is the taller of the two states the container can land, so the
+  // reservation has to match it — 44px, the same floor the pill rule asserts.
+  it('reserves the pill height, not the avatar height', () => {
+    expect(container).toMatch(/min-height:\s*calc\(var\(--spacing\) \* 11\)/);
+  });
+
+  // Per #9, the width axis reserves the full pill at 118px. The compact
+  // container drops that floor itself; this is the uncompacted default.
+  it('keeps the 118px width reservation from #9', () => {
+    expect(container).toMatch(/min-width:\s*7\.375rem/);
+  });
+});
+
 // Issue #38: the full pill needs 444px of navbar row and never fits a phone,
 // so consumers add .user-profile-compact to the container at whatever width
 // their own navbar collapses. The package ships no media query — Docusaurus

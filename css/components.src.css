@@ -1355,8 +1355,16 @@ label[error][focused] :where(.text-heading, .radio-button-helper) {
   beats host framework rules like `.navbar a` or Infima link styles.
   See: https://github.com/MarketDataApp/ui/issues/3
 */
+/*
+  Both floors reserve the LOGIN PILL, not the avatar — the pill is the taller
+  and wider of the two states, and it is the state every anonymous visitor
+  lands. `min-h-11` is 44px, matching the pill's own floor below; the avatar's
+  40px left the reservation 4px short, so a content-sized navbar grew on
+  hydration. See: https://github.com/MarketDataApp/ui/issues/40 (height) and
+  https://github.com/MarketDataApp/ui/issues/9 (width).
+*/
 .user-profile-container {
-  @apply inline-flex items-center min-h-10;
+  @apply inline-flex items-center min-h-11;
   min-width: 7.375rem; /* 118px — login pill worst-case, prevents CLS */
 }
 
