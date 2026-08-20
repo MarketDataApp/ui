@@ -1,5 +1,27 @@
 # Changelog
 
+## 5.7.0
+
+### New
+
+- **A badge that carries a link now styles itself as one, with no opt-in class.** `<a class="badge badge-blue" href="…">` gains a hover affordance, drops the underline, reaches a 24px target and rings on keyboard focus; `<span class="badge badge-blue">` is unchanged in every way. The behaviour keys off `:any-link`, which matches an `<a>` or `<area>` that has an `href` — an anchor without one is not clickable and stays a label. It covers `.badge` and its eight colours, `.badge-pill`, and the three `.badge-pill-{color}` variants. The kit previously shipped badges as static labels only, so a badge used as a link had no hover, kept the site's underline running through the middle of a filled pill, and rendered at 18px. Closes #43.
+  - **Hover** deepens the background one palette step, transitioned over 200ms, following Flowbite's own badges-as-links block, which changes the background rather than adding an underline or a filter. Every colour was measured hovered, in both themes: the label holds at least 4.5:1 against the deepened background in all 22 combinations.
+  - **The 24px minimum height** is WCAG 2.5.8's target size. `inline-flex` and `items-center` centre the text in the taller box rather than letting the extra height hang below it.
+  - **The focus ring mirrors the badge's own colour**, the way `--btn-focus-color` mirrors a button's gradient — `blue-700` in light and `blue-400` in dark, and the matching pair for every other hue. It rings at 2px rather than the 4px the buttons use, because a 24px chip cannot carry a 4px ring without the ring reading as the component.
+
+### Changed
+
+- **`.badge-pill-green`, `.badge-pill-blue` and `.badge-pill-red` now compose `.badge-pill` instead of repeating its declaration list.** They were written out in full, which meant the pill's shape had to be changed in four places and the clickable treatment would have had to be pasted into each one. The emitted declarations are unchanged — `@apply` inlines the same properties — and only their order within the rule moves. No property appears twice in either version, so computed styles are identical.
+
+### Internal
+
+- **`{hue}-700` in light and `{hue}-400` in dark is measured, not chosen.** A focus indicator has to clear 3:1 against what sits beside it (WCAG 1.4.11), which for a chip means both the page behind it and the chip's own background. That pair is the only one clearing both for all eight hues. The 500 and 600 shades that suit blue, red, indigo, purple, pink and gray fail in light mode for green and yellow — `green-600` reaches 2.93:1 against the page and `yellow-600` 2.93:1 — so anything lighter would have needed per-hue exceptions. It also lands beside the label colour (`{hue}-800` light, `{hue}-300` dark), so the ring reads as the same family as the chip.
+- **The clickable block is written out twice, in `badge` and in `badge-pill`, rather than factored into a shared utility.** A shared `@utility` would be emitted as a real class name, because `scripts/build-classes.js` lists every utility for the no-reset build — and a `badge-interactive` class is the opt-in variant this issue deliberately does not ship. A unit assertion guards against both that name and the `.badge-link` the issue proposed.
+- **Two custom properties carry the colours across rules.** `--badge-hover-bg` and `--badge-focus-ring` are declared by each colour utility and read by the shared `:any-link` rules. This is the cascade-signal pattern from the "Nested Component Contrast" section of the README, and it is required rather than stylistic: the hover and focus rules live on `badge` while the palette lives on `badge-{colour}`, and a descendant selector could not join them once a consumer flattens both into one class with `@apply`. An uncoloured badge link declares neither and falls back to a neutral hover and to `--color-focus-ring`.
+- **`tests/e2e/badge-link.spec.js` runs 94 browser tests; 48 of them were confirmed to fail against 5.6.0 first.** The 28 that passed unchanged are the span and no-href controls, which is the point — every assertion about a linked badge has a counterpart asserting the unlinked one did not move. It hovers and tabs real elements and measures delivered contrast, because the hover background is one step deeper than the resting one while the label colour does not move with it. The fixture carries a site-wide `a { text-decoration: underline }`, so the underline assertion is a real specificity check.
+- **`tests/unit/badge-css.test.js` adds 114 assertions over both built bundles**, covering the structure a browser test cannot easily show: that the resting badge declares no `min-height`, and that no opt-in class ships.
+- **The colour probe moves to `tests/e2e/helpers/color.js`, shared with `focus-ring.spec.js`.** Chrome serialises a computed colour in the space it was authored in, so the kit hands back `oklab()` for its tokens and `rgb()` for a plain hex; the helper pushes either through relative colour syntax to reach one comparable form. It is subtle enough to be worth having once.
+
 ## 5.6.0
 
 ### Fixes
