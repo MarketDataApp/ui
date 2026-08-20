@@ -1,5 +1,12 @@
 # Changelog
 
+## 5.7.1
+
+### Docs
+
+- **The demo site now shows clickable badges.** 5.7.0 shipped the behaviour with tests and README prose, but the Badges section rendered only `<span>` badges, so nothing on https://dev.marketdata.app/ui/docs/ demonstrated it. The section gains a row of linked badges directly above the identical row of spans, each row labelled with its height, so the 24px target and the 18px label sit side by side. Clickable pills get the same treatment. The copy says which key to press, because a focus ring cannot be discovered by looking at a page.
+- **`dist/css/components.css` gains `.max-w-3xl` and its `--container-3xl` token**, pulled in by the new demo markup. That is automatic source detection working as intended — `docs/` is real markup and stays scanned, unlike the markdown and test code subtracted in 5.6.0.
+
 ## 5.7.0
 
 ### New
