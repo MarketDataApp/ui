@@ -1,5 +1,21 @@
 # Changelog
 
+## 5.6.0
+
+### Fixes
+
+- **`dist/css/components.css` no longer ships utilities that exist only because a CHANGELOG sentence named them.** Tailwind's automatic source detection scans every non-ignored file in the repo and cannot tell a class name from prose that happens to contain one. Every utility ever written into a changelog entry or a test comment was therefore compiled into the standalone bundle as a real rule: `.px-10` and `.lg:px-10` from the 5.2.4 entry, `.min-h-11`, `.leading-5` and `.shrink-0` from 5.3.0, `.focus:ring-4` and six more from 5.5.0's own prose and test files. **77 rules, about 9KB**, none of them used by anything in this repo. The hazard is sharper here than in an ordinary build because `scripts/unlayer.js` strips the `@layer` wrappers afterwards, so a stray rule does not sit quietly in a layer the consumer outranks — it competes with the consumer's own CSS on specificity alone. A consumer who wrote `class="shadow-md"` and linked this bundle got a rule they never asked this package for, at a specificity that could win. `css/components.input.css` now subtracts markdown and test code from detection. The 5.4.1 and 5.5.0 entries both had to be worded around this; entries no longer need that care.
+
+### Compatibility
+
+- **Check before upgrading if you link `dist/css/components.css` directly and your own markup uses plain Tailwind utilities.** The 77 removed rules were never part of this package's contract — which utilities happened to be present was an accident of what prior changelog entries mentioned — but a page that leaned on one will lose it. The full list is reproducible with `git diff v5.5.0 -- dist/css/components.css`. Two consumers are known unaffected: the documentation site links `components.no-reset.css`, which never had the problem, and the demo site builds `docs/docs.css` from its own sources. Anyone running their own Tailwind build over `css/theme.css` and `css/components.src.css` is unaffected by construction.
+
+### Internal
+
+- **`dist/css/components.no-reset.css` was always immune and is byte-identical after this change.** It imports `tailwindcss/utilities source(none)`, so it only ever emitted what its explicit `@source` list named. `docs/docs.css` is byte-identical too: it re-scans `docs/` on top of the bundle, so every utility the demo pages use is regenerated there regardless. Only the standalone bundle changed — 329 lines deleted, none added.
+- **HTML fixtures stay scanned; only test code is subtracted.** `tests/e2e/fixtures/*.html` is real markup, and it was verified to contribute no utility the demo pages do not already use, so excluding the whole `tests` directory costs nothing. The six markdown files are all documentation and none is read by `scripts/` or `docs/`.
+- **`tests/unit/source-detection-css.test.js` guards both bundles, and its canaries live inside the excluded set on purpose.** It asserts that seven prose-only utilities are absent and that a real component utility is still present. The file is test code, so `@source not` excludes it — delete that exclusion and the names in it become scannable again, the rules reappear, and the test fails. Confirmed: removing the two `@source not` lines fails 6 of its 16 assertions.
+
 ## 5.5.0
 
 ### Fixes
