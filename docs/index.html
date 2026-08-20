@@ -2020,12 +2020,68 @@ button.removeAttribute('aria-busy');        // done</code></pre>
           <span class="badge-pill-red">Expired</span>
         </div>
 
-        <div class="flex flex-wrap gap-2">
+        <div class="flex flex-wrap gap-2 mb-10">
           <code class="text-xs font-mono bg-gray-100 dark:bg-gray-800 px-2 py-1 rounded"
             >.badge .badge-{color}</code
           >
           <code class="text-xs font-mono bg-gray-100 dark:bg-gray-800 px-2 py-1 rounded"
             >.badge-pill-{color}</code
+          >
+        </div>
+
+        <h3 class="text-lg font-semibold mb-3">Clickable Badges</h3>
+        <p class="text-gray-500 dark:text-gray-400 mb-4 max-w-3xl">
+          A badge that carries a link styles itself as one — there is no opt-in class. Hover the
+          badges below, then press <kbd class="font-mono text-xs">Tab</kbd> through them: each rings
+          in its own colour. The row underneath is the same markup on a
+          <code class="text-xs font-mono">&lt;span&gt;</code>, which is unchanged.
+        </p>
+
+        <div class="flex flex-wrap gap-2 mb-3 items-center">
+          <a class="badge badge-blue" href="#badges">Blue</a>
+          <a class="badge badge-gray" href="#badges">Gray</a>
+          <a class="badge badge-red" href="#badges">Red</a>
+          <a class="badge badge-green" href="#badges">Green</a>
+          <a class="badge badge-yellow" href="#badges">Yellow</a>
+          <a class="badge badge-indigo" href="#badges">Indigo</a>
+          <a class="badge badge-purple" href="#badges">Purple</a>
+          <a class="badge badge-pink" href="#badges">Pink</a>
+          <span class="text-xs text-gray-500 dark:text-gray-400 ms-2">links — 24px tall</span>
+        </div>
+
+        <div class="flex flex-wrap gap-2 mb-6 items-center">
+          <span class="badge badge-blue">Blue</span>
+          <span class="badge badge-gray">Gray</span>
+          <span class="badge badge-red">Red</span>
+          <span class="badge badge-green">Green</span>
+          <span class="badge badge-yellow">Yellow</span>
+          <span class="badge badge-indigo">Indigo</span>
+          <span class="badge badge-purple">Purple</span>
+          <span class="badge badge-pink">Pink</span>
+          <span class="text-xs text-gray-500 dark:text-gray-400 ms-2">labels — 18px tall</span>
+        </div>
+
+        <h3 class="text-lg font-semibold mb-3">Clickable Pills</h3>
+        <div class="flex flex-wrap gap-2 mb-6 items-center">
+          <a class="badge-pill-green" href="#badges">Active</a>
+          <a class="badge-pill-blue" href="#badges">Pending</a>
+          <a class="badge-pill-red" href="#badges">Expired</a>
+          <span class="text-xs text-gray-500 dark:text-gray-400 ms-2">links</span>
+          <span class="badge-pill-green">Active</span>
+          <span class="badge-pill-blue">Pending</span>
+          <span class="badge-pill-red">Expired</span>
+          <span class="text-xs text-gray-500 dark:text-gray-400">labels</span>
+        </div>
+
+        <div class="flex flex-wrap gap-2">
+          <code class="text-xs font-mono bg-gray-100 dark:bg-gray-800 px-2 py-1 rounded"
+            >a.badge:any-link</code
+          >
+          <code class="text-xs font-mono bg-gray-100 dark:bg-gray-800 px-2 py-1 rounded"
+            >--badge-hover-bg</code
+          >
+          <code class="text-xs font-mono bg-gray-100 dark:bg-gray-800 px-2 py-1 rounded"
+            >--badge-focus-ring</code
           >
         </div>
       </section>
