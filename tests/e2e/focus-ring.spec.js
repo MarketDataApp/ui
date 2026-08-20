@@ -11,24 +11,21 @@
  * match `:focus-visible` for links and buttons in Chrome, so a test built on
  * it would pass against the broken CSS.
  *
+ * The colour probing lives in helpers/color.js, shared with badge-link.spec.js.
+ *
  * Hermetic by design — the fixture stubs fetch, so these need no session and
  * no deployed site.
  */
 import { test, expect } from '@playwright/test';
+import { readStyles, ringShadow, contrast } from './helpers/color.js';
 
 const FIXTURE = '/tests/e2e/fixtures/focus-ring.html';
 
 /** WCAG 1.4.11 asks 3:1 of a focus indicator against what sits next to it. */
 const MIN_CONTRAST = 3;
 
-/**
- * The ring the kit draws: 4px, spread only, no blur and no offset.
- *
- * The colour is matched as any CSS colour function, not as `rgb()`. Chrome
- * serialises a computed box-shadow in the space the colour was authored in,
- * and the kit's tokens are `oklch()`, which comes back as `oklab()`.
- */
-const RING_SHADOW = /[a-z]+\([^)]*\)\s+0px 0px 0px 4px/;
+/** The header controls and the buttons all ring at 4px. */
+const RING_SHADOW = ringShadow(4);
 
 /**
  * Load the fixture already in one theme.
@@ -57,64 +54,6 @@ async function tabTo(page, selector) {
   throw new Error(`Tab never reached ${selector}`);
 }
 
-/**
- * Read the ring colour and the surface behind it, both as sRGB channels in 0-1.
- *
- * Chrome serialises a computed colour in the space it was authored in, so the
- * kit hands back `oklab()` for its tokens and `rgb()` for the brand hex.
- * Relative colour syntax pushes either one through a probe element and into
- * sRGB, which is the one space a contrast calculation can work in.
- */
-async function readRing(page, selector) {
-  return page.evaluate(
-    ([sel, colorPattern]) => {
-      const toSrgb = (value) => {
-        const probe = document.createElement('span');
-        probe.style.color = `rgb(from ${value} r g b)`;
-        // An unsupported syntax is dropped silently, and the probe would then
-        // report its inherited colour — making every comparison 1:1 and every
-        // assertion pass or fail for the wrong reason.
-        if (!probe.style.color) throw new Error(`relative colour syntax rejected: ${value}`);
-        document.body.appendChild(probe);
-        const out = getComputedStyle(probe).color;
-        probe.remove();
-
-        // Chrome answers `color(srgb r g b)` with 0-1 channels when the source
-        // was authored wide-gamut, and `rgb(r, g, b)` with 0-255 channels when
-        // it was already sRGB. The kit produces both.
-        const scale = out.startsWith('color(') ? 1 : 255;
-        return out
-          .match(/[-\d.]+/g)
-          .slice(0, 3)
-          .map((v) => Math.min(1, Math.max(0, Number(v) / scale)));
-      };
-
-      const el = document.querySelector(sel);
-      const shadow = getComputedStyle(el).boxShadow;
-      const ring = shadow.match(new RegExp(`(${colorPattern})\\s+0px 0px 0px 4px`));
-
-      let behind = getComputedStyle(el).backgroundColor;
-      // A transparent control rings against whatever it sits on.
-      if (behind === 'rgba(0, 0, 0, 0)') behind = getComputedStyle(document.body).backgroundColor;
-
-      return { shadow, ring: ring && toSrgb(ring[1]), surface: toSrgb(behind) };
-    },
-    [selector, '[a-z]+\\([^)]*\\)'],
-  );
-}
-
-/** WCAG relative luminance from sRGB channels in 0-1. */
-function luminance([r, g, b]) {
-  const lin = (c) => (c <= 0.03928 ? c / 12.92 : ((c + 0.055) / 1.055) ** 2.4);
-  return 0.2126 * lin(r) + 0.7152 * lin(g) + 0.0722 * lin(b);
-}
-
-/** WCAG contrast ratio between two sRGB channel triples. */
-function contrast(a, b) {
-  const [hi, lo] = [luminance(a), luminance(b)].sort((x, y) => y - x);
-  return (hi + 0.05) / (lo + 0.05);
-}
-
 for (const theme of ['light', 'dark']) {
   test.describe(`${theme} mode`, () => {
     test.beforeEach(async ({ page }) => {
@@ -127,7 +66,7 @@ for (const theme of ['light', 'dark']) {
       const pill = '.user-profile-login-pill';
       await tabTo(page, pill);
 
-      const { ring, surface } = await readRing(page, pill);
+      const { ring, surface } = await readStyles(page, pill);
       expect(ring).not.toBeNull();
       expect(contrast(ring, surface)).toBeGreaterThanOrEqual(MIN_CONTRAST);
     });
@@ -138,7 +77,7 @@ for (const theme of ['light', 'dark']) {
       const toggle = '.theme-toggle-button';
       await tabTo(page, toggle);
 
-      const { ring, surface } = await readRing(page, toggle);
+      const { ring, surface } = await readStyles(page, toggle);
       expect(ring).not.toBeNull();
       expect(contrast(ring, surface)).toBeGreaterThanOrEqual(MIN_CONTRAST);
     });
@@ -148,7 +87,7 @@ for (const theme of ['light', 'dark']) {
     test('gradient CTA still rings on keyboard focus', async ({ page }) => {
       await tabTo(page, '#cta');
 
-      const { shadow } = await readRing(page, '#cta');
+      const { shadow } = await readStyles(page, '#cta');
       expect(shadow).toMatch(RING_SHADOW);
     });
   });
@@ -173,7 +112,7 @@ test.describe('mouse clicks leave no ring', () => {
       // about focus moving elsewhere.
       await expect(page.locator(selector)).toBeFocused();
 
-      const { shadow } = await readRing(page, selector);
+      const { shadow } = await readStyles(page, selector);
       expect(shadow).not.toMatch(RING_SHADOW);
     });
   }

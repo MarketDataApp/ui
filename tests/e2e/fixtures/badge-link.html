@@ -1,0 +1,109 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>clickable badge fixture (#43)</title>
+    <link rel="stylesheet" href="/dist/css/components.css" />
+    <script>
+      /*
+        Theme comes from `?theme=dark`, applied here in <head> before anything
+        paints, so a measurement never samples a transition.
+      */
+      const theme = new URL(location.href).searchParams.get('theme') === 'dark' ? 'dark' : 'light';
+      document.documentElement.classList.add(theme);
+      document.documentElement.setAttribute('data-theme', theme);
+    </script>
+    <style>
+      body {
+        margin: 0;
+        padding: 24px;
+        background: #ffffff;
+      }
+      html.dark body {
+        background: #111827;
+      }
+      /*
+        The site-wide link underline the issue complains about. A filled pill
+        with a rule running through it reads as damage, so the kit's
+        `no-underline` has to beat this. Written at the same weight a consuming
+        site would use, so the test is a real specificity check.
+      */
+      a {
+        text-decoration: underline;
+      }
+      a:hover {
+        text-decoration: underline;
+      }
+      .row {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        align-items: center;
+        margin-bottom: 12px;
+      }
+    </style>
+  </head>
+  <body>
+    <!--
+      Every badge appears twice: once as a real link (href present, so
+      `:any-link` matches) and once as a span. The span is the control — it
+      must keep exactly the styling it had before #43.
+
+      Class names are written out literally rather than generated, because
+      Tailwind's source detection scans this file and only sees literal
+      strings.
+    -->
+    <div class="row">
+      <a id="a-blue" class="badge badge-blue" href="#blue">blue</a>
+      <a id="a-gray" class="badge badge-gray" href="#gray">gray</a>
+      <a id="a-red" class="badge badge-red" href="#red">red</a>
+      <a id="a-green" class="badge badge-green" href="#green">green</a>
+      <a id="a-yellow" class="badge badge-yellow" href="#yellow">yellow</a>
+      <a id="a-indigo" class="badge badge-indigo" href="#indigo">indigo</a>
+      <a id="a-purple" class="badge badge-purple" href="#purple">purple</a>
+      <a id="a-pink" class="badge badge-pink" href="#pink">pink</a>
+    </div>
+
+    <div class="row">
+      <span id="s-blue" class="badge badge-blue">blue</span>
+      <span id="s-gray" class="badge badge-gray">gray</span>
+      <span id="s-red" class="badge badge-red">red</span>
+      <span id="s-green" class="badge badge-green">green</span>
+      <span id="s-yellow" class="badge badge-yellow">yellow</span>
+      <span id="s-indigo" class="badge badge-indigo">indigo</span>
+      <span id="s-purple" class="badge badge-purple">purple</span>
+      <span id="s-pink" class="badge badge-pink">pink</span>
+    </div>
+
+    <div class="row">
+      <a id="a-pill-green" class="badge-pill-green" href="#pill-green">green</a>
+      <a id="a-pill-blue" class="badge-pill-blue" href="#pill-blue">blue</a>
+      <a id="a-pill-red" class="badge-pill-red" href="#pill-red">red</a>
+      <span id="s-pill-green" class="badge-pill-green">green</span>
+      <span id="s-pill-blue" class="badge-pill-blue">blue</span>
+      <span id="s-pill-red" class="badge-pill-red">red</span>
+    </div>
+
+    <!--
+      Uncoloured badges. These have no background of their own to deepen, so
+      they exercise the --badge-hover-bg fallback.
+    -->
+    <div class="row">
+      <a id="a-plain" class="badge" href="#plain">plain</a>
+      <a id="a-pill-plain" class="badge-pill" href="#pill-plain">plain pill</a>
+      <span id="s-plain" class="badge">plain</span>
+    </div>
+
+    <!--
+      An anchor with NO href. It is not clickable, so `:any-link` must not
+      match it and it must stay a plain label.
+    -->
+    <div class="row">
+      <a id="a-nohref" class="badge badge-blue">no href</a>
+    </div>
+
+    <script>
+      document.body.dataset.ready = 'true';
+    </script>
+  </body>
+</html>

@@ -67,6 +67,13 @@ export default defineConfig({
       testMatch: ['focus-ring.spec.js'],
       use: { browserName: 'chromium', baseURL: LOCAL_SERVER },
     },
+    {
+      // Same hermetic fixture pattern, and Chromium only for the same reasons:
+      // the `:focus-visible` heuristic and relative colour syntax.
+      name: 'badge-link',
+      testMatch: ['badge-link.spec.js'],
+      use: { browserName: 'chromium', baseURL: LOCAL_SERVER },
+    },
   ],
   webServer: [
     {

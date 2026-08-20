@@ -371,6 +371,38 @@ The full pill never wraps at any width. It carries `whitespace-nowrap` and
 `shrink-0`, so a crowded navbar row cannot compress it into two lines. Both
 variants hold a 44px minimum height for the WCAG 2.5.8 target.
 
+### Clickable Badges
+
+A badge that carries a link styles itself as one. There is no opt-in class:
+
+```html
+<!-- clickable: gains a hover, drops the underline, reaches a 24px target -->
+<a class="badge badge-blue" href="/topics/options">options</a>
+
+<!-- a label: unchanged in every way -->
+<span class="badge badge-blue">options</span>
+```
+
+The behaviour keys off `:any-link`, which matches an `<a>` (or `<area>`) that has an `href`. An anchor without one is not clickable and stays a label. It works the same on `.badge-pill` and the `.badge-pill-{color}` variants.
+
+What a linked badge gets:
+
+- **A hover background** one step deeper than its resting colour, transitioned over 200ms. This follows Flowbite's own badges-as-links block, which changes the background rather than adding an underline or a filter.
+- **No underline**, so a site-wide `a { text-decoration: underline }` does not run a rule through the middle of a filled pill.
+- **A 24px minimum height**, the WCAG 2.5.8 target size. A resting badge is 18px, which is fine for a label and too small for a control. `inline-flex` and `items-center` centre the text in the taller box.
+- **A 2px focus ring in its own colour** — `blue-700` in light, `blue-400` in dark, and the matching pair for every other hue. Buttons ring at 4px; a 24px chip cannot carry that without the ring reading as the component.
+
+Those shades are measured, not picked. A focus indicator has to clear 3:1 against what sits beside it (WCAG 1.4.11), which for a chip means both the page behind it and the chip's own background. `{hue}-700` in light and `{hue}-400` in dark is the one pair that clears both for all eight hues — green and yellow reject every lighter shade in light mode, where `green-600` reaches only 2.93:1 against the page.
+
+**Two custom properties carry the colours**, because the hover and focus rules live on `.badge` while the palette lives on `.badge-{color}`:
+
+| Property             | Set by           | Read by                         |
+| -------------------- | ---------------- | ------------------------------- |
+| `--badge-hover-bg`   | `.badge-{color}` | `.badge:any-link:hover`         |
+| `--badge-focus-ring` | `.badge-{color}` | `.badge:any-link:focus-visible` |
+
+An uncoloured `.badge` link declares neither, so it falls back to a neutral hover and to the shared `--color-focus-ring`. This is the same cascade-signal pattern described under "Nested Component Contrast" below, and it is required rather than stylistic: a descendant selector could not join the two rules once a consumer flattens both classes into one of their own with `@apply`.
+
 ### Theme Tokens
 
 `css/theme.css` defines all shared design tokens inside `@theme {}`:
@@ -480,7 +512,7 @@ Usage not yet verified.
 - **Forms**: `.form-container`, `.form-heading`, `.form-label`, `.form-input`, `.form-input-disabled`, `.form-input-error`, `.form-dropdown-input`, `.form-helper-text`, `.form-helper-text-error`
 - **Copy Input**: `.copy-input-group`, `.copy-input`, `.copy-input-compact`, `.copy-input-button` (text variant), `.copy-input-icon-button` + `.copy-input-action` + `.copy-input-tooltip` (icon-only variant with hover tooltip), `.copy-icon` + `.copy-icon-clipboard` / `.copy-icon-check` (mask-image icons). Paired with `dist/copy-button.js`.
 - **Spinner**: `.spinner` — indeterminate loading indicator with neutral track + brand-colored rotating arc, both rendered via `mask-image` (no SVG in consumer markup). Arc color follows `currentColor` (`text-*`); track color overridable via the `--spinner-track` custom property.
-- **Badges**: `.badge .badge-{color}`, `.badge-pill-{color}`
+- **Badges**: `.badge .badge-{color}`, `.badge-pill-{color}` — clickable automatically when used on a link, see "Clickable Badges"
 - **Radio Buttons**: `.radio-button-input`, `.radio-button-helper`
 - **Card Surface**: `.card-surface` (shared visual base: background, border, padding, shadow, rounded corners)
 - **Grid Layout**: `.grid-layout-12`, `.grid-content-container`, `.grid-content-position`

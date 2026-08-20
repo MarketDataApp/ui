@@ -1256,57 +1256,219 @@ label[error][focused] :where(.text-heading, .radio-button-helper) {
   }
 }
 
-/* ---- Badges ---- */
+/* ---- Badges ----
+
+   A badge that carries a link styles itself as one. There is no opt-in class:
+   `:any-link` matches an <a> (or <area>) that has an href, so
+   `<a class="badge badge-blue" href="…">` picks up the hover, loses the
+   underline, and grows to a 24px target, while `<span class="badge badge-blue">`
+   keeps exactly the styling it has always had. A bare <a> with no href is not
+   clickable and does not match. See issue #43.
+
+   `&:any-link` is a compound selector on the badge's own element, not a
+   descendant selector, so it survives a consumer writing `@apply badge
+   badge-blue` on a class of their own — the pattern CLAUDE.md warns about does
+   not apply here. Where the colour has to travel the other way, from the colour
+   utility into the shared rule, it goes through a custom property; see
+   --badge-hover-bg below. */
+
+/* The clickable treatment below is written out in `badge` and in `badge-pill`
+   rather than factored into a shared utility. A shared `@utility` would be
+   emitted as a real class name — scripts/build-classes.js lists every utility
+   for the no-reset build — and a `badge-interactive` class is the opt-in
+   variant this issue deliberately does not ship. The pill colour variants
+   compose `badge-pill`, so the block appears exactly twice.
+
+   The hover colour is the affordance, following Flowbite's own badges-as-links
+   block, which changes the background rather than adding an underline or a
+   filter. Each colour utility declares --badge-hover-bg one step deeper than
+   its resting background; this rule only reads it. That indirection is the
+   "Nested Component Contrast" pattern from CLAUDE.md, and it is required rather
+   than stylistic: the hover rule lives on `badge` while the palette lives on
+   `badge-{colour}`, and a descendant selector could not join them once a
+   consumer flattens both into one class with `@apply`.
+
+   The fallback covers an uncoloured badge link, which has no background of its
+   own to deepen.
+
+   min-h-6 is 24px, the WCAG 2.5.8 minimum target size. A resting badge renders
+   18px, which is fine for a label and too small for something clickable.
+   inline-flex + items-center centre the text in the taller box instead of
+   letting the extra height hang below it.
+
+   Focus is kit-owned here, matching the buttons and the header controls rather
+   than Flowbite, which leaves badge links to the browser's default ring. ring-2
+   rather than the 4px the buttons use — a 24px chip cannot carry a 4px ring
+   without the ring reading as the component.
+
+   The ring mirrors the badge's own colour, the way --btn-focus-color mirrors a
+   button's gradient. Each colour utility declares --badge-focus-ring; this rule
+   reads it and falls back to the shared --color-focus-ring for an uncoloured
+   badge link.
+
+   The shades are {hue}-700 in light and {hue}-400 in dark, and that pair is
+   measured rather than chosen. A focus indicator has to clear 3:1 against what
+   sits beside it (WCAG 1.4.11), which here means both the page behind the chip
+   and the chip's own background. Every hue clears both at that pair. Nothing
+   lighter works in light mode for green or yellow — green-600 reaches only
+   2.93:1 against the page and yellow-600 only 2.93:1, so the 500/600 shades
+   that suit blue and red fail those two. 700/400 is the one pair that needs no
+   per-hue exception. It also lands next to the label colour, {hue}-800 in light
+   and {hue}-300 in dark, so the ring reads as the same family as the chip. */
 @utility badge {
   @apply text-xs font-medium px-2.5 py-0.5 rounded-xs;
+  &:any-link {
+    @apply no-underline hover:no-underline;
+    @apply inline-flex items-center min-h-6;
+    @apply transition-colors duration-200;
+    @apply focus:outline-hidden focus-visible:ring-2;
+    &:focus-visible {
+      --tw-ring-color: var(--badge-focus-ring, var(--color-focus-ring));
+    }
+    &:hover {
+      background-color: var(--badge-hover-bg, var(--color-neutral-tertiary-medium));
+    }
+  }
 }
 
 @utility badge-blue {
   @apply bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-300;
+  --badge-hover-bg: var(--color-blue-200);
+  --badge-focus-ring: var(--color-blue-700);
+  &:where(.dark, .dark *, [data-theme='dark'], [data-theme='dark'] *) {
+    --badge-hover-bg: var(--color-blue-800);
+    --badge-focus-ring: var(--color-blue-400);
+  }
 }
 
 @utility badge-gray {
   @apply bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300;
+  --badge-hover-bg: var(--color-gray-200);
+  --badge-focus-ring: var(--color-gray-700);
+  /* Gray rests on 700 in dark mode, not 900 like the others, so one step
+     deeper is 600 rather than 800. */
+  &:where(.dark, .dark *, [data-theme='dark'], [data-theme='dark'] *) {
+    --badge-hover-bg: var(--color-gray-600);
+    --badge-focus-ring: var(--color-gray-400);
+  }
 }
 
 @utility badge-red {
   @apply bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-300;
+  --badge-hover-bg: var(--color-red-200);
+  --badge-focus-ring: var(--color-red-700);
+  &:where(.dark, .dark *, [data-theme='dark'], [data-theme='dark'] *) {
+    --badge-hover-bg: var(--color-red-800);
+    --badge-focus-ring: var(--color-red-400);
+  }
 }
 
 @utility badge-green {
   @apply bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300;
+  --badge-hover-bg: var(--color-green-200);
+  --badge-focus-ring: var(--color-green-700);
+  &:where(.dark, .dark *, [data-theme='dark'], [data-theme='dark'] *) {
+    --badge-hover-bg: var(--color-green-800);
+    --badge-focus-ring: var(--color-green-400);
+  }
 }
 
 @utility badge-yellow {
   @apply bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-300;
+  --badge-hover-bg: var(--color-yellow-200);
+  --badge-focus-ring: var(--color-yellow-700);
+  &:where(.dark, .dark *, [data-theme='dark'], [data-theme='dark'] *) {
+    --badge-hover-bg: var(--color-yellow-800);
+    --badge-focus-ring: var(--color-yellow-400);
+  }
 }
 
 @utility badge-indigo {
   @apply bg-indigo-100 text-indigo-800 dark:bg-indigo-900 dark:text-indigo-300;
+  --badge-hover-bg: var(--color-indigo-200);
+  --badge-focus-ring: var(--color-indigo-700);
+  &:where(.dark, .dark *, [data-theme='dark'], [data-theme='dark'] *) {
+    --badge-hover-bg: var(--color-indigo-800);
+    --badge-focus-ring: var(--color-indigo-400);
+  }
 }
 
 @utility badge-purple {
   @apply bg-purple-100 text-purple-800 dark:bg-purple-900 dark:text-purple-300;
+  --badge-hover-bg: var(--color-purple-200);
+  --badge-focus-ring: var(--color-purple-700);
+  &:where(.dark, .dark *, [data-theme='dark'], [data-theme='dark'] *) {
+    --badge-hover-bg: var(--color-purple-800);
+    --badge-focus-ring: var(--color-purple-400);
+  }
 }
 
 @utility badge-pink {
   @apply bg-pink-100 text-pink-800 dark:bg-pink-900 dark:text-pink-300;
+  --badge-hover-bg: var(--color-pink-200);
+  --badge-focus-ring: var(--color-pink-700);
+  &:where(.dark, .dark *, [data-theme='dark'], [data-theme='dark'] *) {
+    --badge-hover-bg: var(--color-pink-800);
+    --badge-focus-ring: var(--color-pink-400);
+  }
 }
 
+/* Second and last copy of the clickable treatment — see the note above `badge`.
+   `inline-flex items-center` are already on the resting pill, so only the
+   target height, the underline reset, the transition and the focus ring are
+   restated here. */
 @utility badge-pill {
   @apply inline-flex items-center gap-1.5 text-xs font-medium me-2 px-2.5 py-0.5 rounded-full font-sans;
+  &:any-link {
+    @apply no-underline hover:no-underline;
+    @apply min-h-6;
+    @apply transition-colors duration-200;
+    @apply focus:outline-hidden focus-visible:ring-2;
+    &:focus-visible {
+      --tw-ring-color: var(--badge-focus-ring, var(--color-focus-ring));
+    }
+    &:hover {
+      background-color: var(--badge-hover-bg, var(--color-neutral-tertiary-medium));
+    }
+  }
 }
 
+/* The pill colour variants compose `badge-pill` rather than repeating its
+   declaration list, which is how they were written before. Repetition meant
+   the clickable treatment would have had to be pasted into each one, and that
+   a change to the pill's shape had to be made in four places. The emitted
+   declarations are unchanged — `@apply` inlines the same properties. */
 @utility badge-pill-green {
-  @apply inline-flex items-center gap-1.5 text-xs font-medium me-2 px-2.5 py-0.5 rounded-full font-sans bg-green-100 text-green-800 border border-green-400 dark:bg-green-900 dark:text-green-300;
+  @apply badge-pill;
+  @apply bg-green-100 text-green-800 border border-green-400 dark:bg-green-900 dark:text-green-300;
+  --badge-hover-bg: var(--color-green-200);
+  --badge-focus-ring: var(--color-green-700);
+  &:where(.dark, .dark *, [data-theme='dark'], [data-theme='dark'] *) {
+    --badge-hover-bg: var(--color-green-800);
+    --badge-focus-ring: var(--color-green-400);
+  }
 }
 
 @utility badge-pill-blue {
-  @apply inline-flex items-center gap-1.5 text-xs font-medium me-2 px-2.5 py-0.5 rounded-full font-sans bg-blue-100 text-blue-800 border border-blue-400 dark:bg-blue-900 dark:text-blue-300 capitalize;
+  @apply badge-pill;
+  @apply bg-blue-100 text-blue-800 border border-blue-400 dark:bg-blue-900 dark:text-blue-300 capitalize;
+  --badge-hover-bg: var(--color-blue-200);
+  --badge-focus-ring: var(--color-blue-700);
+  &:where(.dark, .dark *, [data-theme='dark'], [data-theme='dark'] *) {
+    --badge-hover-bg: var(--color-blue-800);
+    --badge-focus-ring: var(--color-blue-400);
+  }
 }
 
 @utility badge-pill-red {
-  @apply inline-flex items-center gap-1.5 text-xs font-medium me-2 px-2.5 py-0.5 rounded-full font-sans bg-red-100 text-red-800 border border-red-400 dark:bg-red-900 dark:text-red-300 capitalize;
+  @apply badge-pill;
+  @apply bg-red-100 text-red-800 border border-red-400 dark:bg-red-900 dark:text-red-300 capitalize;
+  --badge-hover-bg: var(--color-red-200);
+  --badge-focus-ring: var(--color-red-700);
+  &:where(.dark, .dark *, [data-theme='dark'], [data-theme='dark'] *) {
+    --badge-hover-bg: var(--color-red-800);
+    --badge-focus-ring: var(--color-red-400);
+  }
 }
 
 /* ---- CTA Banner ---- */
