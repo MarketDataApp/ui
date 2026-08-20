@@ -7,4 +7,28 @@
 
 @source "../src/templates";
 
+/*
+  This build keeps Tailwind's automatic source detection, because it is the
+  standalone bundle and has to carry the demo site's utilities as well as the
+  kit's own. Detection scans every non-ignored file in the repo, and it cannot
+  tell a class name from prose that happens to contain one.
+
+  Two kinds of file describe utilities without using them, so both are
+  subtracted:
+
+  - Markdown. All six files are documentation and none is a template — nothing
+    in scripts/ or docs/ reads them. Writing a utility in a CHANGELOG sentence
+    used to emit it as a real rule.
+  - Test code. The specs and unit tests name utilities in comments while
+    asserting about them. Their HTML fixtures stay scanned; those are real
+    markup, and they contribute no utility the demo pages do not already use.
+
+  This matters more here than in an ordinary build, because scripts/unlayer.js
+  strips the `@layer` wrappers afterwards. A stray `.focus\:ring-4` does not sit
+  quietly in a layer a consumer outranks — it competes with the consumer's own
+  CSS on specificity alone. See the 5.6.0 entry in CHANGELOG.md.
+*/
+@source not "../**/*.md";
+@source not "../tests";
+
 @import './components.src.css';
