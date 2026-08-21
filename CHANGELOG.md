@@ -1,5 +1,24 @@
 # Changelog
 
+## 5.9.0
+
+### New
+
+- **`.form-input` now works on `<textarea>` as well as `<input>` and `<select>`, and the element decides the rest.** There is no `.form-textarea`: `<textarea class="form-input">` is the whole API, so a multi-line field cannot drift away from the single-line fields beside it, and height stays `rows` — the native lever. Closes #47.
+  - **It resizes vertically**, not the browser default `both`. Dragging horizontally breaks the form's column, and nothing else in the kit lets a control set its own width. Override with `resize-none`.
+  - **The `read-only` not-allowed cursor is scoped to `input` and `select`.** A read-only textarea is still scrolled and selected, and `not-allowed` over text someone is reading is wrong. The read-only fill still applies to every type — losing it would make the field look editable.
+  - **Chrome's `:-webkit-autofill` repaint is scoped the same way.** A textarea never triggers it, and it forces `-webkit-text-fill-color` onto a control a consumer may have coloured.
+- **`.form-input-group` plus a `.form-icon-*` class gives a field a leading icon, with no icon markup at all.** Both classes go on the wrapper; the glyph is a `mask-image` on its own `::before`, so there is no `<svg>` to paste and no `aria-hidden` to remember — a pseudo-element is already decorative to assistive technology. Ships `envelope`, `user`, `lock`, `phone` and `search`. A bare `.form-input-group` is just a relative wrapper.
+  - **The field's leading padding stops being the consumer's decision.** The icon class sets `--form-input-ps` and `.form-input` reads it, with a fallback equal to what `p-2.5` already gave, so the room for the glyph arrives as an inherited value rather than a `ps-9` competing with `p-2.5` at the same specificity — which is #20 from the other direction. For a glyph the kit does not ship, set `--form-icon` and `--form-input-ps` inline on the wrapper.
+
+### Internal
+
+- **The element-scoped rules use a nested `&`, not a descendant selector.** `&` re-binds when a consumer flattens the utility with `@apply`, so their own class name gets the same `:where(textarea)` rule. A descendant selector would not survive that — the trap described under "Nested Component Contrast" in the README.
+- **Two bugs here were found by measuring the rendered page, with green assertions over both.** Worth recording, because in each case the CSS was present and correct-looking in the file:
+  - `:is(textarea)` takes its argument's specificity, so `.form-input:is(textarea)` was (0,1,1) and outranked the `resize-none` utility at (0,1,0). The documented opt-out silently did nothing. It is now `:where(textarea)`, which contributes no specificity, with an assertion that the utility is emitted after the component it overrides.
+  - `mask-image: var(--form-icon)` with the property unset is invalid at computed-value time, so `mask-image` fell back to its initial value of `none` — and _no mask_ means nothing is masked out, so every un-iconed `.form-input-group` painted a solid 16px square over the start of its field. The fallback is now an empty SVG, which is zero alpha everywhere and the "paint nothing" the unset case actually needs.
+- **`tests/unit/form-field-css.test.js` adds 33 assertions per bundle**, including one for each of the two above.
+
 ## 5.8.0
 
 ### New
