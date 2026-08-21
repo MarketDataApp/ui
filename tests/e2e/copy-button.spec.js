@@ -1,6 +1,10 @@
 import { test, expect } from '@playwright/test';
 
-const PAGE_URL = 'https://dev.marketdata.app/ui/docs/#copy-input';
+// The copy group moved off the component index and onto the dedicated form
+// inputs page when the field variants outgrew a single section (#44). This
+// spec drives the deployed site, so it tracks a deploy rather than the working
+// tree — it goes green one deploy after the page lands.
+const PAGE_URL = 'https://dev.marketdata.app/ui/docs/forms.html#copy-input';
 
 test.describe('copy-button', () => {
   test.use({ viewport: { width: 1280, height: 720 } });

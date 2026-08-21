@@ -537,6 +537,81 @@
   @apply mt-2 text-sm text-fg-danger;
 }
 
+/* ---- Search Input Group ----
+   A text field with a submit button joined to its trailing edge, the two
+   reading as one control. Goes on a `<form>`; pair with a `sr-only` label and
+   `role="search"` on a wrapping `<search>` element — see the demo.
+
+   The field composes `.form-input` rather than restating a field style, so a
+   search field and a plain field cannot drift apart. It changes three things
+   and nothing else: the edge it shares with the button, its boundary contrast,
+   and the search-specific webkit decorations. The focus ring is form-input's,
+   inherited — the kit paints one ring, in `--color-brand`, at 1px.
+   See: https://github.com/MarketDataApp/ui/issues/44 */
+@utility search-input-group {
+  @apply flex w-full;
+}
+
+@utility search-input {
+  @apply form-input;
+  /* The button supplies the shared edge. Keeping the field's own trailing
+     border would paint two strokes at the join, which reads as a gap between
+     two controls instead of as one. */
+  @apply rounded-e-none border-e-0;
+  /* form-input's border is under the 3:1 WCAG 1.4.11 asks of a UI component's
+     boundary in both themes. Measured on the demo panel, gray-500/gray-400
+     clear it with room: 4.84:1 light and 5.64:1 dark. A search group
+     normally stands alone in a bar rather than stacked with other fields, so
+     the heavier boundary reads as deliberate here. Every other field in the kit
+     carries the same gap — that is issue #45, not this one. */
+  @apply border-gray-500 dark:border-gray-400;
+  /* The ring paints outside the border box, so the button — later in the DOM —
+     covers it at the join unless the focused half lifts itself out. Declared
+     directly rather than via `@apply relative z-1` so the two properties stay
+     legible as the one thing they are. */
+  &:focus {
+    position: relative;
+    z-index: 1;
+  }
+  /* Chromium's clear "×" lands flush against the attached button and collides
+     with the query text. It is mouse-only and has no accessible name.
+     Preflight resets ::-webkit-search-decoration and neither of these. */
+  &::-webkit-search-cancel-button,
+  &::-webkit-search-results-button {
+    appearance: none;
+  }
+}
+
+/* Height lock: the field is 20px line + 20px padding + 2px border = 42px. The
+   button matches only because it carries the same vertical padding AND a border
+   of its own. Dropping the border to save a declaration lands it 2px short and
+   steps the join. The border tracks the fill through hover for the same reason
+   it exists — a stale blue-800 edge around a blue-900 fill reads as an artifact. */
+@utility search-input-button {
+  @apply shrink-0 inline-flex items-center justify-center gap-2;
+  @apply rounded-s-none rounded-e-base px-4 py-2.5 text-sm font-medium leading-5;
+  @apply border border-solid text-white;
+  @apply bg-brand-strong border-brand-strong;
+  @apply hover:bg-blue-900 hover:border-blue-900;
+  @apply dark:hover:bg-blue-800 dark:hover:border-blue-800;
+  @apply transition-colors duration-200 cursor-pointer;
+  /* `:focus-visible`, not `:focus`. `:focus` also fires on a mouse click, so a
+     clicked submit button kept its ring until the user clicked elsewhere. Every
+     button in the kit made this move — see issue #41. Same colour and width as
+     the field's ring: one control, one ring. */
+  @apply focus:outline-hidden focus-visible:ring-1 focus-visible:ring-brand;
+  &:focus-visible {
+    position: relative;
+    z-index: 1;
+  }
+}
+
+/* Icon-only variant. Composes the base the way `copy-input-compact` does, so a
+   consumer cannot apply the modifier and forget the button underneath it. */
+@utility search-input-button-compact {
+  @apply search-input-button px-3;
+}
+
 /* ---- Copy Input ----
    Input with an absolutely-positioned copy button overlaid on the trailing
    edge. The button reads either the input's value or a `data-copy-value`
