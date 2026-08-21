@@ -68,6 +68,30 @@ describe('automatic source detection in the standalone bundle', () => {
   });
 });
 
+// The subtraction has to be repeated in every entry point that leaves automatic
+// detection on, and it was not: docs.input.css declares `@source "./"`, which
+// ADDS the docs directory rather than restricting scanning to it, so the rose
+// palette reached docs.css after components.input.css was already fixed.
+//
+// This asserts the source rather than the output because docs/docs.css is
+// gitignored and built in CI — a test reading it would fail on a fresh clone.
+describe('entry points that leave automatic source detection on', () => {
+  const ENTRY_POINTS = ['css/components.input.css', 'docs/docs.input.css'];
+
+  it.each(ENTRY_POINTS)('%s subtracts the upstream Flowbite reference copy', (entry) => {
+    const src = readFileSync(resolve(process.cwd(), entry), 'utf8');
+    expect(src).toMatch(/@source not ["']\.\.\/css\/flowbite-theme\.upstream\.css["']/);
+  });
+
+  // If one of these ever adopts `source(none)`, the subtraction is redundant
+  // rather than wrong — but the no-reset bundle proves the pattern works, so
+  // this catches an entry point that quietly turned detection back on.
+  it('the no-reset bundle still restricts detection instead of subtracting', () => {
+    const src = readFileSync(resolve(process.cwd(), 'css/components.no-reset.input.css'), 'utf8');
+    expect(src).toMatch(/source\(none\)/);
+  });
+});
+
 describe('the no-reset bundle', () => {
   const css = readFileSync(resolve(process.cwd(), NO_RESET_BUILD), 'utf8');
 

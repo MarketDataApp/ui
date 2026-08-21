@@ -5,3 +5,13 @@
 @custom-variant dark (&:where(.dark, .dark *, [data-theme="dark"], [data-theme="dark"] *));
 
 @source "./";
+
+/*
+  `@source "./"` above ADDS the docs directory; it does not restrict scanning
+  to it. This file imports plain `tailwindcss` rather than `source(none)`, so
+  automatic detection still reads the whole repo — and css/flowbite-theme.upstream.css
+  names the `rose-*` tokens we replaced with red, which emitted the whole rose
+  palette into this stylesheet. Same subtraction as css/components.input.css.
+  See that file for the full note.
+*/
+@source not "../css/flowbite-theme.upstream.css";
