@@ -207,6 +207,16 @@ describe.each(BUILDS)('form-icon-* presets in %s (#47)', (buildPath) => {
   // Both properties, every time. The glyph without the padding puts the icon
   // on top of the text; the padding without the glyph leaves a 36px gap. They
   // are one decision and a preset that sets only one of them is broken.
+  // Solid, not line. The kit's icon language is filled — the theme toggle's
+  // sun and moon, the user profile's person, and all five admonition icons.
+  // These shipped as stroked outlines first and looked foreign beside them.
+  // A mask reads alpha, so a filled path is opaque and the rest transparent.
+  it.each(ICONS)('.form-icon-%s is a filled glyph, not a stroked one', (name) => {
+    const icon = ruleBody(css, `.form-icon-${name}`);
+    expect(icon).toMatch(/fill='black'/);
+    expect(icon, 'stroked outline — the kit uses solid icons').not.toMatch(/stroke='black'/);
+  });
+
   it.each(ICONS)('.form-icon-%s sets both the glyph and the room for it', (name) => {
     const icon = ruleBody(css, `.form-icon-${name}`);
     expect(icon).toMatch(/--form-icon:\s*url\("data:image\/svg\+xml/);

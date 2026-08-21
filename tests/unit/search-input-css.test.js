@@ -235,6 +235,13 @@ describe.each(BUILDS)('search-input-button-icon in %s (#44)', (buildPath) => {
   // marks it aria-hidden by hand, and a pseudo-element never does. So the
   // button's accessible name is its own label in every variant, by
   // construction, with nothing for a consumer to remember.
+  // Solid, matching the kit's other icons — the theme toggle, the person, the
+  // admonitions. This shipped stroked in 5.8.0 and looked foreign beside them.
+  it('uses a filled glyph, like the rest of the kit', () => {
+    expect(icon).toMatch(/fill='black'/);
+    expect(icon, 'stroked outline — the kit uses solid icons').not.toMatch(/stroke='black'/);
+  });
+
   it('carries its own glyph as a mask-image on ::before', () => {
     expect(icon).toMatch(/&::before/);
     expect(icon).toMatch(/--search-icon:\s*url\("data:image\/svg\+xml/);
