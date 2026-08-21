@@ -22,6 +22,7 @@ import { BUILDS, ruleBody, nestedState } from './helpers/css.js';
 // broken to every property.
 
 const RING_1 = /0 0 0 calc\(1px \+ var\(--tw-ring-offset-width\)\)/;
+const RING_4 = /0 0 0 calc\(4px \+ var\(--tw-ring-offset-width\)\)/;
 
 /** Join every `&:where(.dark …)` block inside an extracted rule body. */
 function darkBlocks(body) {
@@ -146,11 +147,16 @@ describe.each(BUILDS)('search-input-button in %s (#44)', (buildPath) => {
     expect(button).toMatch(/line-height:\s*var\(--leading-5\)/);
   });
 
-  // Same colour and width as the field's ring — one control, one ring.
-  it('rings in the same colour and width as the field', () => {
+  // A 4px halo in brand-medium, not the field's 1px ring. The fill IS
+  // brand-strong, one step from brand, so a ring-brand ring measured 1.29:1
+  // against it and rest and focused were the same picture in both themes.
+  // brand-medium is theme-aware on its own — blue-200 light, blue-900 dark —
+  // so a dark-mode override here would be a bug, not a gap.
+  it('rings with a 4px halo in brand-medium', () => {
     const focus = nestedState(button, ':focus-visible');
-    expect(focus).toMatch(RING_1);
-    expect(focus).toMatch(/--tw-ring-color:\s*var\(--color-brand\)/);
+    expect(focus).toMatch(RING_4);
+    expect(focus).toMatch(/--tw-ring-color:\s*var\(--color-brand-medium\)/);
+    expect(focus).not.toMatch(RING_1);
   });
 
   // :focus-visible, not :focus. :focus also fires on a mouse click, so a

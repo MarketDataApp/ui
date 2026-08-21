@@ -585,22 +585,32 @@
 /* Height lock: the field is 20px line + 20px padding + 2px border = 42px. The
    button matches only because it carries the same vertical padding AND a border
    of its own. Dropping the border to save a declaration lands it 2px short and
-   steps the join. The border tracks the fill through hover for the same reason
-   it exists — a stale blue-800 edge around a blue-900 fill reads as an artifact. */
+   steps the join. The border is transparent, which is Flowbite's own move on
+   this component — the fill paints under it (background-clip is border-box), so
+   the edge reads solid and there is no second colour to keep in step through
+   hover. */
 @utility search-input-button {
   @apply shrink-0 inline-flex items-center justify-center gap-2;
   @apply rounded-s-none rounded-e-base px-4 py-2.5 text-sm font-medium leading-5;
-  @apply border border-solid text-white;
-  @apply bg-brand-strong border-brand-strong;
-  @apply hover:bg-blue-900 hover:border-blue-900;
-  @apply dark:hover:bg-blue-800 dark:hover:border-blue-800;
+  @apply border border-solid border-transparent text-white;
+  @apply bg-brand-strong hover:bg-blue-900 dark:hover:bg-blue-800;
   @apply transition-colors duration-200 cursor-pointer;
-  /* `:focus-visible`, not `:focus`. `:focus` also fires on a mouse click, so a
-     clicked submit button kept its ring until the user clicked elsewhere. Every
-     button in the kit made this move — see issue #41. Same colour and width as
-     the field's ring: one control, one ring. */
-  @apply focus:outline-hidden focus-visible:ring-1 focus-visible:ring-brand;
+  /* A 4px halo in `brand-medium` — Flowbite's treatment for this exact
+     component, and the shape every btn-* variant here already uses. One token
+     covers both themes: blue-200 light reads as a pale halo, blue-900 dark as
+     a deep one, each separating from the fill in the direction its page allows.
+
+     The field's own 1px `ring-brand` cannot serve here. The fill IS
+     brand-strong, one step from brand, so that ring measured 1.29:1 against it
+     and rest and focused were the same picture in both themes.
+
+     `:focus-visible`, not Flowbite's `:focus`. `:focus` also fires on a mouse
+     click, so a clicked submit button kept its ring until the user clicked
+     elsewhere. Every button in the kit made this move — see issue #41. */
+  @apply focus:outline-hidden focus-visible:ring-4 focus-visible:ring-brand-medium;
   &:focus-visible {
+    /* The halo paints outside the border box, so the field — painted after it
+       in the same stacking context — would clip it at the join. */
     position: relative;
     z-index: 1;
   }
