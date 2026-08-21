@@ -466,6 +466,163 @@
           </div>
         </div>
 
+        <!-- TEMPORARY: the field's dark-mode fill and border are undecided.
+             Comes out once one is chosen. Plain CSS in a <style> block below,
+             scoped by id and to dark mode only — deliberately NOT Tailwind
+             classes, so nothing here can reach any build output. -->
+        <h3 class="text-lg font-semibold mt-8 mb-3">Open decision: the field in dark mode</h3>
+        <div class="admonition admonition-warning mb-4">
+          <p class="admonition-heading">Switch to dark mode to compare</p>
+          <div class="admonition-content">
+            <p>
+              These three are identical in light mode — only the dark values differ. Each is shown
+              twice: on the page, and on a raised panel, because the panel is where this component
+              actually lives and it is where the quiet options break down.
+            </p>
+          </div>
+        </div>
+
+        <style>
+          /* Flowbite's own values, measured from their live docs in dark mode. */
+          :where(.dark, [data-theme='dark']) .field-variant-flowbite {
+            background-color: var(--color-gray-800);
+            border-color: var(--color-gray-700);
+          }
+          /* Flowbite's fill, with a boundary that still clears 3:1. */
+          :where(.dark, [data-theme='dark']) .field-variant-hybrid {
+            background-color: var(--color-gray-800);
+            border-color: var(--color-gray-500);
+          }
+        </style>
+
+        <div class="space-y-8">
+          <div>
+            <p class="text-sm font-medium text-heading mb-1">
+              A &mdash; Shipped today: <code class="text-xs font-mono">gray-700</code> fill,
+              <code class="text-xs font-mono">gray-400</code> border
+            </p>
+            <p class="text-sm text-body-subtle mb-3">
+              Boundary 3.96:1 against its own fill. Clears WCAG 1.4.11 everywhere, including on the
+              panel. The rim is the loudest of the three.
+            </p>
+            <div class="space-y-3">
+              <search role="search">
+                <form class="search-input-group max-w-lg" action="#" data-demo-search>
+                  <label for="field-a-page" class="sr-only">Search</label>
+                  <input
+                    id="field-a-page"
+                    type="search"
+                    class="search-input"
+                    placeholder="On the page..."
+                  />
+                  <button type="submit" class="search-input-button">Search</button>
+                </form>
+              </search>
+              <div class="card-surface">
+                <search role="search">
+                  <form class="search-input-group max-w-lg" action="#" data-demo-search>
+                    <label for="field-a-panel" class="sr-only">Search</label>
+                    <input
+                      id="field-a-panel"
+                      type="search"
+                      class="search-input"
+                      placeholder="On a panel..."
+                    />
+                    <button type="submit" class="search-input-button">Search</button>
+                  </form>
+                </search>
+              </div>
+            </div>
+          </div>
+
+          <div>
+            <p class="text-sm font-medium text-heading mb-1">
+              B &mdash; Flowbite exactly: <code class="text-xs font-mono">gray-800</code> fill,
+              <code class="text-xs font-mono">gray-700</code> border
+            </p>
+            <p class="text-sm text-body-subtle mb-3">
+              Boundary 1.42:1 — under the 3:1 WCAG 1.4.11 asks. On the panel the fill is
+              <strong>the panel's own colour</strong>, so the field has no edge at all. This is the
+              treatment issue #44 was filed to stop us shipping.
+            </p>
+            <div class="space-y-3">
+              <search role="search">
+                <form class="search-input-group max-w-lg" action="#" data-demo-search>
+                  <label for="field-b-page" class="sr-only">Search</label>
+                  <input
+                    id="field-b-page"
+                    type="search"
+                    class="search-input field-variant-flowbite"
+                    placeholder="On the page..."
+                  />
+                  <button type="submit" class="search-input-button">Search</button>
+                </form>
+              </search>
+              <div class="card-surface">
+                <search role="search">
+                  <form class="search-input-group max-w-lg" action="#" data-demo-search>
+                    <label for="field-b-panel" class="sr-only">Search</label>
+                    <input
+                      id="field-b-panel"
+                      type="search"
+                      class="search-input field-variant-flowbite"
+                      placeholder="On a panel..."
+                    />
+                    <button type="submit" class="search-input-button">Search</button>
+                  </form>
+                </search>
+              </div>
+            </div>
+          </div>
+
+          <div>
+            <p class="text-sm font-medium text-heading mb-1">
+              C &mdash; Flowbite's fill, our boundary:
+              <code class="text-xs font-mono">gray-800</code> fill,
+              <code class="text-xs font-mono">gray-500</code> border
+            </p>
+            <p class="text-sm text-body-subtle mb-3">
+              The recessed look of B with a boundary that still clears 3:1, and an edge on the
+              panel. Quieter than A.
+            </p>
+            <div class="space-y-3">
+              <search role="search">
+                <form class="search-input-group max-w-lg" action="#" data-demo-search>
+                  <label for="field-c-page" class="sr-only">Search</label>
+                  <input
+                    id="field-c-page"
+                    type="search"
+                    class="search-input field-variant-hybrid"
+                    placeholder="On the page..."
+                  />
+                  <button type="submit" class="search-input-button">Search</button>
+                </form>
+              </search>
+              <div class="card-surface">
+                <search role="search">
+                  <form class="search-input-group max-w-lg" action="#" data-demo-search>
+                    <label for="field-c-panel" class="sr-only">Search</label>
+                    <input
+                      id="field-c-panel"
+                      type="search"
+                      class="search-input field-variant-hybrid"
+                      placeholder="On a panel..."
+                    />
+                    <button type="submit" class="search-input-button">Search</button>
+                  </form>
+                </search>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <p class="text-sm text-body-subtle mt-4">
+          One thing the comparison cannot show: Flowbite's own demo sits on
+          <code class="text-xs font-mono">gray-950</code> (#030712), while this page is
+          <code class="text-xs font-mono">gray-900</code> (#101828). Some of what reads well there
+          is the darker ground behind the control, not the control.
+        </p>
+
         <div class="mt-6 flex flex-wrap gap-2">
           <code class="text-xs font-mono bg-gray-100 dark:bg-gray-800 px-2 py-1 rounded"
             >.search-input-group</code
