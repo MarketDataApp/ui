@@ -542,11 +542,10 @@
    reading as one control. Goes on a `<form>`; pair with a `sr-only` label and
    `role="search"` on a wrapping `<search>` element — see the demo.
 
-   The field composes `.form-input` rather than restating a field style, so a
-   search field and a plain field cannot drift apart. It changes three things
-   and nothing else: the edge it shares with the button, its boundary contrast,
-   and the search-specific webkit decorations. The focus ring is form-input's,
-   inherited — the kit paints one ring, in `--color-brand`, at 1px.
+   The field composes `.form-input` for its behaviour — focus ring, autofill
+   repaint, disabled and read-only states — and then mirrors Flowbite's own
+   search input for its surface colours. The focus ring is form-input's,
+   inherited: one ring, in `--color-brand`, at 1px.
    See: https://github.com/MarketDataApp/ui/issues/44 */
 @utility search-input-group {
   @apply flex w-full;
@@ -558,13 +557,27 @@
      border would paint two strokes at the join, which reads as a gap between
      two controls instead of as one. */
   @apply rounded-e-none border-e-0;
-  /* form-input's border is under the 3:1 WCAG 1.4.11 asks of a UI component's
-     boundary in both themes. Measured on the demo panel, gray-500/gray-400
-     clear it with room: 4.84:1 light and 5.64:1 dark. A search group
-     normally stands alone in a bar rather than stacked with other fields, so
-     the heavier boundary reads as deliberate here. Every other field in the kit
-     carries the same gap — that is issue #45, not this one. */
-  @apply border-gray-500 dark:border-gray-400;
+  /* Surface colours mirror Flowbite's own search input, measured from their
+     live docs: the semantic tokens rather than form-input's raw gray-* pairs.
+     Both are theme-aware on their own, so there is no `dark:` variant to keep
+     in step — neutral-secondary-medium is gray-50/gray-800 and default-medium
+     is gray-200/gray-700.
+
+     These override form-input's fill and border deliberately, so this field
+     and a plain field DO differ in colour. That is the owner's call, made
+     against the alternative below.
+
+     ACCESSIBILITY, recorded rather than argued: this boundary measures 1.18:1
+     in light and 1.42:1 in dark against its own fill, under the 3:1 WCAG
+     1.4.11 asks of a UI component's boundary — the gap issue #44 was filed
+     about. And in dark the fill is exactly `card-surface`'s colour, so on a
+     raised panel the field has no edge at all; on the page it separates from
+     the ground and reads fine. Flowbite ships it this way and their example
+     sits on the page. gray-500/gray-400 cleared 3:1 everywhere and was
+     rejected as too heavy. If this is revisited, the middle option was
+     Flowbite's fill with a gray-500 boundary, which measured 3.01:1. */
+  @apply bg-neutral-secondary-medium border-default-medium;
+  @apply text-heading placeholder:text-body;
   /* The ring paints outside the border box, so the button — later in the DOM —
      covers it at the join unless the focused half lifts itself out. Declared
      directly rather than via `@apply relative z-1` so the two properties stay

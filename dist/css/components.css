@@ -850,7 +850,6 @@
     padding: calc(var(--spacing) * 2.5);
     font-size: var(--text-sm);
     line-height: var(--tw-leading, var(--text-sm--line-height));
-    color: var(--color-heading);
     --tw-shadow: 0 0 #0000;
     box-shadow: var(--tw-inset-shadow), var(--tw-inset-ring-shadow), var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow);
     &:read-only {
@@ -930,9 +929,11 @@
     border-end-end-radius: 0;
     border-inline-end-style: var(--tw-border-style);
     border-inline-end-width: 0px;
-    border-color: var(--color-gray-500);
-    &:where(.dark, .dark *, [data-theme="dark"], [data-theme="dark"] *) {
-      border-color: var(--color-gray-400);
+    border-color: var(--color-default-medium);
+    background-color: var(--color-neutral-secondary-medium);
+    color: var(--color-heading);
+    &::placeholder {
+      color: var(--color-body);
     }
     &:focus {
       position: relative;

@@ -3,19 +3,20 @@ import { resolve } from 'node:path';
 import { BUILDS, ruleBody, nestedState } from './helpers/css.js';
 
 // Issue #44: the search group — a text field with a submit button joined to its
-// trailing edge — was hand-rolled in the consumer on 66 pages. Three things
-// went wrong there that a kit utility has to make impossible:
+// trailing edge — was hand-rolled in the consumer on 66 pages. Two things went
+// wrong there that a kit utility has to make impossible:
 //
-//   1. The field's boundary was invisible. The consumer reached for
-//      `border-default-medium` beside `bg-default-medium` — the same token, so
-//      the border painted the fill colour and drew nothing. 1.24:1 against the
-//      panel in light, 1.42:1 in dark, both under the 3:1 WCAG 1.4.11 asks of a
-//      UI component boundary.
-//   2. Chromium's search clear "×" landed flush against the attached button and
+//   1. Chromium's search clear "×" landed flush against the attached button and
 //      collided with the query text. Preflight resets
 //      ::-webkit-search-decoration and not this one.
-//   3. The two halves drifted apart in height, because each carried its own
+//   2. The two halves drifted apart in height, because each carried its own
 //      padding and only one of them carried a border.
+//
+// The issue also asked for a boundary clearing 3:1, and the component shipped
+// one. The owner then compared it against Flowbite's own search input and chose
+// Flowbite's colours instead, which do not clear 3:1 — see the note in
+// components.src.css. These assertions therefore pin the mirroring, not the
+// contrast: the point is that the values are Flowbite's and stay Flowbite's.
 //
 // These read the built artifacts consumers link, not the `@apply` source. A
 // utility that never emitted would pass a source-string check and still ship
@@ -68,20 +69,47 @@ describe.each(BUILDS)('search-input in %s (#44)', (buildPath) => {
     expect(field).not.toBeNull();
   });
 
-  // The field composes .form-input rather than restating a field style, so a
-  // search field and a plain field stay the same control. gray-50 is
-  // form-input's fill and is the cheapest proof the composition emitted.
-  it("carries form-input's fill, so the two field styles cannot drift", () => {
-    expect(field).toMatch(/var\(--color-gray-50\)/);
-    expect(darkBlocks(field)).toMatch(/var\(--color-gray-700\)/);
+  // It still composes .form-input, for the behaviour rather than the colours:
+  // the autofill repaint is the cheapest proof the composition emitted, and it
+  // is the part a hand-written field would most likely omit.
+  it("carries form-input's behaviour, not just its look", () => {
+    expect(field).toMatch(/&:-webkit-autofill/);
+    expect(field).toMatch(/cursor:\s*not-allowed/);
   });
 
-  // Boundary contrast. form-input's own border sits under 3:1 in both themes.
-  // Measured on the demo panel, gray-500/gray-400 clear it: 4.84:1 light and
-  // 5.64:1 dark. Any lighter token here is issue #44 returning.
-  it('draws a boundary that clears 3:1 in both themes', () => {
-    expect(field).toMatch(/border-color:\s*var\(--color-gray-500\)/);
-    expect(darkBlocks(field)).toMatch(/border-color:\s*var\(--color-gray-400\)/);
+  // Surface colours mirror Flowbite's own search input. Both tokens are
+  // theme-aware on their own, so a `dark:` variant for either would be a bug —
+  // a second value to keep in step with the one that already moves.
+  it("mirrors Flowbite's surface tokens rather than form-input's raw grays", () => {
+    expect(field).toMatch(/background-color:\s*var\(--color-neutral-secondary-medium\)/);
+    expect(field).toMatch(/border-color:\s*var\(--color-default-medium\)/);
+  });
+
+  // The subtle part, and the reason this assertion exists at all. Composing
+  // .form-input still emits its `dark:bg-gray-700` / `dark:border-gray-600`
+  // into this rule. Those land at the SAME specificity as our plain
+  // declarations — the dark variant compiles to `&:where(.dark, …)` and
+  // :where() contributes nothing — so the cascade is settled by source order
+  // alone, and ours only wins because it comes last.
+  //
+  // Reordering the @apply lines above would silently hand dark mode back to
+  // form-input's grays, with no build error and nothing visibly wrong in light
+  // mode. Verified in a browser at the time of writing: the field resolves to
+  // #f9fafb/#e5e7eb in light and #1e2939/#364153 in dark, which are Flowbite's
+  // own values measured from their live docs.
+  it('declares its surface colours last, which is the only reason they win', () => {
+    const after = (ours, inherited) => {
+      const a = field.lastIndexOf(ours);
+      const b = field.lastIndexOf(inherited);
+      expect(a, `missing: ${ours}`).toBeGreaterThan(-1);
+      expect(b, `missing: ${inherited}`).toBeGreaterThan(-1);
+      expect(a).toBeGreaterThan(b);
+    };
+    after(
+      'background-color: var(--color-neutral-secondary-medium)',
+      'background-color: var(--color-gray-700)',
+    );
+    after('border-color: var(--color-default-medium)', 'border-color: var(--color-gray-600)');
   });
 
   // The button supplies the shared edge. Without border-e-0 the join carries
