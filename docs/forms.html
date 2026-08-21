@@ -352,10 +352,12 @@
 
         <h3 class="text-lg font-semibold mt-8 mb-3">Icon and label</h3>
         <p class="text-gray-500 dark:text-gray-400 mb-4">
-          The button is <code class="text-xs font-mono">inline-flex</code> with
-          <code class="text-xs font-mono">gap-2</code>, so an icon needs no extra class. Mark the
-          glyph <code class="text-xs font-mono">aria-hidden</code> &mdash; the label already names
-          the button.
+          <code class="text-xs font-mono">.search-input-button-icon</code>. The glyph is a
+          <code class="text-xs font-mono">mask-image</code> on
+          <code class="text-xs font-mono">::before</code>, the way
+          <code class="text-xs font-mono">.copy-icon</code> carries its clipboard &mdash; the SVG
+          lives in CSS, so there is none to paste and it follows
+          <code class="text-xs font-mono">currentColor</code> on its own.
         </p>
 
         <search role="search">
@@ -368,34 +370,19 @@
               class="search-input"
               placeholder="Search..."
             />
-            <button type="submit" class="search-input-button">
-              <svg
-                class="w-4 h-4"
-                aria-hidden="true"
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 20 20"
-              >
-                <path
-                  stroke="currentColor"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="2"
-                  d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"
-                />
-              </svg>
-              Search
-            </button>
+            <button type="submit" class="search-input-button-icon">Search</button>
           </form>
         </search>
 
         <h3 class="text-lg font-semibold mt-8 mb-3">Icon only</h3>
         <p class="text-gray-500 dark:text-gray-400 mb-4">
-          <code class="text-xs font-mono">.search-input-button-compact</code> replaces
-          <code class="text-xs font-mono">.search-input-button</code> rather than sitting beside it,
-          so the button cannot lose its styling if a consumer forgets the base class. It tightens
-          the side padding only; the height is unchanged. An icon-only button has no accessible name
-          of its own, so it needs <code class="text-xs font-mono">aria-label</code>.
+          <code class="text-xs font-mono">.search-input-button-compact</code>. Same markup, same
+          label &mdash; the class collapses the label's glyphs and tightens the side padding. The
+          text stays in the DOM, so it is still the button's accessible name and there is no
+          <code class="text-xs font-mono">aria-label</code> to remember. Nothing here is marked
+          <code class="text-xs font-mono">aria-hidden</code> either: a pseudo-element is already
+          decorative to assistive technology, which an inline
+          <code class="text-xs font-mono">&lt;svg&gt;</code> is not.
         </p>
 
         <search role="search">
@@ -408,23 +395,7 @@
               class="search-input"
               placeholder="Search..."
             />
-            <button type="submit" class="search-input-button-compact" aria-label="Search">
-              <svg
-                class="w-4 h-4"
-                aria-hidden="true"
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 20 20"
-              >
-                <path
-                  stroke="currentColor"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="2"
-                  d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"
-                />
-              </svg>
-            </button>
+            <button type="submit" class="search-input-button-compact">Search</button>
           </form>
         </search>
 
@@ -484,6 +455,9 @@
           >
           <code class="text-xs font-mono bg-gray-100 dark:bg-gray-800 px-2 py-1 rounded"
             >.search-input-button</code
+          >
+          <code class="text-xs font-mono bg-gray-100 dark:bg-gray-800 px-2 py-1 rounded"
+            >.search-input-button-icon</code
           >
           <code class="text-xs font-mono bg-gray-100 dark:bg-gray-800 px-2 py-1 rounded"
             >.search-input-button-compact</code

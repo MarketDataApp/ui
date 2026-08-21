@@ -2,6 +2,20 @@ import { readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 import { BUILDS, ruleBody, nestedState } from './helpers/css.js';
 
+/**
+ * Count how many top-level rules a class emits.
+ *
+ * Composing a utility that itself composes another makes Tailwind emit the
+ * class twice — once with its own overrides and once as a bare copy of the
+ * base — and the bare copy wins, being second. ruleBody() reads the FIRST,
+ * so every assertion here passed while the browser rendered the other one.
+ * That is the failure this guards, and it is invisible to any check that
+ * looks at one rule.
+ */
+function ruleCount(css, className) {
+  return css.split('\n').filter((l) => l.trim() === `.${className} {`).length;
+}
+
 // Issue #44: the search group — a text field with a submit button joined to its
 // trailing edge — was hand-rolled in the consumer on 66 pages. Two things went
 // wrong there that a kit utility has to make impossible:
@@ -208,12 +222,85 @@ describe.each(BUILDS)('search-input-button in %s (#44)', (buildPath) => {
   });
 });
 
+describe.each(BUILDS)('search-input-button-icon in %s (#44)', (buildPath) => {
+  const css = readFileSync(resolve(process.cwd(), buildPath), 'utf8');
+  const icon = ruleBody(css, '.search-input-button-icon');
+
+  it('emits the icon variant', () => {
+    expect(icon).not.toBeNull();
+  });
+
+  // The glyph comes from CSS, like .copy-icon's clipboard. The point is not
+  // tidiness: an inline <svg> reaches the accessible name unless a consumer
+  // marks it aria-hidden by hand, and a pseudo-element never does. So the
+  // button's accessible name is its own label in every variant, by
+  // construction, with nothing for a consumer to remember.
+  it('carries its own glyph as a mask-image on ::before', () => {
+    expect(icon).toMatch(/&::before/);
+    expect(icon).toMatch(/--search-icon:\s*url\("data:image\/svg\+xml/);
+    expect(icon).toMatch(/mask-image:\s*var\(--search-icon\)/);
+    expect(icon).toMatch(/content:\s*''/);
+  });
+
+  // Follows the text colour rather than declaring one, so hover and the
+  // disabled state cannot leave the glyph a different colour from the label.
+  it('tints the glyph from currentColor', () => {
+    expect(icon).toMatch(/background-color:\s*currentColor/);
+  });
+
+  it('composes the base button, so the height and halo come with it', () => {
+    expect(icon).toMatch(/padding-block:\s*calc\(var\(--spacing\) \* 2\.5\)/);
+    expect(icon).toMatch(/background-color:\s*var\(--color-brand-strong\)/);
+  });
+});
+
 describe.each(BUILDS)('search-input-button-compact in %s (#44)', (buildPath) => {
   const css = readFileSync(resolve(process.cwd(), buildPath), 'utf8');
   const compact = ruleBody(css, '.search-input-button-compact');
 
   it('emits the icon-only variant', () => {
     expect(compact).not.toBeNull();
+  });
+
+  // The regression that prompted this: composing search-input-button-icon —
+  // itself a composition — emitted this class twice, and the second, bare copy
+  // won. font-size: 0, gap-0 and px-3 were all discarded and the button
+  // rendered as icon-plus-label, while every assertion below still passed
+  // because they read the first rule. Every variant is checked, not just this
+  // one, so the next composition that goes three deep fails here.
+  it.each(['search-input-button', 'search-input-button-icon', 'search-input-button-compact'])(
+    '.%s emits exactly one rule, so no bare copy can outrank it',
+    (className) => {
+      expect(ruleCount(css, className)).toBe(1);
+    },
+  );
+
+  // Icon-only is a presentation choice, so the label stays in the DOM and stays
+  // the accessible name — only its glyphs collapse. font-size: 0 is the whole
+  // mechanism; without it the variant would need aria-label in every consumer's
+  // markup, which is the thing this design set out to remove.
+  it('collapses the label visually while leaving it in the accessible name', () => {
+    expect(compact).toMatch(/font-size:\s*0/);
+  });
+
+  // The height survives font-size: 0 only because leading-5 is a length rather
+  // than a multiple — the text still generates a 20px line box at zero font
+  // size. A unitless line-height here would collapse the button and step the
+  // join, and nothing else in the rule would look wrong.
+  it('keeps a line-height that does not depend on the font size', () => {
+    expect(compact).toMatch(/line-height:\s*var\(--leading-5\)/);
+    expect(compact).not.toMatch(/line-height:\s*(1|normal)\s*;/);
+  });
+
+  // A zero-width label still gets pushed off-centre by the base button's 8px
+  // gap, so the glyph would not sit in the middle of its own button.
+  it('drops the gap the label would otherwise leave behind', () => {
+    const gaps = [...compact.matchAll(/gap:\s*calc\(var\(--spacing\) \* ([\d.]+)\)/g)];
+    expect(gaps.at(-1)?.[1]).toBe('0');
+  });
+
+  it('carries the glyph through from the icon variant', () => {
+    expect(compact).toMatch(/mask-image:\s*var\(--search-icon\)/);
   });
 
   // Icon-only, so the label's side padding would leave the glyph adrift. The

@@ -629,10 +629,59 @@
   }
 }
 
-/* Icon-only variant. Composes the base the way `copy-input-compact` does, so a
-   consumer cannot apply the modifier and forget the button underneath it. */
+/* ---- Which button you get is the class's job, not the markup's ----
+   All three take the same content — the label, as text:
+
+     <button class="search-input-button">Search</button>          label
+     <button class="search-input-button-icon">Search</button>     glyph + label
+     <button class="search-input-button-compact">Search</button>  glyph only
+
+   The glyph is a mask-image on ::before, the way .copy-icon carries its
+   clipboard, so the SVG lives in CSS and no consumer pastes markup. It follows
+   currentColor, so it needs no colour of its own.
+
+   A pseudo-element is decorative to assistive technology. That is the point:
+   an inline <svg> has to be marked `aria-hidden` by hand or it reaches the
+   accessible name, and the compact button then needs `aria-label` on top. Here
+   the label is the button's own text in every variant, so the accessible name
+   is right by construction and there is nothing to remember. */
+@utility search-input-button-icon {
+  @apply search-input-button;
+  --search-icon: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24'%3e%3cpath stroke='black' stroke-linecap='round' stroke-width='2' d='m21 21-3.5-3.5M17 10a7 7 0 1 1-14 0 7 7 0 0 1 14 0Z'/%3e%3c/svg%3e");
+  &::before {
+    content: '';
+    display: inline-block;
+    flex-shrink: 0;
+    width: 1rem;
+    height: 1rem;
+    background-color: currentColor;
+    -webkit-mask-image: var(--search-icon);
+    mask-image: var(--search-icon);
+    -webkit-mask-size: contain;
+    mask-size: contain;
+    -webkit-mask-repeat: no-repeat;
+    mask-repeat: no-repeat;
+    -webkit-mask-position: center;
+    mask-position: center;
+  }
+}
+
+/* Icon-only. The label stays in the DOM and stays the accessible name; only its
+   glyphs are collapsed, with `font-size: 0`.
+
+   Height survives because `leading-5` sets a line-height in rem, not a
+   multiple — the text still generates a 20px line box at zero font-size, so the
+   button holds 42px and the join does not step. `gap-0` because a zero-width
+   label would otherwise still be pushed off-centre by the 8px gap.
+
+   It composes `search-input-button-icon` for the glyph, so the mask lives in
+   one place. A unit assertion pins that each of these three classes emits
+   exactly one rule: a duplicate definition emits a second, bare copy that wins
+   on source order and silently discards these overrides, while every
+   single-rule assertion still passes. */
 @utility search-input-button-compact {
-  @apply search-input-button px-3;
+  @apply search-input-button-icon px-3 gap-0;
+  font-size: 0;
 }
 
 /* ---- Copy Input ----
