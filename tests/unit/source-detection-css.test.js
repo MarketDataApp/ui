@@ -55,6 +55,17 @@ describe('automatic source detection in the standalone bundle', () => {
   it('still emits the component utilities the demo pages use', () => {
     expect(hasRule(css, REAL_UTILITY)).toBe(true);
   });
+
+  // css/flowbite-theme.upstream.css is a byte-identical copy of Flowbite's
+  // modern theme, kept so `diff -w` against our derived one shows what we
+  // changed. Nothing imports it. Detection still read it and found the `rose-*`
+  // names in the danger tokens we replaced with red, which pulled the whole
+  // rose palette into this bundle. The theme variables are the tell — no
+  // component in the kit uses rose, so one appearing means the reference file
+  // became scannable again.
+  it('does not emit the rose palette named only in the upstream reference copy', () => {
+    expect(css).not.toMatch(/--color-rose-\d+:/);
+  });
 });
 
 describe('the no-reset bundle', () => {

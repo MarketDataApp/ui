@@ -2,10 +2,14 @@
  * @marketdataapp/ui — Shared Tailwind v4 theme for MarketData properties.
  *
  * Imports Flowbite's full design system tokens (radius scale, neutrals,
- * brand, status, dark-mode overrides) as the base layer, then overrides
- * only the font stack to use system fonts and adds MarketData-specific
- * tokens (brand hexes, admonition colors, shadows) that Flowbite does
- * not provide.
+ * brand, status, dark-mode overrides) as the base layer, then adds the
+ * MarketData-specific tokens Flowbite does not provide: brand hexes, the
+ * Quicksand display face, admonition colors, shadows and the focus ring.
+ *
+ * It overrides nothing. Where we differ from Flowbite — the font stack and
+ * the danger palette — the change is made in flowbite-theme.css itself, and
+ * flowbite-theme.upstream.css holds a byte-identical copy of upstream so the
+ * difference is one `diff -w` away.
  *
  * Usage in consuming projects:
  *   @import "tailwindcss";
@@ -15,19 +19,12 @@
 @import './flowbite-theme.css';
 
 @theme {
-  /* ---- Fix upstream Flowbite typo: --leading-none ships as `1px` (line-height
-     should be unitless `1`); without this every leading-none usage crushes to a
-     single pixel. ---- */
-  --leading-none: 1;
+  /* Fonts, the danger palette and the --leading-none fix are NOT here. They
+     are applied directly in flowbite-theme.css, against a byte-identical copy
+     of upstream in flowbite-theme.upstream.css. See that file's header. An
+     override here would be a second place to keep in step. */
 
-  /* ---- Fonts (override Flowbite's Inter stack with system fonts) ---- */
-  --font-sans:
-    system-ui, -apple-system, 'Segoe UI', Roboto, Ubuntu, Cantarell, 'Noto Sans', sans-serif,
-    'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol';
-  --font-body:
-    system-ui, -apple-system, 'Segoe UI', Roboto, Ubuntu, Cantarell, 'Noto Sans', sans-serif,
-    'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol';
-  --font-mono: SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace;
+  /* ---- Fonts ---- */
   --font-quicksand: 'Quicksand', sans-serif;
 
   /* ---- Shadows ---- */

@@ -31,4 +31,15 @@
 @source not "../**/*.md";
 @source not "../tests";
 
+/*
+  The third kind: css/flowbite-theme.upstream.css is a byte-identical copy of
+  Flowbite's modern theme, kept beside our derived one so `diff -w` shows what
+  we changed. Nothing imports it. But detection reads it like any other file
+  and found the `rose-*` names in the danger tokens we replaced with red —
+  which emitted the whole rose palette, nine variables of it, into this bundle
+  and this bundle only. A reference file describes tokens; it does not use
+  them.
+*/
+@source not "../css/flowbite-theme.upstream.css";
+
 @import './components.src.css';

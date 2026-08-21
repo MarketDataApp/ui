@@ -1,28 +1,54 @@
 /**
- * Flowbite v4 default theme — verbatim copy of `flowbite/src/themes/default.css`
- * from the upstream npm package (currently flowbite@4.0.1).
+ * Flowbite v4 "modern" theme, with MarketData's changes applied in place.
  *
- * Imported by theme.css as the base layer; theme.css then overrides
- * font definitions with the MarketData system-font stack and patches
- * the upstream `--leading-none: 1px` typo (should be unitless `1`).
+ * This is NOT a verbatim copy. It started as `flowbite/src/themes/default.css`
+ * — which is what Flowbite calls the modern theme; there is no `modern.css` —
+ * from flowbite@4.0.2, and diverges in the ways listed below. Imported by
+ * theme.css as the base layer.
  *
- * To refresh: download the file from
- *   https://registry.npmjs.org/flowbite/-/flowbite-<version>.tgz
- * and replace the @theme + .dark blocks below verbatim.
+ * `css/flowbite-theme.upstream.css` sits beside this file as a byte-identical
+ * copy of that upstream file. It is never imported and nothing builds from it.
+ * It exists so the divergence is one command away:
+ *
+ *   diff -w css/flowbite-theme.upstream.css css/flowbite-theme.css
+ *
+ * Use -w. Prettier reindents this file to two spaces and rewraps the long
+ * font stacks, so a plain diff reports every line.
+ *
+ * WHAT WE CHANGED, and why each is here rather than an override in theme.css:
+ *
+ *   1. `danger` is Tailwind's red, not Flowbite's rose. Ten --color-danger-*
+ *      and four --color-fg-danger-* tokens, both themes. See 15c1ca6.
+ *
+ *   2. The font stack is system fonts, not Inter. --font-sans, --font-body
+ *      and --font-mono. The kit ships no webfont, so pointing at Inter would
+ *      resolve to whatever the consumer happens to have.
+ *
+ * Both were overrides in theme.css until we found the header above claiming
+ * this file was verbatim when it had not been since 15c1ca6. A reader
+ * refreshing it per those instructions would have silently reverted danger to
+ * rose. Changing the values here instead means the upstream copy plus one
+ * diff tells the whole truth, and there is no second place to keep in step.
+ *
+ * TO REFRESH: download the new upstream file, replace
+ * flowbite-theme.upstream.css with it verbatim, diff the two, and reapply the
+ * changes above to this one.
+ *
+ * Note for the next refresh: 4.0.1 shipped `--leading-none: 1px`, a typo for
+ * the unitless `1` a line-height needs, and theme.css patched it. 4.0.2 fixes
+ * it upstream, so that patch is gone. It is not one of our changes.
  */
 
 @theme {
+  /* CHANGED from upstream: system fonts, not Inter. The kit ships no webfont,
+     so naming Inter would resolve to whatever the consumer happens to have. */
   --font-sans:
-    'Inter', 'ui-sans-serif', 'system-ui', '-apple-system', 'system-ui', 'Segoe UI', 'Roboto',
-    'Helvetica Neue', 'Arial', 'Noto Sans', 'sans-serif', 'Apple Color Emoji', 'Segoe UI Emoji',
-    'Segoe UI Symbol', 'Noto Color Emoji';
+    system-ui, -apple-system, 'Segoe UI', Roboto, Ubuntu, Cantarell, 'Noto Sans', sans-serif,
+    'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol';
   --font-body:
-    'Inter', 'ui-sans-serif', 'system-ui', '-apple-system', 'system-ui', 'Segoe UI', 'Roboto',
-    'Helvetica Neue', 'Arial', 'Noto Sans', 'sans-serif', 'Apple Color Emoji', 'Segoe UI Emoji',
-    'Segoe UI Symbol', 'Noto Color Emoji';
-  --font-mono:
-    'ui-monospace', 'SFMono-Regular', 'Menlo', 'Monaco', 'Consolas', 'Liberation Mono',
-    'Courier New', 'monospace';
+    system-ui, -apple-system, 'Segoe UI', Roboto, Ubuntu, Cantarell, 'Noto Sans', sans-serif,
+    'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol';
+  --font-mono: SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace;
 
   /* TEXT VARIABLES */
   --text-2xs: 0.625rem;
@@ -32,7 +58,7 @@
   --leading-8: 32px;
   --leading-6: 24px;
   --leading-4: 16px;
-  --leading-none: 1px;
+  --leading-none: 1;
   --leading-5: 20px;
   --tracking-tighter: -0.8px;
   --leading-heading-none: 60px;

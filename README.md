@@ -405,9 +405,34 @@ An uncoloured `.badge` link declares neither, so it falls back to a neutral hove
 
 ### Theme Tokens
 
-`css/theme.css` defines all shared design tokens inside `@theme {}`:
+The token set comes from Flowbite v4's **modern** theme, which upstream ships as `src/themes/default.css` — there is no `modern.css`. Three files, in import order:
 
-- **Fonts**: `--font-sans`, `--font-mono`, `--font-quicksand`
+| file                              | what it is                                                                                                           |
+| --------------------------------- | -------------------------------------------------------------------------------------------------------------------- |
+| `css/flowbite-theme.upstream.css` | A byte-identical copy of the upstream file (flowbite@4.0.2). Never imported, nothing builds from it. Do not edit it. |
+| `css/flowbite-theme.css`          | The same theme with our changes applied **in place**.                                                                |
+| `css/theme.css`                   | Adds the MarketData tokens Flowbite does not provide. Overrides nothing.                                             |
+
+We change Flowbite's theme in exactly two ways, and the reference copy makes that checkable in one command:
+
+```
+diff -w css/flowbite-theme.upstream.css css/flowbite-theme.css
+```
+
+1. **`danger` is Tailwind's red, not Flowbite's rose** — ten `--color-danger-*` and four `--color-fg-danger-*` tokens, both themes.
+2. **The font stack is system fonts, not Inter** — the kit ships no webfont, so naming Inter would resolve to whatever the consumer happens to have.
+
+**Brand tokens are Flowbite's, unmodified** — `--color-brand`, `-softer`, `-soft`, `-medium`, `-strong`, `-subtle`, `-light` and the `--color-fg-brand-*` set all carry upstream's values in both themes.
+
+Changing the values in place rather than overriding them downstream means there is no second place to keep in step. Use `-w`: Prettier reindents the derived file and rewraps the font stacks, so a plain `diff` reports every line.
+
+To refresh Flowbite: replace `flowbite-theme.upstream.css` wholesale, diff the two, and reapply the two changes above to the derived file.
+
+Two guards keep the reference copy honest. It is in `.prettierignore`, so formatting cannot drift it off byte-identical. And `css/components.input.css` subtracts it with `@source not` — automatic source detection read the `rose-*` names in the danger tokens we replaced and emitted the entire rose palette into the standalone bundle. `tests/unit/source-detection-css.test.js` asserts it stays out.
+
+`css/theme.css` then defines the MarketData tokens inside `@theme {}`:
+
+- **Fonts**: `--font-quicksand` (the display face; `--font-sans`, `--font-body` and `--font-mono` come from `flowbite-theme.css`)
 - **Shadows**: `--shadow-line`, `--shadow-darkline`, `--shadow-diffuse`
 - **Brand colors**: `--color-marketdata-lightorange`, `darkorange`, `lightblue`, `darkblue`, `bluebg`
 - **Docusaurus admonition colors**: `note`, `tip`, `info`, `warning`, `danger` (each with bg/border/text + dark variants)
