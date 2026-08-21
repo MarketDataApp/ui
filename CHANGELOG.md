@@ -1,5 +1,15 @@
 # Changelog
 
+## 5.9.1
+
+### Fixed
+
+- **The leading-field icons and the search button's magnifier are now solid, not stroked outlines.** The kit's icon language is filled — the theme toggle's sun and moon, the user profile's person, and all five admonition icons — so the outlines shipped in 5.8.0 and 5.9.0 read as a different set beside them. Affects the five `.form-icon-*` glyphs and `.search-input-button-icon`.
+  - The replacements are solid 20×20 paths, matching the person icon already in `src/templates/`. A mask reads alpha, so `fill='black'` is opaque and everything outside the path transparent — the same mechanism the stroked versions used, so nothing else about the components changes.
+  - Verified by rendering rather than by assertion alone: malformed path data would produce an empty or garbled mask and still satisfy every check that the glyph is a data URI. Envelope, person, lock, phone and the magnifier were each read off the page at 3×.
+  - Each glyph now has an assertion that it is filled rather than stroked, so the icon language is pinned rather than remembered.
+- **Two stroked glyphs remain, deliberately.** The chevron has no solid form. The two `copy-icon` glyphs predate this, and converting them would change the copy button's appearance for every existing consumer — worth doing, but as its own decision rather than folded into an icon-consistency fix.
+
 ## 5.9.0
 
 ### New
