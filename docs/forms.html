@@ -408,19 +408,22 @@
           own.
         </p>
         <p class="text-gray-500 dark:text-gray-400 mb-4">
-          Switch to dark mode here and the trade-off is visible: that fill is
+          Switch to dark mode here and one consequence is visible: that fill is
           <code class="text-xs font-mono">gray-800</code>, which is
           <code class="text-xs font-mono">card-surface</code>'s own colour, so on a panel the field
-          has no edge. On the page it separates from the ground and reads as intended. The boundary
-          measures 1.18:1 in light and 1.42:1 in dark against its own fill, under the 3:1 WCAG
-          1.4.11 asks of a UI component's boundary — the same gap
+          has no edge. On the page it separates from the ground and reads as intended.
+        </p>
+        <p class="text-gray-500 dark:text-gray-400 mb-4">
+          The boundary measures 1.18:1 in light and 1.42:1 in dark against its own fill, under the
+          3:1 WCAG 1.4.11 asks of a UI component's boundary. That is settled rather than
+          outstanding: the kit follows Flowbite's design system, including here, and
           <a
             href="https://github.com/MarketDataApp/ui/issues/45"
             class="underline hover:no-underline"
             >issue #45</a
           >
-          tracks for every other field in the kit. Chosen deliberately, for consistency with
-          Flowbite.
+          is closed as won't-fix. A version clearing 3:1 shipped first and was rejected on
+          appearance — it read as a bright rim beside Flowbite's.
         </p>
 
         <div class="card-surface">

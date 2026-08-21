@@ -567,15 +567,20 @@
      and a plain field DO differ in colour. That is the owner's call, made
      against the alternative below.
 
-     ACCESSIBILITY, recorded rather than argued: this boundary measures 1.18:1
-     in light and 1.42:1 in dark against its own fill, under the 3:1 WCAG
-     1.4.11 asks of a UI component's boundary — the gap issue #44 was filed
-     about. And in dark the fill is exactly `card-surface`'s colour, so on a
-     raised panel the field has no edge at all; on the page it separates from
-     the ground and reads fine. Flowbite ships it this way and their example
-     sits on the page. gray-500/gray-400 cleared 3:1 everywhere and was
-     rejected as too heavy. If this is revisited, the middle option was
-     Flowbite's fill with a gray-500 boundary, which measured 3.01:1. */
+     ACCESSIBILITY — settled, not outstanding. This boundary measures 1.18:1 in
+     light and 1.42:1 in dark against its own fill, under the 3:1 WCAG 1.4.11
+     asks of a UI component's boundary. The kit follows Flowbite's design
+     system, including here, and issue #45 is closed as won't-fix.
+
+     Do not "fix" this without asking. A version clearing 3:1 everywhere
+     (gray-500 / dark:gray-400) shipped first and was rejected on appearance —
+     beside Flowbite's it read as a bright rim. So did the middle option,
+     Flowbite's fill with a gray-500 boundary at 3.01:1. Both were compared on
+     the docs page in both themes before the call was made.
+
+     One consequence worth knowing: in dark the fill is exactly `card-surface`'s
+     colour, so a field on a raised panel has no boundary at all. On the page it
+     separates from the ground. */
   @apply bg-neutral-secondary-medium border-default-medium;
   @apply text-heading placeholder:text-body;
   /* The ring paints outside the border box, so the button — later in the DOM —
