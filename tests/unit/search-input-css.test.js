@@ -87,7 +87,7 @@ describe.each(BUILDS)('search-input in %s (#44)', (buildPath) => {
   // the autofill repaint is the cheapest proof the composition emitted, and it
   // is the part a hand-written field would most likely omit.
   it("carries form-input's behaviour, not just its look", () => {
-    expect(field).toMatch(/&:-webkit-autofill/);
+    expect(field).toMatch(/:-webkit-autofill/);
     expect(field).toMatch(/cursor:\s*not-allowed/);
   });
 

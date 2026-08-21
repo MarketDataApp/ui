@@ -159,8 +159,146 @@
             <p class="form-helper-text">contact support to change billing region</p>
           </div>
 
+          <div class="mb-4">
+            <label class="form-label" for="form-notes">Notes</label>
+            <textarea
+              id="form-notes"
+              rows="4"
+              class="form-input"
+              placeholder="Anything else?"
+            ></textarea>
+            <p class="form-helper-text">
+              the same <code class="text-xs font-mono">.form-input</code> as every field above
+            </p>
+          </div>
+
           <button class="btn-orange-to-blue mt-2">Save Changes</button>
         </div>
+
+        <h3 class="text-lg font-semibold mt-8 mb-2">Multi-line fields</h3>
+        <p class="text-gray-500 dark:text-gray-400 mb-4">
+          There is no <code class="text-xs font-mono">.form-textarea</code>. A
+          <code class="text-xs font-mono">&lt;textarea&gt;</code> takes
+          <code class="text-xs font-mono">.form-input</code> and the element it lands on decides the
+          rest, so a multi-line field cannot drift away from the single-line ones beside it. Height
+          is <code class="text-xs font-mono">rows</code>, the native lever.
+        </p>
+        <p class="text-gray-500 dark:text-gray-400 mb-4">
+          Three things change by element. It resizes vertically — not the browser default
+          <code class="text-xs font-mono">both</code>, because dragging horizontally breaks the
+          form's column; override with <code class="text-xs font-mono">resize-none</code>. It drops
+          the <code class="text-xs font-mono">read-only</code> not-allowed cursor, which is wrong
+          over text a reader is still scrolling and selecting, while keeping the read-only fill. And
+          it drops Chrome's autofill repaint, which a textarea never triggers.
+        </p>
+
+        <div class="grid gap-4 sm:grid-cols-2 max-w-2xl">
+          <div>
+            <label class="form-label" for="ta-default">Default</label>
+            <textarea
+              id="ta-default"
+              rows="3"
+              class="form-input"
+              placeholder="Drag the corner"
+            ></textarea>
+            <p class="form-helper-text">resizes vertically</p>
+          </div>
+          <div>
+            <label class="form-label" for="ta-fixed">Fixed</label>
+            <textarea
+              id="ta-fixed"
+              rows="3"
+              class="form-input resize-none"
+              placeholder="No handle"
+            ></textarea>
+            <p class="form-helper-text">
+              <code class="text-xs font-mono">resize-none</code> opts out
+            </p>
+          </div>
+          <div>
+            <label class="form-label" for="ta-readonly">Read-only</label>
+            <textarea id="ta-readonly" rows="3" class="form-input" readonly>
+Still scrolls and selects, so the cursor stays a caret.</textarea
+            >
+            <p class="form-helper-text">greyed, but readable</p>
+          </div>
+          <div>
+            <label class="form-label" for="ta-disabled">Disabled</label>
+            <textarea
+              id="ta-disabled"
+              rows="3"
+              class="form-input"
+              placeholder="Suppressed"
+              disabled
+            ></textarea>
+            <p class="form-helper-text">placeholder hidden, as on any field</p>
+          </div>
+        </div>
+
+        <h3 class="text-lg font-semibold mt-8 mb-2">Fields with a leading icon</h3>
+        <p class="text-gray-500 dark:text-gray-400 mb-4">
+          <code class="text-xs font-mono">.form-input-group</code> plus a
+          <code class="text-xs font-mono">.form-icon-*</code> class, both on the wrapper. There is
+          no icon markup: the glyph is a <code class="text-xs font-mono">mask-image</code> on the
+          wrapper's own <code class="text-xs font-mono">::before</code>, so there is no
+          <code class="text-xs font-mono">&lt;svg&gt;</code> to paste and no
+          <code class="text-xs font-mono">aria-hidden</code> to remember.
+        </p>
+        <p class="text-gray-500 dark:text-gray-400 mb-4">
+          The field's leading padding is not the consumer's decision either. The icon class sets
+          <code class="text-xs font-mono">--form-input-ps</code> and
+          <code class="text-xs font-mono">.form-input</code> reads it, so the room for the glyph
+          arrives as an inherited value rather than as a
+          <code class="text-xs font-mono">ps-9</code> competing with
+          <code class="text-xs font-mono">p-2.5</code> at the same specificity.
+        </p>
+
+        <div class="grid gap-4 sm:grid-cols-2 max-w-2xl">
+          <div class="form-input-group form-icon-envelope">
+            <label for="fi-email" class="sr-only">Email</label>
+            <input id="fi-email" type="email" class="form-input" placeholder="you@example.com" />
+          </div>
+          <div class="form-input-group form-icon-user">
+            <label for="fi-name" class="sr-only">Name</label>
+            <input id="fi-name" type="text" class="form-input" placeholder="Jane Smith" />
+          </div>
+          <div class="form-input-group form-icon-lock">
+            <label for="fi-pass" class="sr-only">Password</label>
+            <input id="fi-pass" type="password" class="form-input" placeholder="••••••••" />
+          </div>
+          <div class="form-input-group form-icon-phone">
+            <label for="fi-phone" class="sr-only">Phone</label>
+            <input id="fi-phone" type="tel" class="form-input" placeholder="+1 555 0100" />
+          </div>
+        </div>
+
+        <p class="text-gray-500 dark:text-gray-400 mt-4 mb-4">
+          A bare <code class="text-xs font-mono">.form-input-group</code> with no icon class is just
+          a relative wrapper — the pseudo-element paints no mask and, being absolutely positioned,
+          takes no space, so the field keeps its normal padding. The group works on a
+          <code class="text-xs font-mono">&lt;select&gt;</code> and a
+          <code class="text-xs font-mono">&lt;textarea&gt;</code> too; on a textarea the glyph sits
+          against the first line.
+        </p>
+
+        <div class="grid gap-4 sm:grid-cols-2 max-w-2xl">
+          <div class="form-input-group">
+            <label for="fi-none" class="sr-only">No icon</label>
+            <input id="fi-none" type="text" class="form-input" placeholder="No icon class" />
+          </div>
+          <div class="form-input-group form-icon-search">
+            <label for="fi-search" class="sr-only">Filter</label>
+            <input id="fi-search" type="search" class="form-input" placeholder="Filter..." />
+          </div>
+        </div>
+
+        <p class="text-sm text-body-subtle mt-4">
+          For a glyph the kit does not ship, set the pair inline on the wrapper:
+          <code class="text-xs font-mono"
+            >style="--form-icon: url(…); --form-input-ps: calc(var(--spacing) * 9)"</code
+          >. They are one decision — the glyph without the padding lands on top of the text, and the
+          padding without the glyph leaves a gap.
+        </p>
 
         <h3 class="text-lg font-semibold mt-8 mb-2">Cross-container label state sync</h3>
         <p class="text-gray-500 dark:text-gray-400 mb-4">
