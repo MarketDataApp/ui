@@ -1,5 +1,19 @@
 # Changelog
 
+## 5.9.2
+
+### Fixed
+
+- **49 colour tokens shipped declared for dark mode and undefined for light.** `var(--color-neutral-secondary-strong)` resolved in dark and dropped its whole declaration in light, so the element painted nothing and showed its parent through. No console warning, no visual error, and correct in whichever theme the developer had open. The reporter lost the active state of a segmented control and shipped white text on `gray-50` at 1.05:1 to it. Closes #50.
+  - **Nobody wrote the tokens that way.** Both theme blocks declare all 49 for both themes, and always did. Tailwind tree-shakes `@theme`, emitting only the tokens some generated utility references, while the `.dark` blocks are plain CSS rules that nothing shakes and that always ship whole. The light half was pruned and the dark half was not, so the ramp appeared to have holes in one theme.
+  - **The fix is `@theme static` on both blocks**, which exempts them from tree-shaking. No token value changed and no rule was removed — the diff against the previous build is 67 added lines and zero deletions. Cost is about 450 bytes gzipped on `components.css` and 650 on `components.no-reset.css`.
+  - **`tests/unit/theme-token-parity-css.test.js` compares the two halves of each build output** rather than checking any single token, so a token added to one theme and forgotten in the other fails there instead of at a consumer. It fails 13 of its 16 assertions against the previous build.
+  - **This does not add utility classes.** `dist/css/` still carries only the utilities this repo's own source uses, so a pre-built-CSS consumer writing `bg-neutral-secondary-strong` still gets no rule — in either theme, as before. The tokens are now readable as custom properties in both, and a consumer running their own Tailwind build against `css/theme.css` was never affected either way.
+
+### Internal
+
+- **`@theme static` is a third documented divergence from upstream Flowbite**, alongside the red `danger` palette and the system font stack. It is one keyword and touches no values. README and `CLAUDE.md` record it, so a Flowbite refresh reapplies it.
+
 ## 5.9.1
 
 ### Fixed
