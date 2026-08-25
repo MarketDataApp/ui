@@ -413,7 +413,7 @@ The token set comes from Flowbite v4's **modern** theme, which upstream ships as
 | `css/flowbite-theme.css`          | The same theme with our changes applied **in place**.                                                                |
 | `css/theme.css`                   | Adds the MarketData tokens Flowbite does not provide. Overrides nothing.                                             |
 
-We change Flowbite's theme in exactly two ways, and the reference copy makes that checkable in one command:
+We change Flowbite's theme in exactly three ways, and the reference copy makes that checkable in one command:
 
 ```
 diff -w css/flowbite-theme.upstream.css css/flowbite-theme.css
@@ -421,12 +421,25 @@ diff -w css/flowbite-theme.upstream.css css/flowbite-theme.css
 
 1. **`danger` is Tailwind's red, not Flowbite's rose** — ten `--color-danger-*` and four `--color-fg-danger-*` tokens, both themes.
 2. **The font stack is system fonts, not Inter** — the kit ships no webfont, so naming Inter would resolve to whatever the consumer happens to have.
+3. **The theme block is `@theme static`, not `@theme`** — one keyword, no token values touched. See [Token parity across themes](#token-parity-across-themes).
 
 **Brand tokens are Flowbite's, unmodified** — `--color-brand`, `-softer`, `-soft`, `-medium`, `-strong`, `-subtle`, `-light` and the `--color-fg-brand-*` set all carry upstream's values in both themes.
 
 Changing the values in place rather than overriding them downstream means there is no second place to keep in step. Use `-w`: Prettier reindents the derived file and rewraps the font stacks, so a plain `diff` reports every line.
 
-To refresh Flowbite: replace `flowbite-theme.upstream.css` wholesale, diff the two, and reapply the two changes above to the derived file.
+To refresh Flowbite: replace `flowbite-theme.upstream.css` wholesale, diff the two, and reapply the three changes above to the derived file.
+
+#### Token parity across themes
+
+Every `--color-*` token is declared for both themes, and the build ships both halves. If a token resolves in dark mode, it resolves in light mode.
+
+This needs saying because it was not true before 5.9.2. Tailwind tree-shakes `@theme`, emitting only the tokens some generated utility references. The `.dark` block at the foot of `flowbite-theme.css` is a plain CSS rule, so nothing shakes it and it always ships whole. A token that no component class in this repo happened to use therefore survived in dark and vanished in light — 49 of them.
+
+The failure was silent and theme-shaped. A consumer writing `var(--color-neutral-secondary-strong)` got a working colour in dark and an undefined custom property in light, so the browser dropped the whole declaration: no console warning, no visual error, and correct in whichever theme the developer had open. See [#50](https://github.com/MarketDataApp/ui/issues/50).
+
+Both theme blocks are `@theme static`, which exempts them from tree-shaking. The cost is about 450 bytes gzipped. `tests/unit/theme-token-parity-css.test.js` compares the two halves of each build output, so a token added to one theme and forgotten in the other fails there rather than at a consumer.
+
+Note what this does **not** change: the utility classes. `dist/css/` carries only the utilities this repo's own source uses. A consumer of the pre-built CSS who writes `bg-neutral-secondary-strong` still gets no rule, in either theme, because that class was never generated. Use the tokens through your own Tailwind build (`@import "@marketdataapp/ui/css/theme.css"`) to get the utilities, or read the custom properties directly in hand-written CSS.
 
 Two guards keep the reference copy honest. It is in `.prettierignore`, so formatting cannot drift it off byte-identical. And `css/components.input.css` subtracts it with `@source not` — automatic source detection read the `rose-*` names in the danger tokens we replaced and emitted the entire rose palette into the standalone bundle. `tests/unit/source-detection-css.test.js` asserts it stays out.
 
