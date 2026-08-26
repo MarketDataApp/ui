@@ -18,6 +18,7 @@ import { resolve, dirname } from 'path';
 import { fileURLToPath } from 'url';
 import { chromium } from '@playwright/test';
 import { getPlatformUrl } from '../src/reviews.platform.js';
+import { announceChromium, resolveChromium } from './resolve-chromium.js';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const OUTPUT = resolve(__dirname, '..', 'src', 'reviews.data.js');
@@ -46,7 +47,11 @@ async function main() {
 
   let browser;
   try {
-    browser = await chromium.launch();
+    // Same machine-installed browser the e2e suite uses, for the same reason —
+    // and a real system Chromium reads less like a bot than a bundled one.
+    const executablePath = resolveChromium();
+    announceChromium(executablePath);
+    browser = await chromium.launch(executablePath ? { executablePath } : {});
     const page = await browser.newPage();
     await page.goto(TARGET_URL, { waitUntil: 'domcontentloaded', timeout: 30000 });
 

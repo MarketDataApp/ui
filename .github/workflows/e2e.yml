@@ -22,6 +22,9 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
+      # Safety net only. The suite prefers the browser already on the runner
+      # (see scripts/resolve-chromium.js) so Chromium updates never wait on this
+      # repo; this step covers a runner image that ships without one.
       - name: Install Playwright browsers
         run: npx playwright install --with-deps chromium
 

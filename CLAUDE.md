@@ -22,6 +22,7 @@ Shared Tailwind CSS theme and components for all MarketData properties (\*.marke
 - `scripts/unlayer.js` strips `@layer` wrappers post-build so our CSS wins specificity battles against unlayered foreign CSS
 - Built artifacts (`dist/`) must stay committed because consuming projects import them directly
 - Tests live in `tests/` — `tests/unit/` for vitest unit tests, `tests/e2e/` for Playwright e2e tests
+- E2E runs against the machine's own Chromium, not a build this repo pins. `scripts/resolve-chromium.js` resolves it (`CHROMIUM_PATH` override → system browser → Playwright's bundled build) and both `playwright.config.js` and `scripts/fetch-reviews.js` use it. Do not reintroduce a bare `browserName: 'chromium'` or a bare `chromium.launch()` — either one re-pins the browser to the installed `@playwright/test`. See README.md "Which browser the tests run".
 - Component classes should prefer Flowbite semantic tokens from `theme.css` (e.g. `bg-neutral-primary-medium`, `text-heading`, `border-gray`, `text-fg-danger`) — they handle dark mode automatically. Fall back to standard Tailwind utilities with `dark:` variants when no token exists. Do NOT use Flowbite tokens that aren't defined in `theme.css`.
 
 ## Nested Component Contrast Pattern

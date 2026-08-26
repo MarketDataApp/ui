@@ -1,5 +1,6 @@
 import { readFileSync } from 'node:fs';
 import { defineConfig } from '@playwright/test';
+import { announceChromium, resolveChromium } from './scripts/resolve-chromium.js';
 
 // Load .env file so AMEMBER_AUTOLOGIN_URL (and any future vars) are available
 // regardless of how Playwright is invoked (npm run test:e2e, npx playwright test, etc.)
@@ -11,6 +12,13 @@ try {
 } catch {
   // .env file is optional
 }
+
+// These specs measure real rendering — pixel dimensions, `:focus-visible`,
+// relative colour syntax — so they should see the browser our users actually
+// run, and should see it the day the OS updates it, with no commit here.
+// See scripts/resolve-chromium.js for how the browser is chosen and why.
+const CHROMIUM_PATH = resolveChromium();
+announceChromium(CHROMIUM_PATH);
 
 // Deliberately not 3000. That port is the default for so many dev servers that
 // something else usually holds it, and a static file server is indistinguishable
@@ -27,6 +35,8 @@ export default defineConfig({
     headless: true,
     screenshot: 'only-on-failure',
     trace: 'on-first-retry',
+    // Inherited by every project below, none of which sets launchOptions itself.
+    ...(CHROMIUM_PATH && { launchOptions: { executablePath: CHROMIUM_PATH } }),
   },
   projects: [
     {

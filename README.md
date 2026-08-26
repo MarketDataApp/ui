@@ -470,6 +470,17 @@ Buttons and button-like controls ring on `:focus-visible`, not `:focus`, so a mo
 
 After cloning, run `npm install`, then `npm run setup` once. `npm run setup` installs the local git hooks (husky → `pre-commit` formatting via lint-staged).
 
+### Which browser the tests run
+
+The e2e suite runs against **whatever Chromium the machine already has** — `/usr/bin/chromium` on Linux, `Chromium.app`/`Google Chrome.app` on macOS — not against a build this repo pins. `scripts/resolve-chromium.js` picks it, and both `playwright.config.js` and `npm run reviews:fetch` use that one resolver.
+
+This is deliberate. `browserName: 'chromium'` is an invisible version pin: it resolves to the single revision bundled with the installed `@playwright/test`, so the browser under test only moves when someone bumps a devDependency and re-runs `playwright install`. That would make this repo the gate on every Chromium update. The specs measure real rendering — pixel dimensions, `:focus-visible`, relative colour syntax — so they should see the browser our users run, the day their OS updates it, with no commit here.
+
+- Every run prints the binary it chose (`Chromium: /usr/bin/chromium (system)`). Read that line first when a pixel assertion fails.
+- Set `CHROMIUM_PATH=/path/to/binary` to force a specific browser.
+- With no system browser found, it falls back to Playwright's bundled build, so a fresh clone still works after `npx playwright install chromium`. CI keeps that install step as its safety net.
+- Trade-off: Playwright only guarantees the revision it bundles, so a system browser far ahead of it can drift on CDP behaviour. That is the price of not holding updates back, and it fails loudly rather than silently.
+
 This package ships a prebuilt `dist/` and deliberately has **no** `prepare`/`postinstall` lifecycle script. Consumers install it as a git dependency (`github:MarketDataApp/ui#vX.Y.Z`), and pnpm 10/11 refuse to install a git-hosted package that declares a `prepare` script unless it's allowlisted under `allowBuilds` — even when the script does no building. Keeping the manifest free of install-time lifecycle scripts is what lets `pnpm install` work on pnpm 9/10/11 with no allowlist. **Do not add a `prepare` script back** — set up dev-only tooling through `npm run setup` instead. See CHANGELOG 5.2.1 / issue #36.
 
 ## How to Add New Components
