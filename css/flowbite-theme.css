@@ -24,6 +24,15 @@
  *      and --font-mono. The kit ships no webfont, so pointing at Inter would
  *      resolve to whatever the consumer happens to have.
  *
+ *   3. The block below is `@theme static`, not `@theme`. Upstream lets Tailwind
+ *      tree-shake it, which emits only the tokens a generated utility happens
+ *      to reference. The `.dark` block at the foot of this file is a plain CSS
+ *      rule, so it is never shaken and always ships whole. That asymmetry left
+ *      49 tokens in dist/css/components.css declared for dark and undefined for
+ *      light — `var(--color-neutral-secondary-strong)` resolved in one theme and
+ *      dropped the whole declaration in the other, with no warning. `static`
+ *      emits every token in both themes. See issue #50.
+ *
  * Both were overrides in theme.css until we found the header above claiming
  * this file was verbatim when it had not been since 15c1ca6. A reader
  * refreshing it per those instructions would have silently reverted danger to
@@ -39,7 +48,9 @@
  * it upstream, so that patch is gone. It is not one of our changes.
  */
 
-@theme {
+/* CHANGED from upstream: `static`, so the light tokens survive tree-shaking and
+   stay symmetric with the unshakeable `.dark` block below. See header note 3. */
+@theme static {
   /* CHANGED from upstream: system fonts, not Inter. The kit ships no webfont,
      so naming Inter would resolve to whatever the consumer happens to have. */
   --font-sans:

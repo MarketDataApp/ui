@@ -18,7 +18,12 @@
 
 @import './flowbite-theme.css';
 
-@theme {
+/* `static`, so every MarketData token reaches dist/css/components.css whether
+   or not one of the kit's own component classes happens to reference it. A
+   plain `@theme` is tree-shaken, and a consumer reading a token this build
+   pruned gets a dropped declaration and no warning. See issue #50 and the
+   matching note in flowbite-theme.css. */
+@theme static {
   /* Fonts, the danger palette and the --leading-none fix are NOT here. They
      are applied directly in flowbite-theme.css, against a byte-identical copy
      of upstream in flowbite-theme.upstream.css. See that file's header. An
