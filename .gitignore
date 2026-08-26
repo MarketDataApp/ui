@@ -1,5 +1,6 @@
 node_modules/
 .playwright-mcp/
+.agentwatch/
 
 tests/e2e/.auth/
 tests/results/
@@ -7,6 +8,9 @@ playwright-report/
 .cursorrules
 .cursorignore
 .env
+
+# Per-developer direnv setup (pins gh to the account that owns this repo)
+.envrc
 
 # Intermediate build artifacts
 src/*.templates.js
