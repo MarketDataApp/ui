@@ -1,5 +1,20 @@
 # Changelog
 
+## 5.9.3
+
+No change to `dist/`. The build output is byte-identical to 5.9.2, so a consumer upgrading gets no new CSS or JS. This release is test infrastructure only.
+
+### Internal
+
+- **The e2e suite runs against whatever Chromium the machine already has, instead of the build Playwright pins to its own version.** `browserName: 'chromium'` is an invisible version pin: it resolves to the single revision bundled with the installed `@playwright/test`, so the browser under test only moved when someone bumped a devDependency and re-ran `playwright install`. That made this repo the gate on every Chromium update — the suite was testing 145.0.7632.6 while the development machine had 151.0.7922.169.
+  - **These specs measure real rendering** — pixel dimensions, the `:focus-visible` heuristic, relative colour syntax — so they should see the browser our users actually run, the day their OS updates it, with no commit here.
+  - **`scripts/resolve-chromium.js` resolves it once** for both callers: `CHROMIUM_PATH` when set, then the first system browser for the platform, then `undefined` so the caller falls back to Playwright's bundled build. A fresh clone with no system browser still works after `npx playwright install chromium`.
+  - **`scripts/fetch-reviews.js` uses the same binary.** It called a bare `chromium.launch()`, which is the same pin by another route — and a real system Chromium reads less like a bot than a bundled one, which matters for a scrape the platform's anti-bot can rate-limit.
+  - **Every run prints the binary it chose** (`Chromium: /usr/bin/chromium (system)`). The whole point is that the answer changes over time, so it is the first thing to read when a pixel assertion fails.
+  - **Trade-off, stated plainly:** Playwright guarantees only the revision it bundles, so a system browser far ahead of it can drift on CDP behaviour. That is the price of not holding updates back, and it fails loudly rather than silently. Verified by deleting `~/.cache/ms-playwright` entirely — 120 specs pass on system Chromium 151, six major versions ahead of the bundled build, and the fallback still resolves when no system browser is found.
+  - **CI keeps its `playwright install` step as a safety net**, for a runner image that ships without a browser. It no longer decides which browser the suite uses.
+- **`.agentwatch/` and `.envrc` are ignored.** Both are per-developer local files. `.agentwatch/` is a session monitor's scratch directory, in the same category as the already-ignored `.playwright-mcp/`; `.envrc` pins `gh` to the account owning this repo and holds no secret, but is a personal setup choice rather than something every clone should inherit.
+
 ## 5.9.2
 
 ### Fixed
