@@ -406,17 +406,10 @@ export async function initUserProfile(options) {
 
   function handleImgError(img) {
     const placeholder = createPlaceholderSvg();
-    // Copy over attributes for dropdown compatibility
+    // The id carries `aria-labelledby` on the menu, so it has to survive the
+    // swap. Nothing else does: this element's dropdown is re-attached by the
+    // caller against the placeholder itself, not looked up by attribute.
     if (img.id) placeholder.id = img.id;
-    if (img.getAttribute('data-dropdown-toggle')) {
-      placeholder.setAttribute('data-dropdown-toggle', img.getAttribute('data-dropdown-toggle'));
-    }
-    if (img.getAttribute('data-dropdown-placement')) {
-      placeholder.setAttribute(
-        'data-dropdown-placement',
-        img.getAttribute('data-dropdown-placement'),
-      );
-    }
     placeholder.setAttribute('role', 'img');
     placeholder.setAttribute('aria-label', img.alt || 'User avatar');
     img.replaceWith(placeholder);

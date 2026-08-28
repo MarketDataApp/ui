@@ -481,6 +481,31 @@ This is deliberate. `browserName: 'chromium'` is an invisible version pin: it re
 - With no system browser found, it falls back to Playwright's bundled build, so a fresh clone still works after `npx playwright install chromium`. CI keeps that install step as its safety net.
 - Trade-off: Playwright only guarantees the revision it bundles, so a system browser far ahead of it can drift on CDP behaviour. That is the price of not holding updates back, and it fails loudly rather than silently.
 
+### What the tests hear
+
+Every e2e spec calls `watchConsole(test)` from `tests/e2e/helpers/console.js`. A spec fails if the browser logs a console **error** or **warning**, or throws an **uncaught exception** (`pageerror`, which reaches no console listener at any level).
+
+Before this existed the suite watched nothing at all — `page.on` appeared nowhere in `tests/e2e/`. On its first full run the watch found that `scripts/build-site.js` never copied `dist/css`, so the deployed docs site had been loading no kit styles.
+
+To silence one known message, name it:
+
+```js
+watchConsole(test, { allow: ['favicon.ico'] });
+```
+
+- Entries are **substrings, not patterns**, matched against the message text _and_ its source URL. Chrome's commonest message is `Failed to load resource: the server responded with a status of 404` for every failed request alike, and only the URL says which one — matching on text alone would force one entry to silence every 404 in the suite.
+- **Filter by message, never by level.** A neighbouring property asserted on `type === "error"` and was structurally blind to the `aria-hidden` warning it had shipped. Silencing a severity hides things nobody chose to hide.
+- **A dead entry fails the run.** If an allowed message stops appearing, the check says so and the entry has to go. Without that, entries accumulate, nobody can tell which still matter, and the next person widens one instead of investigating it. Runs that saw only part of a file — a `--grep`, a retry worker, a run with failures — skip the check rather than guess.
+- **A green run prints what it suppressed, with counts.** A check that cannot distinguish "nothing was wrong" from "nothing was examined" is not yet a check.
+
+### Why the tests force the accessibility tree on
+
+`playwright.config.js` launches Chromium with `--force-renderer-accessibility`. Do not remove it.
+
+Chrome builds the accessibility tree lazily and skips it entirely in a default headless launch, so accessibility warnings are never **emitted** — not to `page.on('console')`, not to CDP `Log.entryAdded`. A person sees them because opening DevTools switches accessibility on; a headless run does not, and reports a clean console with complete confidence. Measured here: a page that focuses a link and then sets `aria-hidden` on its ancestor produced nothing by default, and produced `Blocked aria-hidden on an element because its descendant retained focus` immediately with the flag.
+
+Dropping the flag breaks nothing visibly — it just makes the console watch stop examining a whole category of defect. `tests/e2e/console-watch.spec.js` exists to make that loud: it drives `fixtures/a11y-probe.html` into a state Chrome must complain about and fails if the complaint does not arrive.
+
 This package ships a prebuilt `dist/` and deliberately has **no** `prepare`/`postinstall` lifecycle script. Consumers install it as a git dependency (`github:MarketDataApp/ui#vX.Y.Z`), and pnpm 10/11 refuse to install a git-hosted package that declares a `prepare` script unless it's allowlisted under `allowBuilds` — even when the script does no building. Keeping the manifest free of install-time lifecycle scripts is what lets `pnpm install` work on pnpm 9/10/11 with no allowlist. **Do not add a `prepare` script back** — set up dev-only tooling through `npm run setup` instead. See CHANGELOG 5.2.1 / issue #36.
 
 ## How to Add New Components

@@ -10,6 +10,9 @@
  * no deployed site, unlike user-profile.spec.js.
  */
 import { test, expect } from '@playwright/test';
+import { watchConsole } from './helpers/console.js';
+
+watchConsole(test);
 
 const FIXTURE = '/tests/e2e/fixtures/user-profile-compact.html';
 

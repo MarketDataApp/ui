@@ -1,0 +1,31 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>accessibility-tree probe</title>
+    <link rel="icon" href="data:," />
+  </head>
+  <body>
+    <!--
+      Deliberately provokes one specific accessibility warning, so a test can
+      assert the browser is still able to produce it.
+
+      This is the exact shape that reached us from a sibling property: a link
+      holds focus, and its ancestor is then hidden from assistive technology.
+      Chrome refuses the attribute and says so at *warning* level:
+
+        Blocked aria-hidden on an element because its descendant retained focus.
+
+      Nothing here is a component. This page is a tuning fork for the harness,
+      not a fixture for the kit, and it must keep failing this way on purpose.
+    -->
+    <div id="panel">
+      <a id="link" href="#">focus lives here</a>
+    </div>
+    <script>
+      document.getElementById('link').focus();
+      document.getElementById('panel').setAttribute('aria-hidden', 'true');
+      document.body.dataset.ready = 'true';
+    </script>
+  </body>
+</html>

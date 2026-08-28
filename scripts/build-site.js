@@ -84,7 +84,23 @@ for (const file of readdirSync(DOCS)) {
   }
 }
 
-// 3. Copy and cache-bust ALL dist JS files (no hardcoded list)
+// 3. Copy the built CSS.
+//
+// This step was missing, and nothing noticed: every docs page links
+// `../dist/css/components.css`, which resolved to a 404 on the deployed site,
+// so https://dev.marketdata.app/ui/docs/ rendered with no kit styles at all.
+// The e2e suite drove those pages and passed throughout, because it asserted on
+// layout JS and never on what the browser reported. The console watch added in
+// tests/e2e/helpers/console.js found it on its first full run.
+//
+// No cache-bust pass here: these are built leaves that import nothing. The
+// query string the HTML appends to its own link is what busts them.
+cpSync(resolve(DIST, 'css'), resolve(SITE, 'dist', 'css'), { recursive: true });
+for (const file of readdirSync(resolve(DIST, 'css'))) {
+  console.log(`  _site/dist/css/${file}`);
+}
+
+// 4. Copy and cache-bust ALL dist JS files (no hardcoded list)
 for (const file of readdirSync(DIST)) {
   if (!file.endsWith('.js')) continue;
   const content = readFileSync(resolve(DIST, file), 'utf8');
@@ -92,7 +108,7 @@ for (const file of readdirSync(DIST)) {
   console.log(`  _site/dist/${file}`);
 }
 
-// 4. Redirect index
+// 5. Redirect index
 writeFileSync(resolve(SITE, 'index.html'), '<meta http-equiv="refresh" content="0;url=docs/">\n');
 console.log('  _site/index.html (redirect)');
 

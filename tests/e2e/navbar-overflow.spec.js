@@ -1,4 +1,16 @@
 import { test, expect } from '@playwright/test';
+import { watchConsole } from './helpers/console.js';
+
+// The only spec that drives the deployed site rather than a local fixture, so
+// it sees whatever is live rather than whatever is in the tree.
+//
+// This entry is expected to die. The docs pages now declare an empty icon, so
+// the favicon request stops at the next deploy and the stale-entry check will
+// fail and tell you to delete this line. That is the intended lifecycle, not an
+// oversight. The CSS 404 on the same page is a real defect and is NOT silenced:
+// build-site.js never copied dist/css, so the deployed docs load no kit styles.
+// These four tests stay red until main deploys that fix.
+watchConsole(test, { allow: ['favicon.ico'] });
 
 const PAGE_URL = 'https://dev.marketdata.app/ui/docs/navbar-overflow.html';
 

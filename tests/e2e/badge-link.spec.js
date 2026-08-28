@@ -18,7 +18,10 @@
  * helpers/color.js for why the probe is shaped the way it is.
  */
 import { test, expect } from '@playwright/test';
+import { watchConsole } from './helpers/console.js';
 import { readStyles, ringShadow, contrast, differs } from './helpers/color.js';
+
+watchConsole(test);
 
 const FIXTURE = '/tests/e2e/fixtures/badge-link.html';
 
