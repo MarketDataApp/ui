@@ -1,4 +1,7 @@
 import { test, expect } from '@playwright/test';
+import { watchConsole } from './helpers/console.js';
+
+watchConsole(test);
 
 const PAGE = '/docs/index.html';
 

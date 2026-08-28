@@ -17,7 +17,10 @@
  * no deployed site.
  */
 import { test, expect } from '@playwright/test';
+import { watchConsole } from './helpers/console.js';
 import { readStyles, ringShadow, contrast } from './helpers/color.js';
+
+watchConsole(test);
 
 const FIXTURE = '/tests/e2e/fixtures/focus-ring.html';
 

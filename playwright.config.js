@@ -36,7 +36,25 @@ export default defineConfig({
     screenshot: 'only-on-failure',
     trace: 'on-first-retry',
     // Inherited by every project below, none of which sets launchOptions itself.
-    ...(CHROMIUM_PATH && { launchOptions: { executablePath: CHROMIUM_PATH } }),
+    launchOptions: {
+      ...(CHROMIUM_PATH && { executablePath: CHROMIUM_PATH }),
+      // Chrome builds the accessibility tree lazily, and skips it entirely in a
+      // default headless launch. Accessibility warnings are then never *emitted*
+      // — not to `page.on('console')`, not to CDP `Log.entryAdded`. A human sees
+      // them because opening DevTools switches accessibility on; a headless run
+      // does not, and reports a clean console with total confidence.
+      //
+      // Measured here before adopting: a page that focuses a link and then sets
+      // `aria-hidden` on its ancestor captured NOTHING by default, and produced
+      // "Blocked aria-hidden on an element because its descendant retained
+      // focus" immediately with this flag.
+      //
+      // So this flag is what makes tests/e2e/helpers/console.js able to see a
+      // whole category of defect. Removing it does not fail anything visibly —
+      // it just makes the console watch quietly stop examining. console-watch
+      // .spec.js exists to make that removal loud.
+      args: ['--force-renderer-accessibility'],
+    },
   },
   projects: [
     {
@@ -52,6 +70,13 @@ export default defineConfig({
         browserName: 'chromium',
         storageState: 'tests/e2e/.auth/user.json',
       },
+    },
+    {
+      // The harness testing itself. Must run wherever the others run, because
+      // what it guards is a launch option they all inherit.
+      name: 'console-watch',
+      testMatch: ['console-watch.spec.js'],
+      use: { browserName: 'chromium', baseURL: LOCAL_SERVER },
     },
     {
       name: 'navbar-overflow',
