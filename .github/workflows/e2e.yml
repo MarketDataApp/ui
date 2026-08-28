@@ -28,6 +28,15 @@ jobs:
       - name: Install Playwright browsers
         run: npx playwright install --with-deps chromium
 
+      # docs/docs.css is a build output and is gitignored, so a fresh checkout
+      # does not have it. Without this step the local server 404s it and every
+      # spec that loads a docs page renders unstyled — which CI did for as long
+      # as these tests have existed, passing throughout, because nothing watched
+      # what the browser reported. dist/ is committed, but rebuilding it here
+      # also proves the committed output still matches its source.
+      - name: Build
+        run: npm run build
+
       - name: Run e2e tests
         env:
           AMEMBER_AUTOLOGIN_URL: ${{ secrets.AMEMBER_AUTOLOGIN_URL }}
