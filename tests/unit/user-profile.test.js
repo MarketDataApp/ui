@@ -341,11 +341,46 @@ describe('initUserProfile — logged in, with dropdown', () => {
 
     const img = container.querySelector('#avatarButton');
     expect(img).not.toBeNull();
-    expect(img.getAttribute('data-dropdown-toggle')).toBe('userDropdown');
 
     const menu = container.querySelector('#userDropdown');
     expect(menu).not.toBeNull();
     expect(menu.classList.contains('hidden')).toBe(true);
+  });
+
+  /**
+   * This markup used to carry `data-dropdown-toggle` and
+   * `data-dropdown-placement`. Our own setupDropdown has driven this menu for
+   * a long time, so they did nothing here — but they are Flowbite's data API,
+   * and a consumer that loads Flowbite's JS globally auto-initialises anything
+   * carrying them. That gave the panel two controllers, and Flowbite's half
+   * positions with Popper and toggles `aria-hidden`, which is the pairing that
+   * makes a browser refuse the attribute outright when focus is still inside.
+   *
+   * The attributes are only inert while nobody loads Flowbite. Keep them gone.
+   */
+  it('carries no Flowbite data-API attributes for a global Flowbite to claim', async () => {
+    const container = document.createElement('div');
+    document.body.appendChild(container);
+
+    await initUserProfile({ container, dropdown: true });
+
+    const img = container.querySelector('#avatarButton');
+    expect(img.hasAttribute('data-dropdown-toggle')).toBe(false);
+    expect(img.hasAttribute('data-dropdown-placement')).toBe(false);
+  });
+
+  // Same reasoning, on the path that builds a fresh element: the placeholder
+  // must not reintroduce what the template no longer carries.
+  it('does not put Flowbite data-API attributes on the error placeholder', async () => {
+    const container = document.createElement('div');
+    document.body.appendChild(container);
+
+    await initUserProfile({ container, dropdown: true });
+    container.querySelector('#avatarButton').dispatchEvent(new Event('error'));
+
+    const placeholder = container.querySelector('div[role="img"]');
+    expect(placeholder.hasAttribute('data-dropdown-toggle')).toBe(false);
+    expect(placeholder.hasAttribute('data-dropdown-placement')).toBe(false);
   });
 
   it('shows user name and email in dropdown header', async () => {
