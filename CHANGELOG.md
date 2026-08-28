@@ -1,5 +1,33 @@
 # Changelog
 
+## 5.9.4
+
+`dist/` changes: the avatar dropdown template loses two attributes. Everything else is test infrastructure and the deploy script.
+
+### Fixed
+
+- **The deployed docs site had been serving every demo page with none of the kit's styles.** `scripts/build-site.js` copied every `.js` out of `dist/` and no CSS at all, so `../dist/css/components.css` — linked by all seven docs pages — resolved to a 404 on `https://dev.marketdata.app/ui/docs/`. The site exists to demonstrate the components and was demonstrating unstyled markup.
+  - **Four e2e specs drive one of those pages on every deploy and passed throughout.** They assert on the navbar overflow JS and never on what the browser reported, so a missing stylesheet was outside what they examined. The tests were not wrong about their subject; the broken thing was never in view. This is the same shape as the console gap fixed below, at the scale of a whole site.
+  - Found by the console watch on its first full run, then confirmed with `curl` against the deployed URL rather than from the test alone.
+  - Those four specs stay red until main deploys this. That is accurate rather than tidy — the site is broken until the deploy lands, and allowlisting a production defect green is the move the watch exists to prevent.
+- **The avatar dropdown no longer carries `data-dropdown-toggle` and `data-dropdown-placement`.** Our own `setupDropdown` has driven that menu since it was written, so the attributes did nothing here — but they are Flowbite's data API, and a consumer that loads Flowbite's JS globally auto-initialises anything carrying them.
+  - **The failure mode is two controllers on one panel.** Flowbite's half positions with Popper and sets `aria-hidden` on hide without moving focus, which is what makes Chrome refuse the attribute and log `Blocked aria-hidden on an element because its descendant retained focus`. Reported from a sibling property, where the same pairing is live on a mega-menu.
+  - **Latent here, not live:** it needs a logged-in avatar rendered on a page that loads Flowbite globally. Removed anyway, along with the copy of both attributes that `handleImgError` put on the SVG placeholder. The `id` stays — the menu's `aria-labelledby` points at it.
+  - Guarded on both paths, since the template and the placeholder reintroduce it independently. Each guard was verified by putting the defect back.
+- **Docs pages and e2e fixtures declare an empty icon**, so a page load stops requesting `/favicon.ico` and logging a 404 for it. `href="data:,"` states what was already true; choosing a real icon is a brand decision, not a fix.
+- **`npm run test:e2e` runs.** It used `set -a && source .env`, and npm runs scripts under `sh`, which has no `source` — the documented way to run the suite failed with `sh: 1: source: not found`. `playwright.config.js` already reads `.env` itself, specifically so invocation style does not matter.
+
+### Internal
+
+- **Every e2e spec now fails on what the browser says, not only on what it draws.** The suite watched nothing at all: `page.on` appeared nowhere in `tests/e2e/`. `watchConsole(test)` in `tests/e2e/helpers/console.js` fails a spec on a console **error**, a console **warning**, or an uncaught exception via **`pageerror`** — the third being a category that reaches no console listener at any level, so a page whose JavaScript died outright would pass a check watching every level there is.
+  - **Allowances are substrings matched against the message text _and_ its source URL.** Chrome reports every failed request as `Failed to load resource: the server responded with a status of 404`, and only the URL distinguishes them, so a text-only match forces one entry to silence every 404 in the suite.
+  - **Never filter by level.** The sibling property that reported the `aria-hidden` bug asserted on `type === "error"` and was structurally blind to it. Filtering by level silences a severity nobody chose to hide; allowlisting by message silences one message.
+  - **An allowance that matches nothing fails the run**, so entries cannot accumulate past their usefulness and get widened instead of investigated. Runs that saw only part of a file — a `--grep`, a retry worker, a run with failures — skip the check rather than guess. It earned this immediately, correctly killing an entry added on a wrong assumption about which fixtures request a favicon.
+  - **A green run prints what it suppressed, with counts.** A check that cannot distinguish "nothing was wrong" from "nothing was examined" is not yet a check.
+- **Chromium launches with `--force-renderer-accessibility`, and a spec fails if it is removed.** Chrome builds the accessibility tree lazily and skips it entirely in a default headless launch, so accessibility warnings are never _emitted_ — not to `page.on('console')`, not to CDP `Log.entryAdded`. A person sees them because opening DevTools switches accessibility on; a headless run does not, and reports a clean console with complete confidence. Measured before adopting: a page that focuses a link and then sets `aria-hidden` on its ancestor captured nothing by default and produced the warning immediately with the flag.
+  - **Widening the console filter would not have caught this on its own.** The severity was one blind spot; the browser declining to produce the message at all is a worse one, and it hides behind a passing run just as well.
+  - **`tests/e2e/console-watch.spec.js` is the guard on the guard.** Removing the flag breaks nothing visibly — it only makes the watch stop examining — so the spec drives `fixtures/a11y-probe.html` into a state Chrome must complain about and fails if the complaint does not arrive, naming the flag in its failure message. Verified by removing the flag.
+
 ## 5.9.3
 
 No change to `dist/`. The build output is byte-identical to 5.9.2, so a consumer upgrading gets no new CSS or JS. This release is test infrastructure only.
