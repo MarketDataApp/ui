@@ -7,6 +7,17 @@
  * Requires: auth.setup.js to run first (storageState with session cookies).
  */
 import { test, expect } from '@playwright/test';
+import { watchConsole } from './helpers/console.js';
+
+// The Gravatar 404 is deliberate, not a fault. The component requests the avatar
+// with `d=404` precisely so a user without a Gravatar produces an error it can
+// catch, and handleImgError swaps in the SVG placeholder. Silencing it is
+// silencing a designed signal.
+//
+// Allowed by host prefix rather than by the full URL: the path carries a hash of
+// the account's email, so a URL-exact entry would go stale the moment the test
+// account changes and would say the wrong thing about why.
+watchConsole(test, { allow: ['https://www.gravatar.com/avatar/'] });
 
 const BASE_URL = 'https://dev.marketdata.app/ui/docs/user-state.html';
 
