@@ -82,7 +82,7 @@
     "format:check": "prettier --check .",
     "setup": "husky",
     "test": "vitest run",
-    "test:e2e": "set -a && source .env && set +a && npx playwright test"
+    "test:e2e": "playwright test"
   },
   "lint-staged": {
     "*": "prettier --write --ignore-unknown"
