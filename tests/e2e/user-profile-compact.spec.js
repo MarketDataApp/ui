@@ -57,13 +57,39 @@ test.describe('compact login pill', () => {
   test('shows no visible label or chevron', async ({ page }) => {
     const container = page.locator('#pill-compact');
 
-    // The label keeps a 1x1 clipped box, so it is present but unreadable.
+    // The label is present but unreadable: it fills the pill's box and
+    // clip-path removes every painted pixel of it. The box is the pill's on
+    // purpose — see the CSS note — so the check is on the clip and on the box
+    // staying inside the pill, not on the box being tiny.
     const label = container.locator('.user-profile-login-label');
     await expect(label).toHaveCount(1);
+    const clip = await label.evaluate((el) => getComputedStyle(el).clipPath);
+    expect(clip).toBe('inset(50%)');
     const labelBox = await label.boundingBox();
-    expect(labelBox.width).toBeLessThanOrEqual(1);
+    const pillBox = await container.locator('.user-profile-login-pill').boundingBox();
+    expect(labelBox.x).toBeGreaterThanOrEqual(pillBox.x - 0.5);
+    expect(labelBox.x + labelBox.width).toBeLessThanOrEqual(pillBox.x + pillBox.width + 0.5);
 
     await expect(container.locator('.user-profile-login-chevron')).toBeHidden();
+  });
+
+  test('adds no scrollable width to its container, so the overflow pass cannot mistake it for compression', async ({
+    page,
+  }) => {
+    // initNavbarOverflow hides an item whose scrollWidth exceeds its
+    // offsetWidth by more than 1px. The hidden label used to run 20px past
+    // the pill and trip that check at 390px with room to spare.
+    const widths = await page.evaluate(() => {
+      const container = document.getElementById('pill-compact');
+      const label = container.querySelector('.user-profile-login-label');
+      return {
+        container: [container.scrollWidth, container.offsetWidth],
+        label: [label.scrollHeight, label.clientHeight],
+      };
+    });
+    expect(widths.container[0]).toBeLessThanOrEqual(widths.container[1] + 1);
+    // And the label itself is not "clipped text" to an audit: nothing scrolls.
+    expect(widths.label[0]).toBe(widths.label[1]);
   });
 
   test('still announces itself as "Log in"', async ({ page }) => {

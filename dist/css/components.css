@@ -5272,9 +5272,9 @@ label[error][focused] :where(.text-heading, .radio-button-helper) {
 }
 .user-profile-compact .user-profile-wrapper .user-profile-login-label {
   position: absolute;
-  height: 1px;
-  width: 1px;
+  inset: calc(var(--spacing) * 0);
   white-space: nowrap;
+  overflow: clip;
   clip-path: inset(50%);
 }
 .user-profile-compact .user-profile-wrapper .user-profile-login-chevron {

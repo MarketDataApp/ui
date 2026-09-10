@@ -184,6 +184,33 @@ test.describe('site header at phone width', () => {
     await expect(page.locator('#navbar-main [aria-current="page"]')).toHaveText('Pricing');
   });
 
+  test('the drawer’s theme toggle agrees with the bar’s after a switch made at desktop width', async ({
+    page,
+  }) => {
+    // The Tools session's repro: switch at desktop, shrink, open the drawer,
+    // and the drawer's toggle must not still offer the mode the page is in.
+    await page.emulateMedia({ colorScheme: 'light' });
+    await page.setViewportSize(DESKTOP);
+    await page.reload({ waitUntil: 'domcontentloaded' });
+    await page.locator('.site-header[data-header-ready]').waitFor({ state: 'attached' });
+    await page.waitForTimeout(REFLOW);
+
+    const bar = page.locator('#theme-toggle button');
+    const drawer = page.locator('#theme-toggle-drawer button');
+    await expect(bar).toHaveAttribute('aria-label', 'Switch to dark mode');
+    await bar.click();
+    await expect(page.locator('html')).toHaveAttribute('data-theme', 'dark');
+    await expect(bar).toHaveAttribute('aria-label', 'Switch to light mode');
+
+    await page.setViewportSize(PHONE);
+    await expect.poll(() => linksDropped(page)).toBe(true);
+    await page.locator('#navbar-toggle').click();
+    await expect(drawer).toBeVisible();
+    await expect(drawer).toHaveAttribute('aria-label', 'Switch to light mode');
+    await expect(drawer.locator('.theme-toggle-icon-dark')).toBeVisible();
+    await expect(drawer.locator('.theme-toggle-icon-light')).toBeHidden();
+  });
+
   test('widening the viewport while the drawer is open closes it and releases the page', async ({
     page,
   }) => {

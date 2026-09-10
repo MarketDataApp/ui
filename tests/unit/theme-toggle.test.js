@@ -241,6 +241,60 @@ describe('initThemeToggle', () => {
   // -------------------------------------------------------------------------
   // System mode tracking
   // -------------------------------------------------------------------------
+  describe('several toggles on one page', () => {
+    // The site header renders two: one in the bar, one in the drawer. Only
+    // one is on screen at a time, so a stale one is exactly the one the
+    // visitor sees next.
+    const flush = () => new Promise((r) => setTimeout(r, 0));
+
+    it('a click on one updates the icon and label of the other', async () => {
+      const a = document.createElement('div');
+      const b = document.createElement('div');
+      document.body.append(a, b);
+      const ta = initThemeToggle({ container: a });
+      const tb = initThemeToggle({ container: b });
+
+      expect(b.querySelector('button').getAttribute('aria-label')).toBe('Switch to dark mode');
+      a.querySelector('button').click();
+      await flush();
+
+      expect(document.documentElement.classList.contains('dark')).toBe(true);
+      expect(b.querySelector('button').getAttribute('aria-label')).toBe('Switch to light mode');
+      expect(b.querySelector('.theme-toggle-icon-dark').style.display).toBe('block');
+      expect(b.querySelector('.theme-toggle-icon-light').style.display).toBe('none');
+
+      ta.cleanup();
+      tb.cleanup();
+    });
+
+    it('follows a theme change made by something other than a toggle', async () => {
+      const container = document.createElement('div');
+      document.body.appendChild(container);
+      const toggle = initThemeToggle({ container });
+
+      // As a consumer's own switch would: class and data-theme together.
+      setDarkMode();
+      await flush();
+
+      expect(container.querySelector('button').getAttribute('aria-label')).toBe(
+        'Switch to light mode',
+      );
+      toggle.cleanup();
+    });
+
+    it('stops following after cleanup', async () => {
+      const container = document.createElement('div');
+      document.body.appendChild(container);
+      const toggle = initThemeToggle({ container });
+      const button = container.querySelector('button');
+      toggle.cleanup();
+
+      setDarkMode();
+      await flush();
+      expect(button.getAttribute('aria-label')).toBe('Switch to dark mode');
+    });
+  });
+
   describe('system mode tracking', () => {
     it('applies dark theme on OS change when in system mode (no cookie)', () => {
       setLightMode();

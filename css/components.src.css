@@ -1995,13 +1995,25 @@ label[error][focused] :where(.text-heading, .radio-button-helper) {
   Visually hidden, but still the button's accessible name — screen readers
   announce "Log in" with no visible label to read.
 
-  This deliberately avoids the usual sr-only recipe: `overflow: hidden` on a
-  1x1 box makes scrollHeight exceed clientHeight, which automated mobile audits
-  flag as clipped text. `clip-path: inset(50%)` hides the same content and
-  leaves overflow visible, so the probes stay quiet.
+  The label fills the pill's box (`inset: 0` against the relative wrapper)
+  rather than sitting in a 1x1 box, for two measured reasons:
+
+  - A 1x1 box with `white-space: nowrap` let the text run ~40px past its own
+    edge, and that overflow counted toward the CONTAINER's scrollable width:
+    #user-profile measured scrollWidth 64 against offsetWidth 44, so
+    initNavbarOverflow read the pill as compressed and hid it at 390px with
+    room to spare. Reported from the Tools property. Inside a 44px box the
+    text has nowhere to overflow to, and the container measures 44/44.
+  - A 1x1 box also had scrollHeight 20 against clientHeight 1 — the exact
+    "clipped text" signal an earlier note here hoped `clip-path` would avoid.
+    It did not; only the box size does. At 44x44 the two agree.
+
+  `overflow: clip` (not `hidden`: no scroll container) is the guard for a font
+  that renders the label wider than the pill; `clip-path` keeps it invisible.
 */
 .user-profile-compact .user-profile-wrapper .user-profile-login-label {
-  @apply absolute w-px h-px whitespace-nowrap;
+  @apply absolute inset-0 whitespace-nowrap;
+  overflow: clip;
   clip-path: inset(50%);
 }
 
