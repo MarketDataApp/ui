@@ -9,7 +9,13 @@
  * SVG icons from Docusaurus (MIT license, Facebook Inc.)
  */
 
-import { getEffectiveTheme, setThemeCookie, clearThemeCookie, isSystemMode } from './theme.js';
+import {
+  getEffectiveTheme,
+  setThemeCookie,
+  clearThemeCookie,
+  isSystemMode,
+  onThemeChange,
+} from './theme.js';
 import { button as buttonTpl } from './theme-toggle.templates.js';
 
 // ---------------------------------------------------------------------------
@@ -90,6 +96,16 @@ export function initThemeToggle(options) {
   updateState();
   container.appendChild(wrapper);
 
+  // Follow the theme on <html>, whoever changes it. A page can carry more
+  // than one toggle — the site header renders one in its bar and one in its
+  // drawer — and a click updates only the button it landed on. Without this,
+  // the other instance keeps its old icon and its old label, so a screen
+  // reader hears "Switch to dark mode" on a page that is already dark.
+  // onThemeChange shares one MutationObserver across every subscriber, so
+  // this also covers a consumer's own switch and an OS change applied by
+  // another instance.
+  const unsubscribe = onThemeChange(updateState);
+
   // Listen for system preference changes — apply theme when in system mode
   let mql = null;
   function onSystemChange(e) {
@@ -105,6 +121,7 @@ export function initThemeToggle(options) {
 
   function cleanup() {
     button.removeEventListener('click', toggle);
+    unsubscribe();
     if (mql) mql.removeEventListener('change', onSystemChange);
     if (wrapper.parentNode) wrapper.parentNode.removeChild(wrapper);
   }

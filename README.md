@@ -27,6 +27,9 @@ npm install @marketdataapp/ui@github:MarketDataApp/ui
 | `./user-profile`            | `dist/user-profile.js`             | Gravatar avatar with optional dropdown menu. Zero dependencies.                                                                                                                                                                              |
 | `./user-state`              | `dist/user-state.js`               | Declarative show/hide for elements based on user auth and subscription state.                                                                                                                                                                |
 | `./copy-button`             | `dist/copy-button.js`              | Auto-init copy-to-clipboard input + button. `initCopyButton({ root })` scans the DOM for `[data-copy-input-group]` wrappers and wires each one. Returns a cleanup fn.                                                                        |
+| `./header`                  | `dist/header.js`                   | The marketdata.app site header as a server-rendered string: `renderHeader()`, `defaultNavigation`, `dataCatalog`. No DOM access; runs in Astro frontmatter, SSR and Node. See "Site Header".                                                 |
+| `./header-client`           | `dist/header-client.js`            | Client behaviour for that header: `initHeader()` wires overflow, drawer, mega menus, theme toggles and the account control. Returns a cleanup fn.                                                                                            |
+| `./assets/*`                | `assets/brand/…`                   | Brand assets: `logo-on-light.png`, `logo-on-dark.png` (4167×807 originals) and 320px webp derivatives of each.                                                                                                                               |
 
 ## CSS Architecture
 
@@ -370,6 +373,144 @@ Behavior that does not change:
 The full pill never wraps at any width. It carries `whitespace-nowrap` and
 `shrink-0`, so a crowded navbar row cannot compress it into two lines. Both
 variants hold a 44px minimum height for the WCAG 2.5.8 target.
+
+### Site Header
+
+One header for every property, rendered from one file. `renderHeader()` returns the header as an HTML string on the server; `initHeader()` wires it on the client. The markup is the website's header — fixed 60px bar, mega menus, full-height drawer, two theme toggles, the account control, the skip link — one class per role, every rule a plain `.site-header-*` selector in `components.src.css`. No Tailwind utility appears in the markup, so it renders the same from `dist/css/components.css` and from a consumer's own Tailwind build that never scans this package. No `@source` line is needed.
+
+#### Astro (both marketdata.app sites)
+
+```astro
+---
+import { renderHeader } from '@marketdataapp/ui/header';
+import { getImage } from 'astro:assets';
+import logoLight from '@marketdataapp/ui/assets/brand/logo-on-light.png';
+import logoDark from '@marketdataapp/ui/assets/brand/logo-on-dark.png';
+
+const [light, dark] = await Promise.all(
+  [logoLight, logoDark].map((src) =>
+    getImage({ src, widths: [160, 320], sizes: '160px', format: 'webp' }),
+  ),
+);
+
+const html = renderHeader({
+  currentPath: Astro.url.pathname,
+  logo: {
+    light: { src: light.src, srcset: light.srcSet.attribute, sizes: '160px' },
+    dark: { src: dark.src, srcset: dark.srcSet.attribute, sizes: '160px' },
+  },
+});
+---
+
+<Fragment set:html={html} />
+<script>
+  import { initHeader } from '@marketdataapp/ui/header-client';
+  initHeader();
+</script>
+```
+
+The string is the initial HTML: nothing about the header waits for JavaScript except the account control's pill and the toggle buttons, which the two modules render into their reserved containers as today. Astro's Vite config may need `@marketdataapp/ui/header-client` in `optimizeDeps.include`, next to the other kit entries.
+
+`renderHeader(options)`:
+
+| option                    | default                        | what it does                                                                                                                                                 |
+| ------------------------- | ------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `logo`                    | **required** (or `slots.logo`) | `{ light, dark, alt?, width?, height? }`. Each source is a URL string or `{ src, srcset?, sizes? }`. Both ship in the HTML; CSS shows the one for the theme. |
+| `currentPath`             | —                              | The page's pathname. The matching drawer row gets `aria-current="page"`. Compared without trailing slashes; `#` and off-site hrefs never match.              |
+| `navigation`              | `defaultNavigation`            | `NavItem[]` — see the types in `dist/header.d.ts`. A dropdown's `layout: 'cards'` is the two-column Products grid with descriptions.                         |
+| `homeHref`                | `'/'`                          | Where the logo links.                                                                                                                                        |
+| `skipLinkHref`            | `'#main-content'`              | The skip link target. Must match the id on your `<main>`.                                                                                                    |
+| `loginUrl`, `loginText`   | dashboard login, `'Log In'`    | The drawer's fallback link, shown when the row cannot hold the account control.                                                                              |
+| `signupUrl`, `signupText` | `'/signup/'`, `'Try For Free'` | Its neighbour.                                                                                                                                               |
+| `fixed`                   | `true`                         | `true`: fixed 60px bar plus a 60px spacer. `false`: an in-flow bar and no spacer.                                                                            |
+| `slots`                   | `{}`                           | `logo`, `auth`, `drawerStart`, `drawerEnd` — HTML strings emitted verbatim. Astro: `await Astro.slots.render('name')`.                                       |
+
+`initHeader(options)` returns a cleanup and is idempotent per header — a second call returns the first cleanup and binds nothing twice. It sets `data-header-ready` on the `<header>` once every binding is in place, which is the signal to wait on in a browser check.
+
+| option        | default              | what it does                                                                                                                                                                                                                                                 |
+| ------------- | -------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `root`        | first `.site-header` | The header to wire.                                                                                                                                                                                                                                          |
+| `userProfile` | `{}`                 | Options forwarded to `initUserProfile` for `#user-profile`, on top of `dropdown: true`, `signupUrl: '/signup/'`, `signupText: 'Try For Free'`. **`false`**: the application owns the control; the header never renders into it, clears it, or tears it down. |
+| `themeToggle` | `true`               | Initialise every `.theme-toggle-container` in the header (the bar's and the drawer's). A container that already holds a toggle is skipped.                                                                                                                   |
+| `inert`       | `'main, footer'`     | The page regions made `inert` while the drawer is open. Regions inside the header, and regions already inert, are left alone; only what was set is unset.                                                                                                    |
+| `hoverDelay`  | `100`                | Milliseconds before a hovered mega menu opens, and before it closes after the pointer leaves.                                                                                                                                                                |
+
+What `initHeader` owns, ported from the website's header:
+
+- **Overflow.** `initNavbarOverflow` on `#navbar-row`, priorities: 1 nav links, 2 `#user-profile`, 3 `#theme-toggle`. The CSS seeds the first paint — below 890px the links start hidden and the hamburger shown; above, the reverse — and the measurement overrides the seed. Re-measure 890px if the default navigation changes.
+- **Drawer.** Off-screen plus `inert` when closed. Opening locks body scroll, makes the page regions inert, moves focus to the close button; closing restores exactly what it changed and returns focus to the hamburger. Escape, the backdrop, the close button and any link inside all close it. When the links come back into the row, the drawer closes itself.
+- **Mega menus, without Flowbite.** On a hover-capable device with a fine pointer, hover opens (after `hoverDelay`) and hovering away closes; a pointer click does nothing, so a visitor cannot lose the menu by clicking the word they are reading. A tap (touch `pointerType`, or a device that fails the media query) and a keyboard activation toggle. Escape closes, and returns focus to the trigger only when focus was inside the panel. Focus leaving the item, or a click elsewhere, closes it. `aria-expanded` and `aria-controls` are always truthful. The panel is centred under its trigger and clamped to the row's own gutter on both edges.
+- **No Flowbite data-API attribute anywhere.** A page that loads Flowbite globally cannot bind a second controller to these panels. `tests/unit/header.test.js` guards it.
+
+#### Data catalogue
+
+`dataCatalog` is the one list behind the Data menu: `{ key, title, icon, href?, comingSoon }` for each data type, in display order. A site that draws data-type cards should build them from this catalogue and keep only what the catalogue does not carry — the card copy — in a local map keyed by `key`:
+
+```ts
+import { dataCatalog } from '@marketdataapp/ui/header';
+import { descriptions } from './data-type-copy'; // { stocks: '…', options: '…', … }
+
+const cards = dataCatalog.map((d) => ({ ...d, description: descriptions[d.key] }));
+```
+
+Then a type that goes live, or a renamed title, changes in one place and the cards and the menu agree by construction.
+
+#### An application with its own account control
+
+An application that must keep its own login behaviour — a return URL that preserves in-page state, its own refresh triggers, its own events — renders its container through the `auth` slot and takes over `#user-profile`:
+
+```astro
+---
+const login = new URL('https://dashboard.marketdata.app/marketdata/login');
+login.searchParams.set('amember_redirect_url', Astro.url.href);
+
+const html = renderHeader({
+  skipLinkHref: '#main',
+  loginUrl: login.href,
+  logo,
+  slots: {
+    auth: `<div id="user-profile" class="user-profile-container">
+             <a href="${login.href}" class="user-profile-login-pill">Log in</a>
+           </div>`,
+  },
+});
+---
+
+<Fragment set:html={html} />
+<script>
+  import { initHeader } from '@marketdataapp/ui/header-client';
+  import { initUserProfile } from '@marketdataapp/ui/user-profile';
+
+  initHeader({ userProfile: false });
+
+  const container = document.getElementById('user-profile');
+  // Your own initUserProfile() call, re-render loop and refresh triggers.
+
+  // One delegated listener on the header covers the pill AND the drawer's
+  // fallback "Log In" link, so both carry the return URL at click time.
+  document.querySelector('.site-header').addEventListener('click', (event) => {
+    const link = event.target.closest('a');
+    if (!link || new URL(link.href).pathname !== '/marketdata/login') return;
+    const destination = new URL(link.href);
+    destination.searchParams.set('amember_redirect_url', location.href);
+    link.href = destination.href;
+  });
+</script>
+```
+
+Keep `id="user-profile"` on the slot's outer element: the overflow pass hides it by that id when the row runs out of room, and `initHeader` finds it by the same id. With `userProfile: false` the header's cleanup never touches what is inside it.
+
+#### Trust boundaries
+
+Every label, href, title and description passes through the escaper. Two things are emitted verbatim and are therefore **trusted application markup**: the four `slots`, and a `NavLink.icon` (or `NavSection.titleIcon`) that starts with `<svg`. Never feed either from user input. An icon given by name is looked up in the bundled set (`headerIconNames`); an unknown name throws at render time rather than rendering nothing.
+
+#### Logo
+
+The package ships the website's originals, `assets/brand/logo-on-light.png` and `logo-on-dark.png` (4167×807), plus a 320px webp of each for a consumer without an image pipeline. The renderer needs URLs, not files: an Astro site imports the PNGs and runs `getImage()` as above; a static site copies the webp files and passes their paths. `logo` is required — there is no default URL a package can know — and the error names both options.
+
+#### Demo
+
+`docs/header.html` is rendered at build time by `scripts/build-docs.js` from `docs/src/header.html`, so what the page shows is the initial HTML a consumer ships, not something injected after paint. `tests/e2e/header.spec.js` drives it.
 
 ### Clickable Badges
 

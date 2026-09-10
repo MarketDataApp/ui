@@ -1995,13 +1995,25 @@ label[error][focused] :where(.text-heading, .radio-button-helper) {
   Visually hidden, but still the button's accessible name — screen readers
   announce "Log in" with no visible label to read.
 
-  This deliberately avoids the usual sr-only recipe: `overflow: hidden` on a
-  1x1 box makes scrollHeight exceed clientHeight, which automated mobile audits
-  flag as clipped text. `clip-path: inset(50%)` hides the same content and
-  leaves overflow visible, so the probes stay quiet.
+  The label fills the pill's box (`inset: 0` against the relative wrapper)
+  rather than sitting in a 1x1 box, for two measured reasons:
+
+  - A 1x1 box with `white-space: nowrap` let the text run ~40px past its own
+    edge, and that overflow counted toward the CONTAINER's scrollable width:
+    #user-profile measured scrollWidth 64 against offsetWidth 44, so
+    initNavbarOverflow read the pill as compressed and hid it at 390px with
+    room to spare. Reported from the Tools property. Inside a 44px box the
+    text has nowhere to overflow to, and the container measures 44/44.
+  - A 1x1 box also had scrollHeight 20 against clientHeight 1 — the exact
+    "clipped text" signal an earlier note here hoped `clip-path` would avoid.
+    It did not; only the box size does. At 44x44 the two agree.
+
+  `overflow: clip` (not `hidden`: no scroll container) is the guard for a font
+  that renders the label wider than the pill; `clip-path` keeps it invisible.
 */
 .user-profile-compact .user-profile-wrapper .user-profile-login-label {
-  @apply absolute w-px h-px whitespace-nowrap;
+  @apply absolute inset-0 whitespace-nowrap;
+  overflow: clip;
   clip-path: inset(50%);
 }
 
@@ -2238,4 +2250,460 @@ label[error][focused] :where(.text-heading, .radio-button-helper) {
 @utility default {
   @apply text-base font-sans text-heading;
   @apply bg-neutral-primary-soft;
+}
+
+/* ---- Site Header ---- */
+/*
+  The marketdata.app header, rendered by src/header.js and driven by
+  src/header-client.js. Plain selectors, not @utility, for the same reason as
+  the user-profile and theme-toggle blocks above: the markup comes out of a
+  package module that no consumer's Tailwind scanner reads, so every rule has
+  to ship unconditionally. The markup carries no Tailwind utility at all —
+  one class per role — which is what lets it render from the same string on a
+  site with its own Tailwind build and on a site linking dist/css.
+
+  Ported from the website's Header.astro. Each rule keeps that file's
+  utilities via @apply so the two can be compared line by line; the notes
+  that explain a measured number travel with it.
+*/
+
+/* Skip link: visible only while focused. */
+.site-header-skip {
+  @apply sr-only focus:not-sr-only focus:absolute focus:top-1 focus:left-1 focus:z-50 focus:px-6 focus:py-4 focus:bg-body focus:rounded-base;
+}
+.site-header-skip:focus {
+  color: black !important;
+}
+
+/*
+  h-15 is the whole point, not decoration. The bar is fixed, so the spacer at
+  the end stands in for it, and the spacer is a hard 60px. Left to size itself
+  off its content the bar cannot hold that number: its tallest child changes
+  during load — the parser paints the 40px hamburger and the empty account
+  container (57px), then the 44px login pill lands (61px). 57px against a
+  60px spacer opens a 3px band showing the page background; 61px overlaps the
+  content. Pinning the height makes the two agree by construction.
+
+  Full bleed, no max-width: the logo stays at the left edge and the account
+  control at the right edge however wide the display gets.
+*/
+.site-header-bar {
+  @apply bg-neutral-primary-soft fixed w-screen z-40 top-0 start-0 flex h-15 items-center border-b border-body/10;
+}
+/* `fixed: false` — the bar scrolls with the page and there is no spacer. */
+.site-header-bar--static {
+  @apply relative w-full;
+}
+.site-header-inner {
+  @apply w-full;
+}
+
+/*
+  The row must not wrap: initNavbarOverflow detects overflow through flex-item
+  compression, cross-group overlap or container scrollWidth, and a wrapping
+  row shows none of the three. Its two children are the groups the utility
+  walks.
+
+  ps-4 / pe-1.5: the trailing gutter is 6px of layout plus the theme toggle's
+  10px of transparent padding, which reads as the same 16px the logo gets on
+  the left. The row owns its gutter so the compensation stays inside the box
+  the utility measures — a negative margin on the toggle would push it past
+  the content box and read as permanent overflow.
+*/
+.site-header-row {
+  @apply flex items-center justify-between ps-4 pe-1.5;
+}
+
+/*
+  gap, not space-x: space-x margins every child but the last, and a
+  display:none last child (the nav links once dropped) would leave the logo
+  16px of nothing.
+
+  h-10 for the same reason the bar has h-15: unmeasured, this group holds the
+  40px hamburger; measured on desktop it holds a 32px row of links. Pinned to
+  the taller state so the logo — centred in it — never moves.
+*/
+.site-header-start {
+  @apply flex h-10 items-center gap-4;
+}
+
+.site-header-toggle {
+  @apply inline-flex items-center p-2 w-10 h-10 justify-center text-sm text-body rounded-base bg-transparent border-0 cursor-pointer;
+  @apply hover:bg-neutral-secondary-soft hover:text-heading;
+}
+.site-header-toggle-icon,
+.site-header-close-icon {
+  @apply w-6 h-6;
+}
+
+.site-header-brand {
+  @apply flex items-center no-underline;
+}
+
+/*
+  10rem is the design width, but a ceiling rather than a fixed size: the
+  drawer's bar has to hold this wordmark, the theme toggle and the close
+  button inside a panel that is 4/5 of the viewport. At 320px that is 224px
+  of content box for 260px of intrinsic width, and a logo that could not
+  shrink pushed the close button 36px past the screen edge. aspect-ratio
+  replaces a fixed height so the wordmark keeps its proportions as it scales.
+
+  Both logos ship in the HTML; visibility picks the one for the theme, so a
+  toggle costs no request and no layout.
+*/
+.site-header-logo {
+  @apply relative block;
+  width: 10rem;
+  max-width: 100%;
+  aspect-ratio: 5 / 1;
+}
+.site-header-logo-light,
+.site-header-logo-dark {
+  @apply absolute top-0 left-0 w-full h-full;
+}
+.site-header-logo-light {
+  @apply visible opacity-100 dark:invisible dark:opacity-0;
+}
+.site-header-logo-dark {
+  @apply invisible opacity-0 dark:visible dark:opacity-100;
+}
+
+/*
+  shrink-0 + whitespace-nowrap are what make overflow visible to the utility:
+  left to shrink, the links compress and their labels wrap, which grows the
+  bar instead of overflowing it, and the utility measures overflow, not height.
+*/
+.site-header-links {
+  @apply flex shrink-0 whitespace-nowrap m-0 border-0 px-4 py-0 bg-transparent list-none space-x-6 xl:space-x-8 rtl:space-x-reverse items-center;
+}
+.site-header-item {
+  @apply relative;
+}
+.site-header-link {
+  @apply block font-medium text-heading rounded border-0 p-0 no-underline hover:text-fg-brand;
+}
+.site-header-menu-button {
+  @apply flex items-center justify-between w-auto rounded font-semibold text-heading bg-transparent border-0 p-0 cursor-pointer;
+  @apply hover:text-fg-brand;
+}
+/*
+  On a device with a mouse the items that own a panel are not links: hover
+  opens, hover away closes, and a click does nothing (header-client.js ignores
+  pointer clicks under the same media query). A pointer cursor on a control
+  that ignores the click it invites is a promise the header does not keep, and
+  Preflight sets `cursor: pointer` on every button, so this has to say
+  `default` rather than merely not say `pointer`.
+*/
+@media (hover: hover) and (pointer: fine) {
+  .site-header-menu-button {
+    cursor: default;
+  }
+}
+.site-header-caret {
+  @apply w-4 h-4 ms-1.5;
+}
+.site-header-menu:hover .site-header-caret,
+.site-header-menu-button[aria-expanded='true'] .site-header-caret {
+  transform: scaleY(-1);
+}
+
+/*
+  whitespace-normal undoes the nowrap inherited from the links row: this panel
+  holds prose. It is absolute and hidden, so it never feeds the row's measured
+  width. header-client.js sets `left` at open time to centre the panel under
+  its trigger and keep it off both viewport edges by the row's gutter.
+
+  The ::before bridge covers the 10px offset between trigger and panel so the
+  pointer crossing it never counts as leaving.
+*/
+.site-header-panel {
+  @apply absolute z-10 whitespace-normal bg-neutral-primary-medium border border-body/20 rounded-lg shadow-lg;
+  top: calc(100% + 10px);
+  left: 0;
+}
+.site-header-panel[hidden] {
+  display: none;
+}
+.site-header-panel::before {
+  content: '';
+  @apply absolute left-0 w-full;
+  top: -10px;
+  height: 10px;
+}
+.site-header-panel-inner {
+  @apply flex;
+}
+.site-header-panel-column {
+  @apply p-5 min-w-50;
+}
+.site-header-panel-column--cards {
+  min-width: 0;
+}
+.site-header-panel-title {
+  @apply block mb-5 text-sm font-medium text-body-subtle no-underline;
+}
+a.site-header-panel-title:hover {
+  @apply text-fg-brand;
+}
+.site-header-panel-list {
+  @apply m-0 p-0 list-none space-y-2;
+}
+/*
+  No grid gap on purpose. A gap is dead space: a gutter between cards means
+  the highlight drops out while the pointer crosses it. The cards space
+  themselves with padding inside each hover surface so the surfaces tile.
+*/
+.site-header-panel-grid {
+  @apply m-0 p-0 list-none grid grid-cols-2;
+  width: 720px;
+}
+.site-header-panel-item--card {
+  @apply p-2.5;
+}
+.site-header-panel-item--card:not(.site-header-panel-item--disabled) {
+  @apply rounded-md hover:bg-neutral-primary-strong;
+}
+.site-header-panel-link {
+  @apply flex flex-col text-base text-body-subtle rounded no-underline whitespace-nowrap;
+}
+a.site-header-panel-link:hover {
+  @apply text-fg-brand;
+}
+.site-header-panel-link--described {
+  @apply font-semibold;
+}
+.site-header-panel-link--disabled {
+  @apply px-3 cursor-default;
+}
+.site-header-panel--cards .site-header-panel-link {
+  @apply px-3 whitespace-normal;
+}
+.site-header-panel-label {
+  @apply flex items-center;
+}
+.site-header-panel-icon {
+  @apply w-3.5 h-3.5 me-1.5 shrink-0;
+}
+.site-header-panel--cards .site-header-panel-column .site-header-panel-icon {
+  @apply w-6 h-6;
+}
+.site-header-panel-soon {
+  @apply ms-1 text-sm font-normal text-body-subtle;
+}
+.site-header-panel-description {
+  @apply text-sm text-body-subtle font-medium mt-1;
+}
+a.site-header-panel-link:hover .site-header-panel-description {
+  @apply text-fg-brand;
+}
+.site-header-panel-aside {
+  @apply p-5 bg-neutral-primary-strong rounded-e-lg min-w-50;
+}
+.site-header-panel-aside-list {
+  @apply m-0 p-0 list-none space-y-1;
+}
+.site-header-panel-aside-link {
+  @apply flex items-center whitespace-nowrap py-0.5 text-base text-body-subtle no-underline;
+}
+a.site-header-panel-aside-link:hover {
+  @apply text-fg-brand;
+}
+.site-header-panel-aside-link--disabled {
+  @apply cursor-default;
+}
+
+/*
+  gap, not space-x: Astro leaves a component's <script> as a last child here,
+  which gave the toggle a trailing margin against a display:none script.
+*/
+.site-header-end {
+  @apply flex shrink-0 items-center gap-1.5;
+}
+.site-header-theme-toggle {
+  @apply flex items-center h-11 w-11;
+}
+
+/* ---- Drawer ---- */
+.site-header-backdrop {
+  @apply fixed inset-0 z-40 bg-black/50 opacity-0 pointer-events-none transition-opacity duration-200 motion-reduce:transition-none;
+}
+.site-header-backdrop[data-open] {
+  @apply opacity-100 pointer-events-auto;
+}
+/*
+  A full-height drawer, not an inline panel dropping out of the bar: an
+  inline panel shows a few items before it runs out of screen. Closed state
+  is translated off-screen plus `inert`, which drops it from the tab order
+  and the accessibility tree while it can still animate. `hidden` cannot do
+  both.
+*/
+.site-header-drawer {
+  @apply fixed top-0 start-0 z-50 flex h-dvh w-4/5 max-w-sm -translate-x-full flex-col bg-neutral-primary-soft shadow-xl transition-transform duration-200 ease-out motion-reduce:transition-none;
+}
+.site-header-drawer[data-open] {
+  @apply translate-x-0;
+}
+.site-header-drawer-bar {
+  @apply flex h-15 shrink-0 items-center justify-between gap-2 border-b border-default px-4;
+}
+/* min-w-0 so this flex item may go under its content width; without it the
+   automatic minimum holds the logo at 10rem and max-width has nothing to
+   shrink against. */
+.site-header-drawer-brand {
+  @apply flex min-h-11 min-w-0 items-center no-underline;
+}
+.site-header-drawer-actions {
+  @apply flex items-center gap-1;
+}
+.site-header-close {
+  @apply inline-flex h-11 w-11 items-center justify-center rounded-base p-2 text-body bg-transparent border-0 cursor-pointer;
+  @apply hover:bg-neutral-secondary-soft hover:text-heading;
+}
+/* Only this scrolls, so the bar above stays put on a long menu. */
+.site-header-drawer-body {
+  @apply flex-1 overflow-y-auto overscroll-contain px-4 py-4;
+}
+.site-header-drawer-list {
+  @apply flex w-full flex-col m-0 p-0 list-none;
+}
+.site-header-drawer-link {
+  @apply block rounded px-3 py-2 font-medium text-heading no-underline transition-colors hover:bg-body/10;
+}
+/*
+  The current page is coloured the way Docusaurus colours its active menu
+  link; every other row stays neutral and reacts to hover with a background
+  alone, which is what makes the coloured one read as "you are here".
+*/
+.site-header-drawer-link[aria-current='page'],
+.site-header-drawer-section-link[aria-current='page'],
+.site-header-drawer-sublink[aria-current='page'] {
+  @apply font-medium;
+  color: var(--color-marketdata-lightblue);
+}
+.site-header-accordion-button {
+  @apply flex items-center justify-between w-full py-2 px-3 rounded font-medium text-heading bg-transparent border-0 cursor-pointer text-start;
+  @apply hover:bg-neutral-tertiary;
+}
+/*
+  Hovering the row tints the whole row; the chevron sits in its own chip that
+  takes the same tint again, so it lands a step brighter than the row. Stacking
+  one translucent colour is correct in both themes by construction:
+  bg-body/10 darkens a light row and lightens a dark one.
+*/
+.site-header-chevron-chip {
+  @apply ms-1.5 flex h-8 w-11 shrink-0 items-center justify-center rounded-xs transition-colors duration-150 motion-reduce:transition-none;
+}
+.site-header-accordion-button:hover .site-header-chevron-chip {
+  @apply bg-body/10;
+}
+/* One chevron that points right when collapsed and swings down when open,
+   driven off aria-expanded so what a screen reader hears and what the eye
+   sees cannot disagree. */
+.site-header-chevron {
+  @apply w-5 h-5 text-body-subtle transition-[transform,color] duration-200 ease-linear motion-reduce:transition-none;
+}
+.site-header-accordion-button:hover .site-header-chevron {
+  @apply text-heading;
+}
+.site-header-accordion-button[aria-expanded='true'] .site-header-chevron {
+  transform: rotate(90deg);
+}
+.site-header-accordion {
+  @apply w-full;
+}
+.site-header-accordion[hidden] {
+  display: none;
+}
+/* Indented, not boxed: a card inside the drawer reads as a second surface on
+   the first. */
+.site-header-accordion-inner {
+  @apply ms-3 border-s border-default ps-3;
+}
+.site-header-accordion-sections {
+  @apply flex flex-col gap-4 py-2;
+}
+.site-header-drawer-section-link,
+.site-header-drawer-sublink {
+  @apply flex items-center rounded px-3 py-2.5 text-base text-body no-underline transition-colors hover:bg-body/10;
+}
+.site-header-drawer-section-title {
+  @apply block px-3 pb-1 pt-2 text-xs font-semibold uppercase tracking-wide text-body-subtle;
+}
+.site-header-drawer-sublist {
+  @apply m-0 p-0 list-none space-y-1;
+}
+.site-header-drawer-icon {
+  @apply w-3.5 h-3.5 me-1.5 shrink-0;
+}
+.site-header-drawer-auth {
+  @apply border-t border-default mt-4 pt-4;
+}
+.site-header-drawer-auth-links {
+  @apply flex flex-col space-y-2 px-3;
+}
+.site-header-drawer-auth-link {
+  @apply rounded px-3 py-2.5 text-body no-underline transition-colors hover:bg-body/10;
+}
+.site-header-spacer {
+  @apply h-15;
+}
+
+/* ---- Site Header: first-paint seeds and settled state ---- */
+/*
+  The measurement decides what the bar shows, but the module that measures
+  arrives after the first paint — 4.3s on a throttled connection. These rules
+  seed the guess so the common case has nothing to correct.
+
+  890px is where initNavbarOverflow actually drops the links for the default
+  navigation, found by stepping the viewport 10px at a time. Above it the seed
+  matches what the measurement concludes and nothing moves; below it the seed
+  is the narrow layout, which is the only one that cannot overflow. The
+  measurement still overrides this, which is what keeps it a seed rather than
+  a second source of truth. Re-measure 890px when the nav's items change.
+*/
+@media (width < 890px) {
+  .site-header-row[data-navbar-unmeasured] .site-header-links {
+    display: none;
+  }
+}
+@media (width >= 890px) {
+  .site-header-row[data-navbar-unmeasured] .site-header-toggle {
+    display: none;
+  }
+}
+/* Settled: the hamburger shows only if the utility dropped the links. */
+.site-header-row:not([data-navbar-unmeasured]):not(:has(.site-header-links[data-navbar-hidden]))
+  .site-header-toggle {
+  display: none;
+}
+/*
+  Same condition for the drawer the hamburger opens. Both :has() sit at the
+  top level, negated separately: :has() may not nest inside :has(), and a
+  selector that breaks that rule is dropped silently. Read it as: measured AND
+  links still in the row → no hamburger → no drawer.
+*/
+.site-header:not(:has(.site-header-row[data-navbar-unmeasured])):not(
+    :has(.site-header-links[data-navbar-hidden])
+  )
+  :is(.site-header-drawer, .site-header-backdrop) {
+  display: none;
+}
+/*
+  Exactly one theme toggle, never two. The drawer's bar carries one and the
+  bar carries one; once the hamburger is in play the drawer's wins, so the
+  bar's goes under the same condition that reveals the hamburger. Below 890px
+  the unmeasured guess hides it too; above, hiding it while unmeasured would
+  cost a 52px layout shift on every desktop page once it reappeared.
+*/
+@media (width < 890px) {
+  .site-header:has(.site-header-row[data-navbar-unmeasured])
+    .site-header-row
+    .site-header-theme-toggle {
+    display: none;
+  }
+}
+.site-header:has(.site-header-links[data-navbar-hidden])
+  .site-header-row
+  .site-header-theme-toggle {
+  display: none;
 }

@@ -61,5 +61,18 @@ for (const dir of readdirSync(TEMPLATES_ROOT)) {
     lines.push('');
   }
 
+  // Every SVG partial, keyed by its bare file name, as one object literal on
+  // one line. A renderer that picks icons by name at runtime (header.js) reads
+  // this map instead of importing thirty named constants. One line matters:
+  // build-js.js inlines `export const name = value;` declarations with a
+  // line-anchored regex, so a multi-line literal would not be found.
+  const partials = Object.fromEntries(
+    Object.entries(svgs)
+      .sort(([a], [b]) => a.localeCompare(b))
+      .map(([path, svg]) => [basename(path, '.svg'), svg]),
+  );
+  lines.push(`export const partials = ${JSON.stringify(partials)};`);
+  lines.push('');
+
   writeFileSync(output, lines.join('\n'));
 }
