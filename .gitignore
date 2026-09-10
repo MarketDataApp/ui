@@ -15,6 +15,7 @@ playwright-report/
 # Intermediate build artifacts
 src/*.templates.js
 docs/docs.css
+docs/header.html
 _site/
 
 # MCP config (contains local paths)

@@ -8,7 +8,8 @@
  *   - Replaces each import with inlined const declarations
  *   - Writes to dist/ with a "do not edit" header
  *
- * For files without local imports (theme.js, navbar-overflow.js):
+ * For files without local imports (theme.js, navbar-overflow.js, header-client.js —
+ * whose imports of sibling dist modules stay as relative imports):
  *   - Copies from src/ to dist/ with a header
  */
 
@@ -25,7 +26,7 @@ mkdirSync(DIST, { recursive: true });
 
 const HEADER = '// Auto-generated from src/ by scripts/build-js.js — do not edit manually\n\n';
 
-const FILES_WITH_LOCAL_IMPORTS = ['user-profile.js', 'theme-toggle.js', 'reviews.js'];
+const FILES_WITH_LOCAL_IMPORTS = ['user-profile.js', 'theme-toggle.js', 'reviews.js', 'header.js'];
 const FILES_WITHOUT_LOCAL_IMPORTS = [
   'theme.js',
   'user.js',
@@ -36,6 +37,7 @@ const FILES_WITHOUT_LOCAL_IMPORTS = [
   'copy-button.js',
   'long-progress.js',
   'label-state-sync.js',
+  'header-client.js',
 ];
 
 // ---------------------------------------------------------------------------

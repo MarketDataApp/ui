@@ -11,7 +11,8 @@
   },
   "files": [
     "dist/",
-    "css/"
+    "css/",
+    "assets/"
   ],
   "exports": {
     "./theme": {
@@ -61,10 +62,19 @@
     "./label-state-sync": {
       "types": "./dist/label-state-sync.d.ts",
       "default": "./dist/label-state-sync.js"
-    }
+    },
+    "./header": {
+      "types": "./dist/header.d.ts",
+      "default": "./dist/header.js"
+    },
+    "./header-client": {
+      "types": "./dist/header-client.d.ts",
+      "default": "./dist/header-client.js"
+    },
+    "./assets/*": "./assets/*"
   },
   "scripts": {
-    "build": "npm run build:templates && npm run build:js && npm run build:types && npm run build:classes && npm run build:css",
+    "build": "npm run build:templates && npm run build:js && npm run build:types && npm run build:classes && npm run build:css && npm run build:docs",
     "build:templates": "node scripts/build-templates.js",
     "build:js": "node scripts/build-js.js",
     "build:types": "rm -f dist/*.d.ts && tsc -p tsconfig.json",
@@ -82,7 +92,8 @@
     "format:check": "prettier --check .",
     "setup": "husky",
     "test": "vitest run",
-    "test:e2e": "playwright test"
+    "test:e2e": "playwright test",
+    "build:docs": "node scripts/build-docs.js"
   },
   "lint-staged": {
     "*": "prettier --write --ignore-unknown"

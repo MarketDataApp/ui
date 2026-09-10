@@ -109,6 +109,12 @@ export default defineConfig({
       testMatch: ['badge-link.spec.js'],
       use: { browserName: 'chromium', baseURL: LOCAL_SERVER },
     },
+    {
+      // Drives docs/header.html, a build output: `npm run build` must have run.
+      name: 'header',
+      testMatch: ['header.spec.js'],
+      use: { browserName: 'chromium', baseURL: LOCAL_SERVER },
+    },
   ],
   webServer: [
     {

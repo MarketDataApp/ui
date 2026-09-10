@@ -100,7 +100,13 @@ for (const file of readdirSync(resolve(DIST, 'css'))) {
   console.log(`  _site/dist/css/${file}`);
 }
 
-// 4. Copy and cache-bust ALL dist JS files (no hardcoded list)
+// 4. Copy the package assets. docs/header.html links the brand logos the
+//    package ships (assets/brand/*.webp) by relative path, the same files a
+//    consumer without an image pipeline would copy into its own public dir.
+cpSync(resolve(ROOT, 'assets'), resolve(SITE, 'assets'), { recursive: true });
+console.log('  _site/assets/');
+
+// 5. Copy and cache-bust ALL dist JS files (no hardcoded list)
 for (const file of readdirSync(DIST)) {
   if (!file.endsWith('.js')) continue;
   const content = readFileSync(resolve(DIST, file), 'utf8');
@@ -108,7 +114,7 @@ for (const file of readdirSync(DIST)) {
   console.log(`  _site/dist/${file}`);
 }
 
-// 5. Redirect index
+// 6. Redirect index
 writeFileSync(resolve(SITE, 'index.html'), '<meta http-equiv="refresh" content="0;url=docs/">\n');
 console.log('  _site/index.html (redirect)');
 
