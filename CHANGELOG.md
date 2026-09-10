@@ -1,6 +1,6 @@
 # Changelog
 
-## Unreleased
+## 5.10.0
 
 `dist/` changes: two new modules, `header.js` and `header-client.js`, plus their `.d.ts`; both CSS builds gain the `.site-header-*` rules. New `assets/` directory. Nothing an existing consumer imports changes.
 
