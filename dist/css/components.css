@@ -33,6 +33,7 @@
     --color-yellow-700: oklch(55.4% 0.135 66.442);
     --color-yellow-800: oklch(47.6% 0.114 61.907);
     --color-yellow-900: oklch(42.1% 0.095 57.708);
+    --color-yellow-950: oklch(28.6% 0.066 53.813);
     --color-lime-500: oklch(76.8% 0.233 130.85);
     --color-lime-600: oklch(64.8% 0.2 131.684);
     --color-green-100: oklch(96.2% 0.044 156.743);
@@ -43,6 +44,7 @@
     --color-green-700: oklch(52.7% 0.154 150.069);
     --color-green-800: oklch(44.8% 0.119 151.328);
     --color-green-900: oklch(39.3% 0.095 152.535);
+    --color-green-950: oklch(26.6% 0.065 152.934);
     --color-emerald-50: oklch(97.9% 0.021 166.113);
     --color-emerald-100: oklch(95% 0.052 163.051);
     --color-emerald-200: oklch(90.5% 0.093 164.15);
@@ -77,6 +79,7 @@
     --color-indigo-700: oklch(45.7% 0.24 277.023);
     --color-indigo-800: oklch(39.8% 0.195 277.366);
     --color-indigo-900: oklch(35.9% 0.144 278.697);
+    --color-indigo-950: oklch(25.7% 0.09 281.288);
     --color-purple-100: oklch(94.6% 0.033 307.174);
     --color-purple-200: oklch(90.2% 0.063 306.703);
     --color-purple-300: oklch(82.7% 0.119 306.383);
@@ -86,6 +89,7 @@
     --color-purple-700: oklch(49.6% 0.265 301.924);
     --color-purple-800: oklch(43.8% 0.218 303.724);
     --color-purple-900: oklch(38.1% 0.176 304.987);
+    --color-purple-950: oklch(29.1% 0.149 302.717);
     --color-fuchsia-500: oklch(66.7% 0.295 322.15);
     --color-fuchsia-600: oklch(59.1% 0.293 322.896);
     --color-pink-100: oklch(94.8% 0.028 342.258);
@@ -97,6 +101,7 @@
     --color-pink-700: oklch(52.5% 0.223 3.958);
     --color-pink-800: oklch(45.9% 0.187 3.815);
     --color-pink-900: oklch(40.8% 0.153 2.432);
+    --color-pink-950: oklch(28.4% 0.109 3.907);
     --color-gray-50: oklch(98.5% 0.002 247.839);
     --color-gray-100: oklch(96.7% 0.003 264.542);
     --color-gray-200: oklch(92.8% 0.006 264.531);
@@ -1562,6 +1567,7 @@
       }
       &:hover {
         background-color: var(--badge-hover-bg, var(--color-neutral-tertiary-medium));
+        color: var(--badge-hover-text);
       }
     }
     border-style: var(--tw-border-style);
@@ -1577,9 +1583,11 @@
       color: var(--color-blue-300);
     }
     --badge-hover-bg: var(--color-blue-200);
+    --badge-hover-text: var(--color-blue-800);
     --badge-focus-ring: var(--color-blue-700);
     &:where(.dark, .dark *, [data-theme='dark'], [data-theme='dark'] *) {
       --badge-hover-bg: var(--color-blue-800);
+      --badge-hover-text: var(--color-blue-200);
       --badge-focus-ring: var(--color-blue-400);
     }
   }
@@ -1626,6 +1634,7 @@
       }
       &:hover {
         background-color: var(--badge-hover-bg, var(--color-neutral-tertiary-medium));
+        color: var(--badge-hover-text);
       }
     }
     border-style: var(--tw-border-style);
@@ -1641,9 +1650,11 @@
       color: var(--color-red-300);
     }
     --badge-hover-bg: var(--color-red-200);
+    --badge-hover-text: var(--color-red-800);
     --badge-focus-ring: var(--color-red-700);
     &:where(.dark, .dark *, [data-theme='dark'], [data-theme='dark'] *) {
       --badge-hover-bg: var(--color-red-800);
+      --badge-hover-text: var(--color-red-200);
       --badge-focus-ring: var(--color-red-400);
     }
   }
@@ -1690,6 +1701,7 @@
       }
       &:hover {
         background-color: var(--badge-hover-bg, var(--color-neutral-tertiary-medium));
+        color: var(--badge-hover-text);
       }
     }
     border-style: var(--tw-border-style);
@@ -1704,9 +1716,11 @@
       color: var(--color-green-300);
     }
     --badge-hover-bg: var(--color-green-200);
+    --badge-hover-text: var(--color-green-800);
     --badge-focus-ring: var(--color-green-700);
     &:where(.dark, .dark *, [data-theme='dark'], [data-theme='dark'] *) {
       --badge-hover-bg: var(--color-green-800);
+      --badge-hover-text: var(--color-green-200);
       --badge-focus-ring: var(--color-green-400);
     }
   }
@@ -1753,6 +1767,7 @@
       }
       &:hover {
         background-color: var(--badge-hover-bg, var(--color-neutral-tertiary-medium));
+        color: var(--badge-hover-text);
       }
     }
   }
@@ -2012,6 +2027,7 @@
       }
       &:hover {
         background-color: var(--badge-hover-bg, var(--color-neutral-tertiary-medium));
+        color: var(--badge-hover-text);
       }
     }
   }
@@ -3802,9 +3818,11 @@
       color: var(--color-blue-300);
     }
     --badge-hover-bg: var(--color-blue-200);
+    --badge-hover-text: var(--color-blue-800);
     --badge-focus-ring: var(--color-blue-700);
     &:where(.dark, .dark *, [data-theme='dark'], [data-theme='dark'] *) {
       --badge-hover-bg: var(--color-blue-800);
+      --badge-hover-text: var(--color-blue-200);
       --badge-focus-ring: var(--color-blue-400);
     }
   }
@@ -3818,9 +3836,11 @@
       color: var(--color-gray-300);
     }
     --badge-hover-bg: var(--color-gray-200);
+    --badge-hover-text: var(--color-gray-800);
     --badge-focus-ring: var(--color-gray-700);
     &:where(.dark, .dark *, [data-theme='dark'], [data-theme='dark'] *) {
       --badge-hover-bg: var(--color-gray-600);
+      --badge-hover-text: var(--color-gray-200);
       --badge-focus-ring: var(--color-gray-400);
     }
   }
@@ -3834,9 +3854,11 @@
       color: var(--color-green-300);
     }
     --badge-hover-bg: var(--color-green-200);
+    --badge-hover-text: var(--color-green-800);
     --badge-focus-ring: var(--color-green-700);
     &:where(.dark, .dark *, [data-theme='dark'], [data-theme='dark'] *) {
       --badge-hover-bg: var(--color-green-800);
+      --badge-hover-text: var(--color-green-200);
       --badge-focus-ring: var(--color-green-400);
     }
   }
@@ -3850,9 +3872,11 @@
       color: var(--color-indigo-300);
     }
     --badge-hover-bg: var(--color-indigo-200);
+    --badge-hover-text: var(--color-indigo-800);
     --badge-focus-ring: var(--color-indigo-700);
     &:where(.dark, .dark *, [data-theme='dark'], [data-theme='dark'] *) {
       --badge-hover-bg: var(--color-indigo-800);
+      --badge-hover-text: var(--color-indigo-200);
       --badge-focus-ring: var(--color-indigo-400);
     }
   }
@@ -3866,9 +3890,11 @@
       color: var(--color-pink-300);
     }
     --badge-hover-bg: var(--color-pink-200);
+    --badge-hover-text: var(--color-pink-800);
     --badge-focus-ring: var(--color-pink-700);
     &:where(.dark, .dark *, [data-theme='dark'], [data-theme='dark'] *) {
       --badge-hover-bg: var(--color-pink-800);
+      --badge-hover-text: var(--color-pink-200);
       --badge-focus-ring: var(--color-pink-400);
     }
   }
@@ -3882,9 +3908,11 @@
       color: var(--color-purple-300);
     }
     --badge-hover-bg: var(--color-purple-200);
+    --badge-hover-text: var(--color-purple-800);
     --badge-focus-ring: var(--color-purple-700);
     &:where(.dark, .dark *, [data-theme='dark'], [data-theme='dark'] *) {
       --badge-hover-bg: var(--color-purple-800);
+      --badge-hover-text: var(--color-purple-200);
       --badge-focus-ring: var(--color-purple-400);
     }
   }
@@ -3898,9 +3926,11 @@
       color: var(--color-red-300);
     }
     --badge-hover-bg: var(--color-red-200);
+    --badge-hover-text: var(--color-red-800);
     --badge-focus-ring: var(--color-red-700);
     &:where(.dark, .dark *, [data-theme='dark'], [data-theme='dark'] *) {
       --badge-hover-bg: var(--color-red-800);
+      --badge-hover-text: var(--color-red-200);
       --badge-focus-ring: var(--color-red-400);
     }
   }
@@ -3914,9 +3944,11 @@
       color: var(--color-yellow-300);
     }
     --badge-hover-bg: var(--color-yellow-200);
+    --badge-hover-text: var(--color-yellow-800);
     --badge-focus-ring: var(--color-yellow-700);
     &:where(.dark, .dark *, [data-theme='dark'], [data-theme='dark'] *) {
       --badge-hover-bg: var(--color-yellow-800);
+      --badge-hover-text: var(--color-yellow-200);
       --badge-focus-ring: var(--color-yellow-400);
     }
   }

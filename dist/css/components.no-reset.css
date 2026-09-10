@@ -1318,6 +1318,7 @@
     }
     &:hover {
       background-color: var(--badge-hover-bg, var(--color-neutral-tertiary-medium));
+      color: var(--badge-hover-text);
     }
   }
   border-style: var(--tw-border-style);
@@ -1333,9 +1334,11 @@
     color: var(--color-blue-300);
   }
   --badge-hover-bg: var(--color-blue-200);
+  --badge-hover-text: var(--color-blue-800);
   --badge-focus-ring: var(--color-blue-700);
   &:where(.dark, .dark *, [data-theme='dark'], [data-theme='dark'] *) {
     --badge-hover-bg: var(--color-blue-800);
+    --badge-hover-text: var(--color-blue-200);
     --badge-focus-ring: var(--color-blue-400);
   }
 }
@@ -1382,6 +1385,7 @@
     }
     &:hover {
       background-color: var(--badge-hover-bg, var(--color-neutral-tertiary-medium));
+      color: var(--badge-hover-text);
     }
   }
   border-style: var(--tw-border-style);
@@ -1397,9 +1401,11 @@
     color: var(--color-red-300);
   }
   --badge-hover-bg: var(--color-red-200);
+  --badge-hover-text: var(--color-red-800);
   --badge-focus-ring: var(--color-red-700);
   &:where(.dark, .dark *, [data-theme='dark'], [data-theme='dark'] *) {
     --badge-hover-bg: var(--color-red-800);
+    --badge-hover-text: var(--color-red-200);
     --badge-focus-ring: var(--color-red-400);
   }
 }
@@ -1446,6 +1452,7 @@
     }
     &:hover {
       background-color: var(--badge-hover-bg, var(--color-neutral-tertiary-medium));
+      color: var(--badge-hover-text);
     }
   }
   border-style: var(--tw-border-style);
@@ -1460,9 +1467,11 @@
     color: var(--color-green-300);
   }
   --badge-hover-bg: var(--color-green-200);
+  --badge-hover-text: var(--color-green-800);
   --badge-focus-ring: var(--color-green-700);
   &:where(.dark, .dark *, [data-theme='dark'], [data-theme='dark'] *) {
     --badge-hover-bg: var(--color-green-800);
+    --badge-hover-text: var(--color-green-200);
     --badge-focus-ring: var(--color-green-400);
   }
 }
@@ -1509,6 +1518,7 @@
     }
     &:hover {
       background-color: var(--badge-hover-bg, var(--color-neutral-tertiary-medium));
+      color: var(--badge-hover-text);
     }
   }
 }
@@ -1708,6 +1718,7 @@
     }
     &:hover {
       background-color: var(--badge-hover-bg, var(--color-neutral-tertiary-medium));
+      color: var(--badge-hover-text);
     }
   }
 }
@@ -3134,9 +3145,11 @@
     color: var(--color-blue-300);
   }
   --badge-hover-bg: var(--color-blue-200);
+  --badge-hover-text: var(--color-blue-800);
   --badge-focus-ring: var(--color-blue-700);
   &:where(.dark, .dark *, [data-theme='dark'], [data-theme='dark'] *) {
     --badge-hover-bg: var(--color-blue-800);
+    --badge-hover-text: var(--color-blue-200);
     --badge-focus-ring: var(--color-blue-400);
   }
 }
@@ -3150,9 +3163,11 @@
     color: var(--color-gray-300);
   }
   --badge-hover-bg: var(--color-gray-200);
+  --badge-hover-text: var(--color-gray-800);
   --badge-focus-ring: var(--color-gray-700);
   &:where(.dark, .dark *, [data-theme='dark'], [data-theme='dark'] *) {
     --badge-hover-bg: var(--color-gray-600);
+    --badge-hover-text: var(--color-gray-200);
     --badge-focus-ring: var(--color-gray-400);
   }
 }
@@ -3166,9 +3181,11 @@
     color: var(--color-green-300);
   }
   --badge-hover-bg: var(--color-green-200);
+  --badge-hover-text: var(--color-green-800);
   --badge-focus-ring: var(--color-green-700);
   &:where(.dark, .dark *, [data-theme='dark'], [data-theme='dark'] *) {
     --badge-hover-bg: var(--color-green-800);
+    --badge-hover-text: var(--color-green-200);
     --badge-focus-ring: var(--color-green-400);
   }
 }
@@ -3182,9 +3199,11 @@
     color: var(--color-indigo-300);
   }
   --badge-hover-bg: var(--color-indigo-200);
+  --badge-hover-text: var(--color-indigo-800);
   --badge-focus-ring: var(--color-indigo-700);
   &:where(.dark, .dark *, [data-theme='dark'], [data-theme='dark'] *) {
     --badge-hover-bg: var(--color-indigo-800);
+    --badge-hover-text: var(--color-indigo-200);
     --badge-focus-ring: var(--color-indigo-400);
   }
 }
@@ -3198,9 +3217,11 @@
     color: var(--color-pink-300);
   }
   --badge-hover-bg: var(--color-pink-200);
+  --badge-hover-text: var(--color-pink-800);
   --badge-focus-ring: var(--color-pink-700);
   &:where(.dark, .dark *, [data-theme='dark'], [data-theme='dark'] *) {
     --badge-hover-bg: var(--color-pink-800);
+    --badge-hover-text: var(--color-pink-200);
     --badge-focus-ring: var(--color-pink-400);
   }
 }
@@ -3214,9 +3235,11 @@
     color: var(--color-purple-300);
   }
   --badge-hover-bg: var(--color-purple-200);
+  --badge-hover-text: var(--color-purple-800);
   --badge-focus-ring: var(--color-purple-700);
   &:where(.dark, .dark *, [data-theme='dark'], [data-theme='dark'] *) {
     --badge-hover-bg: var(--color-purple-800);
+    --badge-hover-text: var(--color-purple-200);
     --badge-focus-ring: var(--color-purple-400);
   }
 }
@@ -3230,9 +3253,11 @@
     color: var(--color-red-300);
   }
   --badge-hover-bg: var(--color-red-200);
+  --badge-hover-text: var(--color-red-800);
   --badge-focus-ring: var(--color-red-700);
   &:where(.dark, .dark *, [data-theme='dark'], [data-theme='dark'] *) {
     --badge-hover-bg: var(--color-red-800);
+    --badge-hover-text: var(--color-red-200);
     --badge-focus-ring: var(--color-red-400);
   }
 }
@@ -3246,9 +3271,11 @@
     color: var(--color-yellow-300);
   }
   --badge-hover-bg: var(--color-yellow-200);
+  --badge-hover-text: var(--color-yellow-800);
   --badge-focus-ring: var(--color-yellow-700);
   &:where(.dark, .dark *, [data-theme='dark'], [data-theme='dark'] *) {
     --badge-hover-bg: var(--color-yellow-800);
+    --badge-hover-text: var(--color-yellow-200);
     --badge-focus-ring: var(--color-yellow-400);
   }
 }

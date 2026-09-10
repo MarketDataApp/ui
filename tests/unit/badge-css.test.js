@@ -60,6 +60,13 @@ describe.each(BUILDS)('clickable badges in %s (#43)', (buildPath) => {
       expect(link).toMatch(/background-color:\s*var\(--badge-hover-bg,/);
     });
 
+    // The label follows the same route. No fallback, on purpose: an uncoloured
+    // badge link has no label colour of its own, and an undefined property
+    // leaves `color` at its inherited value — the resting state.
+    it('takes its hover label colour from the colour utility too', () => {
+      expect(link).toMatch(/color:\s*var\(--badge-hover-text\)/);
+    });
+
     it('rings in the badge’s own colour, falling back to the shared token', () => {
       expect(link).toMatch(
         /--tw-ring-color:\s*var\(--badge-focus-ring,\s*var\(--color-focus-ring\)\)/,
@@ -82,6 +89,12 @@ describe.each(BUILDS)('clickable badges in %s (#43)', (buildPath) => {
       expect(body).toMatch(new RegExp(`--badge-hover-bg:\\s*var\\(--color-${hue}-${lightStep}\\)`));
     });
 
+    // Light mode's label holds 5.66:1 or better on the deepened background
+    // without moving, so the hover label restates the resting {hue}-800.
+    it(`keeps the label at ${hue}-800 on hover in light mode`, () => {
+      expect(body).toMatch(new RegExp(`--badge-hover-text:\\s*var\\(--color-${hue}-800\\)`));
+    });
+
     // Measured, not chosen: {hue}-700 and {hue}-400 are the one pair that
     // clears 3:1 against both the page and the chip for all eight hues.
     // Lighter shades fail in light mode for green and yellow.
@@ -96,6 +109,17 @@ describe.each(BUILDS)('clickable badges in %s (#43)', (buildPath) => {
       );
       expect(dark).toMatch(new RegExp(`--badge-hover-bg:\\s*var\\(--color-${hue}-${darkStep}\\)`));
       expect(dark).toMatch(new RegExp(`--badge-focus-ring:\\s*var\\(--color-${hue}-400\\)`));
+    });
+
+    // Dark is where the hover step moves the background towards the label:
+    // red and pink settled at 4.36:1 and 4.34:1 with the label at {hue}-300.
+    // One step up to {hue}-200 holds 5.66:1 or better on every hue.
+    it(`lifts the label to ${hue}-200 on hover in dark mode`, () => {
+      const dark = nestedState(
+        body,
+        ":where(.dark, .dark *, [data-theme='dark'], [data-theme='dark'] *)",
+      );
+      expect(dark).toMatch(new RegExp(`--badge-hover-text:\\s*var\\(--color-${hue}-200\\)`));
     });
   });
 

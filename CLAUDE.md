@@ -47,6 +47,7 @@ This works because `@apply` inlines custom property declarations onto the DOM el
 - Shared gradients and shadows
 - Shared component classes used across properties: buttons (btn-orange-to-blue, btn-outline-to-orange, and other btn-{from}-to-{to} variants), forms, badges, grid layout, radio buttons
 - Dark mode logic (shared JS for theme toggle + cookie across subdomains)
+- **The site header, its navigation list and the data catalogue.** `src/header.js` owns `defaultNavigation` and `dataCatalog`; both the desktop mega menus and the mobile drawer render from that one list, and every consumer (website, Tools) gets its menu from here. A menu change is made in this repo, released, and pinned by the consumers — never in a consumer's markup. A consumer that needs a different menu passes `navigation` to `renderHeader()`; it does not edit the rendered HTML. The website derives its data-type cards from `dataCatalog` as well. Full API in README "Site Header".
 
 ## What does NOT belong here
 

@@ -1,5 +1,16 @@
 # Changelog
 
+## 5.10.1
+
+`dist/` changes: both CSS builds gain one declaration per linked-badge hover rule and one custom property per badge colour. No markup changes.
+
+### Fixed
+
+- **A linked red or pink badge failed the 4.5:1 text floor on hover in dark mode, and the test that guarded it passed anyway.** Dark badges rest on `{hue}-900` with `{hue}-300` text; Flowbite's hover step to `{hue}-800` brings the background towards the label, and red settled at 4.36:1, pink at 4.34:1. The 5.7.0 note claimed all 22 combinations held 4.5:1 — its measurement, and the e2e test's, read the colour on whichever frame of the 200ms fade the poll landed on, which is early enough to pass most of the time. The 5.10.0 release e2e run landed on a late frame and failed on `pill-red`; the owner then measured the settled state at 4.39:1 by hand.
+  - **The label now lifts one step with the background in dark mode**, `{hue}-300` to `{hue}-200`, through a third cascade property, `--badge-hover-text`, declared by every colour utility beside `--badge-hover-bg` and read by the shared `:any-link:hover` rule. Every hue holds 5.66:1 or better hovered in both themes. Light mode's label restates its resting colour, so nothing there moves.
+  - **Flowbite v4's own answer was measured and rejected.** Its badge link is `bg-danger-soft hover:bg-danger-medium text-fg-danger-strong`, which in this kit's tokens rests dark badges on `{hue}-950` and hovers to `900` — passing, but on the gray-900 page ground a resting 950 chip is all but invisible for green, yellow, indigo, purple and pink. The three treatments were compared side by side on a scratch page in both themes before choosing.
+  - **`tests/e2e/badge-link.spec.js` now waits for the settled hover state** — a background that differs from rest and has stopped changing between two reads — before it measures. Verified against 5.10.0's CSS, where it fails red, pink and pill-red in dark mode every time instead of by chance.
+
 ## 5.10.0
 
 `dist/` changes: two new modules, `header.js` and `header-client.js`, plus their `.d.ts`; both CSS builds gain the `.site-header-*` rules. New `assets/` directory. Nothing an existing consumer imports changes.

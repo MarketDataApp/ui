@@ -528,7 +528,7 @@ The behaviour keys off `:any-link`, which matches an `<a>` (or `<area>`) that ha
 
 What a linked badge gets:
 
-- **A hover background** one step deeper than its resting colour, transitioned over 200ms. This follows Flowbite's own badges-as-links block, which changes the background rather than adding an underline or a filter.
+- **A hover background** one step deeper than its resting colour, transitioned over 200ms. This follows Flowbite's own badges-as-links block, which changes the background rather than adding an underline or a filter. In dark mode the label lifts one step with it, `{hue}-300` to `{hue}-200`: the dark hover step moves the background towards the label, and red and pink settled at 4.36:1 and 4.34:1 without it. Every hue holds 5.66:1 or better hovered, in both themes, measured after the transition. Light mode's label does not move; it did not need to.
 - **No underline**, so a site-wide `a { text-decoration: underline }` does not run a rule through the middle of a filled pill.
 - **A 24px minimum height**, the WCAG 2.5.8 target size. A resting badge is 18px, which is fine for a label and too small for a control. `inline-flex` and `items-center` centre the text in the taller box.
 - **A 2px focus ring in its own colour** — `blue-700` in light, `blue-400` in dark, and the matching pair for every other hue. Buttons ring at 4px; a 24px chip cannot carry that without the ring reading as the component.
@@ -540,9 +540,10 @@ Those shades are measured, not picked. A focus indicator has to clear 3:1 agains
 | Property             | Set by           | Read by                         |
 | -------------------- | ---------------- | ------------------------------- |
 | `--badge-hover-bg`   | `.badge-{color}` | `.badge:any-link:hover`         |
+| `--badge-hover-text` | `.badge-{color}` | `.badge:any-link:hover`         |
 | `--badge-focus-ring` | `.badge-{color}` | `.badge:any-link:focus-visible` |
 
-An uncoloured `.badge` link declares neither, so it falls back to a neutral hover and to the shared `--color-focus-ring`. This is the same cascade-signal pattern described under "Nested Component Contrast" below, and it is required rather than stylistic: a descendant selector could not join the two rules once a consumer flattens both classes into one of their own with `@apply`.
+An uncoloured `.badge` link declares none of them, so it falls back to a neutral hover background, keeps its inherited label colour, and rings in the shared `--color-focus-ring`. This is the same cascade-signal pattern described under "Nested Component Contrast" below, and it is required rather than stylistic: a descendant selector could not join the two rules once a consumer flattens both classes into one of their own with `@apply`.
 
 ### Theme Tokens
 

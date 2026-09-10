@@ -61,11 +61,24 @@ for (const theme of ['light', 'dark']) {
           const resting = await readStyles(page, selector);
 
           await page.locator(selector).hover();
-          // The kit transitions the background over 200ms by design.
+          // The kit transitions the colours over 200ms by design. Wait for the
+          // SETTLED state: a background that differs from rest AND has stopped
+          // moving between two reads. The first version polled only for "has
+          // changed" and then measured whatever frame of the fade it landed on,
+          // which passed red and pink in dark mode on early frames while their
+          // settled hover sat at 4.36:1 — under the floor. Reading mid-fade is
+          // how a contrast defect shipped under a green test.
+          let previous = null;
           await expect
             .poll(async () => {
               const now = await readStyles(page, selector);
-              return differs(now.background, resting.background);
+              const settled =
+                differs(now.background, resting.background) &&
+                previous !== null &&
+                !differs(now.background, previous.background) &&
+                !differs(now.color, previous.color);
+              previous = now;
+              return settled;
             })
             .toBe(true);
 
