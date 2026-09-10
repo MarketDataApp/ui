@@ -1,6 +1,6 @@
 # Changelog
 
-## Unreleased
+## 5.10.1
 
 `dist/` changes: both CSS builds gain one declaration per linked-badge hover rule and one custom property per badge colour. No markup changes.
 
