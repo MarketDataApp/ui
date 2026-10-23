@@ -3895,16 +3895,6 @@ label[error][focused] :where(.text-heading, .radio-button-helper) {
   background-color: transparent;
   padding: calc(var(--spacing) * 0);
   color: var(--color-body);
-  &:hover {
-    @media (hover: hover) {
-      background-color: var(--color-neutral-tertiary-medium);
-    }
-  }
-  &:hover {
-    @media (hover: hover) {
-      color: var(--color-body);
-    }
-  }
   &:active {
     background-color: transparent;
   }
@@ -3931,6 +3921,16 @@ label[error][focused] :where(.text-heading, .radio-button-helper) {
   }
   &:focus-visible {
     --tw-ring-color: var(--color-focus-ring);
+  }
+  &:hover {
+    @media (hover: hover) {
+      background-color: var(--color-neutral-tertiary-medium);
+    }
+  }
+  &:hover {
+    @media (hover: hover) {
+      color: var(--color-body);
+    }
   }
   -webkit-tap-highlight-color: transparent;
   transition: background 0.15s;

@@ -2077,19 +2077,28 @@ label[error][focused] :where(.text-heading, .radio-button-helper) {
 .theme-toggle-wrapper .theme-toggle-button {
   @apply inline-flex items-center justify-center w-8 h-8 rounded-full cursor-pointer;
   @apply bg-transparent text-body border-none p-0;
-  @apply hover:bg-neutral-tertiary-medium hover:text-body;
-  @apply active:bg-transparent active:text-body;
   /*
-    `focus:bg-transparent focus:text-body` are resets that hold off host
-    framework button rules (amember), so they stay on every focus. The
-    indicator itself is keyboard-only.
+    `active:` and `focus:` restate the resting colours. They are resets that
+    hold off host framework button rules (amember), so they stay on every
+    press and every focus. The focus indicator itself is keyboard-only.
 
     `focus:outline-hidden` used to stand alone, which left the button with no
     focus indicator at all — the UA ring removed and nothing drawn in its
     place. See: https://github.com/MarketDataApp/ui/issues/41
   */
+  @apply active:bg-transparent active:text-body;
   @apply focus:outline-hidden focus:bg-transparent focus:text-body;
   @apply focus-visible:ring-4 focus-visible:ring-focus-ring;
+  /*
+    Hover comes after the resets, and the order is load-bearing. Each @apply
+    line emits in place, at the same specificity as the resets, so the later
+    rule wins when both match. With hover first, a mouse click left the button
+    focused (Chrome, Edge, Firefox) and the focus reset painted over every
+    later hover until the user clicked elsewhere; each press flashed the hover
+    off too. Tailwind gates `hover:` on `(hover: hover)`, so a tap on a touch
+    screen still leaves no background behind.
+  */
+  @apply hover:bg-neutral-tertiary-medium hover:text-body;
   -webkit-tap-highlight-color: transparent;
   transition: background 0.15s;
 }
