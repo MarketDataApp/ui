@@ -110,6 +110,13 @@ export default defineConfig({
       use: { browserName: 'chromium', baseURL: LOCAL_SERVER },
     },
     {
+      // Same hermetic fixture pattern. Chromium only and on purpose: the click
+      // case rests on Chrome focusing a button on click, which Safari does not.
+      name: 'theme-toggle-states',
+      testMatch: ['theme-toggle-states.spec.js'],
+      use: { browserName: 'chromium', baseURL: LOCAL_SERVER },
+    },
+    {
       // Drives docs/header.html, a build output: `npm run build` must have run.
       name: 'header',
       testMatch: ['header.spec.js'],

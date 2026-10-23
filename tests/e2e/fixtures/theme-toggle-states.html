@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>theme toggle interaction states fixture</title>
+    <link rel="icon" href="data:," />
+    <link rel="stylesheet" href="/dist/css/components.css" />
+    <script>
+      /*
+        Theme comes from `?theme=dark`, applied here in <head> before anything
+        paints, the same way focus-ring.html does it.
+      */
+      const theme = new URL(location.href).searchParams.get('theme') === 'dark' ? 'dark' : 'light';
+      document.documentElement.classList.add(theme);
+      document.documentElement.setAttribute('data-theme', theme);
+    </script>
+    <style>
+      /*
+        The neutral page surfaces the properties use: white in light mode,
+        gray-900 in dark. The padding is empty page for a test to move the
+        pointer to, or to click on, without landing on a control.
+      */
+      body {
+        margin: 0;
+        padding: 48px;
+        background: #ffffff;
+      }
+      html.dark body {
+        background: #111827;
+      }
+      .row {
+        display: flex;
+        align-items: center;
+        gap: 48px;
+      }
+
+      /*
+        aMember's content-area button state rule, from amember.css, with its
+        colours verbatim: a hovered or pressed button turns #4e80a6 with white
+        text. Only the two properties the toggle restates are kept. aMember's
+        own `:focus` rule sets nothing but `outline: none`; `:focus` is added
+        here because a rule of exactly this shape is what the toggle's focus
+        reset exists to hold off.
+      */
+      .am-body-content button:hover,
+      .am-body-content button:active,
+      .am-body-content button:focus {
+        background-color: #4e80a6;
+        color: white;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="row">
+      <div id="plain"></div>
+      <div class="am-body-content"><div id="host"></div></div>
+    </div>
+
+    <script type="module">
+      const { initThemeToggle } = await import('/dist/theme-toggle.js');
+
+      initThemeToggle({ container: document.getElementById('plain') });
+      initThemeToggle({ container: document.getElementById('host') });
+
+      document.body.dataset.ready = 'true';
+    </script>
+  </body>
+</html>
