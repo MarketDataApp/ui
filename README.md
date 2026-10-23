@@ -769,6 +769,8 @@ Usage not yet verified.
 
 6. **Class-name selectors break with `@apply`.** When a consumer writes `@apply form-container`, the `form-container` class name never appears in the DOM — Tailwind inlines the properties at build time. This means descendant selectors like `.form-container .radio-group-container` will never match. Use CSS custom properties as cascade signals instead (see below).
 
+7. **A host-framework reset on `:focus` or `:active` must come before the hover.** A plain rule that restates its resting colours on `focus:` and `active:` (the theme toggle does, to hold off aMember) gives each state the hover's specificity, so source order decides. Each `@apply` line emits in place, while a single `@apply` sorts its variants hover-first — so put the reset lines first and the `hover:` line after them. With the hover first, a mouse click leaves the button focused and the reset paints over every later hover until the user clicks elsewhere. `tests/unit/theme-toggle-css.test.js` guards the toggle's order.
+
 ### Nested Component Contrast via CSS Custom Properties
 
 Components that nest inside other components (e.g. radio groups inside forms) need different background tiers depending on their context. The naive approach — descendant selectors like `.form-container .radio-group-container` — breaks when consumers use `@apply` because class names don't appear in the DOM.
