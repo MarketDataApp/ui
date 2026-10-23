@@ -19,7 +19,7 @@ describe('@marketdataapp/ui/header without a DOM', () => {
     expect(html.startsWith('<header class="site-header">')).toBe(true);
     expect(html.endsWith('<div class="site-header-spacer"></div>')).toBe(true);
     expect(defaultNavigation.length).toBe(5);
-    expect(dataCatalog.length).toBe(11);
+    expect(dataCatalog.length).toBe(10);
   });
 
   it('the client module also imports without a DOM, so a bundler can evaluate it during SSR', async () => {

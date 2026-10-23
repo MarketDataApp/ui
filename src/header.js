@@ -151,7 +151,6 @@ export const dataCatalog = Object.freeze([
     href: '/data/stocks/',
     comingSoon: false,
   },
-  { key: 'indices', title: 'Indices', icon: 'indices', comingSoon: true },
   { key: 'futures', title: 'Futures', icon: 'futures', comingSoon: true },
   { key: 'currencies', title: 'Currencies', icon: 'currencies', comingSoon: true },
   { key: 'crypto', title: 'Crypto', icon: 'crypto', comingSoon: true },
