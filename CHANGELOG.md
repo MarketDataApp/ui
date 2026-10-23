@@ -1,5 +1,20 @@
 # Changelog
 
+## 5.10.3
+
+`dist/` changes: both CSS builds reorder the theme toggle's state blocks. No declaration changes value and no markup changes. `dist/css/components.css` also drops five unused `--color-*-950` declarations.
+
+### Fixed
+
+- **The theme toggle lost its hover background after a mouse click, until the user clicked somewhere else.** The toggle restates its resting colours on `:active` and `:focus` — `focus:bg-transparent focus:text-body` and their `active:` pair — to hold off aMember's button rules. Those resets came _after_ the hover rule, at the same specificity, so they won whenever both matched. Chrome, Edge and Firefox focus a button on a mouse click, so after one click every hover painted transparent. Measured on www.marketdata.app and the feedback board in dark mode: `gray-700` before the click, `rgba(0,0,0,0)` after it with the button still `document.activeElement`. Safari on macOS does not focus a button on click, so it may not show it.
+  - **The hover `@apply` now comes after the resets.** Each `@apply` line in a plain rule emits in place, so the line order is the cascade order, and the source says so. A single `@apply` would not do: Tailwind sorts its variants hover-first.
+  - **A press no longer flashes the hover off.** The `:active` reset painted over the hover for the length of every press, for the same reason. Flowbite's own toggle declares no active state at all, so this is parity, not a new treatment.
+  - **What the resets are for still holds.** Inside aMember's content area the toggle paints exactly what it paints outside it, at rest, hovered, focused, focused and hovered, and pressed. The keyboard-only ring (`focus-visible:ring-4 focus-visible:ring-focus-ring`, #41) is untouched, and `tests/e2e/focus-ring.spec.js` passes unchanged.
+  - **A tap on a touch screen still leaves no background.** Tailwind gates `hover:` on `(hover: hover)`, and with the hover now above the resets that gate is the only thing holding off a phone's sticky `:hover` after a tap. It is tested as such.
+  - **`tests/e2e/theme-toggle-states.spec.js` drives a hermetic fixture** through click-then-hover against the same hover with nothing focused, a held press, a tap in a `(hover: none)` context with the sticky `:hover` forced on through the DevTools protocol (Chromium's touch emulation does not leave one), and every state above inside a container carrying aMember's own `#4e80a6` button colours. Both themes throughout, and every read waits for the 0.15s fade to settle. The click and press cases fail against 5.10.2's CSS; ungating the hover fails the tap case, and dropping the focus reset fails the aMember focus case.
+  - **`tests/unit/theme-toggle-css.test.js` guards the order in both builds** on every pull request, since the e2e suite runs only after a deploy: every hover block after every reset, both resets present, every hover gated on `(hover: hover)`.
+  - **`dist/css/components.css` also drops five unused `--color-{yellow,green,indigo,purple,pink}-950` declarations.** No rule in either build reads them; they arrived in 5.10.1, most likely from a scratch page that source detection scanned, and a clean build no longer emits them.
+
 ## 5.10.2
 
 `dist/` changes: `header.js` only. `dataCatalog` loses one entry and the icon map loses one icon. No CSS and no class names change.
