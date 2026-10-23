@@ -148,7 +148,7 @@ describe('defaultNavigation', () => {
   });
 
   it('exposes a catalogue with stable keys, a title, an icon that exists, and an href on every live type', () => {
-    expect(dataCatalog.length).toBe(11);
+    expect(dataCatalog.length).toBe(10);
     const keys = dataCatalog.map((d) => d.key);
     expect(new Set(keys).size).toBe(keys.length);
     for (const d of dataCatalog) {
@@ -158,6 +158,16 @@ describe('defaultNavigation', () => {
       expect(typeof d.comingSoon).toBe('boolean');
       if (!d.comingSoon) expect(d.href).toMatch(/^\/data\//);
     }
+  });
+
+  // The operator ruled on 2026-10-23 that no property may say Market Data
+  // offers indices of any kind — not as a live type, not as "Coming Soon".
+  it('offers no indices, live or planned, in the catalogue, the menus or the icon set', () => {
+    expect(dataCatalog.map((d) => d.key)).not.toContain('indices');
+    expect(dataCatalog.some((d) => /indices/i.test(d.title))).toBe(false);
+    expect(headerIconNames).not.toContain('indices');
+    const { root } = render();
+    expect(root.textContent).not.toMatch(/indices/i);
   });
 
   it('is frozen', () => {
@@ -173,12 +183,12 @@ describe('renderHeader: mega menu and drawer differ on purpose', () => {
   it('keeps disabled rows in the mega menu and drops them, and their emptied group, from the drawer', () => {
     const { root } = render();
     const panel = root.querySelector('#mega-menu-data');
-    expect(panel.querySelectorAll('.site-header-panel-aside-link--disabled').length).toBe(6);
+    expect(panel.querySelectorAll('.site-header-panel-aside-link--disabled').length).toBe(5);
     expect(panel.textContent).toContain('Coming Soon');
 
     const accordion = root.querySelector('#mega-menu-data-mobile');
     expect(accordion.textContent).not.toContain('Coming Soon');
-    expect(accordion.textContent).not.toContain('Indices');
+    expect(accordion.textContent).not.toContain('Futures');
     expect(accordion.querySelectorAll('a').length).toBe(6); // "Explore Our Data" + 5 live types
   });
 
@@ -417,6 +427,6 @@ describe('renderHeader: slots and trust boundaries', () => {
     expect(headerIconNames).toEqual(
       expect.arrayContaining(['menu', 'x', 'triangle', 'chevron-right', 'braces']),
     );
-    expect(headerIconNames.length).toBe(32);
+    expect(headerIconNames.length).toBe(31);
   });
 });

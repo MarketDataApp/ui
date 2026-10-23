@@ -1,5 +1,16 @@
 # Changelog
 
+## 5.10.2
+
+`dist/` changes: `header.js` only. `dataCatalog` loses one entry and the icon map loses one icon. No CSS and no class names change.
+
+### Changed
+
+- **The Data menu no longer announces Indices.** The operator ruled on 2026-10-23 that no MarketData property may say it offers indices of any kind, live or planned. `dataCatalog` drops `{ key: 'indices', title: 'Indices', icon: 'indices', comingSoon: true }`, so the mega menu's Coming Soon column lists five types instead of six. No other entry changes, and the rest keep their order.
+  - **The `indices` icon leaves the header icon set**, and `headerIconNames` with it, 32 to 31: nothing else in the kit drew it. A consumer that passes `icon: 'indices'` in its own `navigation` now gets the renderer's `unknown icon` error.
+  - **A consumer that keys its own copy by `dataCatalog` must drop its `indices` row in the same change as the pin bump.** The website's `src/data/data-types.ts` refuses to load when its descriptions and the catalogue drift, and it holds an `indices` description.
+  - **`tests/unit/header.test.js` pins the ruling**: no `indices` key or title in the catalogue, no `indices` icon, and the word nowhere in the rendered header.
+
 ## 5.10.1
 
 `dist/` changes: both CSS builds gain one declaration per linked-badge hover rule and one custom property per badge colour. No markup changes.
