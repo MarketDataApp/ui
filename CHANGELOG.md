@@ -1,5 +1,22 @@
 # Changelog
 
+## 5.10.4
+
+`dist/` changes: `header.js` only. Three hrefs in `defaultNavigation` change, and one link gains `external: true`. No CSS, no class names and no icons change.
+
+### Changed
+
+- **The Products menu's Updates links go to the feedback board.** `roadmap.marketdata.app` serves the Market Data feedback board, not Canny, since 2026-10-31. The kit still carried the Canny-era hrefs: Changelog went to the website's `/changelog/`, which now only redirects to the board; Product Roadmap went to the board's front page, which is now the feature list; and Feature Requests went to `/features`, which is now a 301 to that front page.
+
+  | Link             | Was                                       | Now                                        |
+  | ---------------- | ----------------------------------------- | ------------------------------------------ |
+  | Changelog        | `/changelog/`                             | `https://roadmap.marketdata.app/changelog` |
+  | Product Roadmap  | `https://roadmap.marketdata.app/`         | `https://roadmap.marketdata.app/roadmap`   |
+  | Feature Requests | `https://roadmap.marketdata.app/features` | `https://roadmap.marketdata.app/`          |
+  - **All three are `external: true`**, so each opens in a new tab with `rel="noopener noreferrer"`. Changelog was internal before. Labels, icons and order do not change.
+  - **The website must delete its `BOARD_LINKS` override in the same change as the pin bump.** `src/components/Header.astro` passes these exact URLs today, and it throws on purpose when the kit already carries one of them. Delete the block and pass no `navigation`.
+  - **`tests/unit/header.test.js` pins the three links** by label, href, icon and `external`.
+
 ## 5.10.3
 
 `dist/` changes: both CSS builds reorder the theme toggle's state blocks. No declaration changes value and no markup changes. `dist/css/components.css` also drops five unused `--color-*-950` declarations.

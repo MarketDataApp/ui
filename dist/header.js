@@ -237,16 +237,21 @@ export const defaultNavigation = Object.freeze([
     aside: {
       title: 'Updates',
       links: [
-        { label: 'Changelog', href: '/changelog/', icon: 'changelog' },
+        {
+          label: 'Changelog',
+          href: 'https://roadmap.marketdata.app/changelog',
+          icon: 'changelog',
+          external: true,
+        },
         {
           label: 'Product Roadmap',
-          href: 'https://roadmap.marketdata.app/',
+          href: 'https://roadmap.marketdata.app/roadmap',
           icon: 'roadmap',
           external: true,
         },
         {
           label: 'Feature Requests',
-          href: 'https://roadmap.marketdata.app/features',
+          href: 'https://roadmap.marketdata.app/',
           icon: 'feature-requests',
           external: true,
         },

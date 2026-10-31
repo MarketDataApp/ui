@@ -170,6 +170,19 @@ describe('defaultNavigation', () => {
     expect(root.textContent).not.toMatch(/indices/i);
   });
 
+  // The changelog, the roadmap and the feature requests moved to the feedback
+  // board, which took over roadmap.marketdata.app from Canny on 2026-10-31.
+  // The website's /changelog/ now only redirects there, and the board's
+  // /features is a 301 to its front page, which is the feature list.
+  it('sends the Updates links to the feedback board, in a new tab', () => {
+    const updates = defaultNavigation.find((i) => i.label === 'Products').aside;
+    expect(updates.links.map((l) => [l.label, l.href, l.icon, l.external])).toEqual([
+      ['Changelog', 'https://roadmap.marketdata.app/changelog', 'changelog', true],
+      ['Product Roadmap', 'https://roadmap.marketdata.app/roadmap', 'roadmap', true],
+      ['Feature Requests', 'https://roadmap.marketdata.app/', 'feature-requests', true],
+    ]);
+  });
+
   it('is frozen', () => {
     expect(Object.isFrozen(defaultNavigation)).toBe(true);
     expect(Object.isFrozen(dataCatalog)).toBe(true);
