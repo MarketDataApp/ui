@@ -29,7 +29,7 @@ export function renderHeader(options?: RenderHeaderOptions): string;
  * @property {string} label
  * @property {string} href
  * @property {string} [icon] - A built-in icon name (see `headerIconNames`) or a raw `<svg …>` string. Raw SVG is trusted markup.
- * @property {boolean} [external] - Opens in a new tab with `rel="noopener noreferrer"`.
+ * @property {boolean} [external] - Off-site: opens in a new tab with `rel="noopener noreferrer"`. An absolute href on `currentOrigin` is on-site and opens in the same tab.
  * @property {boolean} [disabled] - An announcement, not a link. Shown in the mega menu, dropped from the drawer.
  * @property {string} [disabledLabel] - Suffix after a disabled label, e.g. "(coming soon)".
  * @property {string} [description] - Second line under the label. Only the `cards` layout draws it.
@@ -97,6 +97,7 @@ export function renderHeader(options?: RenderHeaderOptions): string;
  * @typedef {Object} RenderHeaderOptions
  * @property {HeaderLogo} [logo] - Required unless `slots.logo` is given.
  * @property {string} [currentPath] - The page's pathname. Marks the matching drawer row with `aria-current="page"`.
+ * @property {string | URL} [currentOrigin] - The page's origin, or any absolute URL on it, when that is not the website's. An `external` link to it opens in the same tab. Changes only the tab, never `aria-current`.
  * @property {NavItem[]} [navigation] - Default `defaultNavigation`.
  * @property {string} [homeHref] - Default "/".
  * @property {string} [skipLinkHref] - Default "#main-content".
@@ -139,7 +140,7 @@ export type NavLink = {
      */
     icon?: string;
     /**
-     * - Opens in a new tab with `rel="noopener noreferrer"`.
+     * - Off-site: opens in a new tab with `rel="noopener noreferrer"`. An absolute href on `currentOrigin` is on-site and opens in the same tab.
      */
     external?: boolean;
     /**
@@ -272,6 +273,10 @@ export type RenderHeaderOptions = {
      * - The page's pathname. Marks the matching drawer row with `aria-current="page"`.
      */
     currentPath?: string;
+    /**
+     * - The page's origin, or any absolute URL on it, when that is not the website's. An `external` link to it opens in the same tab. Changes only the tab, never `aria-current`.
+     */
+    currentOrigin?: string | URL;
     /**
      * - Default `defaultNavigation`.
      */

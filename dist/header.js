@@ -33,7 +33,7 @@ const icons = {"blog":"<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 5
  * @property {string} label
  * @property {string} href
  * @property {string} [icon] - A built-in icon name (see `headerIconNames`) or a raw `<svg …>` string. Raw SVG is trusted markup.
- * @property {boolean} [external] - Opens in a new tab with `rel="noopener noreferrer"`.
+ * @property {boolean} [external] - Off-site: opens in a new tab with `rel="noopener noreferrer"`. An absolute href on `currentOrigin` is on-site and opens in the same tab.
  * @property {boolean} [disabled] - An announcement, not a link. Shown in the mega menu, dropped from the drawer.
  * @property {string} [disabledLabel] - Suffix after a disabled label, e.g. "(coming soon)".
  * @property {string} [description] - Second line under the label. Only the `cards` layout draws it.
@@ -110,6 +110,7 @@ const icons = {"blog":"<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 5
  * @typedef {Object} RenderHeaderOptions
  * @property {HeaderLogo} [logo] - Required unless `slots.logo` is given.
  * @property {string} [currentPath] - The page's pathname. Marks the matching drawer row with `aria-current="page"`.
+ * @property {string | URL} [currentOrigin] - The page's origin, or any absolute URL on it, when that is not the website's. An `external` link to it opens in the same tab. Changes only the tab, never `aria-current`.
  * @property {NavItem[]} [navigation] - Default `defaultNavigation`.
  * @property {string} [homeHref] - Default "/".
  * @property {string} [skipLinkHref] - Default "#main-content".
@@ -360,6 +361,51 @@ function icon(name, className) {
 /** `target`/`rel` for a link that opens off-site. */
 function externalAttrs(link) {
   return link.external ? { target: '_blank', rel: 'noopener noreferrer' } : {};
+}
+
+/**
+ * The origin of an absolute URL, or `null` for a relative one and for a URL
+ * with no origin of its own (`mailto:`, `data:`), whose `origin` is "null".
+ */
+function originOf(href) {
+  try {
+    const { origin } = new URL(href);
+    return origin === 'null' ? null : origin;
+  } catch {
+    return null;
+  }
+}
+
+/**
+ * The navigation as seen from `currentOrigin`.
+ *
+ * `external` is written from the website's side. Another site that renders the
+ * same navigation names its own origin, and an external link to that origin is
+ * one of its own pages there: it opens in the same tab, as its own navigation
+ * does. Only an absolute href names an origin; a relative one stays as marked.
+ *
+ * Returns new objects, never edits the input: `defaultNavigation` is frozen
+ * and shared by every render.
+ */
+function resolveExternal(navigation, currentOrigin) {
+  if (currentOrigin == null) return navigation;
+  const here = originOf(currentOrigin);
+  if (!here) {
+    throw new Error(
+      `@marketdataapp/ui/header: currentOrigin must be an absolute URL with an origin, such as "https://roadmap.marketdata.app", not ${JSON.stringify(String(currentOrigin))}.`,
+    );
+  }
+  const link = (l) => (l.external && originOf(l.href) === here ? { ...l, external: false } : l);
+  const section = (s) => ({ ...s, links: s.links.map(link) });
+  return navigation.map((item) =>
+    item.type === 'link'
+      ? link(item)
+      : {
+          ...item,
+          columns: item.columns.map(section),
+          ...(item.aside ? { aside: section(item.aside) } : {}),
+        },
+  );
 }
 
 /** A trailing-slash-insensitive pathname, so `/pricing` and `/pricing/` are one page. */
@@ -637,7 +683,8 @@ export function renderHeader(options = {}) {
   const {
     logo,
     currentPath,
-    navigation = defaultNavigation,
+    currentOrigin,
+    navigation: givenNavigation = defaultNavigation,
     homeHref = '/',
     skipLinkHref = '#main-content',
     loginUrl = 'https://dashboard.marketdata.app/marketdata/login',
@@ -648,6 +695,7 @@ export function renderHeader(options = {}) {
     slots = {},
   } = options;
 
+  const navigation = resolveExternal(givenNavigation, currentOrigin);
   const isCurrent = makeIsCurrent(currentPath);
   const logoHtml = logoMarkup(logo, slots);
   const authHtml = slots.auth ?? '<div id="user-profile" class="user-profile-container"></div>';

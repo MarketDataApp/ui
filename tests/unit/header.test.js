@@ -249,6 +249,132 @@ describe('renderHeader: mega menu and drawer differ on purpose', () => {
     expect(internal.hasAttribute('target')).toBe(false);
   });
 
+  // `external` is written from the website's side. The feedback board renders
+  // the same navigation on roadmap.marketdata.app, where the Updates links are
+  // its own pages: a new tab there would open the board beside the board.
+  const BOARD = 'https://roadmap.marketdata.app';
+  const updatesHrefs = defaultNavigation
+    .find((i) => i.label === 'Products')
+    .aside.links.map((l) => l.href);
+  const tabOf = (a) => [a.getAttribute('target'), a.getAttribute('rel')];
+
+  it('never edits the navigation it is given', () => {
+    const before = JSON.stringify(defaultNavigation);
+    render({ currentOrigin: BOARD });
+    expect(JSON.stringify(defaultNavigation)).toBe(before);
+    expect(defaultNavigation.find((i) => i.label === 'Products').aside.links[0].external).toBe(
+      true,
+    );
+  });
+
+  it('opens an external link to currentOrigin in the same tab, in the mega menu and the drawer', () => {
+    const { root } = render({ currentOrigin: BOARD });
+    for (const href of updatesHrefs) {
+      const links = [...root.querySelectorAll(`a[href="${href}"]`)];
+      expect(links.length, href).toBe(2);
+      for (const a of links) expect(tabOf(a), href).toEqual([null, null]);
+    }
+  });
+
+  it('still opens every other external link in a new tab when currentOrigin is set', () => {
+    const { root } = render({ currentOrigin: BOARD });
+    for (const href of [
+      'https://api.marketdata.app/',
+      'https://www.trustpilot.com/review/www.marketdata.app',
+    ]) {
+      const links = [...root.querySelectorAll(`a[href="${href}"]`)];
+      expect(links.length, href).toBeGreaterThan(0);
+      for (const a of links) expect(tabOf(a), href).toEqual(['_blank', 'noopener noreferrer']);
+    }
+  });
+
+  it('opens the board links in a new tab from any other origin, and without currentOrigin', () => {
+    for (const currentOrigin of [
+      undefined,
+      'https://www.marketdata.app',
+      'https://roadmap-staging.marketdata.app',
+      'http://roadmap.marketdata.app',
+    ]) {
+      const { root } = render({ currentOrigin });
+      for (const href of updatesHrefs) {
+        for (const a of root.querySelectorAll(`a[href="${href}"]`)) {
+          expect(tabOf(a), `${currentOrigin} ${href}`).toEqual(['_blank', 'noopener noreferrer']);
+        }
+      }
+    }
+  });
+
+  it('takes any absolute URL on the origin, and compares origins, not strings', () => {
+    for (const currentOrigin of [
+      `${BOARD}/`,
+      `${BOARD}/changelog?x=1#y`,
+      'HTTPS://Roadmap.MarketData.app:443',
+      new URL(BOARD),
+    ]) {
+      const a = render({ currentOrigin }).root.querySelector(`a[href="${BOARD}/roadmap"]`);
+      expect(a.hasAttribute('target'), String(currentOrigin)).toBe(false);
+    }
+  });
+
+  it('leaves a relative external href and a non-external link as they are', () => {
+    const navigation = [
+      { type: 'link', label: 'Board', href: `${BOARD}/` },
+      {
+        type: 'dropdown',
+        id: 'x',
+        label: 'X',
+        columns: [
+          {
+            links: [
+              { label: 'Sheet', href: '/rates.pdf', external: true },
+              { label: 'Plain', href: `${BOARD}/roadmap` },
+            ],
+          },
+        ],
+      },
+    ];
+    const { root } = render({ navigation, currentOrigin: BOARD });
+    for (const a of root.querySelectorAll('a[href="/rates.pdf"]')) {
+      expect(tabOf(a)).toEqual(['_blank', 'noopener noreferrer']);
+    }
+    for (const a of root.querySelectorAll(`a[href^="${BOARD}/"]`)) {
+      expect(a.hasAttribute('target')).toBe(false);
+    }
+  });
+
+  it('resolves a top-level external link, and a dropdown written without its type', () => {
+    const navigation = [
+      { type: 'link', label: 'Board', href: `${BOARD}/`, external: true },
+      {
+        id: 'y',
+        label: 'Y',
+        columns: [{ links: [{ label: 'Map', href: `${BOARD}/roadmap`, external: true }] }],
+      },
+    ];
+    const { root } = render({ navigation, currentOrigin: BOARD });
+    const links = [...root.querySelectorAll(`a[href^="${BOARD}/"]`)];
+    expect(links.length).toBe(4);
+    for (const a of links) expect(tabOf(a), a.getAttribute('href')).toEqual([null, null]);
+  });
+
+  it('changes only the tab: an on-origin link is still never aria-current', () => {
+    const { root } = render({ currentOrigin: BOARD, currentPath: '/changelog' });
+    expect(root.querySelector('[aria-current]')).toBeNull();
+  });
+
+  it('throws on a currentOrigin that is not an absolute URL, naming the option', () => {
+    for (const currentOrigin of [
+      'roadmap.marketdata.app',
+      '/changelog',
+      '',
+      'mailto:support@marketdata.app',
+    ]) {
+      expect(() => render({ currentOrigin }), JSON.stringify(currentOrigin)).toThrow(
+        /currentOrigin/,
+      );
+    }
+  });
+
   it('carries the account fallback links in the drawer with the defaults, and takes overrides', () => {
     const { root } = render();
     const links = [...drawerOf(root).querySelectorAll('.site-header-drawer-auth-link')];
