@@ -1,5 +1,25 @@
 # Changelog
 
+## 5.11.0
+
+`dist/` changes: `header.js` and `header.d.ts` only. A new `renderHeader()` option. Without it, the output is byte-identical to 5.10.4. No CSS, no class names and no icons change.
+
+### Added
+
+- **`renderHeader({ currentOrigin })`: a site other than the website keeps its own links in the tab.** `external` is written from the website's side, and 5.10.4 marked the three Updates links `external`, because on www they lead to the feedback board. The board renders the same navigation on `roadmap.marketdata.app`, where those links are its own pages, and opened each one in a new tab beside itself. Now the board passes its origin, and an `external` link with an absolute href on that origin opens in the same tab, as the board's own navigation does.
+
+  | Link             | On www.marketdata.app | On roadmap.marketdata.app (`currentOrigin`) |
+  | ---------------- | --------------------- | ------------------------------------------- |
+  | Changelog        | new tab               | same tab                                    |
+  | Product Roadmap  | new tab               | same tab                                    |
+  | Feature Requests | new tab               | same tab                                    |
+  | Swagger          | new tab               | new tab                                     |
+  | Customer Reviews | new tab               | new tab                                     |
+  - **Origins are compared, not strings.** Any absolute URL on the origin, or a `URL` object, works. Another origin, `roadmap-staging` included, keeps the new tab.
+  - **Only the tab changes.** A relative href keeps its new tab, and `aria-current` still never marks an absolute href.
+  - **A value that is not an absolute URL with an origin throws,** `mailto:` included, and the error names the option.
+  - **`docs/header.html` shows the table above,** read back from what `renderHeader()` writes with and without the option.
+
 ## 5.10.4
 
 `dist/` changes: `header.js` only. Three hrefs in `defaultNavigation` change, and one link gains `external: true`. No CSS, no class names and no icons change.
