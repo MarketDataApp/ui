@@ -89,6 +89,21 @@ const html = renderHeader({
         </p>
       </section>
 
+      <section id="off-site" class="space-y-4">
+        <h2 class="text-2xl font-bold border-b border-gray-200 dark:border-gray-700 pb-2">
+          Off-site links
+        </h2>
+        <p class="text-body">
+          A link marked <code>external</code> leaves the website, so it opens in a new tab. The
+          feedback board renders the same navigation on its own origin and passes
+          <code>currentOrigin: 'https://roadmap.marketdata.app'</code>. There, the Updates links are
+          the board's own pages and open in the same tab. The rows below are the output of
+          <code>renderHeader()</code> with and without that option, for every external link in
+          <code>defaultNavigation</code>.
+        </p>
+        <!-- @off-site -->
+      </section>
+
       <section id="state" class="space-y-4">
         <h2 class="text-2xl font-bold border-b border-gray-200 dark:border-gray-700 pb-2">
           Live state
