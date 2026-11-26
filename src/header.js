@@ -292,6 +292,7 @@ export const defaultNavigation = Object.freeze([
         links: [
           { label: 'About Market Data', href: '/about/', icon: 'braces' },
           { label: 'Custom API Development', href: '/custom-development/', icon: 'settings' },
+          { label: 'Affiliate Program', href: '/affiliates/', icon: 'dollar' },
           {
             label: 'Customer Reviews',
             href: 'https://www.trustpilot.com/review/www.marketdata.app',
