@@ -200,7 +200,7 @@ describe('defaultNavigation', () => {
       const a = root.querySelector(`#${id} a[href="/affiliates/"]`);
       expect(a, id).not.toBeNull();
       expect(a.textContent.trim(), id).toBe('Affiliate Program');
-      expect(a.hasAttribute('target'), id).toBe(false);
+      expect([a.getAttribute('target'), a.getAttribute('rel')], id).toEqual([null, null]);
     }
   });
 
