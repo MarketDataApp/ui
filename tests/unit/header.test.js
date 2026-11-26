@@ -183,6 +183,27 @@ describe('defaultNavigation', () => {
     ]);
   });
 
+  it('lists the Company links in order, with the Affiliate Program after Custom API Development', () => {
+    const company = defaultNavigation.find((i) => i.label === 'Company');
+    expect(company.columns[0].links.map((l) => [l.label, l.href, l.icon, l.external])).toEqual([
+      ['About Market Data', '/about/', 'braces', undefined],
+      ['Custom API Development', '/custom-development/', 'settings', undefined],
+      ['Affiliate Program', '/affiliates/', 'dollar', undefined],
+      ['Customer Reviews', 'https://www.trustpilot.com/review/www.marketdata.app', 'star', true],
+      ['News', '/news/', 'newspaper', undefined],
+    ]);
+  });
+
+  it('renders the Affiliate Program link in the mega menu and the drawer, in the same tab', () => {
+    const { root } = render();
+    for (const id of ['mega-menu-company', 'mega-menu-company-mobile']) {
+      const a = root.querySelector(`#${id} a[href="/affiliates/"]`);
+      expect(a, id).not.toBeNull();
+      expect(a.textContent.trim(), id).toBe('Affiliate Program');
+      expect([a.getAttribute('target'), a.getAttribute('rel')], id).toEqual([null, null]);
+    }
+  });
+
   it('is frozen', () => {
     expect(Object.isFrozen(defaultNavigation)).toBe(true);
     expect(Object.isFrozen(dataCatalog)).toBe(true);

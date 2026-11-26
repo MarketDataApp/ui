@@ -1,5 +1,23 @@
 # Changelog
 
+## 5.12.0
+
+`dist/` changes: `header.js` only. One link is added to `defaultNavigation`. No CSS, no class names and no icons change.
+
+### Added
+
+- **The Company menu links the Affiliate Program.** The website serves the page at `/affiliates/`, and only its footer linked it. The link sits after Custom API Development, in the mega menu and in the drawer, with the `dollar` icon. It is internal, so it opens in the same tab.
+
+  | Company menu           | href                                                   |
+  | ---------------------- | ------------------------------------------------------ |
+  | About Market Data      | `/about/`                                              |
+  | Custom API Development | `/custom-development/`                                 |
+  | Affiliate Program      | `/affiliates/` (new)                                   |
+  | Customer Reviews       | `https://www.trustpilot.com/review/www.marketdata.app` |
+  | News                   | `/news/`                                               |
+  - **A consumer that passes no `navigation` gets the link with its pin bump,** and needs no other change. The feedback board makes the href absolute on www, as it does for the other path links.
+  - **`tests/unit/header.test.js` pins the five Company links** by label, href, icon and `external`, and checks that both the mega menu and the drawer render the new one.
+
 ## 5.11.0
 
 `dist/` changes: `header.js` and `header.d.ts` only. A new `renderHeader()` option. Without it, the output is byte-identical to 5.10.4. No CSS, no class names and no icons change.
